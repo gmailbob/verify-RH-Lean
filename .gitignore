@@ -1,0 +1,18 @@
+# Everything a run produces lives in $WORKDIR (default ~/rh-verify), outside the
+# repo. These patterns are a safety net in case something lands here anyway.
+/work/
+/out/
+.lake/
+lean.tar.gz
+lean.tar.gz.part*
+*.tar.zst
+*.olean
+*.ilean
+*.log
+*.log.zst
+__pycache__/
+*.pyc
+
+# Committed evidence from our run (small text files and one hash list); see evidence/README.md
+!/evidence/
+!/evidence/**
