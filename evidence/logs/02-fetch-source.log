@@ -1,0 +1,40 @@
+=== 2026-11-21T04:28:14Z  02-fetch-source.sh 02-fetch-source.log  (host <host>, WORKDIR=/home/ec2-user/rh)
+[04:28:14] download announcement and 14 archive parts from https://alpo.ge
+  remark.pdf already present
+  lean.tar.gz.part01 already present
+  lean.tar.gz.part02 already present
+  lean.tar.gz.part03 already present
+  lean.tar.gz.part04 already present
+  lean.tar.gz.part05 already present
+  lean.tar.gz.part06 already present
+  lean.tar.gz.part07 already present
+  lean.tar.gz.part08 already present
+  lean.tar.gz.part09 already present
+  lean.tar.gz.part10 already present
+  lean.tar.gz.part11 already present
+  lean.tar.gz.part12 already present
+  lean.tar.gz.part13 already present
+  lean.tar.gz.part14 already present
+[04:28:14] verify hashes
+  PASS  remark.pdf size and sha256
+  PASS  all 14 parts match expected/archive-parts.sha256
+[04:28:15] concatenate
+  PASS  archive size 239275554
+  PASS  archive sha256 9631b4f020199e580ba86178cb56c6e9b09f690c2369a80dc4334aa93f49c7fc
+[04:28:17] inspect archive members before extracting
+  regular files: 175190  directories: 0  uncompressed bytes: 1030536719
+  by extension: {'lean': 175187, 'json': 1, 'toml': 1, '(none)': 1}
+  PASS  only regular files and directories under lean/, no unsafe paths, 175190 files
+[04:28:28] extract into /home/ec2-user/rh/src
+  PASS  175190 files extracted
+  PASS  175187 .lean files
+[04:28:36] project pins
+  PASS  lean-toolchain is leanprover/lean4:v4.33.1
+  PASS  lakefile.toml pins mathlib 0df444a360eaa60ab8c11dca51a86af692955474
+  PASS  lake-manifest.json revisions match expected/lake-manifest.revs
+[04:28:36] baseline hash of every source file
+  files hashed: 175190
+  digest of the hash list: 859c80e3fe4912ad9e18ad359edbfdc62fb845ad340add30b5caa0fdc74d2ee1
+  PASS  wrote /home/ec2-user/rh/out/sources.prebuild.sha256.zst
+
+All checks passed (0 warning(s)).

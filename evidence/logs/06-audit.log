@@ -1,0 +1,302 @@
+=== 2026-11-21T04:29:22Z  06-audit.sh 06-audit.log  (host <host>, WORKDIR=/home/ec2-user/rh)
+[04:29:22] compile AuditLib
+  PASS  AuditLib compiled
+[04:29:23] self-test of the audit checks
+  PASS axioms  good_noAxioms: []
+  PASS axioms  good_classical: [propext, Classical.choice, Quot.sound]
+  PASS type    good_typed : MyStmt
+  PASS defn    MyStmt is syntactically identical to the reviewed text MyStmtCopy
+  PASS module  Nat.add_comm is defined in Init.Data.Nat.Basic
+  PASS deps    MyStmt uses only constants from [Init] (7 constants)
+  PASS selftest 'sorry' rejected as expected: AUDIT FAIL: bad_sorry depends on non-standard axioms [sorryAx] (all: [sorryAx])
+  PASS selftest 'custom axiom' rejected as expected: AUDIT FAIL: bad_axiom depends on non-standard axioms [myAxiom] (all: [myAxiom])
+  PASS selftest 'native_decide' rejected as expected: AUDIT FAIL: bad_native depends on non-standard axioms [bad_native._native.native_decide.ax_1_1] (all: [bad_native._native.native_decide.ax_1_1])
+  PASS selftest 'type only defeq to the statement' rejected as expected: AUDIT FAIL: type of bad_type is
+  PASS selftest 'statement drift' rejected as expected: AUDIT FAIL: MyStmt differs syntactically from MyStmtDrift (defeq: false)
+  PASS selftest 'wrong module' rejected as expected: AUDIT FAIL: Nat.add_comm is defined in some (Init.Data.Nat.Basic), expected Mathlib.Foo
+  PASS selftest 'statement uses a non-library constant' rejected as expected: AUDIT FAIL: UsesLocal uses MyStmt, which is not from an imported module
+  PASS selftest 'missing constant' rejected as expected: AUDIT FAIL: constant does.not.exist not found
+  PASS  self-test: good declarations accepted, every cheat rejected
+
+All checks passed (0 warning(s)).
+ERROR project not built; run scripts/05-build.sh
+=== 2026-11-21T04:29:57Z  06-audit.sh 06-audit.log  (host <host>, WORKDIR=/home/ec2-user/rh)
+[04:29:57] compile AuditLib
+  PASS  AuditLib compiled
+[04:29:58] self-test of the audit checks
+  PASS axioms  good_noAxioms: []
+  PASS axioms  good_classical: [propext, Classical.choice, Quot.sound]
+  PASS type    good_typed : MyStmt
+  PASS defn    MyStmt is syntactically identical to the reviewed text MyStmtCopy
+  PASS module  Nat.add_comm is defined in Init.Data.Nat.Basic
+  PASS deps    MyStmt uses only constants from [Init] (7 constants)
+  PASS selftest 'sorry' rejected as expected: AUDIT FAIL: bad_sorry depends on non-standard axioms [sorryAx] (all: [sorryAx])
+  PASS selftest 'custom axiom' rejected as expected: AUDIT FAIL: bad_axiom depends on non-standard axioms [myAxiom] (all: [myAxiom])
+  PASS selftest 'native_decide' rejected as expected: AUDIT FAIL: bad_native depends on non-standard axioms [bad_native._native.native_decide.ax_1_1] (all: [bad_native._native.native_decide.ax_1_1])
+  PASS selftest 'type only defeq to the statement' rejected as expected: AUDIT FAIL: type of bad_type is
+  PASS selftest 'statement drift' rejected as expected: AUDIT FAIL: MyStmt differs syntactically from MyStmtDrift (defeq: false)
+  PASS selftest 'wrong module' rejected as expected: AUDIT FAIL: Nat.add_comm is defined in some (Init.Data.Nat.Basic), expected Mathlib.Foo
+  PASS selftest 'statement uses a non-library constant' rejected as expected: AUDIT FAIL: UsesLocal uses MyStmt, which is not from an imported module
+  PASS selftest 'missing constant' rejected as expected: AUDIT FAIL: constant does.not.exist not found
+  PASS  self-test: good declarations accepted, every cheat rejected
+
+All checks passed (0 warning(s)).
+=== 2026-11-21T04:49:49Z  06-audit.sh 06-audit.log  (host <host>, WORKDIR=/home/ec2-user/rh)
+[04:49:49] compile AuditLib
+AuditLib.lean:109:18: error(lean.synthInstanceFailed): failed to synthesize instance of type class
+  OfNat MessageData 0
+numerals are polymorphic in Lean, but the numeral `0` cannot be used in a context where the expected type is
+  MessageData
+due to the absence of the instance above
+
+Hint: Type class instance resolution failures can be inspected with the `set_option trace.Meta.synthInstance true` command.
+AuditLib.lean:121:12: error(lean.synthInstanceFailed): failed to synthesize instance of type class
+  HAdd MessageData Nat MessageData
+
+Hint: Type class instance resolution failures can be inspected with the `set_option trace.Meta.synthInstance true` command.
+  FAIL  AuditLib failed to compile
+
+1 check(s) FAILED, 0 warning(s). Do not continue.
+=== 2026-11-21T04:49:54Z  06-audit.sh 06-audit.log  (host <host>, WORKDIR=/home/ec2-user/rh)
+[04:49:54] compile AuditLib
+AuditLib.lean:104:6: warning: Variable name `env` is not explicitly referenced.
+
+Hint: The binding can be removed (if unused) or named `_` (if used implicitly). Alternatively, prefix the name with `_` to silence this warning:
+  [apply] _env
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+  PASS  AuditLib compiled
+[04:49:55] self-test of the audit checks
+PASS axioms  good_noAxioms: []
+PASS axioms  good_classical: [propext, Classical.choice, Quot.sound]
+PASS type    good_typed : MyStmt
+PASS defn    MyStmt is syntactically identical to the reviewed text MyStmtCopy
+PASS module  Nat.add_comm is defined in Init.Data.Nat.Basic
+PASS deps    MyStmt uses only constants from [Init] (7 constants)
+/home/ec2-user/workplace/verify-RH-Lean/scripts/audit/SelfTest.lean:31:0: error: AUDIT FAIL: PStmt differs syntactically from PStmtCopy (defeq: true)
+  ⟨0, ⋯⟩ = ⟨0, ⋯⟩
+vs
+  ⟨0, PStmt._proof_1⟩ = ⟨0, PStmt._proof_1⟩
+PASS deps    PStmt uses only constants from [Init] (15 constants)
+PASS selftest 'sorry' rejected as expected: AUDIT FAIL: bad_sorry depends on non-standard axioms [sorryAx] (all: [sorryAx])
+PASS selftest 'custom axiom' rejected as expected: AUDIT FAIL: bad_axiom depends on non-standard axioms [myAxiom] (all: [myAxiom])
+PASS selftest 'native_decide' rejected as expected: AUDIT FAIL: bad_native depends on non-standard axioms [bad_native._native.native_decide.ax_1_1] (all: [bad_native._native.native_decide.ax_1_1])
+PASS selftest 'type only defeq to the statement' rejected as expected: AUDIT FAIL: type of bad_type is
+  ∀ (n : Nat), n + 0 = n
+expected exactly the constant MyStmt
+PASS selftest 'statement drift' rejected as expected: AUDIT FAIL: MyStmt differs syntactically from MyStmtDrift (defeq: false)
+  ∀ (n : Nat), n + 0 = n
+vs
+  ∀ (n : Nat), 0 + n = n
+PASS selftest 'wrong module' rejected as expected: AUDIT FAIL: Nat.add_comm is defined in some (Init.Data.Nat.Basic), expected Mathlib.Foo
+PASS selftest 'statement uses a non-library constant' rejected as expected: AUDIT FAIL: UsesLocal uses MyStmt, which is not from an imported module
+/home/ec2-user/workplace/verify-RH-Lean/scripts/audit/SelfTest.lean:55:0: error: SELFTEST FAIL: expected HidesLocal._proof_1; test is not meaningful
+PASS selftest 'local lemma hidden in an auxiliary proof' rejected as expected: AUDIT FAIL: HidesLocal uses PStmt._proof_1, which is not from an imported module
+PASS selftest 'drift in a statement with nested proofs' rejected as expected: AUDIT FAIL: PStmt differs syntactically from PStmtDrift (defeq: false)
+  ⟨0, ⋯⟩ = ⟨0, ⋯⟩
+vs
+  ⟨0, ⋯⟩ = ⟨0, ⋯⟩
+PASS selftest 'missing constant' rejected as expected: AUDIT FAIL: constant does.not.exist not found
+SELFTEST COMPLETE
+  FAIL  self-test failed
+
+1 check(s) FAILED, 0 warning(s). Do not continue.
+=== 2026-11-21T04:50:31Z  06-audit.sh 06-audit.log  (host <host>, WORKDIR=/home/ec2-user/rh)
+[04:50:31] compile AuditLib
+  PASS  AuditLib compiled
+[04:50:32] self-test of the audit checks
+PASS axioms  good_noAxioms: []
+PASS axioms  good_classical: [propext, Classical.choice, Quot.sound]
+PASS type    good_typed : MyStmt
+PASS defn    MyStmt is syntactically identical to the reviewed text MyStmtCopy
+PASS module  Nat.add_comm is defined in Init.Data.Nat.Basic
+PASS deps    MyStmt uses only constants from [Init] (7 constants)
+PASS defn    PStmt is syntactically identical to the reviewed text PStmtCopy (after inlining 1 auxiliary proof(s))
+PASS deps    PStmt uses only constants from [Init] (15 constants)
+PASS selftest 'sorry' rejected as expected: AUDIT FAIL: bad_sorry depends on non-standard axioms [sorryAx] (all: [sorryAx])
+PASS selftest 'custom axiom' rejected as expected: AUDIT FAIL: bad_axiom depends on non-standard axioms [myAxiom] (all: [myAxiom])
+PASS selftest 'native_decide' rejected as expected: AUDIT FAIL: bad_native depends on non-standard axioms [bad_native._native.native_decide.ax_1_1] (all: [bad_native._native.native_decide.ax_1_1])
+PASS selftest 'type only defeq to the statement' rejected as expected: AUDIT FAIL: type of bad_type is
+  ∀ (n : Nat), n + 0 = n
+expected exactly the constant MyStmt
+PASS selftest 'statement drift' rejected as expected: AUDIT FAIL: MyStmt differs syntactically from MyStmtDrift (defeq: false)
+  ∀ (n : Nat), n + 0 = n
+vs
+  ∀ (n : Nat), 0 + n = n
+PASS selftest 'wrong module' rejected as expected: AUDIT FAIL: Nat.add_comm is defined in some (Init.Data.Nat.Basic), expected Mathlib.Foo
+PASS selftest 'statement uses a non-library constant' rejected as expected: AUDIT FAIL: UsesLocal uses MyStmt, which is not from an imported module
+PASS deps    HidesLocal uses only constants from [Init] (15 constants)
+/home/ec2-user/workplace/verify-RH-Lean/scripts/audit/SelfTest.lean:64:0: error: SELFTEST FAIL: 'local lemma hidden in an auxiliary proof' was accepted but must be rejected
+PASS selftest 'drift in a statement with nested proofs' rejected as expected: AUDIT FAIL: PStmt differs syntactically from PStmtDrift (defeq: false)
+  ⟨0, ⋯⟩ = ⟨0, ⋯⟩
+vs
+  ⟨0, ⋯⟩ = ⟨0, ⋯⟩
+PASS selftest 'missing constant' rejected as expected: AUDIT FAIL: constant does.not.exist not found
+SELFTEST COMPLETE
+  FAIL  self-test failed
+
+1 check(s) FAILED, 0 warning(s). Do not continue.
+=== 2026-11-21T04:50:55Z  06-audit.sh 06-audit.log  (host <host>, WORKDIR=/home/ec2-user/rh)
+[04:50:55] compile AuditLib
+  PASS  AuditLib compiled
+[04:50:56] self-test of the audit checks
+  PASS axioms  good_noAxioms: []
+  PASS axioms  good_classical: [propext, Classical.choice, Quot.sound]
+  PASS type    good_typed : MyStmt
+  PASS defn    MyStmt is syntactically identical to the reviewed text MyStmtCopy
+  PASS module  Nat.add_comm is defined in Init.Data.Nat.Basic
+  PASS deps    MyStmt uses only constants from [Init] (7 constants)
+  PASS defn    PStmt is syntactically identical to the reviewed text PStmtCopy (after inlining 1 auxiliary proof(s))
+  PASS deps    PStmt uses only constants from [Init] (15 constants)
+  PASS selftest 'sorry' rejected as expected: AUDIT FAIL: bad_sorry depends on non-standard axioms [sorryAx] (all: [sorryAx])
+  PASS selftest 'custom axiom' rejected as expected: AUDIT FAIL: bad_axiom depends on non-standard axioms [myAxiom] (all: [myAxiom])
+  PASS selftest 'native_decide' rejected as expected: AUDIT FAIL: bad_native depends on non-standard axioms [bad_native._native.native_decide.ax_1_1] (all: [bad_native._native.native_decide.ax_1_1])
+  PASS selftest 'type only defeq to the statement' rejected as expected: AUDIT FAIL: type of bad_type is
+  PASS selftest 'statement drift' rejected as expected: AUDIT FAIL: MyStmt differs syntactically from MyStmtDrift (defeq: false)
+  PASS selftest 'wrong module' rejected as expected: AUDIT FAIL: Nat.add_comm is defined in some (Init.Data.Nat.Basic), expected Mathlib.Foo
+  PASS selftest 'statement uses a non-library constant' rejected as expected: AUDIT FAIL: UsesLocal uses MyStmt, which is not from an imported module
+  PASS selftest 'local lemma hidden in an auxiliary proof' rejected as expected: AUDIT FAIL: HidesLocal uses localLt, which is not from an imported module
+  PASS selftest 'drift in a statement with nested proofs' rejected as expected: AUDIT FAIL: PStmt differs syntactically from PStmtDrift (defeq: false)
+  PASS selftest 'missing constant' rejected as expected: AUDIT FAIL: constant does.not.exist not found
+  PASS  self-test: good declarations accepted, every cheat rejected
+
+All checks passed (0 warning(s)).
+=== 2026-11-21T04:52:13Z  06-audit.sh 06-audit.log  (host <host>, WORKDIR=/home/ec2-user/rh)
+[04:52:13] compile AuditLib
+  PASS  AuditLib compiled
+[04:52:13] self-test of the audit checks
+  PASS axioms  good_noAxioms: []
+  PASS axioms  good_classical: [propext, Classical.choice, Quot.sound]
+  PASS type    good_typed : MyStmt
+  PASS defn    MyStmt is syntactically identical to the reviewed text MyStmtCopy
+  PASS module  Nat.add_comm is defined in Init.Data.Nat.Basic
+  PASS deps    MyStmt uses only constants from [Init] (7 constants)
+  PASS defn    PStmt is syntactically identical to the reviewed text PStmtCopy (after inlining 1 auxiliary proof(s))
+  PASS deps    PStmt uses only constants from [Init] (15 constants)
+  PASS selftest 'sorry' rejected as expected: AUDIT FAIL: bad_sorry depends on non-standard axioms [sorryAx] (all: [sorryAx])
+  PASS selftest 'custom axiom' rejected as expected: AUDIT FAIL: bad_axiom depends on non-standard axioms [myAxiom] (all: [myAxiom])
+  PASS selftest 'native_decide' rejected as expected: AUDIT FAIL: bad_native depends on non-standard axioms [bad_native._native.native_decide.ax_1_1] (all: [bad_native._native.native_decide.ax_1_1])
+  PASS selftest 'type only defeq to the statement' rejected as expected: AUDIT FAIL: type of bad_type is
+  PASS selftest 'statement drift' rejected as expected: AUDIT FAIL: MyStmt differs syntactically from MyStmtDrift (defeq: false)
+  PASS selftest 'wrong module' rejected as expected: AUDIT FAIL: Nat.add_comm is defined in some (Init.Data.Nat.Basic), expected Mathlib.Foo
+  PASS selftest 'statement uses a non-library constant' rejected as expected: AUDIT FAIL: UsesLocal uses MyStmt, which is not from an imported module
+  PASS selftest 'local lemma hidden in an auxiliary proof' rejected as expected: AUDIT FAIL: HidesLocal uses localLt, which is not from an imported module
+  PASS selftest 'drift in a statement with nested proofs' rejected as expected: AUDIT FAIL: PStmt differs syntactically from PStmtDrift (defeq: false)
+  PASS selftest 'missing constant' rejected as expected: AUDIT FAIL: constant does.not.exist not found
+  PASS  self-test: good declarations accepted, every cheat rejected
+[04:52:14] compile Reviewed.lean (the reviewed statement text) against Mathlib
+  PASS  Reviewed compiled
+[04:52:17] check Statements.lean against the reviewed text (before any build)
+  PASS  Statements.lean imports only Mathlib
+  PASS module  RiemannHypothesis is defined in Mathlib.NumberTheory.LSeries.RiemannZeta
+  PASS defn    RiemannHypothesis is syntactically identical to the reviewed text Reviewed.RiemannHypothesis (after inlining 1 auxiliary proof(s))
+  PASS deps    RiemannHypothesis uses only constants from [Init, Mathlib] (36 constants)
+  PASS defn    RiemannZetaZerosOnLine is syntactically identical to the reviewed text Reviewed.RiemannZetaZerosOnLine (after inlining 1 auxiliary proof(s))
+  PASS deps    RiemannZetaZerosOnLine uses only constants from [Init, Mathlib] (36 constants)
+  PASS defn    DirichletLNonvanishingRightOfHalf is syntactically identical to the reviewed text Reviewed.DirichletLNonvanishingRightOfHalf (after inlining 1 auxiliary proof(s))
+  PASS deps    DirichletLNonvanishingRightOfHalf uses only constants from [Init, Mathlib] (40 constants)
+  PASS defn    DirichletLZerosOnLine is syntactically identical to the reviewed text Reviewed.DirichletLZerosOnLine (after inlining 1 auxiliary proof(s))
+  PASS deps    DirichletLZerosOnLine uses only constants from [Init, Mathlib] (35 constants)
+  PASS defn    PrimitiveDirichletLZerosOnLine is syntactically identical to the reviewed text Reviewed.PrimitiveDirichletLZerosOnLine (after inlining 1 auxiliary proof(s))
+  PASS deps    PrimitiveDirichletLZerosOnLine uses only constants from [Init, Mathlib] (36 constants)
+  PASS  every statement matches the reviewed text and uses only Mathlib/core constants
+
+All checks passed (0 warning(s)).
+=== 2026-11-21T17:24:48Z  06-audit.sh 06-audit.log  (host <host>, WORKDIR=/home/ec2-user/rh)
+[17:24:48] compile AuditLib
+  PASS  AuditLib compiled
+[17:24:49] self-test of the audit checks
+  PASS axioms  good_noAxioms: []
+  PASS axioms  good_classical: [propext, Classical.choice, Quot.sound]
+  PASS type    good_typed : MyStmt
+  PASS defn    MyStmt is syntactically identical to the reviewed text MyStmtCopy
+  PASS module  Nat.add_comm is defined in Init.Data.Nat.Basic
+  PASS deps    MyStmt uses only constants from [Init] (7 constants)
+  PASS defn    PStmt is syntactically identical to the reviewed text PStmtCopy (after inlining 1 auxiliary proof(s))
+  PASS deps    PStmt uses only constants from [Init] (15 constants)
+  PASS selftest 'sorry' rejected as expected: AUDIT FAIL: bad_sorry depends on non-standard axioms [sorryAx] (all: [sorryAx])
+  PASS selftest 'custom axiom' rejected as expected: AUDIT FAIL: bad_axiom depends on non-standard axioms [myAxiom] (all: [myAxiom])
+  PASS selftest 'native_decide' rejected as expected: AUDIT FAIL: bad_native depends on non-standard axioms [bad_native._native.native_decide.ax_1_1] (all: [bad_native._native.native_decide.ax_1_1])
+  PASS selftest 'type only defeq to the statement' rejected as expected: AUDIT FAIL: type of bad_type is
+  PASS selftest 'statement drift' rejected as expected: AUDIT FAIL: MyStmt differs syntactically from MyStmtDrift (defeq: false)
+  PASS selftest 'wrong module' rejected as expected: AUDIT FAIL: Nat.add_comm is defined in some (Init.Data.Nat.Basic), expected Mathlib.Foo
+  PASS selftest 'statement uses a non-library constant' rejected as expected: AUDIT FAIL: UsesLocal uses MyStmt, which is not from an imported module
+  PASS selftest 'local lemma hidden in an auxiliary proof' rejected as expected: AUDIT FAIL: HidesLocal uses localLt, which is not from an imported module
+  PASS selftest 'drift in a statement with nested proofs' rejected as expected: AUDIT FAIL: PStmt differs syntactically from PStmtDrift (defeq: false)
+  PASS selftest 'missing constant' rejected as expected: AUDIT FAIL: constant does.not.exist not found
+  PASS  self-test: good declarations accepted, every cheat rejected
+[17:24:51] compile Reviewed.lean (the reviewed statement text) against Mathlib
+  PASS  Reviewed compiled
+[17:24:54] check Statements.lean against the reviewed text (before any build)
+  PASS  Statements.lean imports only Mathlib
+  PASS module  RiemannHypothesis is defined in Mathlib.NumberTheory.LSeries.RiemannZeta
+  PASS defn    RiemannHypothesis is syntactically identical to the reviewed text Reviewed.RiemannHypothesis (after inlining 1 auxiliary proof(s))
+  PASS deps    RiemannHypothesis uses only constants from [Init, Mathlib] (36 constants)
+  PASS defn    RiemannZetaZerosOnLine is syntactically identical to the reviewed text Reviewed.RiemannZetaZerosOnLine (after inlining 1 auxiliary proof(s))
+  PASS deps    RiemannZetaZerosOnLine uses only constants from [Init, Mathlib] (36 constants)
+  PASS defn    DirichletLNonvanishingRightOfHalf is syntactically identical to the reviewed text Reviewed.DirichletLNonvanishingRightOfHalf (after inlining 1 auxiliary proof(s))
+  PASS deps    DirichletLNonvanishingRightOfHalf uses only constants from [Init, Mathlib] (40 constants)
+  PASS defn    DirichletLZerosOnLine is syntactically identical to the reviewed text Reviewed.DirichletLZerosOnLine (after inlining 1 auxiliary proof(s))
+  PASS deps    DirichletLZerosOnLine uses only constants from [Init, Mathlib] (35 constants)
+  PASS defn    PrimitiveDirichletLZerosOnLine is syntactically identical to the reviewed text Reviewed.PrimitiveDirichletLZerosOnLine (after inlining 1 auxiliary proof(s))
+  PASS deps    PrimitiveDirichletLZerosOnLine uses only constants from [Init, Mathlib] (36 constants)
+  PASS  every statement matches the reviewed text and uses only Mathlib/core constants
+[17:24:58] audit the final theorems (imports the whole project; may take a while)
+def RiemannHypothesis : Prop :=
+∀ (s : ℂ), riemannZeta s = 0 → (¬∃ n, s = -2 * (↑n + 1)) → s ≠ 1 → s.re = 1 / 2
+def RiemannZetaZerosOnLine : Prop :=
+∀ (s : ℂ), riemannZeta s = 0 → (¬∃ n, s = -2 * (↑n + 1)) → s ≠ 1 → s.re = 1 / 2
+def DirichletLNonvanishingRightOfHalf : Prop :=
+∀ (N : ℕ) [inst : NeZero N] (χ : DirichletCharacter ℂ N) (s : ℂ),
+  1 / 2 < s.re → χ ≠ 1 ∨ s ≠ 1 → DirichletCharacter.LFunction χ s ≠ 0
+def DirichletLZerosOnLine : Prop :=
+∀ (N : ℕ) [inst : NeZero N] (χ : DirichletCharacter ℂ N) (s : ℂ),
+  0 < s.re → s.re < 1 → DirichletCharacter.LFunction χ s = 0 → s.re = 1 / 2
+def PrimitiveDirichletLZerosOnLine : Prop :=
+∀ (N : ℕ) [inst : NeZero N] (χ : DirichletCharacter ℂ N),
+  χ.IsPrimitive → ∀ (s : ℂ), 0 < s.re → s.re < 1 → DirichletCharacter.LFunction χ s = 0 → s.re = 1 / 2
+riemannHypothesis : RiemannHypothesis
+riemannZeta_eq_zero_re : RiemannZetaZerosOnLine
+LFunction_ne_zero_of_half_lt_re : DirichletLNonvanishingRightOfHalf
+LFunction_eq_zero_re : DirichletLZerosOnLine
+LFunction_eq_zero_re_of_isPrimitive : PrimitiveDirichletLZerosOnLine
+PASS module  RiemannHypothesis is defined in Mathlib.NumberTheory.LSeries.RiemannZeta
+PASS defn    RiemannHypothesis is syntactically identical to the reviewed text Reviewed.RiemannHypothesis (after inlining 1 auxiliary proof(s))
+PASS deps    RiemannHypothesis uses only constants from [Init, Mathlib] (36 constants)
+PASS module  RiemannZetaZerosOnLine is defined in Statements
+PASS defn    RiemannZetaZerosOnLine is syntactically identical to the reviewed text Reviewed.RiemannZetaZerosOnLine (after inlining 1 auxiliary proof(s))
+PASS deps    RiemannZetaZerosOnLine uses only constants from [Init, Mathlib] (36 constants)
+PASS module  DirichletLNonvanishingRightOfHalf is defined in Statements
+PASS defn    DirichletLNonvanishingRightOfHalf is syntactically identical to the reviewed text Reviewed.DirichletLNonvanishingRightOfHalf (after inlining 1 auxiliary proof(s))
+PASS deps    DirichletLNonvanishingRightOfHalf uses only constants from [Init, Mathlib] (40 constants)
+PASS module  DirichletLZerosOnLine is defined in Statements
+PASS defn    DirichletLZerosOnLine is syntactically identical to the reviewed text Reviewed.DirichletLZerosOnLine (after inlining 1 auxiliary proof(s))
+PASS deps    DirichletLZerosOnLine uses only constants from [Init, Mathlib] (35 constants)
+PASS module  PrimitiveDirichletLZerosOnLine is defined in Statements
+PASS defn    PrimitiveDirichletLZerosOnLine is syntactically identical to the reviewed text Reviewed.PrimitiveDirichletLZerosOnLine (after inlining 1 auxiliary proof(s))
+PASS deps    PrimitiveDirichletLZerosOnLine uses only constants from [Init, Mathlib] (36 constants)
+PASS module  riemannHypothesis is defined in Main
+PASS type    riemannHypothesis : RiemannHypothesis
+PASS axioms  riemannHypothesis: [propext, Classical.choice, Quot.sound]
+PASS module  riemannZeta_eq_zero_re is defined in Main
+PASS type    riemannZeta_eq_zero_re : RiemannZetaZerosOnLine
+PASS axioms  riemannZeta_eq_zero_re: [propext, Classical.choice, Quot.sound]
+PASS module  LFunction_ne_zero_of_half_lt_re is defined in Main
+PASS type    LFunction_ne_zero_of_half_lt_re : DirichletLNonvanishingRightOfHalf
+PASS axioms  LFunction_ne_zero_of_half_lt_re: [propext, Classical.choice, Quot.sound]
+PASS module  LFunction_eq_zero_re is defined in Main
+PASS type    LFunction_eq_zero_re : DirichletLZerosOnLine
+PASS axioms  LFunction_eq_zero_re: [propext, Classical.choice, Quot.sound]
+PASS module  LFunction_eq_zero_re_of_isPrimitive is defined in Main
+PASS type    LFunction_eq_zero_re_of_isPrimitive : PrimitiveDirichletLZerosOnLine
+PASS axioms  LFunction_eq_zero_re_of_isPrimitive: [propext, Classical.choice, Quot.sound]
+'riemannHypothesis' depends on axioms: [propext, Classical.choice, Quot.sound]
+'riemannZeta_eq_zero_re' depends on axioms: [propext, Classical.choice, Quot.sound]
+'LFunction_ne_zero_of_half_lt_re' depends on axioms: [propext, Classical.choice, Quot.sound]
+'LFunction_eq_zero_re' depends on axioms: [propext, Classical.choice, Quot.sound]
+'LFunction_eq_zero_re_of_isPrimitive' depends on axioms: [propext, Classical.choice, Quot.sound]
+AUDIT COMPLETE: all checks passed
+wall 48.90s, max RSS 34887000 KB
+  PASS  all audit checks passed
+
+All checks passed (0 warning(s)).

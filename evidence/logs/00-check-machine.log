@@ -1,0 +1,126 @@
+=== 2026-11-21T04:27:47Z  00-check-machine.sh 00-check-machine.log  (host <host>, WORKDIR=/home/ec2-user/rh)
+[04:27:47] platform
+  Linux 6.18.62-127.179.amzn2023.aarch64 aarch64; Amazon Linux 2023.12.20261120
+  PASS  architecture aarch64 is supported (asset lean-4.33.1-linux_aarch64.tar.zst)
+[04:27:47] required tools
+  PASS  bash
+  PASS  curl
+  PASS  tar
+  PASS  gzip
+  PASS  zstd
+  PASS  sha256sum
+  PASS  python3
+  PASS  git
+  PASS  awk
+  PASS  find
+  PASS  xargs
+  PASS  sort
+  PASS  df
+  PASS  free
+  PASS  nproc
+  PASS  python3 >= 3.8 (Python 3.9.25)
+  PASS  GNU time (/usr/bin/time)
+[04:27:47] CPU
+  32 logical CPUs; JOBS=28
+  PASS  32 CPUs
+[04:27:47] memory
+  RAM 61 GiB, swap 0 GiB
+  FAIL  RAM + swap < 96 GiB. Add swap, e.g.:
+        sudo fallocate -l 64G /swapfile && sudo chmod 600 /swapfile && sudo mkswap /swapfile && sudo swapon /swapfile
+[04:27:47] disk at /home/ec2-user/rh
+  /dev/nvme0n1p1 2.0T total, 1.9T free; already used by WORKDIR: 5 GB
+  PASS  1993 GB available >= 1900 GB recommended
+  PASS  free inodes: 1048207015
+  PASS  WORKDIR is outside the repository
+[04:27:48] limits
+  PASS  open files limit 65535
+[04:27:48] network
+  PASS  reachable: https://alpo.ge/remark.pdf
+  PASS  reachable: https://github.com/leanprover/lean4/releases/download/v4.33.1/lean-4.33.1-linux_aarch64.tar.zst
+  PASS  reachable: https://github.com/leanprover-community/mathlib4
+
+1 check(s) FAILED, 0 warning(s). Do not continue.
+=== 2026-11-21T04:28:05Z  00-check-machine.sh 00-check-machine.log  (host <host>, WORKDIR=/home/ec2-user/rh)
+[04:28:05] platform
+  Linux 6.18.62-127.179.amzn2023.aarch64 aarch64; Amazon Linux 2023.12.20261120
+  PASS  architecture aarch64 is supported (asset lean-4.33.1-linux_aarch64.tar.zst)
+[04:28:05] required tools
+  PASS  bash
+  PASS  curl
+  PASS  tar
+  PASS  gzip
+  PASS  zstd
+  PASS  sha256sum
+  PASS  python3
+  PASS  git
+  PASS  awk
+  PASS  find
+  PASS  xargs
+  PASS  sort
+  PASS  df
+  PASS  free
+  PASS  nproc
+  PASS  python3 >= 3.8 (Python 3.9.25)
+  PASS  GNU time (/usr/bin/time)
+[04:28:05] CPU
+  32 logical CPUs; JOBS=28
+  PASS  32 CPUs
+[04:28:05] memory
+  RAM 61 GiB, swap 63 GiB
+  PASS  RAM + swap >= 96 GiB
+[04:28:05] disk at /home/ec2-user/rh
+  /dev/nvme0n1p1 2.0T total, 1.9T free; already used by WORKDIR: 5 GB
+  PASS  1993 GB available >= 1900 GB recommended
+  PASS  free inodes: 1048207015
+  PASS  WORKDIR is outside the repository
+[04:28:06] limits
+  PASS  open files limit 65535
+[04:28:06] network
+  PASS  reachable: https://alpo.ge/remark.pdf
+  PASS  reachable: https://github.com/leanprover/lean4/releases/download/v4.33.1/lean-4.33.1-linux_aarch64.tar.zst
+  PASS  reachable: https://github.com/leanprover-community/mathlib4
+
+All checks passed (0 warning(s)).
+=== 2026-11-21T07:04:28Z  00-check-machine.sh 00-check-machine.log  (host <host>, WORKDIR=/home/ec2-user/rh)
+[07:04:28] platform
+  Linux 6.18.62-127.179.amzn2023.aarch64 aarch64; Amazon Linux 2023.12.20261120
+  PASS  architecture aarch64 is supported (asset lean-4.33.1-linux_aarch64.tar.zst)
+[07:04:28] required tools
+  PASS  bash
+  PASS  curl
+  PASS  tar
+  PASS  gzip
+  PASS  zstd
+  PASS  sha256sum
+  PASS  python3
+  PASS  git
+  PASS  awk
+  PASS  find
+  PASS  xargs
+  PASS  sort
+  PASS  df
+  PASS  free
+  PASS  nproc
+  PASS  python3 >= 3.8 (Python 3.9.25)
+  PASS  GNU time (/usr/bin/time)
+  PASS  tmux (for the long steps 5 and 7)
+[07:04:28] CPU
+  32 logical CPUs; JOBS=28
+  PASS  32 CPUs
+[07:04:28] memory
+  RAM 61 GiB, swap 63 GiB
+  PASS  RAM + swap >= 96 GiB
+[07:04:28] disk at /home/ec2-user/rh
+  /dev/nvme0n1p1 2.0T total, 1.7T free; already used by WORKDIR: 198 GB
+  PASS  1992 GB available >= 1900 GB recommended
+  PASS  free inodes: 1047828097
+  PASS  WORKDIR is outside the repository
+[07:04:29] limits
+  PASS  open files limit 65535
+  PASS  vm.max_map_count 1048576
+[07:04:29] network
+  PASS  reachable: https://alpo.ge/remark.pdf
+  PASS  reachable: https://github.com/leanprover/lean4/releases/download/v4.33.1/lean-4.33.1-linux_aarch64.tar.zst
+  PASS  reachable: https://github.com/leanprover-community/mathlib4
+
+All checks passed (0 warning(s)).

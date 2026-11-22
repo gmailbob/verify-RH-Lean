@@ -1,0 +1,262 @@
+==================================================================== root: riemannHypothesis
+nodes: 1905921 (user-written 1079944)   edges: 20986047
+cone of riemannHypothesis: 1265256 nodes (66.4% of all), user-written 791182 (73.3%)
+not needed by the root: 640665 nodes, user-written 288762
+dominator computation: 3 rounds to fixed point
+
+query                                                                              cone    cone%    exclusive    excl%  immediate dominator
+riemannHypothesis                                                               1265256  100.00%      1265256  100.00%  -
+rhOfAll                                                                         1265255  100.00%      1265255  100.00%  riemannHypothesis
+allChi                                                                          1265250  100.00%      1265248  100.00%  rhOfAll
+claimAll                                                                   not reachable from the root
+critAll                                                                    not reachable from the root
+UpperTheory.FinalTheorems.everyCharacter                                        1265249  100.00%      1265247  100.00%  allChi
+UpperTheory.FinalTheorems.everyCharacter_of_row                                 1174939   92.86%       961960   76.03%  UpperTheory.FinalTheorems.everyCharacter
+UpperTheory.Gal.Int.galoisLocalGlobalStrong_recParameter                         303286   23.97%        90309    7.14%  UpperTheory.FinalTheorems.everyCharacter
+UpperTheory.Gal.Int.galoisRepresentations_of_thetaLift                           266240   21.04%        86158    6.81%  UpperTheory.Gal.Int.galoisLocalGlobalStrong_recParameter
+UpperTheory.LiteratureTheorems.every_character_of_literature_of_vWin            1058739   83.68%       840854   66.46%  UpperTheory.FinalTheorems.everyCharacter_of_row
+UpperTheory.Lit.every_character_of_theta_integrals_local_matching                772332   61.04%       540408   42.71%  UpperTheory.LiteratureTheorems.every_character_of_literature_of_vWin
+UpperTheory.One.vwin_of_row                                                      276809   21.88%        90527    7.15%  UpperTheory.FinalTheorems.everyCharacter_of_row
+UpperTheory.One.Join.automorphic_window_of_inputs                                276584   21.86%        90523    7.15%  UpperTheory.One.vwin_of_row
+UpperTheory.Zero.LLC.recTExists                                                   20912    1.65%          583    0.05%  UpperTheory.FinalTheorems.everyCharacter
+Formalism.VW.rh_of_every                                                              6    0.00%            4    0.00%  rhOfAll
+Formalism.VW.rh_of_right                                                              3    0.00%            3    0.00%  Formalism.VW.rh_of_every
+Formalism.VW.critLine                                                      not reachable from the root
+Claim.strip                                                                not reachable from the root
+Claim.zeta                                                                 not reachable from the root
+
+dominator tree (exclusive share = needed only through that declaration):
+thm riemannHypothesis  [Main]  exclusive 1265256 (100.00%), user-written 791182  {Development 67%, Formalism 22%, GroundTheory 6%}
+  thm rhOfAll  [Supplements.Kernels.MainTheorems]  exclusive 1265255 (100.00%), user-written 791181  {Development 67%, Formalism 22%, GroundTheory 6%}
+    thm allChi  [Supplements.Kernels.MainTheorems]  exclusive 1265248 (100.00%), user-written 791177  {Development 67%, Formalism 22%, GroundTheory 6%}
+      thm UpperTheory.FinalTheorems.everyCharacter  [Development.AutomorphicArithmetic.CharacterBoxes.MainConclusion]  exclusive 1265247 (100.00%), user-written 791176  {Development 67%, Formalism 22%, GroundTheory 6%}
+        thm UpperTheory.FinalTheorems.everyCharacter_of_row  [Development.AutomorphicArithmetic.CharacterBoxes.MainConclusion]  exclusive 961960 (76.03%), user-written 602917  {Development 61%, Formalism 28%, GroundTheory 5%}
+          thm UpperTheory.LiteratureTheorems.every_character_of_literature_of_vWin  [Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.ThirdPlaceSeries.EveryCharacterOfLiteratureOfVWin]  exclusive 840854 (66.46%), user-written 546369  {Development 58%, Formalism 32%, ReciprocityTheory 5%}
+            thm UpperTheory.Lit.every_character_of_theta_integrals_local_matching  [Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.ThirdPlaceSeries.SiegelEisensteinSecondTermHypotheses]  exclusive 540408 (42.71%), user-written 339215  {Development 51%, Formalism 45%, ReciprocityTheory 3%}
+              thm UpperTheory.Lit.nonempty_hyps_definite_side_of_closed_bound  [Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.ThirdPlaceSeries.SiegelEisensteinSecondTermHypotheses]  exclusive 449095 (35.49%), user-written 282178  {Development 58%, Formalism 38%, ReciprocityTheory 3%}
+                thm GlobalTheory.Fc.S0.StageU.hypotheses_nonempty_of_unramified_exponents_alt  [Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.ThirdPlaceSeries.HypothesesNonemptyOfUnramifiedExponents]  exclusive 152670 (12.07%), user-written 96639  {Development 58%, Formalism 41%, ReciprocityTheory 1%}
+                  thm GlobalTheory.Fc.AllAtMemberStage0.allRows_of_open0_alt  [Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.ThirdPlaceSeries.LinkROfIsLinked]  exclusive 54017 (4.27%), user-written 35902  {Formalism 69%, Development 29%, ReciprocityTheory 2%}
+                    thm GlobalTheory.LocalRows.lg1_sLp_sO_hTF  [Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.ThirdPlaceSeries.AtChoice]  exclusive 23066 (1.82%), user-written 15286  {Formalism 98%, Development 2%, Lemmata 0%}
+                    thm GlobalTheory.T.hServ_of_linkR  [Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.ThirdPlaceSeries.RowHServOfLinkStatement]  exclusive 16313 (1.29%), user-written 11102  {Formalism 57%, Development 37%, ReciprocityTheory 6%}
+                    + 1116 smaller children, 14637 nodes in total (1.16%)
+                  thm GlobalTheory.T.large_unramified_exponent_bundles_exist_alt  [Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.ThirdPlaceSeries.MemberBundlesLargeUnramifiedExponents]  exclusive 37056 (2.93%), user-written 22255  {Development 81%, Formalism 19%, Lemmata 0%}
+                    thm GlobalTheory.Fc.StageOneU.member_bundles_large_unramified_exponents_alt  [Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.ThirdPlaceSeries.MemberBundlesLargeUnramifiedExponents]  exclusive 37055 (2.93%), user-written 22254  {Development 81%, Formalism 19%, Lemmata 0%}
+                  thm UpperTheory.GalC.final_alt_alt  [Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.ThirdPlaceSeries.CFinal]  exclusive 28188 (2.23%), user-written 17014  {Development 50%, Formalism 50%, ReciprocityTheory 0%}
+                    thm UpperTheory.GalC.final_of_alt  [Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.ThirdPlaceSeries.LinkNFam]  exclusive 26608 (2.10%), user-written 16189  {Formalism 52%, Development 48%, ReciprocityTheory 0%}
+                    + 160 smaller children, 1579 nodes in total (0.12%)
+                  thm GlobalTheory.T.liftInj_and_nonVan_typeNZ_of_given  [Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.LocalTypeDictionary.LiftInjNonVanTypeNZOfPrints]  exclusive 6432 (0.51%), user-written 4439  {Development 99%, Formalism 1%}
+                    thm GlobalTheory.Core.Rk.LiftOnto.liftInj_nonVan_typeNZ_of_hypotheses_alt  [Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.LocalTypeDictionary.LiftInjNonVanTypeNZOfPrints]  exclusive 6431 (0.51%), user-written 4438  {Development 99%, Formalism 1%}
+                  + 5586 smaller children, 26976 nodes in total (2.13%)
+                thm GlobalTheory.Fc.S0.ontoX_and_lamLow_of_unitaryGroupHypotheses'  [Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.ThirdPlaceSeries.SurjectiveAndLowWeightOfUnramifiedExponents]  exclusive 34786 (2.75%), user-written 22470  {Development 50%, Formalism 38%, ReciprocityTheory 12%}
+                  thm GlobalTheory.BigOn.ontoX_of_hypotheses_alt_alt  [Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.ThirdPlaceSeries.OntoXOfPrints]  exclusive 34185 (2.70%), user-written 22122  {Development 49%, Formalism 39%, ReciprocityTheory 12%}
+                    thm GlobalTheory.FinalJoin.runHolds_of_parOK  [Development.AbelianVarietyTheory.Proofs.HeightProofs.ExistsThresholdRunHolds]  exclusive 10096 (0.80%), user-written 6900  {ReciprocityTheory 36%, Development 36%, Formalism 28%}
+                    thm GlobalTheory.BigOn.geoSt_of_pageSt_alt  [Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.ThirdPlaceSeries.GeoStOfPageSt]  exclusive 7993 (0.63%), user-written 5576  {Development 53%, Formalism 47%, Lemmata 0%}
+                    thm GlobalTheory.T.expSt_of_base_change_and_crystalline_lattices  [Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.ThirdPlaceSeries.ExponentBoundOfUnitaryThetaStandardTheorems]  exclusive 7137 (0.56%), user-written 4031  {Formalism 60%, Development 40%, ReciprocityTheory 0%}
+                    + 2001 smaller children, 8958 nodes in total (0.71%)
+                  + 39 smaller children, 600 nodes in total (0.05%)
+                thm GlobalTheory.T.open0_of_unitary_group_hypotheses  [Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.ThirdPlaceSeries.OpenOrbitOfUnramifiedExponents]  exclusive 22887 (1.81%), user-written 13994  {Development 96%, Formalism 4%}
+                  thm GlobalTheory.Fc.S0.Open0ProofU.open_orbit_of_unramified_exponents_alt  [Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.ThirdPlaceSeries.OpenOrbitOfUnramifiedExponents]  exclusive 22886 (1.81%), user-written 13993  {Development 96%, Formalism 4%}
+                    thm GlobalTheory.T.main_theorem_published_inputs_third_alt_alt  [Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.ThirdPlaceSeries.MainTheoremPublishedInputsThird]  exclusive 20262 (1.60%), user-written 12239  {Development 97%, Formalism 3%}
+                    + 39 smaller children, 2623 nodes in total (0.21%)
+                thm GlobalTheory.RowClaim.Join.thetaLift_row_properties_conj  [Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.LocalTypeDictionary.ThetaLiftRowPropertiesConj]  exclusive 9374 (0.74%), user-written 5140  {Development 98%, Formalism 2%}
+                  + 181 smaller children, 9373 nodes in total (0.74%)
+                thm UpperTheory.Lit.functionalsSeparate_of_howeUnram_of_siegelWeil  [Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.LocalTypeDictionary.FunctionalsSeparateOfHoweUnramOfSiegelWeil]  exclusive 7180 (0.57%), user-written 4749  {Development 99%, Formalism 1%, ReciprocityTheory 0%}
+                  + 45 smaller children, 7179 nodes in total (0.57%)
+                thm GlobalTheory.BigTop.Fun.Close.fourier_coefficient_fit_of_join_alt  [Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.ThirdPlaceSeries.FourierCoefficientFitOfJoin]  exclusive 6719 (0.53%), user-written 4145  {Development 95%, Formalism 5%, Lemmata 0%}
+                  thm GlobalTheory.BigTop.Fun.Close.fittedFunction_at_zero_close_alt  [Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.ThirdPlaceSeries.FittedFunctionAtZeroClose]  exclusive 6718 (0.53%), user-written 4144  {Development 95%, Formalism 5%, Lemmata 0%}
+                    + 312 smaller children, 6717 nodes in total (0.53%)
+                + 48109 smaller children, 215478 nodes in total (17.03%)
+              thm UpperTheory.Top.every_character_of_green_v_win  [Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.ThirdPlaceSeries.TopPlug]  exclusive 23454 (1.85%), user-written 14901  {Formalism 93%, Development 6%, CompanionTheory 1%}
+                thm UpperTheory.Top.zero_free_all_of_green_v_win  [Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.ThirdPlaceSeries.TopPlug]  exclusive 23445 (1.85%), user-written 14895  {Formalism 93%, Development 6%, CompanionTheory 1%}
+                  thm UpperTheory.Top.shape_closed_link_n_of_green  [Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.ThirdPlaceSeries.TopShape]  exclusive 19278 (1.52%), user-written 12247  {Formalism 98%, Development 2%, CompanionTheory 1%}
+                    thm Formalism.L2.G.linkG_concrete5  [Formalism.LocalToGlobal.GroupLattices.LinkGConcreteNoKer]  exclusive 10759 (0.85%), user-written 6173  {Formalism 100%, Development 0%, Lemmata 0%}
+                    + 613 smaller children, 8518 nodes in total (0.67%)
+                  + 432 smaller children, 4166 nodes in total (0.33%)
+                + 8 smaller children, 8 nodes in total (0.00%)
+              + 18999 smaller children, 67858 nodes in total (5.36%)
+            thm SelfIntersectionVolumeEstimates.topCovolSlim2_use_alt_alt  [Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.ThirdPlaceSeries.TopCovolSlim2Use]  exclusive 79803 (6.31%), user-written 55802  {Development 81%, GroundTheory 16%, ReciprocityTheory 2%}
+              thm PositivityTheory.HtPt.Ah.deep_slim_use  [Development.WeilBound.CoreStatements.AutomorphicKernels.MoriwakiBigness.HilbertSamuelApplications.AhSlimU]  exclusive 45650 (3.61%), user-written 32506  {Development 75%, GroundTheory 22%, ReciprocityTheory 3%}
+                thm GlobalTheory.CompanionTheory.Ar.Plug.deepStR_of_use  [Development.WeilBound.CoreStatements.AutomorphicKernels.MoriwakiBigness.HilbertSamuelApplications.DeepStROfUse]  exclusive 45051 (3.56%), user-written 32093  {Development 74%, GroundTheory 23%, ReciprocityTheory 3%}
+                  thm GlobalTheory.CompanionTheory.Ar.Link.good_tower_volume_theorem_bis  [Development.WeilBound.CoreStatements.AutomorphicKernels.MoriwakiBigness.HilbertSamuelApplications.GoodTowerVolumeTheoremBis]  exclusive 31599 (2.50%), user-written 22549  {Development 80%, GroundTheory 19%, ReciprocityTheory 1%}
+                    thm GlobalTheory.T.final_theorem_of_inputs_right  [Development.AutomorphicSpectrum.Proofs.GeometryProofs.FinalTheoremOfInputsRightStatement]  exclusive 31595 (2.50%), user-written 22545  {Development 80%, GroundTheory 19%, ReciprocityTheory 1%}
+                    + 2 smaller children, 3 nodes in total (0.00%)
+                  + 2635 smaller children, 13451 nodes in total (1.06%)
+                + 31 smaller children, 598 nodes in total (0.05%)
+              thm SelfIntersectionVolumeEstimates.topCovolG_alt_alt  [Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.ThirdPlaceSeries.TopCovolG]  exclusive 19967 (1.58%), user-written 13285  {Development 96%, ReciprocityTheory 2%, Formalism 1%}
+                + 2255 smaller children, 19966 nodes in total (1.58%)
+              + 3426 smaller children, 14185 nodes in total (1.12%)
+            thm UpperTheory.LiteratureTheorems.theta_integrals_agree_and_local_matching_of_literature  [Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.ThirdPlaceSeries.EveryCharacterOfLiteratureOfVWin]  exclusive 14217 (1.12%), user-written 9792  {Development 91%, Formalism 8%, ReciprocityTheory 0%}
+              thm PositivityTheory.ThKR.theoremK_head2  [Development.WeilBound.ThetaLifts.Reductions.FiniteClosure.TheoremKOfMod]  exclusive 11576 (0.91%), user-written 7812  {Development 90%, Formalism 10%, ReciprocityTheory 1%}
+                thm PositivityTheory.ThKR.theoremK_head2_of_mod  [Development.WeilBound.ThetaLifts.Reductions.FiniteClosure.TheoremKOfMod]  exclusive 11315 (0.89%), user-written 7639  {Development 89%, Formalism 10%, ReciprocityTheory 1%}
+                  thm PositivityTheory.Sph.Tr.closeSph  [Development.WeilBound.ThetaLifts.SphericalLattices.SphericalClosure.CloseSph]  exclusive 8241 (0.65%), user-written 5576  {Development 99%, Formalism 1%, ReciprocityTheory 0%}
+                    + 1912 smaller children, 8240 nodes in total (0.65%)
+                  + 757 smaller children, 3073 nodes in total (0.24%)
+                + 40 smaller children, 260 nodes in total (0.02%)
+              + 27 smaller children, 2640 nodes in total (0.21%)
+            thm GlobalTheory.TorKSField.toroidalForFanKS  [Development.AbelianVarietyTheory.Proofs.DivisorProofs.ToroidalCompactificationFanLogKodairaSpencerIso]  exclusive 7187 (0.57%), user-written 5386  {Development 100%, ReciprocityTheory 0%, Formalism 0%}
+              + 26 smaller children, 7186 nodes in total (0.57%)
+            thm UpperTheory.LiteratureTheorems.published_results_arithmetic  [Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.ThirdPlaceSeries.EveryCharacterOfLiteratureOfVWin]  exclusive 6975 (0.55%), user-written 5374  {Development 96%, ReciprocityTheory 4%, GroundTheory 0%}
+              + 182 smaller children, 6974 nodes in total (0.55%)
+            + 50463 smaller children, 192263 nodes in total (15.20%)
+          thm UpperTheory.One.vwin_of_row  [Development.AutomorphicArithmetic.AutomorphicVarieties.ModularityArgument.ThresholdArguments.DenseThresholdCases.VwinOfRow]  exclusive 90527 (7.15%), user-written 37695  {Development 93%, PositivityTheory 4%, GroundTheory 1%}
+            thm UpperTheory.One.Join.automorphic_window_of_inputs  [Development.AutomorphicArithmetic.AutomorphicVarieties.ModularityArgument.ThresholdArguments.DenseThresholdCases.TopMainZj]  exclusive 90523 (7.15%), user-written 37692  {Development 93%, PositivityTheory 4%, GroundTheory 1%}
+              thm UpperTheory.One.Join.v_window_of_depth_zero_residual_bc_cm  [Development.AutomorphicArithmetic.AutomorphicVarieties.ModularityArgument.ThresholdArguments.DenseThresholdCases.TopMainZj]  exclusive 89542 (7.08%), user-written 37041  {Development 93%, PositivityTheory 4%, GroundTheory 1%}
+                thm UpperTheory.V.v_window_of_literal_automorphy_n  [Development.AutomorphicArithmetic.AutomorphicVarieties.ModularityArgument.ThresholdArguments.DenseThresholdCases.WindowBoundOfLiteratureLevel]  exclusive 89479 (7.07%), user-written 36981  {Development 93%, PositivityTheory 4%, GroundTheory 1%}
+                  thm UpperTheory.V.HV.DescentVanishingReductions.v_window_of_automorphy_csd_ss_mono_odd  [Development.AutomorphicArithmetic.AutomorphicVarieties.ModularityArgument.ThresholdArguments.DenseThresholdCases.WindowBoundOfLiteratureLevel]  exclusive 89478 (7.07%), user-written 36980  {Development 93%, PositivityTheory 4%, GroundTheory 1%}
+                    thm UpperTheory.V.HV.DescentVanishingReductions.vwin_of_hypotheses_H_E_alt  [Development.AutomorphicArithmetic.AutomorphicVarieties.ModularityArgument.ThresholdArguments.DenseThresholdCases.WindowBoundOfLiteratureLevel]  exclusive 79012 (6.24%), user-written 32942  {Development 94%, PositivityTheory 4%, GroundTheory 1%}
+                    + 1185 smaller children, 10465 nodes in total (0.83%)
+                + 9 smaller children, 62 nodes in total (0.00%)
+              + 31 smaller children, 980 nodes in total (0.08%)
+            + 3 smaller children, 3 nodes in total (0.00%)
+          + 7841 smaller children, 30578 nodes in total (2.42%)
+        thm UpperTheory.Gal.Int.galoisLocalGlobalStrong_recParameter  [Development.AutomorphicArithmetic.Foundations.GaloisRepresentations.IntegralStructures.RowSrc]  exclusive 90309 (7.14%), user-written 52554  {Development 99%, GroundTheory 1%, ReciprocityTheory 0%}
+          thm UpperTheory.Gal.Int.galoisRepresentations_of_thetaLift  [Development.AutomorphicArithmetic.Foundations.GaloisRepresentations.IntegralStructures.GaloisRepresentationsOfThetaLift]  exclusive 86158 (6.81%), user-written 49856  {Development 99%, GroundTheory 1%, ReciprocityTheory 0%}
+            thm UpperTheory.Gal.Int.Geo.geoOne_holds  [Development.AutomorphicArithmetic.Foundations.GaloisRepresentations.IntegralStructures.GeometricFlagBases.WeightOneGeometricRealization]  exclusive 77841 (6.15%), user-written 45056  {Development 98%, GroundTheory 1%, ReciprocityTheory 0%}
+              thm UpperTheory.Gal.Int.Geo.geometric_realization_of_weight_one  [Development.AutomorphicArithmetic.Foundations.GaloisRepresentations.IntegralStructures.GeometricFlagBases.GeometricRealizationOfWeightOne]  exclusive 74676 (5.90%), user-written 43923  {Development 98%, GroundTheory 1%, ReciprocityTheory 0%}
+                thm UpperTheory.Gal.Int.Geo.steps_holds  [Development.AutomorphicArithmetic.Foundations.GaloisRepresentations.IntegralStructures.GeometricFlagBases.GeometricRealizationOfWeightOne]  exclusive 50246 (3.97%), user-written 29570  {Development 98%, GroundTheory 2%, Formalism 0%}
+                  + 4733 smaller children, 50245 nodes in total (3.97%)
+                thm UpperTheory.Gal.Int.Geo.kodaira_spencer_of_weight_one  [Development.AutomorphicArithmetic.Foundations.GaloisRepresentations.IntegralStructures.GeometricFlagBases.GeometricRealizationOfWeightOne]  exclusive 18713 (1.48%), user-written 11444  {Development 99%, GroundTheory 0%, ReciprocityTheory 0%}
+                  + 1396 smaller children, 18712 nodes in total (1.48%)
+                + 925 smaller children, 5716 nodes in total (0.45%)
+              + 144 smaller children, 3164 nodes in total (0.25%)
+            thm UpperTheory.Gal.Int.galoisLocalGlobalStrong_of_geometry_lift  [Development.AutomorphicArithmetic.Foundations.GaloisRepresentations.IntegralStructures.Development]  exclusive 8091 (0.64%), user-written 4667  {Development 100%, Formalism 0%, GroundTheory 0%}
+              thm UpperTheory.Gal.Int.galoisLocalGlobal_of_geometry_lift  [Development.AutomorphicArithmetic.Foundations.GaloisRepresentations.IntegralStructures.Development]  exclusive 8065 (0.64%), user-written 4646  {Development 100%, Formalism 0%, GroundTheory 0%}
+                + 211 smaller children, 8064 nodes in total (0.64%)
+              + 11 smaller children, 25 nodes in total (0.00%)
+            + 95 smaller children, 225 nodes in total (0.02%)
+          + 25 smaller children, 4150 nodes in total (0.33%)
+        + 58062 smaller children, 212977 nodes in total (16.83%)
+    + 2 smaller children, 6 nodes in total (0.00%)
+
+==================================================================== root: LFunction_eq_zero_re
+nodes: 1905921 (user-written 1079944)   edges: 20986047
+cone of LFunction_eq_zero_re: 1265264 nodes (66.4% of all), user-written 791190 (73.3%)
+not needed by the root: 640657 nodes, user-written 288754
+dominator computation: 3 rounds to fixed point
+
+query                                                                              cone    cone%    exclusive    excl%  immediate dominator
+riemannHypothesis                                                          not reachable from the root
+rhOfAll                                                                    not reachable from the root
+allChi                                                                          1265250  100.00%      1265250  100.00%  claimAll
+claimAll                                                                        1265261  100.00%      1265257  100.00%  LFunction_eq_zero_re
+critAll                                                                    not reachable from the root
+UpperTheory.FinalTheorems.everyCharacter                                        1265249  100.00%      1265247  100.00%  allChi
+UpperTheory.FinalTheorems.everyCharacter_of_row                                 1174939   92.86%       961960   76.03%  UpperTheory.FinalTheorems.everyCharacter
+UpperTheory.Gal.Int.galoisLocalGlobalStrong_recParameter                         303286   23.97%        90309    7.14%  UpperTheory.FinalTheorems.everyCharacter
+UpperTheory.Gal.Int.galoisRepresentations_of_thetaLift                           266240   21.04%        86158    6.81%  UpperTheory.Gal.Int.galoisLocalGlobalStrong_recParameter
+UpperTheory.LiteratureTheorems.every_character_of_literature_of_vWin            1058739   83.68%       840854   66.46%  UpperTheory.FinalTheorems.everyCharacter_of_row
+UpperTheory.Lit.every_character_of_theta_integrals_local_matching                772332   61.04%       540408   42.71%  UpperTheory.LiteratureTheorems.every_character_of_literature_of_vWin
+UpperTheory.One.vwin_of_row                                                      276809   21.88%        90527    7.15%  UpperTheory.FinalTheorems.everyCharacter_of_row
+UpperTheory.One.Join.automorphic_window_of_inputs                                276584   21.86%        90523    7.15%  UpperTheory.One.vwin_of_row
+UpperTheory.Zero.LLC.recTExists                                                   20912    1.65%          583    0.05%  UpperTheory.FinalTheorems.everyCharacter
+Formalism.VW.rh_of_every                                                   not reachable from the root
+Formalism.VW.rh_of_right                                                   not reachable from the root
+Formalism.VW.critLine                                                      not reachable from the root
+Claim.strip                                                                           8    0.00%            5    0.00%  claimAll
+Claim.zeta                                                                           10    0.00%            1    0.00%  claimAll
+
+dominator tree (exclusive share = needed only through that declaration):
+thm LFunction_eq_zero_re  [Main]  exclusive 1265264 (100.00%), user-written 791190  {Development 67%, Formalism 22%, GroundTheory 6%}
+  thm claimAll  [Supplements.Kernels.MainTheorems]  exclusive 1265257 (100.00%), user-written 791185  {Development 67%, Formalism 22%, GroundTheory 6%}
+    thm allChi  [Supplements.Kernels.MainTheorems]  exclusive 1265250 (100.00%), user-written 791178  {Development 67%, Formalism 22%, GroundTheory 6%}
+      thm UpperTheory.FinalTheorems.everyCharacter  [Development.AutomorphicArithmetic.CharacterBoxes.MainConclusion]  exclusive 1265247 (100.00%), user-written 791176  {Development 67%, Formalism 22%, GroundTheory 6%}
+        thm UpperTheory.FinalTheorems.everyCharacter_of_row  [Development.AutomorphicArithmetic.CharacterBoxes.MainConclusion]  exclusive 961960 (76.03%), user-written 602917  {Development 61%, Formalism 28%, GroundTheory 5%}
+          thm UpperTheory.LiteratureTheorems.every_character_of_literature_of_vWin  [Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.ThirdPlaceSeries.EveryCharacterOfLiteratureOfVWin]  exclusive 840854 (66.46%), user-written 546369  {Development 58%, Formalism 32%, ReciprocityTheory 5%}
+            thm UpperTheory.Lit.every_character_of_theta_integrals_local_matching  [Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.ThirdPlaceSeries.SiegelEisensteinSecondTermHypotheses]  exclusive 540408 (42.71%), user-written 339215  {Development 51%, Formalism 45%, ReciprocityTheory 3%}
+              thm UpperTheory.Lit.nonempty_hyps_definite_side_of_closed_bound  [Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.ThirdPlaceSeries.SiegelEisensteinSecondTermHypotheses]  exclusive 449095 (35.49%), user-written 282178  {Development 58%, Formalism 38%, ReciprocityTheory 3%}
+                thm GlobalTheory.Fc.S0.StageU.hypotheses_nonempty_of_unramified_exponents_alt  [Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.ThirdPlaceSeries.HypothesesNonemptyOfUnramifiedExponents]  exclusive 152670 (12.07%), user-written 96639  {Development 58%, Formalism 41%, ReciprocityTheory 1%}
+                  thm GlobalTheory.Fc.AllAtMemberStage0.allRows_of_open0_alt  [Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.ThirdPlaceSeries.LinkROfIsLinked]  exclusive 54017 (4.27%), user-written 35902  {Formalism 69%, Development 29%, ReciprocityTheory 2%}
+                    thm GlobalTheory.LocalRows.lg1_sLp_sO_hTF  [Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.ThirdPlaceSeries.AtChoice]  exclusive 23066 (1.82%), user-written 15286  {Formalism 98%, Development 2%, Lemmata 0%}
+                    thm GlobalTheory.T.hServ_of_linkR  [Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.ThirdPlaceSeries.RowHServOfLinkStatement]  exclusive 16313 (1.29%), user-written 11102  {Formalism 57%, Development 37%, ReciprocityTheory 6%}
+                    + 1116 smaller children, 14637 nodes in total (1.16%)
+                  thm GlobalTheory.T.large_unramified_exponent_bundles_exist_alt  [Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.ThirdPlaceSeries.MemberBundlesLargeUnramifiedExponents]  exclusive 37056 (2.93%), user-written 22255  {Development 81%, Formalism 19%, Lemmata 0%}
+                    thm GlobalTheory.Fc.StageOneU.member_bundles_large_unramified_exponents_alt  [Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.ThirdPlaceSeries.MemberBundlesLargeUnramifiedExponents]  exclusive 37055 (2.93%), user-written 22254  {Development 81%, Formalism 19%, Lemmata 0%}
+                  thm UpperTheory.GalC.final_alt_alt  [Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.ThirdPlaceSeries.CFinal]  exclusive 28188 (2.23%), user-written 17014  {Development 50%, Formalism 50%, ReciprocityTheory 0%}
+                    thm UpperTheory.GalC.final_of_alt  [Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.ThirdPlaceSeries.LinkNFam]  exclusive 26608 (2.10%), user-written 16189  {Formalism 52%, Development 48%, ReciprocityTheory 0%}
+                    + 160 smaller children, 1579 nodes in total (0.12%)
+                  thm GlobalTheory.T.liftInj_and_nonVan_typeNZ_of_given  [Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.LocalTypeDictionary.LiftInjNonVanTypeNZOfPrints]  exclusive 6432 (0.51%), user-written 4439  {Development 99%, Formalism 1%}
+                    thm GlobalTheory.Core.Rk.LiftOnto.liftInj_nonVan_typeNZ_of_hypotheses_alt  [Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.LocalTypeDictionary.LiftInjNonVanTypeNZOfPrints]  exclusive 6431 (0.51%), user-written 4438  {Development 99%, Formalism 1%}
+                  + 5586 smaller children, 26976 nodes in total (2.13%)
+                thm GlobalTheory.Fc.S0.ontoX_and_lamLow_of_unitaryGroupHypotheses'  [Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.ThirdPlaceSeries.SurjectiveAndLowWeightOfUnramifiedExponents]  exclusive 34786 (2.75%), user-written 22470  {Development 50%, Formalism 38%, ReciprocityTheory 12%}
+                  thm GlobalTheory.BigOn.ontoX_of_hypotheses_alt_alt  [Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.ThirdPlaceSeries.OntoXOfPrints]  exclusive 34185 (2.70%), user-written 22122  {Development 49%, Formalism 39%, ReciprocityTheory 12%}
+                    thm GlobalTheory.FinalJoin.runHolds_of_parOK  [Development.AbelianVarietyTheory.Proofs.HeightProofs.ExistsThresholdRunHolds]  exclusive 10096 (0.80%), user-written 6900  {ReciprocityTheory 36%, Development 36%, Formalism 28%}
+                    thm GlobalTheory.BigOn.geoSt_of_pageSt_alt  [Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.ThirdPlaceSeries.GeoStOfPageSt]  exclusive 7993 (0.63%), user-written 5576  {Development 53%, Formalism 47%, Lemmata 0%}
+                    thm GlobalTheory.T.expSt_of_base_change_and_crystalline_lattices  [Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.ThirdPlaceSeries.ExponentBoundOfUnitaryThetaStandardTheorems]  exclusive 7137 (0.56%), user-written 4031  {Formalism 60%, Development 40%, ReciprocityTheory 0%}
+                    + 2001 smaller children, 8958 nodes in total (0.71%)
+                  + 39 smaller children, 600 nodes in total (0.05%)
+                thm GlobalTheory.T.open0_of_unitary_group_hypotheses  [Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.ThirdPlaceSeries.OpenOrbitOfUnramifiedExponents]  exclusive 22887 (1.81%), user-written 13994  {Development 96%, Formalism 4%}
+                  thm GlobalTheory.Fc.S0.Open0ProofU.open_orbit_of_unramified_exponents_alt  [Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.ThirdPlaceSeries.OpenOrbitOfUnramifiedExponents]  exclusive 22886 (1.81%), user-written 13993  {Development 96%, Formalism 4%}
+                    thm GlobalTheory.T.main_theorem_published_inputs_third_alt_alt  [Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.ThirdPlaceSeries.MainTheoremPublishedInputsThird]  exclusive 20262 (1.60%), user-written 12239  {Development 97%, Formalism 3%}
+                    + 39 smaller children, 2623 nodes in total (0.21%)
+                thm GlobalTheory.RowClaim.Join.thetaLift_row_properties_conj  [Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.LocalTypeDictionary.ThetaLiftRowPropertiesConj]  exclusive 9374 (0.74%), user-written 5140  {Development 98%, Formalism 2%}
+                  + 181 smaller children, 9373 nodes in total (0.74%)
+                thm UpperTheory.Lit.functionalsSeparate_of_howeUnram_of_siegelWeil  [Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.LocalTypeDictionary.FunctionalsSeparateOfHoweUnramOfSiegelWeil]  exclusive 7180 (0.57%), user-written 4749  {Development 99%, Formalism 1%, ReciprocityTheory 0%}
+                  + 45 smaller children, 7179 nodes in total (0.57%)
+                thm GlobalTheory.BigTop.Fun.Close.fourier_coefficient_fit_of_join_alt  [Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.ThirdPlaceSeries.FourierCoefficientFitOfJoin]  exclusive 6719 (0.53%), user-written 4145  {Development 95%, Formalism 5%, Lemmata 0%}
+                  thm GlobalTheory.BigTop.Fun.Close.fittedFunction_at_zero_close_alt  [Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.ThirdPlaceSeries.FittedFunctionAtZeroClose]  exclusive 6718 (0.53%), user-written 4144  {Development 95%, Formalism 5%, Lemmata 0%}
+                    + 312 smaller children, 6717 nodes in total (0.53%)
+                + 48109 smaller children, 215478 nodes in total (17.03%)
+              thm UpperTheory.Top.every_character_of_green_v_win  [Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.ThirdPlaceSeries.TopPlug]  exclusive 23454 (1.85%), user-written 14901  {Formalism 93%, Development 6%, CompanionTheory 1%}
+                thm UpperTheory.Top.zero_free_all_of_green_v_win  [Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.ThirdPlaceSeries.TopPlug]  exclusive 23445 (1.85%), user-written 14895  {Formalism 93%, Development 6%, CompanionTheory 1%}
+                  thm UpperTheory.Top.shape_closed_link_n_of_green  [Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.ThirdPlaceSeries.TopShape]  exclusive 19278 (1.52%), user-written 12247  {Formalism 98%, Development 2%, CompanionTheory 1%}
+                    thm Formalism.L2.G.linkG_concrete5  [Formalism.LocalToGlobal.GroupLattices.LinkGConcreteNoKer]  exclusive 10759 (0.85%), user-written 6173  {Formalism 100%, Development 0%, Lemmata 0%}
+                    + 613 smaller children, 8518 nodes in total (0.67%)
+                  + 432 smaller children, 4166 nodes in total (0.33%)
+                + 8 smaller children, 8 nodes in total (0.00%)
+              + 18999 smaller children, 67858 nodes in total (5.36%)
+            thm SelfIntersectionVolumeEstimates.topCovolSlim2_use_alt_alt  [Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.ThirdPlaceSeries.TopCovolSlim2Use]  exclusive 79803 (6.31%), user-written 55802  {Development 81%, GroundTheory 16%, ReciprocityTheory 2%}
+              thm PositivityTheory.HtPt.Ah.deep_slim_use  [Development.WeilBound.CoreStatements.AutomorphicKernels.MoriwakiBigness.HilbertSamuelApplications.AhSlimU]  exclusive 45650 (3.61%), user-written 32506  {Development 75%, GroundTheory 22%, ReciprocityTheory 3%}
+                thm GlobalTheory.CompanionTheory.Ar.Plug.deepStR_of_use  [Development.WeilBound.CoreStatements.AutomorphicKernels.MoriwakiBigness.HilbertSamuelApplications.DeepStROfUse]  exclusive 45051 (3.56%), user-written 32093  {Development 74%, GroundTheory 23%, ReciprocityTheory 3%}
+                  thm GlobalTheory.CompanionTheory.Ar.Link.good_tower_volume_theorem_bis  [Development.WeilBound.CoreStatements.AutomorphicKernels.MoriwakiBigness.HilbertSamuelApplications.GoodTowerVolumeTheoremBis]  exclusive 31599 (2.50%), user-written 22549  {Development 80%, GroundTheory 19%, ReciprocityTheory 1%}
+                    thm GlobalTheory.T.final_theorem_of_inputs_right  [Development.AutomorphicSpectrum.Proofs.GeometryProofs.FinalTheoremOfInputsRightStatement]  exclusive 31595 (2.50%), user-written 22545  {Development 80%, GroundTheory 19%, ReciprocityTheory 1%}
+                    + 2 smaller children, 3 nodes in total (0.00%)
+                  + 2635 smaller children, 13451 nodes in total (1.06%)
+                + 31 smaller children, 598 nodes in total (0.05%)
+              thm SelfIntersectionVolumeEstimates.topCovolG_alt_alt  [Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.ThirdPlaceSeries.TopCovolG]  exclusive 19967 (1.58%), user-written 13285  {Development 96%, ReciprocityTheory 2%, Formalism 1%}
+                + 2255 smaller children, 19966 nodes in total (1.58%)
+              + 3426 smaller children, 14185 nodes in total (1.12%)
+            thm UpperTheory.LiteratureTheorems.theta_integrals_agree_and_local_matching_of_literature  [Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.ThirdPlaceSeries.EveryCharacterOfLiteratureOfVWin]  exclusive 14217 (1.12%), user-written 9792  {Development 91%, Formalism 8%, ReciprocityTheory 0%}
+              thm PositivityTheory.ThKR.theoremK_head2  [Development.WeilBound.ThetaLifts.Reductions.FiniteClosure.TheoremKOfMod]  exclusive 11576 (0.91%), user-written 7812  {Development 90%, Formalism 10%, ReciprocityTheory 1%}
+                thm PositivityTheory.ThKR.theoremK_head2_of_mod  [Development.WeilBound.ThetaLifts.Reductions.FiniteClosure.TheoremKOfMod]  exclusive 11315 (0.89%), user-written 7639  {Development 89%, Formalism 10%, ReciprocityTheory 1%}
+                  thm PositivityTheory.Sph.Tr.closeSph  [Development.WeilBound.ThetaLifts.SphericalLattices.SphericalClosure.CloseSph]  exclusive 8241 (0.65%), user-written 5576  {Development 99%, Formalism 1%, ReciprocityTheory 0%}
+                    + 1912 smaller children, 8240 nodes in total (0.65%)
+                  + 757 smaller children, 3073 nodes in total (0.24%)
+                + 40 smaller children, 260 nodes in total (0.02%)
+              + 27 smaller children, 2640 nodes in total (0.21%)
+            thm GlobalTheory.TorKSField.toroidalForFanKS  [Development.AbelianVarietyTheory.Proofs.DivisorProofs.ToroidalCompactificationFanLogKodairaSpencerIso]  exclusive 7187 (0.57%), user-written 5386  {Development 100%, ReciprocityTheory 0%, Formalism 0%}
+              + 26 smaller children, 7186 nodes in total (0.57%)
+            thm UpperTheory.LiteratureTheorems.published_results_arithmetic  [Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.ThirdPlaceSeries.EveryCharacterOfLiteratureOfVWin]  exclusive 6975 (0.55%), user-written 5374  {Development 96%, ReciprocityTheory 4%, GroundTheory 0%}
+              + 182 smaller children, 6974 nodes in total (0.55%)
+            + 50463 smaller children, 192263 nodes in total (15.20%)
+          thm UpperTheory.One.vwin_of_row  [Development.AutomorphicArithmetic.AutomorphicVarieties.ModularityArgument.ThresholdArguments.DenseThresholdCases.VwinOfRow]  exclusive 90527 (7.15%), user-written 37695  {Development 93%, PositivityTheory 4%, GroundTheory 1%}
+            thm UpperTheory.One.Join.automorphic_window_of_inputs  [Development.AutomorphicArithmetic.AutomorphicVarieties.ModularityArgument.ThresholdArguments.DenseThresholdCases.TopMainZj]  exclusive 90523 (7.15%), user-written 37692  {Development 93%, PositivityTheory 4%, GroundTheory 1%}
+              thm UpperTheory.One.Join.v_window_of_depth_zero_residual_bc_cm  [Development.AutomorphicArithmetic.AutomorphicVarieties.ModularityArgument.ThresholdArguments.DenseThresholdCases.TopMainZj]  exclusive 89542 (7.08%), user-written 37041  {Development 93%, PositivityTheory 4%, GroundTheory 1%}
+                thm UpperTheory.V.v_window_of_literal_automorphy_n  [Development.AutomorphicArithmetic.AutomorphicVarieties.ModularityArgument.ThresholdArguments.DenseThresholdCases.WindowBoundOfLiteratureLevel]  exclusive 89479 (7.07%), user-written 36981  {Development 93%, PositivityTheory 4%, GroundTheory 1%}
+                  thm UpperTheory.V.HV.DescentVanishingReductions.v_window_of_automorphy_csd_ss_mono_odd  [Development.AutomorphicArithmetic.AutomorphicVarieties.ModularityArgument.ThresholdArguments.DenseThresholdCases.WindowBoundOfLiteratureLevel]  exclusive 89478 (7.07%), user-written 36980  {Development 93%, PositivityTheory 4%, GroundTheory 1%}
+                    thm UpperTheory.V.HV.DescentVanishingReductions.vwin_of_hypotheses_H_E_alt  [Development.AutomorphicArithmetic.AutomorphicVarieties.ModularityArgument.ThresholdArguments.DenseThresholdCases.WindowBoundOfLiteratureLevel]  exclusive 79012 (6.24%), user-written 32942  {Development 94%, PositivityTheory 4%, GroundTheory 1%}
+                    + 1185 smaller children, 10465 nodes in total (0.83%)
+                + 9 smaller children, 62 nodes in total (0.00%)
+              + 31 smaller children, 980 nodes in total (0.08%)
+            + 3 smaller children, 3 nodes in total (0.00%)
+          + 7841 smaller children, 30578 nodes in total (2.42%)
+        thm UpperTheory.Gal.Int.galoisLocalGlobalStrong_recParameter  [Development.AutomorphicArithmetic.Foundations.GaloisRepresentations.IntegralStructures.RowSrc]  exclusive 90309 (7.14%), user-written 52554  {Development 99%, GroundTheory 1%, ReciprocityTheory 0%}
+          thm UpperTheory.Gal.Int.galoisRepresentations_of_thetaLift  [Development.AutomorphicArithmetic.Foundations.GaloisRepresentations.IntegralStructures.GaloisRepresentationsOfThetaLift]  exclusive 86158 (6.81%), user-written 49856  {Development 99%, GroundTheory 1%, ReciprocityTheory 0%}
+            thm UpperTheory.Gal.Int.Geo.geoOne_holds  [Development.AutomorphicArithmetic.Foundations.GaloisRepresentations.IntegralStructures.GeometricFlagBases.WeightOneGeometricRealization]  exclusive 77841 (6.15%), user-written 45056  {Development 98%, GroundTheory 1%, ReciprocityTheory 0%}
+              thm UpperTheory.Gal.Int.Geo.geometric_realization_of_weight_one  [Development.AutomorphicArithmetic.Foundations.GaloisRepresentations.IntegralStructures.GeometricFlagBases.GeometricRealizationOfWeightOne]  exclusive 74676 (5.90%), user-written 43923  {Development 98%, GroundTheory 1%, ReciprocityTheory 0%}
+                thm UpperTheory.Gal.Int.Geo.steps_holds  [Development.AutomorphicArithmetic.Foundations.GaloisRepresentations.IntegralStructures.GeometricFlagBases.GeometricRealizationOfWeightOne]  exclusive 50246 (3.97%), user-written 29570  {Development 98%, GroundTheory 2%, Formalism 0%}
+                  + 4733 smaller children, 50245 nodes in total (3.97%)
+                thm UpperTheory.Gal.Int.Geo.kodaira_spencer_of_weight_one  [Development.AutomorphicArithmetic.Foundations.GaloisRepresentations.IntegralStructures.GeometricFlagBases.GeometricRealizationOfWeightOne]  exclusive 18713 (1.48%), user-written 11444  {Development 99%, GroundTheory 0%, ReciprocityTheory 0%}
+                  + 1396 smaller children, 18712 nodes in total (1.48%)
+                + 925 smaller children, 5716 nodes in total (0.45%)
+              + 144 smaller children, 3164 nodes in total (0.25%)
+            thm UpperTheory.Gal.Int.galoisLocalGlobalStrong_of_geometry_lift  [Development.AutomorphicArithmetic.Foundations.GaloisRepresentations.IntegralStructures.Development]  exclusive 8091 (0.64%), user-written 4667  {Development 100%, Formalism 0%, GroundTheory 0%}
+              thm UpperTheory.Gal.Int.galoisLocalGlobal_of_geometry_lift  [Development.AutomorphicArithmetic.Foundations.GaloisRepresentations.IntegralStructures.Development]  exclusive 8065 (0.64%), user-written 4646  {Development 100%, Formalism 0%, GroundTheory 0%}
+                + 211 smaller children, 8064 nodes in total (0.64%)
+              + 11 smaller children, 25 nodes in total (0.00%)
+            + 95 smaller children, 225 nodes in total (0.02%)
+          + 25 smaller children, 4150 nodes in total (0.33%)
+        + 58062 smaller children, 212977 nodes in total (16.83%)
+      + 1 smaller children, 2 nodes in total (0.00%)
+    + 2 smaller children, 6 nodes in total (0.00%)
+  + 5 smaller children, 6 nodes in total (0.00%)
+

@@ -1,0 +1,12 @@
+PASS module  RiemannHypothesis is defined in Mathlib.NumberTheory.LSeries.RiemannZeta
+PASS defn    RiemannHypothesis is syntactically identical to the reviewed text Reviewed.RiemannHypothesis (after inlining 1 auxiliary proof(s))
+PASS deps    RiemannHypothesis uses only constants from [Init, Mathlib] (36 constants)
+PASS defn    RiemannZetaZerosOnLine is syntactically identical to the reviewed text Reviewed.RiemannZetaZerosOnLine (after inlining 1 auxiliary proof(s))
+PASS deps    RiemannZetaZerosOnLine uses only constants from [Init, Mathlib] (36 constants)
+PASS defn    DirichletLNonvanishingRightOfHalf is syntactically identical to the reviewed text Reviewed.DirichletLNonvanishingRightOfHalf (after inlining 1 auxiliary proof(s))
+PASS deps    DirichletLNonvanishingRightOfHalf uses only constants from [Init, Mathlib] (40 constants)
+PASS defn    DirichletLZerosOnLine is syntactically identical to the reviewed text Reviewed.DirichletLZerosOnLine (after inlining 1 auxiliary proof(s))
+PASS deps    DirichletLZerosOnLine uses only constants from [Init, Mathlib] (35 constants)
+PASS defn    PrimitiveDirichletLZerosOnLine is syntactically identical to the reviewed text Reviewed.PrimitiveDirichletLZerosOnLine (after inlining 1 auxiliary proof(s))
+PASS deps    PrimitiveDirichletLZerosOnLine uses only constants from [Init, Mathlib] (36 constants)
+STATEMENT PRE-CHECK COMPLETE

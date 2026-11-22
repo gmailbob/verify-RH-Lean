@@ -1,0 +1,80 @@
+- theorem riemannHypothesis  [Main]  (1 project deps)
+    : RiemannHypothesis
+  - theorem rhOfAll  [Supplements.Kernels.MainTheorems]  (2 project deps)
+      : RiemannHypothesis
+    - theorem Formalism.VW.rh_of_every  [Formalism.GammaFactorNonvanishing.CritLine]  (2 project deps)
+        : UpperTheory.EveryCharacter → RiemannHypothesis
+      - def UpperTheory.EveryCharacter  [Development.AutomorphicArithmetic.CharacterBoxes.EveryCharacter]  (0 project deps)
+          : Prop
+      - theorem Formalism.VW.rh_of_right  [Formalism.GammaFactorNonvanishing.RhOfRight]  (0 project deps)
+          : (∀ (s : ℂ), 1 / 2 < s.re → s ≠ 1 → riemannZeta s ≠ 0) → RiemannHypothesis
+    - theorem allChi  [Supplements.Kernels.MainTheorems]  (2 project deps)
+        : UpperTheory.EveryCharacter
+      - UpperTheory.EveryCharacter  (see above)
+      - theorem UpperTheory.FinalTheorems.everyCharacter  [Development.AutomorphicArithmetic.CharacterBoxes.MainConclusion]  (3 project deps)
+          : UpperTheory.EveryCharacter
+        - UpperTheory.EveryCharacter  (see above)
+        - theorem UpperTheory.FinalTheorems.everyCharacter_of_row  [Development.AutomorphicArithmetic.CharacterBoxes.MainConclusion]  (10 project deps)
+            : (UpperTheory.GalStar.Row0b fun {E Ω} [Field E] [NumberField E] [Field Ω] [Algebra E Ω] [IsAlgClosure E Ω] {A} {w} h rc => UpperTheory.Zero.LLC.IsRecT h rc) → UpperTheory.EveryCharacter
+        - theorem UpperTheory.Gal.Int.galoisLocalGlobalStrong_recParameter  [Development.AutomorphicArithmetic.Foundations.GaloisRepresentations.IntegralStructures.RowSrc]  (4 project deps)
+            : UpperTheory.GalStar.Row0b fun {E Ω} [Field E] [NumberField E] [Field Ω] [Algebra E Ω] [IsAlgClosure E Ω] {A} {w} => UpperTheory.Gal.Int.recT
+
+- theorem riemannZeta_eq_zero_re  [Main]  (2 project deps)
+    : RiemannZetaZerosOnLine
+  - def RiemannZetaZerosOnLine  [Statements]  (0 project deps)
+      : Prop
+  - rhOfAll  (see above)
+
+- theorem LFunction_ne_zero_of_half_lt_re  [Main]  (2 project deps)
+    : DirichletLNonvanishingRightOfHalf
+  - def DirichletLNonvanishingRightOfHalf  [Statements]  (0 project deps)
+      : Prop
+  - allChi  (see above)
+
+- theorem LFunction_eq_zero_re  [Main]  (5 project deps)
+    : DirichletLZerosOnLine
+  - def DirichletLZerosOnLine  [Statements]  (0 project deps)
+      : Prop
+  - def Claim.Strip  [Development.AutomorphicArithmetic.CharacterBoxes.HalfPlane]  (0 project deps)
+      : Prop
+  - def Claim.Zeta  [Development.AutomorphicArithmetic.CharacterBoxes.HalfPlane]  (0 project deps)
+      : Prop
+  - def Claim.HalfPlane  [Development.AutomorphicArithmetic.CharacterBoxes.HalfPlane]  (0 project deps)
+      : Prop
+  - theorem claimAll  [Supplements.Kernels.MainTheorems]  (6 project deps)
+      : Claim.HalfPlane ∧ Claim.Strip ∧ Claim.Zeta
+    - Claim.HalfPlane  (see above)
+    - Claim.Strip  (see above)
+    - Claim.Zeta  (see above)
+    - allChi  (see above)
+    - theorem Claim.strip  [Development.AutomorphicArithmetic.CharacterBoxes.ClaimStrip]  (4 project deps)
+        : Claim.HalfPlane → Claim.Strip
+      - Claim.HalfPlane  (see above)
+      - Claim.Strip  (see above)
+      - theorem Claim.prim_zero  [Development.AutomorphicArithmetic.CharacterBoxes.ClaimStrip]  (1 project deps)
+          : ∀ {N : ℕ} [inst : NeZero N] (χ : DirichletCharacter ℂ N) [inst_1 : NeZero χ.conductor] {s : ℂ}, 0 < s.re → s.re < 1 → DirichletCharacter.LFunction χ s = 0 → DirichletCharacter.LFunction χ.primitiveCharacter s = 0
+        - theorem Claim.factor_ne_zero  [Development.AutomorphicArithmetic.CharacterBoxes.ClaimStrip]  (0 project deps)
+            : ∀ {M : ℕ} (ψ : DirichletCharacter ℂ M) {s : ℂ}, 0 < s.re → ∀ (p : ℕ), Nat.Prime p → 1 - ψ ↑p * ↑p ^ (-s) ≠ 0
+      - theorem Claim.prim_reflect  [Development.AutomorphicArithmetic.CharacterBoxes.ClaimStrip]  (1 project deps)
+          : ∀ {M : ℕ} [inst : NeZero M] (ψ : DirichletCharacter ℂ M), ψ.IsPrimitive → ∀ {s : ℂ}, 0 < s.re → s.re < 1 → DirichletCharacter.LFunction ψ s = 0 → DirichletCharacter.LFunction ψ⁻¹ (1 - s) = 0
+        - theorem Claim.gamma_ne_zero  [Development.AutomorphicArithmetic.CharacterBoxes.ClaimStrip]  (0 project deps)
+            : ∀ {M : ℕ} [NeZero M] (φ : DirichletCharacter ℂ M) {t : ℂ}, 0 < t.re → φ.gammaFactor t ≠ 0
+    - theorem Claim.zeta  [Development.AutomorphicArithmetic.CharacterBoxes.ClaimStrip]  (3 project deps)
+        : Claim.HalfPlane → Claim.Zeta
+      - Claim.HalfPlane  (see above)
+      - Claim.Zeta  (see above)
+      - Claim.strip  (see above)
+
+- theorem LFunction_eq_zero_re_of_isPrimitive  [Main]  (2 project deps)
+    : PrimitiveDirichletLZerosOnLine
+  - def PrimitiveDirichletLZerosOnLine  [Statements]  (0 project deps)
+      : Prop
+  - theorem critAll  [Supplements.Kernels.MainTheorems]  (2 project deps)
+      : ∀ (N : ℕ) [inst : NeZero N] (χ : DirichletCharacter ℂ N), χ.IsPrimitive → ∀ (s : ℂ), 0 < s.re → s.re < 1 → DirichletCharacter.LFunction χ s = 0 → s.re = 1 / 2
+    - theorem Formalism.VW.critLine  [Formalism.GammaFactorNonvanishing.CritLine]  (2 project deps)
+        : UpperTheory.EveryCharacter → ∀ (N : ℕ) [inst : NeZero N] (χ : DirichletCharacter ℂ N), χ.IsPrimitive → ∀ (s : ℂ), 0 < s.re → s.re < 1 → DirichletCharacter.LFunction χ s = 0 → s.re = 1 / 2
+      - UpperTheory.EveryCharacter  (see above)
+      - theorem Formalism.VW.gammaFactor_ne_zero  [Formalism.GammaFactorNonvanishing.CritLine]  (0 project deps)
+          : ∀ {N : ℕ} (χ : DirichletCharacter ℂ N) {s : ℂ}, 0 < s.re → χ.gammaFactor s ≠ 0
+    - allChi  (see above)
+

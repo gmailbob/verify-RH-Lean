@@ -1,0 +1,4 @@
+manifest entries: 175187   our .olean files: 175187   missing on our side: 0
+identical: 76968   different: 98219
+  identical files containing our path:      0   (expected 0)
+  different files NOT containing our path:  0   (expected 0)

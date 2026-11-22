@@ -1,0 +1,31 @@
+=== 2026-11-21T17:27:45Z  07-kernel-replay.sh 07-kernel-replay.log  (host <host>, WORKDIR=/home/ec2-user/rh)
+[17:27:45] leanchecker --fresh Main
+replaying Main with --fresh
+	Command being timed: "lake --keep-toolchain env leanchecker --fresh --verbose Main"
+	User time (seconds): 45695.80
+	System time (seconds): 397.48
+	Percent of CPU this job got: 96%
+	Elapsed (wall clock) time (h:mm:ss or m:ss): 13:14:44
+	Average shared text size (kbytes): 0
+	Average unshared data size (kbytes): 0
+	Average stack size (kbytes): 0
+	Average total size (kbytes): 0
+	Maximum resident set size (kbytes): 48531816
+	Average resident set size (kbytes): 0
+	Major (requiring I/O) page faults: 1827853
+	Minor (reclaiming a frame) page faults: 183628617
+	Voluntary context switches: 2091263
+	Involuntary context switches: 131628
+	Swaps: 0
+	File system inputs: 313966328
+	File system outputs: 8
+	Socket messages sent: 0
+	Socket messages received: 0
+	Signals delivered: 0
+	Page size (bytes): 4096
+	Exit status: 0
+
+duration 13h 14m, exit 0
+  PASS  kernel replay of Main from scratch succeeded
+
+All checks passed (0 warning(s)).

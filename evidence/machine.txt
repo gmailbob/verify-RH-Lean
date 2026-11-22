@@ -1,0 +1,12 @@
+# collected 2026-11-22T10:18:14Z
+kernel:        Linux 6.18.62-127.179.amzn2023.aarch64 aarch64
+os:            Amazon Linux 2023.12.20261120
+instance type: c8gn.8xlarge
+cpus:          32
+memory:        61 GiB RAM
+               63 GiB swap
+disk:          2T Amazon Elastic Block Store
+filesystem:    xfs, 2.0T total
+vm.max_map_count: 1048576
+lean:          Lean (version 4.33.1, aarch64-unknown-linux-gnu, commit 819816b2e0a3bf405af45ae5c7af2491d8f5bee6, Release)
+JOBS:          28

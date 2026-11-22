@@ -1,0 +1,382 @@
+project: /home/ec2-user/rh/src/lean
+.lean files: 175187   other files under src/: 0
+
+==============================================================================
+A. HARD-FAIL TOKENS (any hit in code fails)
+==============================================================================
+  sorry                    in code:     0   in comments/strings:     0   (unfinished proof (sorryAx))
+  admit                    in code:     0   in comments/strings:     0   (synonym for sorry)
+  sorryAx                  in code:     0   in comments/strings:     0   (the sorry axiom itself)
+  axiom                    in code:     0   in comments/strings:     0   (declares a new axiom)
+  unsafe                   in code:     0   in comments/strings:     0   (unsafe definitions bypass kernel checks)
+  native_decide            in code:     0   in comments/strings:     0   (trusts compiled code (Lean.ofReduceBool))
+  ofReduceBool             in code:     0   in comments/strings:     0   (trusts compiled code)
+  ofReduceNat              in code:     0   in comments/strings:     0   (trusts compiled code)
+  trustCompiler            in code:     0   in comments/strings:     0   (trusts compiled code)
+  implemented_by           in code:     0   in comments/strings:     0   (replaces code with untrusted implementation)
+  extern                   in code:     0   in comments/strings:     0   (foreign implementation)
+  opaque                   in code:     0   in comments/strings:     0   (opaque constant (can hide unsafe implementations))
+  skipKernelTC             in code:     0   in comments/strings:     0   (debug.skipKernelTC disables the kernel)
+  debug                    in code:     0   in comments/strings:     0   (debug.* options (e.g. debug.skipKernelTC))
+  Kernel.Environment       in code:     0   in comments/strings:     0   (direct kernel environment access)
+  addDeclWithoutChecking   in code:     0   in comments/strings:     0   (adds declarations unchecked)
+  replay                   in code:     0   in comments/strings:     0   (environment replay hooks)
+
+==============================================================================
+B. METAPROGRAMMING INVENTORY (review each)
+==============================================================================
+  run_cmd                         5 hits in 5 files
+  run_elab                        0 hits in 0 files
+  run_meta                        0 hits in 0 files
+  run_tac                        32 hits in 16 files
+  by_elab                         0 hits in 0 files
+  #eval                           0 hits in 0 files
+  inline Lean.Elab/Lean.Meta     42 hits in 21 files
+  initialize                      0 hits in 0 files
+  elab definition                 4 hits in 3 files
+  macro definition               87 hits in 64 files
+  syntax definition               0 hits in 0 files
+  elaborator attribute            0 hits in 0 files
+  addDecl                         2 hits in 1 files
+  modifyEnv / setEnv              5 hits in 5 files
+  direct mvar assign              3 hits in 3 files
+  Kernel.isDefEq / whnf           1 hits in 1 files
+  IO / process                    0 hits in 0 files
+  partial def                     2 hits in 2 files
+  allowUnsafeReducibility        37 hits in 33 files
+  maxHeartbeats 0                 4 hits in 4 files
+
+  User-defined syntax keywords and how often each is used:
+    'TF'                           uses  13954   defined 1x, first in Development.EtaleCohomology.TateTwists.EtaleTensorCycleLocallyLowersTopDegreeOfRowExact
+    'gp'                           uses   5148   defined 1x, first in Development.AbelianVarietyTheory.Proofs.FormalGroupCharts.GermEvGermEvThreePoints
+    'cp'                           uses   4254   defined 1x, first in Development.AutomorphicArithmetic.Foundations.EtaleClopenDescent.ExistsHeckeCorrespondenceOnIntegralShimuraModel
+    'fa'                           uses   2300   defined 3x, first in Development.AutomorphicSpectrum.Proofs.BlockDecomposition.DFormMem
+    'zz'                           uses   1855   defined 1x, first in Development.WeilBound.CoreStatements.HodgeTatePoints.CbBase
+    'TI'                           uses    804   defined 1x, first in Development.EtaleCohomology.TateTwists.EtaleTensorCycleLocallyLowersTopDegreeOfRowExact
+    'kc%'                          uses    393   defined 7x, first in Development.AbelianVarietyTheory.Definitions.AutomorphicMembership.PlaceModelImp
+    'integ'                        uses    283   defined 1x, first in Formalism.LocalToGlobal.TorsionIntegrality.TorsionTranslationPowers.NonsingularJetNorms.NonsingularNorm
+    'kexactB'                      uses    277   defined 1x, first in Formalism.LocalToGlobal.IndefiniteReal.HeckeNonvanishing.Imports
+    'mx2_dg'                       uses    126   defined 2x, first in Formalism.HermitianCurvature.HermitianCurvatureProofs.CoordinateCommuteRaisingConstant
+    'ksub'                         uses    121   defined 3x, first in Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.FormGroupsModelsActionsMeasuresBasesCharacterise
+    'ones'                         uses    110   defined 1x, first in ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.ExtensionDescent.Theta1
+    'gl2'                          uses     97   defined 2x, first in Development.AutomorphicArithmetic.Foundations.Convolution.RealGroupAnalysis.UnitaryActions.ContinuousAdelicGL2OfContinuousEntries
+    'push_map'                     uses     66   defined 2x, first in Development.AbelianVarietyTheory.Proofs.FormalGroupCharts.ExistsFormalBiextMap
+    'obt'                          uses     59   defined 2x, first in Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsMeasY
+    'blks'                         uses     57   defined 4x, first in Formalism.HermitianCurvature.HermitianCurvatureProofs.CornerBlockActionInvariant
+    'tr_via'                       uses     48   defined 1x, first in Development.AbelianVarietyTheory.Definitions.AutomorphicMembership.GoodPartEq
+    'lbt'                          uses     39   defined 1x, first in Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsProperOfFiniteType
+    'evs'                          uses     38   defined 2x, first in Development.WeilBound.CoreStatements.HodgeTatePoints.CbBase
+    'noncomm_match_scalars'        uses     33   defined 1x, first in Formalism.HermitianCurvature.HermitianCurvatureProofs.EmbedLoweringConstant
+    'jet_tac'                      uses     31   defined 1x, first in Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.RigidFrameSymmetricRatioSeries
+    'exists_prescribed_local_data' uses     28   defined 1x, first in Formalism.SharpRestriction.Divisibility.LocalNonemptiness.SubsingletonRankIndicatorIff
+    'sl2'                          uses     25   defined 1x, first in Development.AutomorphicArithmetic.Foundations.Convolution.RealGroupAnalysis.UnitaryActions.ContinuousAdelicGL2OfContinuousEntries
+    'fbm'                          uses     22   defined 1x, first in Formalism.SharpRestriction.Divisibility.GeneratorPowers.FBMapPf
+    'tr_clause'                    uses     21   defined 1x, first in Development.AbelianVarietyTheory.Definitions.AutomorphicMembership.RealIoX
+    'push_ev'                      uses     17   defined 1x, first in Development.AbelianVarietyTheory.Proofs.FormalGroupCharts.GermEvGermEvThreePoints
+    'nbt'                          uses     16   defined 1x, first in Formalism.PeriodIntegrals.UnitaryGroupMassFormula.DensityLemma.PFibreBoundV
+    'fin_index_simp'               uses     12   defined 1x, first in Development.AbelianVarietyTheory.Definitions.GaloisGeometry.NegOnePowBoundaryTermsCancel
+    'geo_cases'                    uses     12   defined 1x, first in Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.IsClassSystem
+    'opens_le_auto'                uses     12   defined 1x, first in Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.LineModelTrueOfFalse
+    'change_aux_intm'              uses     12   defined 1x, first in Formalism.EllipticTorsion.EllipticTorsionProofs.Change
+    'keq'                          uses     11   defined 1x, first in Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ReferenceTupleWeilDatumVectorPolynomialMapEnlarg
+    'distrib_module'               uses     11   defined 1x, first in Formalism.HermitianCurvature.HermitianCurvatureProofs.RttUpperRelationsFromDescent
+    'grp_comb'                     uses     10   defined 1x, first in Development.AbelianVarietyTheory.Proofs.ModuliProofs.ExistsUniqueRigMulRight
+    'fin_tac'                      uses     10   defined 1x, first in Development.WeilBound.CoreStatements.PadicHodgeComparison.EtaleCohomologyComparison.CechPairings.FaceMapCompSuccAboveCastSucc
+    'modx'                         uses     10   defined 1x, first in Formalism.DistinguishedUnitIdeals.DistinguishedOrderProofs.RhoMapFunctorial
+    'tr_leaves'                    uses      9   defined 1x, first in Development.AbelianVarietyTheory.Definitions.AutomorphicMembership.RealIoX
+    'pre_cases'                    uses      9   defined 3x, first in Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.FormGroupsModelsActionsMeasuresBasesCharacterise
+    'tie_cases'                    uses      8   defined 3x, first in Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.FormGroupsModelsActionsMeasuresBasesCharacterise
+    'pre_sub'                      uses      8   defined 1x, first in Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ReferenceTupleWeilDatumVectorPolynomialMapEnlarg
+    'fin_order'                    uses      8   defined 1x, first in Development.AutomorphicSpectrum.Proofs.BlockDecomposition.Cup1CoboundaryMemBoundaries
+    "fin_order'"                   uses      8   defined 1x, first in Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ShuffleCup1FormulaPositiveDegree
+    'opens_le'                     uses      7   defined 2x, first in Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsDlogAddCoboundaryAbLocus
+    'base_cases'                   uses      6   defined 1x, first in Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.IsClassSystem
+    'qmove'                        uses      6   defined 2x, first in Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.CharWSeedStd
+    'secTac'                       uses      6   defined 1x, first in ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.DiscreteValuationRings.ExistsRosatiGen
+    'kq%'                          uses      5   defined 2x, first in Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsSelectedRealization
+    'kcopy'                        uses      5   defined 1x, first in Formalism.LocalToGlobal.NumberFieldFamilies.OwnStruct
+    'fIwasawa_omega'               uses      5   defined 1x, first in Formalism.SatakeDualWeyl.AdelicIwasawaHecke.FIwasawaC
+    'meq'                          uses      4   defined 1x, first in Development.EtaleCohomology.EtaleSheaves.ChasePf
+    'ztac'                         uses      4   defined 1x, first in Development.WeilBound.CoreStatements.HodgeTatePoints.CcBase
+    'ifarith'                      uses      4   defined 1x, first in Formalism.PeriodIntegrals.UnitaryGroupMassFormula.LevelImageArithmetic.GlevImageOf
+    'copyDec%'                     uses      3   defined 1x, first in Development.AbelianVarietyTheory.Proofs.TwistedOperators.TwoLeMOf
+    'copyIsV%'                     uses      3   defined 1x, first in Development.AbelianVarietyTheory.Proofs.TwistedOperators.TwoLeMOf
+    'no_const'                     uses      2   defined 2x, first in Development.AbelianVarietyTheory.Proofs.FormalGroupCharts.ExistsFormalBiextMap
+    'set_cases'                    uses      2   defined 1x, first in Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.SetupRelIffSameData
+    'copy_cases'                   uses      2   defined 1x, first in Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.RingSpecNormalisedCharacterEq
+    'coef_cases'                   uses      2   defined 1x, first in Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ThetaLiftAtReferenceTupleOverEnlargedBase
+    'tr_delta'                     uses      1   defined 1x, first in Development.AbelianVarietyTheory.Definitions.AutomorphicMembership.RealIoX
+    'cpt_copy_thms'                uses      1   defined 1x, first in Formalism.HermitianCurvature.HermitianCurvatureProofs.CutCptCopy
+    'kd%'                          uses      0   defined 1x, first in Development.AbelianVarietyTheory.Proofs.TwistedOperators.TwoLeMOf
+    'pos_tac'                      uses      0   defined 1x, first in Formalism.LocalToGlobal.IndefiniteForms.IndefiniteTree.FunctionalLowerBoundOfConditionsNumeric
+    'onele_tac'                    uses      0   defined 1x, first in Formalism.LocalToGlobal.IndefiniteForms.IndefiniteTree.FunctionalLowerBoundOfConditionsNumeric
+    '#kcopy_probe'                 uses      0   defined 1x, first in Formalism.LocalToGlobal.NumberFieldFamilies.OwnStruct
+    'lvo'                          uses      0   defined 1x, first in Formalism.PeriodIntegrals.UnitaryGroupMassFormula.GaussianUniqueness.MulMApply
+
+  -- run_cmd --
+    BuildAid.D1:4: run_cmd Lean.modifyEnv fun env => Lean.LibrarySuggestions.nameDenyListExt.addEntry env "CompanionTheory"
+    BuildAid.D2:4: run_cmd Lean.modifyEnv fun env => Lean.LibrarySuggestions.nameDenyListExt.addEntry env "CrystallineSemistableComparison"
+    BuildAid.D3:4: run_cmd Lean.modifyEnv fun env => Lean.LibrarySuggestions.nameDenyListExt.addEntry env "GlobalTheory"
+    BuildAid.D4:4: run_cmd Lean.modifyEnv fun env => Lean.LibrarySuggestions.nameDenyListExt.addEntry env "PositivityTheory"
+    BuildAid.D5:4: run_cmd Lean.modifyEnv fun env => Lean.LibrarySuggestions.nameDenyListExt.addEntry env "UpperTheory"
+
+  -- run_tac --
+    Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.ExistsBoundAbsLocalLatticeCompletionEntries:12: | (run_tac Lean.Elab.Tactic.liftMetaTactic (fun g => do pure [← g.revertAll])); exact @_root_.GlobalTheory.LocalLatticeBound.exists_bound_latLoc
+    Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.ExistsBoundAbsLocalLatticeCompletionEntries:13: | (run_tac Lean.Elab.Tactic.liftMetaTactic (fun g => do pure [← g.revertAll])); exact _root_.GlobalTheory.LocalLatticeBound.exists_bound_latLoc
+    Development.AbelianVarietyTheory.Proofs.DivisorProofs.BoundedPowerSeriesEvaluationDivisibility:24: | (run_tac Lean.Elab.Tactic.liftMetaTactic (fun g => do pure [← g.revertAll])); exact @_root_.GlobalTheory.SummableSeriesBounds.main
+    Development.AbelianVarietyTheory.Proofs.DivisorProofs.BoundedPowerSeriesEvaluationDivisibility:25: | (run_tac Lean.Elab.Tactic.liftMetaTactic (fun g => do pure [← g.revertAll])); exact _root_.GlobalTheory.SummableSeriesBounds.main
+    Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsJetExtensionSquareZero:22: | (run_tac Lean.Elab.Tactic.liftMetaTactic (fun g => do pure [← g.revertAll])); exact @_root_.GlobalTheory.SquareLiftLemmas.exists_hom_jet
+    Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsJetExtensionSquareZero:23: | (run_tac Lean.Elab.Tactic.liftMetaTactic (fun g => do pure [← g.revertAll])); exact _root_.GlobalTheory.SquareLiftLemmas.exists_hom_jet
+    Development.AbelianVarietyTheory.Proofs.DivisorProofs.FramesTildeGammaValues:70: run_tac do
+    Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsRootMapMinpolyIffExistsRingHomExtension:10: | (run_tac Lean.Elab.Tactic.liftMetaTactic (fun g => do pure [← g.revertAll])); exact @_root_.GlobalTheory.InjectiveAlgebraHomExistence.exists_ringHom_comp_alge
+    Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsRootMapMinpolyIffExistsRingHomExtension:11: | (run_tac Lean.Elab.Tactic.liftMetaTactic (fun g => do pure [← g.revertAll])); exact _root_.GlobalTheory.InjectiveAlgebraHomExistence.exists_ringHom_comp_algeb
+    Development.AbelianVarietyTheory.Proofs.DivisorProofs.LocalizationPreservesRingPullbackSquare:38: | (run_tac Lean.Elab.Tactic.liftMetaTactic (fun g => do pure [← g.revertAll])); exact @_root_.GlobalTheory.QuotientMapComposition.main
+    Development.AbelianVarietyTheory.Proofs.DivisorProofs.LocalizationPreservesRingPullbackSquare:39: | (run_tac Lean.Elab.Tactic.liftMetaTactic (fun g => do pure [← g.revertAll])); exact _root_.GlobalTheory.QuotientMapComposition.main
+    Development.AbelianVarietyTheory.Proofs.DivisorProofs.LocalizationPreservesRingPullbackSquare:61: | (run_tac Lean.Elab.Tactic.liftMetaTactic (fun g => do pure [← g.revertAll])); exact @_root_.GlobalTheory.QuotientMapComposition.main
+    Development.AbelianVarietyTheory.Proofs.DivisorProofs.LocalizationPreservesRingPullbackSquare:62: | (run_tac Lean.Elab.Tactic.liftMetaTactic (fun g => do pure [← g.revertAll])); exact _root_.GlobalTheory.QuotientMapComposition.main
+    Development.AbelianVarietyTheory.Proofs.DivisorProofs.MatchedDiffsInvariantSubspace:31: | (run_tac Lean.Elab.Tactic.liftMetaTactic (fun g => do pure [← g.revertAll])); exact @_root_.GlobalTheory.SpectralLemmaFirst.main
+    Development.AbelianVarietyTheory.Proofs.DivisorProofs.MatchedDiffsInvariantSubspace:32: | (run_tac Lean.Elab.Tactic.liftMetaTactic (fun g => do pure [← g.revertAll])); exact _root_.GlobalTheory.SpectralLemmaFirst.main
+    Development.AbelianVarietyTheory.Proofs.FlagMeasures.BasedFlagPairLatticeContainment:131: | (run_tac Lean.Elab.Tactic.liftMetaTactic (fun g => do pure [← g.revertAll])); exact @_root_.GlobalTheory.NatSmulMemOfSpan.exists_nat_smul_mem
+    Development.AbelianVarietyTheory.Proofs.FlagMeasures.BasedFlagPairLatticeContainment:132: | (run_tac Lean.Elab.Tactic.liftMetaTactic (fun g => do pure [← g.revertAll])); exact _root_.GlobalTheory.NatSmulMemOfSpan.exists_nat_smul_mem
+    Development.AbelianVarietyTheory.Proofs.FlagMeasures.DetMatrixSandwichLinearMap:14: | (run_tac Lean.Elab.Tactic.liftMetaTactic (fun g => do pure [← g.revertAll])); exact @_root_.GlobalTheory.DeterminantRealSandwich.det_real_family
+    Development.AbelianVarietyTheory.Proofs.FlagMeasures.DetMatrixSandwichLinearMap:15: | (run_tac Lean.Elab.Tactic.liftMetaTactic (fun g => do pure [← g.revertAll])); exact _root_.GlobalTheory.DeterminantRealSandwich.det_real_family
+    Development.AbelianVarietyTheory.Proofs.FlagMeasures.PowLePowRatio:153: | (run_tac Lean.Elab.Tactic.liftMetaTactic (fun g => do pure [← g.revertAll])); exact @_root_.GlobalTheory.InnerSumZeroSpan.main
+    Development.AbelianVarietyTheory.Proofs.FlagMeasures.PowLePowRatio:154: | (run_tac Lean.Elab.Tactic.liftMetaTactic (fun g => do pure [← g.revertAll])); exact _root_.GlobalTheory.InnerSumZeroSpan.main
+    Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsExtTwistedPlaces:60: | (run_tac Lean.Elab.Tactic.liftMetaTactic (fun g => do pure [← g.revertAll])); exact @_root_.GlobalTheory.PrimeBelow.exists_below
+    Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsExtTwistedPlaces:61: | (run_tac Lean.Elab.Tactic.liftMetaTactic (fun g => do pure [← g.revertAll])); exact _root_.GlobalTheory.PrimeBelow.exists_below
+    Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsGIs:81: run_tac do
+    Development.AbelianVarietyTheory.Proofs.SatakeParameters.AdelicLatticeSmulMemOfAgreeAwayFromPlace:70: | (run_tac Lean.Elab.Tactic.liftMetaTactic (fun g => do pure [← g.revertAll])); exact @_root_.GlobalTheory.NatMulIsIntegralSatakeParameters.exists_nsmul_mem
+    Development.AbelianVarietyTheory.Proofs.SatakeParameters.AdelicLatticeSmulMemOfAgreeAwayFromPlace:71: | (run_tac Lean.Elab.Tactic.liftMetaTactic (fun g => do pure [← g.revertAll])); exact _root_.GlobalTheory.NatMulIsIntegralSatakeParameters.exists_nsmul_mem
+    Development.AbelianVarietyTheory.Proofs.SatakeParameters.UnramifiedWeierstrassCurveTransformCoefficientsW:20: | (run_tac Lean.Elab.Tactic.liftMetaTactic (fun g => do pure [← g.revertAll])); exact @_root_.GlobalTheory.WittRootsOfUnity.inWf_of_mem_Kur
+    Development.AbelianVarietyTheory.Proofs.SatakeParameters.UnramifiedWeierstrassCurveTransformCoefficientsW:21: | (run_tac Lean.Elab.Tactic.liftMetaTactic (fun g => do pure [← g.revertAll])); exact _root_.GlobalTheory.WittRootsOfUnity.inWf_of_mem_Kur
+    Development.AbelianVarietyTheory.Proofs.SatakeParameters.ValuationRingModel:206: | (run_tac Lean.Elab.Tactic.liftMetaTactic (fun g => do pure [← g.revertAll])); exact @_root_.GlobalTheory.AlgClosedResidueField.isAlgClosed_residueField
+    Development.AbelianVarietyTheory.Proofs.SatakeParameters.ValuationRingModel:207: | (run_tac Lean.Elab.Tactic.liftMetaTactic (fun g => do pure [← g.revertAll])); exact _root_.GlobalTheory.AlgClosedResidueField.isAlgClosed_residueField
+    Development.AbelianVarietyTheory.Proofs.TwistedOperators.RelIndexTwoBlockParahoricConjTorusDiagElement:22: | (run_tac Lean.Elab.Tactic.liftMetaTactic (fun g => do pure [← g.revertAll])); exact @_root_.GlobalTheory.ParahoricConjugateOpen.relIndex_conj_parahoric
+    Development.AbelianVarietyTheory.Proofs.TwistedOperators.RelIndexTwoBlockParahoricConjTorusDiagElement:23: | (run_tac Lean.Elab.Tactic.liftMetaTactic (fun g => do pure [← g.revertAll])); exact _root_.GlobalTheory.ParahoricConjugateOpen.relIndex_conj_parahoric
+
+  -- inline Lean.Elab/Lean.Meta --
+    BuildAid.D1:2: import Lean.Elab.Command
+    BuildAid.D2:2: import Lean.Elab.Command
+    BuildAid.D3:2: import Lean.Elab.Command
+    BuildAid.D4:2: import Lean.Elab.Command
+    BuildAid.D5:2: import Lean.Elab.Command
+    Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.ExistsBoundAbsLocalLatticeCompletionEntries:12: | (run_tac Lean.Elab.Tactic.liftMetaTactic (fun g => do pure [← g.revertAll])); exact @_root_.GlobalTheory.LocalLatticeBound.exists_bound_latLoc
+    Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.ExistsBoundAbsLocalLatticeCompletionEntries:13: | (run_tac Lean.Elab.Tactic.liftMetaTactic (fun g => do pure [← g.revertAll])); exact _root_.GlobalTheory.LocalLatticeBound.exists_bound_latLoc
+    Development.AbelianVarietyTheory.Proofs.DivisorProofs.BoundedPowerSeriesEvaluationDivisibility:24: | (run_tac Lean.Elab.Tactic.liftMetaTactic (fun g => do pure [← g.revertAll])); exact @_root_.GlobalTheory.SummableSeriesBounds.main
+    Development.AbelianVarietyTheory.Proofs.DivisorProofs.BoundedPowerSeriesEvaluationDivisibility:25: | (run_tac Lean.Elab.Tactic.liftMetaTactic (fun g => do pure [← g.revertAll])); exact _root_.GlobalTheory.SummableSeriesBounds.main
+    Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsJetExtensionSquareZero:22: | (run_tac Lean.Elab.Tactic.liftMetaTactic (fun g => do pure [← g.revertAll])); exact @_root_.GlobalTheory.SquareLiftLemmas.exists_hom_jet
+    Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsJetExtensionSquareZero:23: | (run_tac Lean.Elab.Tactic.liftMetaTactic (fun g => do pure [← g.revertAll])); exact _root_.GlobalTheory.SquareLiftLemmas.exists_hom_jet
+    Development.AbelianVarietyTheory.Proofs.DivisorProofs.FramesTildeGammaValues:71: let g ← Lean.Elab.Tactic.getMainGoal
+    Development.AbelianVarietyTheory.Proofs.DivisorProofs.FramesTildeGammaValues:77: let ty ← Lean.Meta.whnf (← Lean.Meta.inferType t.appArg!)
+    Development.AbelianVarietyTheory.Proofs.DivisorProofs.FramesTildeGammaValues:77: let ty ← Lean.Meta.whnf (← Lean.Meta.inferType t.appArg!)
+    Development.AbelianVarietyTheory.Proofs.DivisorProofs.FramesTildeGammaValues:79: let pf ← Lean.Meta.mkAppM ``Subsingleton.elim #[fi.toExpr, inst]
+    Development.AbelianVarietyTheory.Proofs.DivisorProofs.FramesTildeGammaValues:82: Lean.Elab.Tactic.replaceMainGoal [g']
+    Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsRootMapMinpolyIffExistsRingHomExtension:10: | (run_tac Lean.Elab.Tactic.liftMetaTactic (fun g => do pure [← g.revertAll])); exact @_root_.GlobalTheory.InjectiveAlgebraHomExistence.exists_ringHom_comp_alge
+    Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsRootMapMinpolyIffExistsRingHomExtension:11: | (run_tac Lean.Elab.Tactic.liftMetaTactic (fun g => do pure [← g.revertAll])); exact _root_.GlobalTheory.InjectiveAlgebraHomExistence.exists_ringHom_comp_algeb
+    Development.AbelianVarietyTheory.Proofs.DivisorProofs.LocalizationPreservesRingPullbackSquare:38: | (run_tac Lean.Elab.Tactic.liftMetaTactic (fun g => do pure [← g.revertAll])); exact @_root_.GlobalTheory.QuotientMapComposition.main
+    Development.AbelianVarietyTheory.Proofs.DivisorProofs.LocalizationPreservesRingPullbackSquare:39: | (run_tac Lean.Elab.Tactic.liftMetaTactic (fun g => do pure [← g.revertAll])); exact _root_.GlobalTheory.QuotientMapComposition.main
+    Development.AbelianVarietyTheory.Proofs.DivisorProofs.LocalizationPreservesRingPullbackSquare:61: | (run_tac Lean.Elab.Tactic.liftMetaTactic (fun g => do pure [← g.revertAll])); exact @_root_.GlobalTheory.QuotientMapComposition.main
+    Development.AbelianVarietyTheory.Proofs.DivisorProofs.LocalizationPreservesRingPullbackSquare:62: | (run_tac Lean.Elab.Tactic.liftMetaTactic (fun g => do pure [← g.revertAll])); exact _root_.GlobalTheory.QuotientMapComposition.main
+    Development.AbelianVarietyTheory.Proofs.DivisorProofs.MatchedDiffsInvariantSubspace:31: | (run_tac Lean.Elab.Tactic.liftMetaTactic (fun g => do pure [← g.revertAll])); exact @_root_.GlobalTheory.SpectralLemmaFirst.main
+    Development.AbelianVarietyTheory.Proofs.DivisorProofs.MatchedDiffsInvariantSubspace:32: | (run_tac Lean.Elab.Tactic.liftMetaTactic (fun g => do pure [← g.revertAll])); exact _root_.GlobalTheory.SpectralLemmaFirst.main
+    Development.AbelianVarietyTheory.Proofs.FlagMeasures.BasedFlagPairLatticeContainment:131: | (run_tac Lean.Elab.Tactic.liftMetaTactic (fun g => do pure [← g.revertAll])); exact @_root_.GlobalTheory.NatSmulMemOfSpan.exists_nat_smul_mem
+    Development.AbelianVarietyTheory.Proofs.FlagMeasures.BasedFlagPairLatticeContainment:132: | (run_tac Lean.Elab.Tactic.liftMetaTactic (fun g => do pure [← g.revertAll])); exact _root_.GlobalTheory.NatSmulMemOfSpan.exists_nat_smul_mem
+    Development.AbelianVarietyTheory.Proofs.FlagMeasures.DetMatrixSandwichLinearMap:14: | (run_tac Lean.Elab.Tactic.liftMetaTactic (fun g => do pure [← g.revertAll])); exact @_root_.GlobalTheory.DeterminantRealSandwich.det_real_family
+    Development.AbelianVarietyTheory.Proofs.FlagMeasures.DetMatrixSandwichLinearMap:15: | (run_tac Lean.Elab.Tactic.liftMetaTactic (fun g => do pure [← g.revertAll])); exact _root_.GlobalTheory.DeterminantRealSandwich.det_real_family
+    Development.AbelianVarietyTheory.Proofs.FlagMeasures.PowLePowRatio:153: | (run_tac Lean.Elab.Tactic.liftMetaTactic (fun g => do pure [← g.revertAll])); exact @_root_.GlobalTheory.InnerSumZeroSpan.main
+    Development.AbelianVarietyTheory.Proofs.FlagMeasures.PowLePowRatio:154: | (run_tac Lean.Elab.Tactic.liftMetaTactic (fun g => do pure [← g.revertAll])); exact _root_.GlobalTheory.InnerSumZeroSpan.main
+    Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsExtTwistedPlaces:60: | (run_tac Lean.Elab.Tactic.liftMetaTactic (fun g => do pure [← g.revertAll])); exact @_root_.GlobalTheory.PrimeBelow.exists_below
+    Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsExtTwistedPlaces:61: | (run_tac Lean.Elab.Tactic.liftMetaTactic (fun g => do pure [← g.revertAll])); exact _root_.GlobalTheory.PrimeBelow.exists_below
+    Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsGIs:82: let m ← Lean.Elab.Tactic.getMainGoal
+    Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsGIs:83: m.withContext do m.assign (← Lean.Meta.getFVarFromUserName `h)
+    Development.AbelianVarietyTheory.Proofs.SatakeParameters.AdelicLatticeSmulMemOfAgreeAwayFromPlace:70: | (run_tac Lean.Elab.Tactic.liftMetaTactic (fun g => do pure [← g.revertAll])); exact @_root_.GlobalTheory.NatMulIsIntegralSatakeParameters.exists_nsmul_mem
+    Development.AbelianVarietyTheory.Proofs.SatakeParameters.AdelicLatticeSmulMemOfAgreeAwayFromPlace:71: | (run_tac Lean.Elab.Tactic.liftMetaTactic (fun g => do pure [← g.revertAll])); exact _root_.GlobalTheory.NatMulIsIntegralSatakeParameters.exists_nsmul_mem
+    Development.AbelianVarietyTheory.Proofs.SatakeParameters.UnramifiedWeierstrassCurveTransformCoefficientsW:20: | (run_tac Lean.Elab.Tactic.liftMetaTactic (fun g => do pure [← g.revertAll])); exact @_root_.GlobalTheory.WittRootsOfUnity.inWf_of_mem_Kur
+    Development.AbelianVarietyTheory.Proofs.SatakeParameters.UnramifiedWeierstrassCurveTransformCoefficientsW:21: | (run_tac Lean.Elab.Tactic.liftMetaTactic (fun g => do pure [← g.revertAll])); exact _root_.GlobalTheory.WittRootsOfUnity.inWf_of_mem_Kur
+    Development.AbelianVarietyTheory.Proofs.SatakeParameters.ValuationRingModel:206: | (run_tac Lean.Elab.Tactic.liftMetaTactic (fun g => do pure [← g.revertAll])); exact @_root_.GlobalTheory.AlgClosedResidueField.isAlgClosed_residueField
+    Development.AbelianVarietyTheory.Proofs.SatakeParameters.ValuationRingModel:207: | (run_tac Lean.Elab.Tactic.liftMetaTactic (fun g => do pure [← g.revertAll])); exact _root_.GlobalTheory.AlgClosedResidueField.isAlgClosed_residueField
+
+  -- elab definition --
+    Formalism.HermitianCurvature.HermitianCurvatureProofs.CutCptCopy:87: elab "cpt_copy_thms" : command => do
+    Formalism.LocalToGlobal.IndefiniteReal.HeckeNonvanishing.Imports:5: elab "kexactB " e:term : tactic => withMainContext do
+    Formalism.LocalToGlobal.NumberFieldFamilies.OwnStruct:53: elab "kcopy " t:term : tactic => withMainContext do
+    Formalism.LocalToGlobal.NumberFieldFamilies.OwnStruct:60: elab "#kcopy_probe " t:term " : " ty:term : command => Command.runTermElabM fun _ => do
+
+  -- addDecl --
+    Formalism.HermitianCurvature.HermitianCurvatureProofs.CutCptCopy:78: addDecl (.defnDecl { d with name := n', type := subst tainted d.type, value := subst tainted d.value })
+    Formalism.HermitianCurvature.HermitianCurvatureProofs.CutCptCopy:82: addDecl (.thmDecl { t with name := n', type := subst tainted t.type, value := subst tainted t.value })
+
+  -- modifyEnv / setEnv --
+    BuildAid.D1:4: run_cmd Lean.modifyEnv fun env => Lean.LibrarySuggestions.nameDenyListExt.addEntry env "CompanionTheory"
+    BuildAid.D2:4: run_cmd Lean.modifyEnv fun env => Lean.LibrarySuggestions.nameDenyListExt.addEntry env "CrystallineSemistableComparison"
+    BuildAid.D3:4: run_cmd Lean.modifyEnv fun env => Lean.LibrarySuggestions.nameDenyListExt.addEntry env "GlobalTheory"
+    BuildAid.D4:4: run_cmd Lean.modifyEnv fun env => Lean.LibrarySuggestions.nameDenyListExt.addEntry env "PositivityTheory"
+    BuildAid.D5:4: run_cmd Lean.modifyEnv fun env => Lean.LibrarySuggestions.nameDenyListExt.addEntry env "UpperTheory"
+
+  -- direct mvar assign --
+    Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsGIs:83: m.withContext do m.assign (← Lean.Meta.getFVarFromUserName `h)
+    Formalism.LocalToGlobal.IndefiniteReal.HeckeNonvanishing.Imports:8: g.assign (← instantiateMVars v)
+    Formalism.LocalToGlobal.NumberFieldFamilies.OwnStruct:58: g.assign (← instantiateMVars v)
+
+  -- Kernel.isDefEq / whnf --
+    Formalism.LocalToGlobal.NumberFieldFamilies.OwnStruct:11: match Kernel.isDefEq (← getEnv) (← getLCtx) a b with
+
+  -- partial def --
+    Formalism.HermitianCurvature.HermitianCurvatureProofs.CutCptCopy:41: partial def go (env : Environment) (n : Name) (st : NameSet × NameSet × Array Name) : NameSet × NameSet × Array Name :=
+    Formalism.LocalToGlobal.NumberFieldFamilies.OwnStruct:18: partial def copyAt (probe : Bool) (e tgt : Expr) (path : String) (fuel : Nat) : StateT (Array String) MetaM Expr := do
+
+==============================================================================
+C. OPTIONS
+==============================================================================
+  set_option keys used in source:
+      57556  maxHeartbeats
+      11203  autoImplicit
+       7478  maxSynthPendingDepth
+       7381  synthInstance.maxHeartbeats
+       1879  backward.isDefEq.respectTransparency
+        874  linter.unusedSectionVars
+        503  linter.unusedVariables
+        272  linter.unusedSimpArgs
+        181  genSizeOfSpec
+        179  genInjectivity
+        122  linter.style.haveILetI
+         87  backward.isDefEq.respectTransparency.types
+         51  synthInstance.maxSize
+         46  linter.dupNamespace
+         40  linter.overlappingInstances
+         38  linter.all
+         37  allowUnsafeReducibility
+         34  maxRecDepth
+         34  linter.deprecated
+         33  backward.defeqAttrib.useBackward
+         31  hygiene
+         23  linter.style.longLine
+         12  linter.unusedTactic
+         12  linter.unreachableTactic
+          9  linter.unnecessarySeqFocus
+          9  pp.fullNames
+          7  quotPrecheck
+          3  smartUnfolding
+          1  linter.auxLemma
+          1  Elab.async
+          1  linter.unnecessarySimpa
+          1  genSizeOf
+          1  warn.classDefReducibility
+
+  lakefile.toml (full):
+    | name = "tree"
+    | srcDir = "src"
+    | defaultTargets = ["BuildAid", "CompanionTheory", "Development", "Formalism", "GroundTheory", "GroundTheoryFields", "Lemmata", "PositivityTheory", "ReciprocityTheory", "Supplements", "Main"]
+    | moreLeanArgs = ["--tstack=400000"]
+    | 
+    | [leanOptions]
+    | autoImplicit = false
+    | relaxedAutoImplicit = false
+    | maxSynthPendingDepth = 3
+    | pp.unicode.fun = true
+    | maxHeartbeats = 4000000
+    | 
+    | [[require]]
+    | name = "mathlib"
+    | git = "https://github.com/leanprover-community/mathlib4"
+    | rev = "0df444a360eaa60ab8c11dca51a86af692955474"
+    | 
+    | [[lean_lib]]
+    | name = "BuildAid"
+    | globs = ["BuildAid.+"]
+    | 
+    | [[lean_lib]]
+    | name = "CompanionTheory"
+    | globs = ["CompanionTheory.+"]
+    | 
+    | [[lean_lib]]
+    | name = "Development"
+    | globs = ["Development.+"]
+    | 
+    | [[lean_lib]]
+    | name = "Formalism"
+    | globs = ["Formalism.+"]
+    | 
+    | [[lean_lib]]
+    | name = "GroundTheory"
+    | globs = ["GroundTheory.ArithmeticGeometry.+", "GroundTheory.AutomorphicForms.+", "GroundTheory.Brauer.+", "GroundTheory.FunctionField.+", "GroundTheory.HeightsAndTheta.+", "GroundTheory.IdeleRoots.+", "GroundTheory.PAdicHodge.+", "GroundTheory.PowerSubgroups.+", "GroundTheory.ProfiniteCohomology.+", "GroundTheory.TateCohomology.+"]
+    | 
+    | [[lean_lib]]
+    | name = "GroundTheoryFields"
+    | globs = ["GroundTheory.LocalFields.+", "GroundTheory.GlobalFields.+"]
+    | leanOptions = {synthInstance.maxHeartbeats = 400000}
+    | 
+    | [[lean_lib]]
+    | name = "Lemmata"
+    | globs = ["Lemmata.+"]
+    | 
+    | [[lean_lib]]
+    | name = "PositivityTheory"
+    | globs = ["PositivityTheory.+"]
+    | 
+    | [[lean_lib]]
+    | name = "ReciprocityTheory"
+    | globs = ["ReciprocityTheory.+"]
+    | 
+    | [[lean_lib]]
+    | name = "Supplements"
+    | globs = ["Supplements.+"]
+    | 
+    | [[lean_lib]]
+    | name = "Main"
+    | roots = ["Statements", "Main"]
+
+==============================================================================
+D. IMPORT GRAPH
+==============================================================================
+  modules reachable from ['Main', 'Statements']: 175187 of 175187 project modules
+  external import roots: {'Mathlib': 344, 'Lean': 3, 'Batteries': 1}
+  project modules NOT reachable (built by lake but irrelevant to the final theorems): 0
+  files with 'run_cmd' inside the cone: 5 / 5
+  files with 'run_tac' inside the cone: 16 / 16
+  files with 'elab definition' inside the cone: 3 / 3
+  files with 'addDecl' inside the cone: 1 / 1
+  files with 'direct mvar assign' inside the cone: 3 / 3
+
+==============================================================================
+E. STATEMENT FILES (read these)
+==============================================================================
+
+  ---- Main.lean ----
+    | import Statements
+    | import Supplements.Kernels.MainTheoremsAll
+    | 
+    | theorem riemannHypothesis : RiemannHypothesis := rhOfAll
+    | 
+    | theorem riemannZeta_eq_zero_re : RiemannZetaZerosOnLine := rhOfAll
+    | 
+    | theorem LFunction_ne_zero_of_half_lt_re : DirichletLNonvanishingRightOfHalf := allChi
+    | 
+    | theorem LFunction_eq_zero_re : DirichletLZerosOnLine := claimAll.2.1
+    | 
+    | theorem LFunction_eq_zero_re_of_isPrimitive : PrimitiveDirichletLZerosOnLine := critAll
+
+  ---- Statements.lean ----
+    | import Mathlib
+    | 
+    | def RiemannZetaZerosOnLine : Prop :=
+    |   ∀ s : ℂ, riemannZeta s = 0 → (¬∃ n : ℕ, s = -2 * ((n : ℂ) + 1)) → s ≠ 1 → s.re = 1 / 2
+    | 
+    | def DirichletLNonvanishingRightOfHalf : Prop :=
+    |   ∀ (N : ℕ) [NeZero N] (χ : DirichletCharacter ℂ N) (s : ℂ),
+    |     1 / 2 < s.re → (χ ≠ 1 ∨ s ≠ 1) → DirichletCharacter.LFunction χ s ≠ 0
+    | 
+    | def DirichletLZerosOnLine : Prop :=
+    |   ∀ (N : ℕ) [NeZero N] (χ : DirichletCharacter ℂ N) (s : ℂ),
+    |     0 < s.re → s.re < 1 → DirichletCharacter.LFunction χ s = 0 → s.re = 1 / 2
+    | 
+    | def PrimitiveDirichletLZerosOnLine : Prop :=
+    |   ∀ (N : ℕ) [NeZero N] (χ : DirichletCharacter ℂ N), χ.IsPrimitive →
+    |     ∀ s : ℂ, 0 < s.re → s.re < 1 → DirichletCharacter.LFunction χ s = 0 → s.re = 1 / 2
+
+==============================================================================
+RESULT
+==============================================================================
+  hard-fail hits in code: 0  ->  PASS
+  Section B items are not failures; the kernel re-checks everything they produce,
+  but read them to understand how the proof was assembled.

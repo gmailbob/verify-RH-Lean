@@ -1,0 +1,6 @@
+Manifest-to-manifest comparison: our project-oleans.sha256 vs MIT's project-oleans.sha256
+files in ours: 175187   in MIT's: 175187   in both: 175187
+only in ours: 0   only in MIT's: 0
+identical sha256: 76968   different: 98219
+Main.olean: ours 9146dfb4148e24d2252e04c50742f3e49dd126dfcc5006d10bf5f873ddf796ad, MIT's 9146dfb4148e24d2252e04c50742f3e49dd126dfcc5006d10bf5f873ddf796ad, identical
+Expected (MIT's note): 76,968 path-free files identical; 98,219 files that embed the source path differ.

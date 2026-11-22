@@ -1,0 +1,23 @@
+=== 2026-11-21T05:07:52Z  05-build.sh 05-build.log  (host <host>, WORKDIR=/home/ec2-user/rh)
+[05:07:52] free disk 1979 GB; JOBS=28; toolchain Lean (version 4.33.1
+[05:07:52] lake build started
+=== 2026-11-21T07:04:51Z  05-build.sh 05-build.log  (host <host>, WORKDIR=/home/ec2-user/rh)
+[07:04:51] free disk 1794 GB; JOBS=28; toolchain Lean (version 4.33.1
+[07:04:51] lake build started
+exit status:     0
+started (UTC):   2026-11-21T07:04:51Z
+finished (UTC):  2026-11-21T17:23:22Z
+duration:        10h 18m
+last progress:   [183902/183903]
+error lines:     0
+warning lines:   489061
+failed jobs:     0
+final line:      Build completed successfully (183903 jobs).
+disk after:      1.3T used, 709G free
+size of .lake:   1.2T
+machine:         32 CPUs, 61 GiB RAM, aarch64, JOBS=28
+[17:24:02] compressing build log
+-rw-rw-r--. 1 ec2-user ec2-user 8243312 Nov 21 17:23 /home/ec2-user/rh/out/build.log.zst
+  PASS  lake build succeeded
+
+All checks passed (0 warning(s)).

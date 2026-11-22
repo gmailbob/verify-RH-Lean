@@ -1,0 +1,27 @@
+=== 2026-11-21T04:28:06Z  01-install-toolchain.sh 01-install-toolchain.log  (host <host>, WORKDIR=/home/ec2-user/rh)
+[04:28:06] download lean-4.33.1-linux_aarch64.tar.zst
+  already present
+[04:28:06] authenticity
+  sha256 f7353a8b2a8741c84558523e450556f9a1c45e3cafcf54399ce68c6a24c55f07
+  PASS  matches pin in config.sh
+  PASS  matches GitHub release asset digest
+  PASS  tag v4.33.1 points at pinned commit 819816b2e0a3bf405af45ae5c7af2491d8f5bee6
+[04:28:10] extract
+  already extracted at /home/ec2-user/rh/toolchain/lean-4.33.1-linux_aarch64
+[04:28:10] binaries
+  Lean (version 4.33.1, aarch64-unknown-linux-gnu, commit 819816b2e0a3bf405af45ae5c7af2491d8f5bee6, Release)
+  PASS  lean reports version 4.33.1
+  PASS  lean reports commit 819816b2e0a3bf405af45ae5c7af2491d8f5bee6
+  Lake version 5.0.0-src+819816b (Lean version 4.33.1)
+  PASS  lake matches
+  PASS  lean resolves to the pinned toolchain
+  PASS  lake resolves to the pinned toolchain
+  PASS  leanchecker resolves to the pinned toolchain
+[04:28:10] smoke tests
+  'smoke' does not depend on any axioms
+  PASS  lean elaborates and checks a theorem
+  PASS  leanchecker --fresh Init.Prelude
+
+To use this toolchain in your shell:  export PATH="/home/ec2-user/rh/toolchain/lean-4.33.1-linux_aarch64/bin:$PATH"
+
+All checks passed (0 warning(s)).

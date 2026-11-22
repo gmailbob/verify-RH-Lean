@@ -1,0 +1,9 @@
+root module: Main
+library roots: [Init, Lean, Std, Lake, Mathlib, Batteries, Aesop, Qq, ProofWidgets, Plausible, LeanSearchClient, ImportGraph, Cli]
+imported modules: 186200
+environment constants: 2701132
+project nodes: 1905921
+user-written nodes: 1079944
+edges: 20986047
+self-check: 2003 nodes compared, 0 mismatches, file size ok: true -> PASS
+timings (s): import 339, export 951, self-check 393

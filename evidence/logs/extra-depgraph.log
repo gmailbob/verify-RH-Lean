@@ -1,0 +1,70 @@
+=== 2026-11-21T23:21:17Z  run.sh extra-depgraph.log  (host <host>, WORKDIR=/home/ec2-user/rh)
+ERROR leanchecker (step 7) is running; this would slow it down. Wait, or set FORCE=1.
+=== 2026-11-22T08:48:27Z  run.sh extra-depgraph.log  (host <host>, WORKDIR=/home/ec2-user/rh)
+[08:48:37] export the dependency graph of Main
+Command terminated by signal 15
+wall 1452.56s, max RSS 53266820 KB
+  FAIL  export or its self-check failed
+
+1 check(s) FAILED, 0 warning(s). Do not continue.
+=== 2026-11-22T09:14:44Z  run.sh extra-depgraph.log  (host <host>, WORKDIR=/home/ec2-user/rh)
+[09:14:45] export the dependency graph of Main
+imported Main: 186200 modules, 2701132 constants, 339 s
+project nodes: 1905921 (indexed in 2 s)
+nodes.tsv written (15 s)
+edges: 20986047; user-written nodes: 1079944; export 951 s
+root module: Main
+library roots: [Init, Lean, Std, Lake, Mathlib, Batteries, Aesop, Qq, ProofWidgets, Plausible, LeanSearchClient, ImportGraph, Cli]
+imported modules: 186200
+environment constants: 2701132
+project nodes: 1905921
+user-written nodes: 1079944
+edges: 20986047
+self-check: 2003 nodes compared, 0 mismatches, file size ok: true -> PASS
+timings (s): import 339, export 951, self-check 393
+wall 1687.63s, max RSS 54665808 KB
+  PASS  graph exported; self-check passed (see /home/ec2-user/rh/out/extra/depgraph/meta.txt)
+[09:42:53] analyse
+  PASS  report: /home/ec2-user/rh/out/extra/depgraph-report.txt
+==================================================================== root: riemannHypothesis
+nodes: 1905921 (user-written 1079944)   edges: 20986047
+cone of riemannHypothesis: 1265256 nodes (66.4% of all), user-written 791182 (73.3%)
+not needed by the root: 640665 nodes, user-written 288762
+dominator computation: 3 rounds to fixed point
+
+query                                                                              cone    cone%    exclusive    excl%  immediate dominator
+riemannHypothesis                                                               1265256  100.00%      1265256  100.00%  -
+rhOfAll                                                                         1265255  100.00%      1265255  100.00%  riemannHypothesis
+allChi                                                                          1265250  100.00%      1265248  100.00%  rhOfAll
+claimAll                                                                   not reachable from the root
+critAll                                                                    not reachable from the root
+UpperTheory.FinalTheorems.everyCharacter                                        1265249  100.00%      1265247  100.00%  allChi
+UpperTheory.FinalTheorems.everyCharacter_of_row                                 1174939   92.86%       961960   76.03%  UpperTheory.FinalTheorems.everyCharacter
+UpperTheory.Gal.Int.galoisLocalGlobalStrong_recParameter                         303286   23.97%        90309    7.14%  UpperTheory.FinalTheorems.everyCharacter
+UpperTheory.Gal.Int.galoisRepresentations_of_thetaLift                           266240   21.04%        86158    6.81%  UpperTheory.Gal.Int.galoisLocalGlobalStrong_recParameter
+UpperTheory.LiteratureTheorems.every_character_of_literature_of_vWin            1058739   83.68%       840854   66.46%  UpperTheory.FinalTheorems.everyCharacter_of_row
+UpperTheory.Lit.every_character_of_theta_integrals_local_matching                772332   61.04%       540408   42.71%  UpperTheory.LiteratureTheorems.every_character_of_literature_of_vWin
+UpperTheory.One.vwin_of_row                                                      276809   21.88%        90527    7.15%  UpperTheory.FinalTheorems.everyCharacter_of_row
+UpperTheory.One.Join.automorphic_window_of_inputs                                276584   21.86%        90523    7.15%  UpperTheory.One.vwin_of_row
+UpperTheory.Zero.LLC.recTExists                                                   20912    1.65%          583    0.05%  UpperTheory.FinalTheorems.everyCharacter
+Formalism.VW.rh_of_every                                                              6    0.00%            4    0.00%  rhOfAll
+Formalism.VW.rh_of_right                                                              3    0.00%            3    0.00%  Formalism.VW.rh_of_every
+Formalism.VW.critLine                                                      not reachable from the root
+Claim.strip                                                                not reachable from the root
+Claim.zeta                                                                 not reachable from the root
+
+dominator tree (exclusive share = needed only through that declaration):
+thm riemannHypothesis  [Main]  exclusive 1265256 (100.00%), user-written 791182  {Development 67%, Formalism 22%, GroundTheory 6%}
+  thm rhOfAll  [Supplements.Kernels.MainTheorems]  exclusive 1265255 (100.00%), user-written 791181  {Development 67%, Formalism 22%, GroundTheory 6%}
+    thm allChi  [Supplements.Kernels.MainTheorems]  exclusive 1265248 (100.00%), user-written 791177  {Development 67%, Formalism 22%, GroundTheory 6%}
+      thm UpperTheory.FinalTheorems.everyCharacter  [Development.AutomorphicArithmetic.CharacterBoxes.MainConclusion]  exclusive 1265247 (100.00%), user-written 791176  {Development 67%, Formalism 22%, GroundTheory 6%}
+        thm UpperTheory.FinalTheorems.everyCharacter_of_row  [Development.AutomorphicArithmetic.CharacterBoxes.MainConclusion]  exclusive 961960 (76.03%), user-written 602917  {Development 61%, Formalism 28%, GroundTheory 5%}
+          thm UpperTheory.LiteratureTheorems.every_character_of_literature_of_vWin  [Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.ThirdPlaceSeries.EveryCharacterOfLiteratureOfVWin]  exclusive 840854 (66.46%), user-written 546369  {Development 58%, Formalism 32%, ReciprocityTheory 5%}
+            thm UpperTheory.Lit.every_character_of_theta_integrals_local_matching  [Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.ThirdPlaceSeries.SiegelEisensteinSecondTermHypotheses]  exclusive 540408 (42.71%), user-written 339215  {Development 51%, Formalism 45%, ReciprocityTheory 3%}
+              thm UpperTheory.Lit.nonempty_hyps_definite_side_of_closed_bound  [Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.ThirdPlaceSeries.SiegelEisensteinSecondTermHypotheses]  exclusive 449095 (35.49%), user-written 282178  {Development 58%, Formalism 38%, ReciprocityTheory 3%}
+                thm GlobalTheory.Fc.S0.StageU.hypotheses_nonempty_of_unramified_exponents_alt  [Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.ThirdPlaceSeries.HypothesesNonemptyOfUnramifiedExponents]  exclusive 152670 (12.07%), user-written 96639  {Development 58%, Formalism 41%, ReciprocityTheory 1%}
+                  thm GlobalTheory.Fc.AllAtMemberStage0.allRows_of_open0_alt  [Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.ThirdPlaceSeries.LinkROfIsLinked]  exclusive 54017 (4.27%), user-written 35902  {Formalism 69%, Development 29%, ReciprocityTheory 2%}
+                    thm GlobalTheory.LocalRows.lg1_sLp_sO_hTF  [Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.ThirdPlaceSeries.AtChoice]  exclusive 23066 (1.82%), user-written 15286  {Formalism 98%, Development 2%, Lemmata 0%}
+                    thm GlobalTheory.T.hServ_of_linkR  [Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.ThirdPlaceSeries.RowHServOfLinkStatement]  exclusive 16313 (1.29%), user-written 11102  {Formalism 57%, Development 37%, ReciprocityTheory 6%}
+
+All checks passed (0 warning(s)).

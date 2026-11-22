@@ -1,0 +1,27 @@
+PASS axioms  good_noAxioms: []
+PASS axioms  good_classical: [propext, Classical.choice, Quot.sound]
+PASS type    good_typed : MyStmt
+PASS defn    MyStmt is syntactically identical to the reviewed text MyStmtCopy
+PASS module  Nat.add_comm is defined in Init.Data.Nat.Basic
+PASS deps    MyStmt uses only constants from [Init] (7 constants)
+PASS defn    PStmt is syntactically identical to the reviewed text PStmtCopy (after inlining 1 auxiliary proof(s))
+PASS deps    PStmt uses only constants from [Init] (15 constants)
+PASS selftest 'sorry' rejected as expected: AUDIT FAIL: bad_sorry depends on non-standard axioms [sorryAx] (all: [sorryAx])
+PASS selftest 'custom axiom' rejected as expected: AUDIT FAIL: bad_axiom depends on non-standard axioms [myAxiom] (all: [myAxiom])
+PASS selftest 'native_decide' rejected as expected: AUDIT FAIL: bad_native depends on non-standard axioms [bad_native._native.native_decide.ax_1_1] (all: [bad_native._native.native_decide.ax_1_1])
+PASS selftest 'type only defeq to the statement' rejected as expected: AUDIT FAIL: type of bad_type is
+  ∀ (n : Nat), n + 0 = n
+expected exactly the constant MyStmt
+PASS selftest 'statement drift' rejected as expected: AUDIT FAIL: MyStmt differs syntactically from MyStmtDrift (defeq: false)
+  ∀ (n : Nat), n + 0 = n
+vs
+  ∀ (n : Nat), 0 + n = n
+PASS selftest 'wrong module' rejected as expected: AUDIT FAIL: Nat.add_comm is defined in some (Init.Data.Nat.Basic), expected Mathlib.Foo
+PASS selftest 'statement uses a non-library constant' rejected as expected: AUDIT FAIL: UsesLocal uses MyStmt, which is not from an imported module
+PASS selftest 'local lemma hidden in an auxiliary proof' rejected as expected: AUDIT FAIL: HidesLocal uses localLt, which is not from an imported module
+PASS selftest 'drift in a statement with nested proofs' rejected as expected: AUDIT FAIL: PStmt differs syntactically from PStmtDrift (defeq: false)
+  ⟨0, ⋯⟩ = ⟨0, ⋯⟩
+vs
+  ⟨0, ⋯⟩ = ⟨0, ⋯⟩
+PASS selftest 'missing constant' rejected as expected: AUDIT FAIL: constant does.not.exist not found
+SELFTEST COMPLETE
