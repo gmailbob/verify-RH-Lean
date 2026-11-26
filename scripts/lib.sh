@@ -7,9 +7,9 @@ REPO="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 # shellcheck source=../config.sh
 source "$REPO/config.sh"
 
-DL="$WORKDIR/download"          # archive parts + announcement (untrusted)
-SRC="$WORKDIR/src"              # extraction target (untrusted)
-PROJ="$SRC/$EXPECTED_ROOT_DIR"  # the Lake project
+SRC="$WORKDIR/src"              # downloaded sources (untrusted)
+CLONE="$SRC/grh-lean"           # fresh clone of $SOURCE_REPO_URL at $SOURCE_COMMIT
+PROJ="$CLONE/$SOURCE_SUBDIR"    # the Lake project
 TC="$WORKDIR/toolchain"         # Lean release
 OUT="$WORKDIR/out"              # logs, hash lists, reports from each step
 
@@ -54,9 +54,9 @@ finish() {
 need_toolchain() {
   [[ -x "$LEAN_HOME/bin/lean" ]] || die "toolchain missing; run scripts/01-install-toolchain.sh"
 }
-# Lean memory-maps every imported .olean; deep modules here import >20k of them. With the
-# Amazon Linux / RHEL default vm.max_map_count (65530) Lean fails with
-# "failed to read file '....olean'" although the file is intact (mmap ENOMEM).
+# Lean memory-maps every imported .olean file. If a process runs out of mappings
+# (vm.max_map_count), Lean fails with "failed to read file '....olean'" although the file is
+# intact (mmap returns ENOMEM). Raise the limit if you see that.
 need_max_map_count() {
   local m; m=$(sysctl -n vm.max_map_count 2>/dev/null || echo 0)
   (( m >= MIN_MAX_MAP_COUNT )) || die "vm.max_map_count is $m, need >= $MIN_MAX_MAP_COUNT (see scripts/00-check-machine.sh)"
@@ -65,20 +65,38 @@ need_project() {
   [[ -f "$PROJ/lakefile.toml" ]] || die "project missing; run scripts/02-fetch-source.sh"
 }
 
-# start_monitor <csv> [interval-seconds] [lake-log]: sample disk/memory/load (and
-# lake [n/N] progress if a log is given) in the background until stop_monitor.
+# pinned_checkout <url> <dir> <full-commit-sha>: clone if needed, check out exactly that commit,
+# and check that no tracked file is modified. Records PASS/FAIL lines.
+pinned_checkout() {
+  local url="$1" dir="$2" rev="$3"
+  [[ -d "$dir/.git" ]] || git clone --quiet "$url" "$dir"
+  git -C "$dir" fetch --quiet origin "$rev" 2>/dev/null || git -C "$dir" fetch --quiet origin
+  git -C "$dir" -c advice.detachedHead=false checkout --quiet --detach "$rev"
+  [[ "$(git -C "$dir" rev-parse HEAD)" == "$rev" ]] && ok "$(basename "$dir") at $rev" || bad "$(basename "$dir") not at $rev"
+  [[ -z "$(git -C "$dir" status --porcelain --untracked-files=no)" ]] \
+    && ok "$(basename "$dir") has no modified tracked files" || bad "$(basename "$dir") has local modifications"
+}
+
+# start_monitor <csv> [interval-seconds] [lake-log]: sample disk/memory/load, the largest
+# number of memory mappings held by any Lean process (the quantity vm.max_map_count limits),
+# and lake [n/N] progress if a log is given, in the background until stop_monitor.
 start_monitor() {
   local csv="$1" iv="${2:-300}" plog="${3:-}"
   # append, so a resumed run (e.g. after a reboot) keeps the earlier samples
-  [[ -s "$csv" ]] || echo "utc,disk_used_gb,disk_avail_gb,mem_used_gb,swap_used_gb,load1,progress" > "$csv"
+  [[ -s "$csv" ]] || echo "utc,disk_used_gb,disk_avail_gb,mem_used_gib,swap_used_gib,load1,progress,max_maps" > "$csv"
   (
     set +e +o pipefail   # a failed sample (e.g. no progress line yet) must not kill the monitor
     while :; do
       read -r du da < <(df -Pk "$WORKDIR" | awk 'NR==2 {printf "%d %d\n", $3/1e6, $4/1e6}')
-      read -r mu su < <(free -k | awk '/^Mem:/ {m=$3} /^Swap:/ {s=$3} END {printf "%d %d\n", m/1048576, s/1048576}')
+      read -r mu su < <(free -k | awk '/^Mem:/ {m=$3} /^Swap:/ {s=$3} END {printf "%.1f %.1f\n", m/1048576, s/1048576}')
       prog=""
       [[ -n "$plog" && -f "$plog" ]] && prog=$(tail -c 262144 "$plog" | grep -oE '\[[0-9]+/[0-9]+\]' | tail -1 | tr -d '[]')
-      echo "$(date -u +%FT%TZ),$du,$da,$mu,$su,$(cut -d' ' -f1 /proc/loadavg),$prog" >> "$csv"
+      mm=0
+      for p in $(pgrep -x 'lean|leanchecker|leanexport' 2>/dev/null); do
+        n=$( { wc -l < "/proc/$p/maps"; } 2>/dev/null ) || continue   # the process may have exited
+        (( ${n:-0} > mm )) && mm=$n
+      done
+      echo "$(date -u +%FT%TZ),$du,$da,$mu,$su,$(cut -d' ' -f1 /proc/loadavg),$prog,$mm" >> "$csv"
       sleep "$iv"
     done
   ) &

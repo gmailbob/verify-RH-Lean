@@ -58,6 +58,7 @@ META = {
     "elab definition": r"^[ \t]*(?:@\[[^\]]*\]\s*)?(?:local\s+|scoped\s+)?(?:elab|elab_rules)\b",
     "macro definition": r"^[ \t]*(?:@\[[^\]]*\]\s*)?(?:local\s+|scoped\s+)?(?:macro|macro_rules)\b",
     "syntax definition": r"^[ \t]*(?:@\[[^\]]*\]\s*)?(?:local\s+|scoped\s+)?syntax\b",
+    "notation / infix definition": r"^[ \t]*(?:@\[[^\]]*\]\s*)?(?:local\s+|scoped\s+)?(?:notation3?|infixl|infixr|infix|prefix|postfix)\b",
     "elaborator attribute": r"@\[\s*(?:command_elab|term_elab|tactic|macro)\b",
     "addDecl": r"\baddDecl\b",
     "modifyEnv / setEnv": r"\b(?:modifyEnv|setEnv)\b",
@@ -67,6 +68,7 @@ META = {
     "partial def": r"\bpartial\s+def\b",
     "allowUnsafeReducibility": r"\ballowUnsafeReducibility\b",
     "maxHeartbeats 0": r"set_option\s+maxHeartbeats\s+0\b",
+    "attribute command": r"^[ \t]*attribute\s*\[",
 }
 
 IDENT_CH = r"A-Za-z0-9_'!?₀-₉ₐ-ₜᵢ-ᵪ"
@@ -238,7 +240,7 @@ print("\n  User-defined syntax keywords and how often each is used:")
 for kw, mod in sorted(custom_syntax.items(), key=lambda kv: -syntax_uses[kv[0]]):
     print(f"    {kw!r:30s} uses {syntax_uses[kw]:6d}   defined {syntax_defs[kw]}x, first in {mod}")
 for k in ["run_cmd", "run_elab", "run_meta", "run_tac", "by_elab", "#eval", "initialize",
-          "inline Lean.Elab/Lean.Meta", "elab definition",
+          "inline Lean.Elab/Lean.Meta", "elab definition", "notation / infix definition",
           "elaborator attribute", "addDecl", "modifyEnv / setEnv", "direct mvar assign",
           "Kernel.isDefEq / whnf", "IO / process", "partial def"]:
     hits = meta_hits.get(k, [])
@@ -296,5 +298,6 @@ with open(json_out, "w") as fh:
 section("RESULT")
 print(f"  hard-fail hits in code: {code_fail}  ->  {'FAIL' if code_fail else 'PASS'}")
 print("  Section B items are not failures; the kernel re-checks everything they produce,")
-print("  but read them to understand how the proof was assembled.")
+print("  but read them to understand how the proof was assembled. 'attribute command' counts")
+print("  instance, simp-set and similar attributes: they steer elaboration and add no axioms.")
 sys.exit(1 if code_fail else 0)

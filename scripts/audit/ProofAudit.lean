@@ -15,7 +15,7 @@ import Main
 import AuditLib
 import Reviewed
 
-set_option maxHeartbeats 0  -- the axiom traversal of a ~180k-module cone is long
+set_option maxHeartbeats 0  -- the axiom traversal walks the whole proof
 
 open Audit
 

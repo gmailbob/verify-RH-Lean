@@ -10,10 +10,9 @@
 #
 # leanchecker is single-threaded and prints no progress. For an estimate, run in another
 # terminal:  python3 -I scripts/tools/replay_progress.py $(pgrep -x leanchecker) $OUT/replay-progress.csv
-# It records the share of .olean pages the replay has touched; it ended at ~96% here,
-# because the kernel never needs some of the stored data.
-# Measured on 32 Graviton4 cores / 61 GiB RAM + 64 GiB swap: 13 h 15 min wall clock,
-# 48.5 GB peak RSS (mostly file-backed .olean pages; ~16 GB anonymous), no swap used.
+# It records the share of .olean pages the replay has touched. On a project this small,
+# loading alone touches about 80% of them, so the figure says little; the replay took
+# 46 minutes on one Graviton4 core here, with 10.9 GiB peak RSS.
 # Outputs: $OUT/replay.log, $OUT/replay-monitor.csv
 source "$(dirname "$0")/lib.sh"
 need_toolchain
@@ -24,7 +23,7 @@ log_to 07-kernel-replay.log
 [[ -d "$PROJ/.lake/build/lib" ]] || die "project not built; run scripts/05-build.sh"
 target="${REPLAY_TARGET:-Main}"
 
-start_monitor "$OUT/replay-monitor.csv" 300
+start_monitor "$OUT/replay-monitor.csv" 60
 trap stop_monitor EXIT
 log "leanchecker --fresh $target"
 # On Ctrl-C/TERM, Lake (in the same process group) stops; this script must carry on

@@ -36,22 +36,34 @@ log "per-claim files"
 take scan.txt                     scan/scan.txt
 take scan.json                    scan/scan.json
 take build-summary.txt            build/build-summary.txt
+take build.log                    build/build.log
 take build-monitor.csv            build/build-monitor.csv
+take build-time.txt               build/build-time.txt
 take audit/selftest.txt           audit/selftest.txt
 take audit/statements.txt         audit/statements.txt
 take audit.txt                    audit/audit.txt
 take replay.log                   replay/replay.log
 take replay-monitor.csv           replay/replay-monitor.csv
 take replay-progress.csv          replay/replay-progress.csv
-take con-leche-solution-mit.log   independent-kernel/con-leche-solution-mit.log
-take solution-mit.ndjson.sha256   independent-kernel/solution-mit.ndjson.sha256
-take export-memtrend.csv          independent-kernel/own-export-memtrend.csv
-take olean-vs-mit.txt             build-match/olean-vs-mit.txt
-take manifest-vs-mit.txt          build-match/manifest-vs-mit.txt
-takebin project-oleans.sha256.zst build-match/project-oleans.sha256.zst
+take solution.ndjson.sha256       independent-kernels/solution.ndjson.sha256
+take con-leche.log                independent-kernels/con-leche.log
+take con-ron.log                  independent-kernels/con-ron.log
+take nanoda.log                   independent-kernels/nanoda.log
 take extra/depgraph-report.txt    proof-structure/depgraph-report.txt
 take extra/depgraph/meta.txt      proof-structure/depgraph-meta.txt
 take extra/proof-tree.txt         proof-structure/proof-tree.txt
+
+log "hash of every compiled file of the project"
+# Lets anyone compare their build with this one without building. Files that embed the
+# absolute source path (Lean stores it next to saved linter messages) differ between machines.
+if [[ -d "$PROJ/.lake/build/lib/lean" ]]; then
+  mkdir -p "$DEST/build"
+  (cd "$PROJ/.lake/build/lib/lean" && find . -name '*.olean*' -print0 | xargs -0 -P "$(nproc)" -n 200 sha256sum \
+     | LC_ALL=C sort -k2) | zstd -q -19 -f -o "$DEST/build/project-oleans.sha256.zst"
+  ok "build/project-oleans.sha256.zst ($(zstdcat "$DEST/build/project-oleans.sha256.zst" | wc -l) files)"
+else
+  warn "project not built; no compiled-file hashes"
+fi
 
 log "machine description"
 {
@@ -70,34 +82,6 @@ log "machine description"
   echo "JOBS:          $JOBS"
 } > "$DEST/machine.txt"
 ok "machine.txt"
-
-log "hashes of the third-party files we compared against (not copied)"
-{
-  echo "# sha256 of third-party files this run read, with where they came from. Fetched 2026-11-21/22."
-  echo "# The files themselves are not redistributed here."
-  R="$OUT/reference"
-  if [[ -d "$R/mit" ]]; then
-    for f in $(cd "$R/mit" && ls); do
-      url="https://math.mit.edu/~drew/grh/$f"; [[ "$f" == index.html ]] && url="https://math.mit.edu/~drew/grh/"
-      echo "$(sha256sum "$R/mit/$f" | cut -d' ' -f1)  $url"
-    done
-  fi
-  if [[ -d "$R/github-io" ]]; then
-    (cd "$R/github-io" && command find . -type f | sort) | while read -r f; do
-      f="${f#./}"; url="https://proveriemannhypothesis.github.io/artifacts/$f"
-      [[ "$f" == index.html ]] && url="https://proveriemannhypothesis.github.io/"
-      echo "$(sha256sum "$R/github-io/$f" | cut -d' ' -f1)  $url"
-    done
-  fi
-  if [[ -d "$R/deicyde" ]]; then
-    for f in $(cd "$R/deicyde" && ls); do
-      echo "$(sha256sum "$R/deicyde/$f" | cut -d' ' -f1)  https://raw.githubusercontent.com/Deicyde/riemann-hypothesis/HEAD/$f  (HEAD at fetch time)"
-    done
-  fi
-  echo "$REFERENCE_EXPORT_ZST_SHA256  $REFERENCE_EXPORT_URL  (verified by step 9)"
-  echo "$REFERENCE_EXPORT_SHA256  solution.ndjson, unpacked from the above  (verified by step 9)"
-} > "$DEST/third-party.sha256"
-ok "third-party.sha256"
 
 log "check: nothing identifying left"
 if grep -rlE "compute\.internal|${HOST_SHORT}" "$DEST" --include='*.log' --include='*.txt' --include='*.csv' --include='*.json' 2>/dev/null | grep -v README.md; then

@@ -28,7 +28,7 @@ fi
 
 # tmux sessions start with the tmux server's environment, not ours: forward the kit's settings.
 fwd=""
-for v in JOBS UPTO FORCE REEXPORT EXPORT_SOURCE SETUP_JOBS REPLAY_TARGET SELFTEST_ONLY; do
+for v in JOBS UPTO FORCE REEXPORT CHECK_JOBS REPLAY_TARGET SELFTEST_ONLY; do
   [[ -n "${!v:-}" ]] && fwd+="export $v='${!v}'; "
 done
 
