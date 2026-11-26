@@ -65,7 +65,7 @@ char *strdup(const char *);
 #endif
 
 #define UNDEF UINT32_MAX
-#define NCAT 12
+#define NCAT 128   /* at most this many areas; the last slot collects the overflow */
 
 static void die(const char *m) { fprintf(stderr, "depgraph_analyze: %s\n", m); exit(2); }
 static void *xmalloc(size_t n) { void *p = malloc(n ? n : 1); if (!p) die("out of memory"); return p; }
@@ -75,15 +75,20 @@ static uint32_t N;
 static char **name, **module, *kind, *user;
 static uint8_t *cat;
 static uint64_t *off; static uint32_t *adj;          /* forward CSR */
-static const char *catName[NCAT] = {"BuildAid", "CompanionTheory", "Development", "Formalism", "GroundTheory",
-  "Lemmata", "PositivityTheory", "ReciprocityTheory", "Supplements", "Main", "Statements", "other"};
+/* An area is the first two components of a module name ("Lib.Shimura", "New.Reduction"),
+ * or the whole name when it has one component ("Main"). Areas are collected as they appear. */
+static char *catName[NCAT];
+static int nCat;
 
 static uint8_t catOf(const char *mod) {
-  for (int c = 0; c < NCAT - 1; c++) {
-    size_t l = strlen(catName[c]);
-    if (strncmp(mod, catName[c], l) == 0 && (mod[l] == '.' || mod[l] == 0)) return (uint8_t)c;
-  }
-  return NCAT - 1;
+  const char *d1 = strchr(mod, '.');
+  const char *d2 = d1 ? strchr(d1 + 1, '.') : NULL;
+  size_t l = d2 ? (size_t)(d2 - mod) : strlen(mod);
+  for (int c = 0; c < nCat; c++)
+    if (strlen(catName[c]) == l && strncmp(catName[c], mod, l) == 0) return (uint8_t)c;
+  if (nCat == NCAT - 1) { if (!catName[NCAT - 1]) catName[NCAT - 1] = strdup("other"); return NCAT - 1; }
+  catName[nCat] = xmalloc(l + 1); memcpy(catName[nCat], mod, l); catName[nCat][l] = 0;
+  return (uint8_t)nCat++;
 }
 
 static void readNodes(const char *path) {
@@ -238,7 +243,7 @@ static void printNode(uint32_t v, int depth, int maxDepth, double minPct) {
   printf("%*s%s %s  [%s]  exclusive %lu (%.2f%%), user-written %lu", 2 * depth, "",
          kindName(kind[v]),
          name[v], module[v], (unsigned long)sub[v], pct, (unsigned long)subUser[v]);
-  /* top libraries in this subtree */
+  /* the three largest areas in this subtree */
   int best[3] = {-1, -1, -1};
   for (int c = 0; c < NCAT; c++) {
     for (int s = 0; s < 3; s++) {
@@ -249,7 +254,7 @@ static void printNode(uint32_t v, int depth, int maxDepth, double minPct) {
     }
   }
   printf("  {");
-  for (int s = 0; s < 3; s++) if (best[s] >= 0 && subCat[v][best[s]] > 0)
+  for (int s = 0; s < 3; s++) if (best[s] >= 0 && catName[best[s]] && subCat[v][best[s]] > 0)
     printf("%s%s %.0f%%", s ? ", " : "", catName[best[s]], 100.0 * (double)subCat[v][best[s]] / (double)sub[v]);
   printf("}\n");
   if (depth >= maxDepth) return;

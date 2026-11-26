@@ -2,10 +2,11 @@
 
 Usage: python3 -I compare_olean_manifest.py <build-lib-dir> <manifest.sha256> <our-src-path> [workers]
   build-lib-dir  e.g. $PROJ/.lake/build/lib/lean
-  manifest       lines "<sha256>  ./<Module/Path>.olean" (e.g. MIT's project-oleans.sha256)
+  manifest       lines "<sha256>  ./<Module/Path>.olean", e.g. another run's
+                 evidence/build/project-oleans.sha256.zst, unpacked
   our-src-path   absolute path of our src/ dir as Lean saw it, e.g. $PROJ/src/
 
-Lean v4.33 stores the absolute source path next to each saved linter message, so a file
+Lean stores the absolute source path next to each saved linter message, so a file
 can only match a build made at another path if it contains no path. This reports, for
 each file: hash match or not, and whether our file contains our source path. Expected
 for a faithful rebuild: every path-free file matches; every mismatch contains our path.

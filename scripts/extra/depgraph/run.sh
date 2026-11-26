@@ -26,13 +26,9 @@ else
   bad "export or its self-check failed"; finish
 fi
 
-QUERIES=(riemannHypothesis rhOfAll allChi claimAll critAll
-  UpperTheory.FinalTheorems.everyCharacter UpperTheory.FinalTheorems.everyCharacter_of_row
-  UpperTheory.Gal.Int.galoisLocalGlobalStrong_recParameter UpperTheory.Gal.Int.galoisRepresentations_of_thetaLift
-  UpperTheory.LiteratureTheorems.every_character_of_literature_of_vWin
-  UpperTheory.Lit.every_character_of_theta_integrals_local_matching
-  UpperTheory.One.vwin_of_row UpperTheory.One.Join.automorphic_window_of_inputs UpperTheory.Zero.LLC.recTExists
-  Formalism.VW.rh_of_every Formalism.VW.rh_of_right Formalism.VW.critLine Claim.strip Claim.zeta)
+# Declarations to report cone and exclusive sizes for: the final theorems and the three
+# results of New.Main they are derived from. Add your own with QUERIES="name1 name2".
+read -ra QUERIES <<< "riemannHypothesis LFunction_ne_zero_of_half_lt_re LFunction_eq_zero_re New.grh New.zeta_zeros_on_line New.zeros_on_line ${QUERIES:-}"
 qargs=(); for q in "${QUERIES[@]}"; do qargs+=(--query "$q"); done
 
 log "analyse"

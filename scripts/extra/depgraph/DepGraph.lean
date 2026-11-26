@@ -112,7 +112,7 @@ def main (args : List String) : IO UInt32 := do
   -- Visiting them in that order makes page faults on the memory-mapped .olean files mostly
   -- sequential. Hash order (env.constants.fold) jumps randomly between ~175k files and is
   -- limited by disk latency when the files do not fit in RAM (~1 ms per fault on EBS).
-  -- Lean 4.33 can generate the same on-demand lemma (e.g. `f.eq_1`, `congr_simp`) in more
+  -- Lean can generate the same on-demand lemma (e.g. `f.eq_1`, `congr_simp`) in more
   -- than one module, so a name may appear in several modules' lists; keep the first.
   let mut names : Array Name := #[]
   let mut index : Std.HashMap Name UInt32 := {}
