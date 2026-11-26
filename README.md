@@ -12,13 +12,18 @@ Mathlib states it, and of GRH for Dirichlet L-functions, published at
 803 Lean files, about 477,000 lines. That proof is a rewriting of Levent Alpöge's 17-million-line
 Lean proof (<https://alpo.ge/remark.pdf>).
 
-This repository holds **no proof and no build output**. It holds scripts that download the
+This repository holds **no Lean proof and no Lean build output**. It holds scripts that download the
 published proof from scratch, verify it against pinned hashes, build it with a verified official
 Lean toolchain, and audit the result. Run them yourself and compare. Every check in our own run
 passed, and it found a complete and valid machine-checked proof of Mathlib's statement of RH and
 of GRH for Dirichlet L-functions. The results are in [REPORT.md](REPORT.md)
 ([中文](REPORT.zh-CN.md)), and the logs and outputs behind them are in
 [`evidence/`](evidence/README.md).
+
+The folder [`paper/`](paper/README.md) holds a reading of that proof in ordinary mathematical
+language ([PDF](paper/GRH-reading.pdf), 145 pages). It was drafted by Claude from the Lean source
+and has not been refereed. It explains what the argument is. It is not part of the verification,
+and nothing in the report depends on it.
 
 Our earlier verification of the original 17-million-line library, with its report and evidence,
 is on the branch [`original`](https://github.com/gmailbob/verify-RH-Lean/tree/original).
@@ -196,6 +201,8 @@ scripts/tools/             scan_source.py, hash-tree.sh,
 REPORT.md                  the results of our run
 REPORT.zh-CN.md            Chinese translation of REPORT.md
 evidence/                  logs and outputs behind REPORT.md (index: evidence/README.md)
+paper/                     a reading of the proof: LaTeX source and PDF (exposition, not verification;
+                           see paper/README.md)
 ```
 
 Python helpers run with `python3 -I` and only read the downloaded files as data.

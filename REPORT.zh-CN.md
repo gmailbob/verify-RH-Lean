@@ -48,6 +48,10 @@
 “No mathematician has read it through, and no paper comes with it.”（没有数学家通读过它，也没有随附
 论文。）
 
+关于论证本身的内容，[`paper/`](paper/README.md) 中有一份用通常数学语言写成的证明解读
+（[PDF](paper/GRH-reading.pdf)），由 Claude 根据 Lean 源码起草，未经同行评审。它是一份阐述，
+不为这里的证据增添任何内容。
+
 **证据。** 本报告中每一项陈述所依据的日志和输出都在 [`evidence/`](evidence/) 中。其
 [README](evidence/README.md) 说明了哪个文件支持哪项结论。
 
@@ -119,9 +123,19 @@ AWS `c8gn.8xlarge`：Graviton4，32 个 vCPU（aarch64），61 GiB 内存，无�
   当 Re s > 1/2 时 L(χ, s) 不为零（平凡特征的极点除外）；带状区域 0 < Re s < 1 中的零点都在
   Re s = 1/2 上；对本原 χ 同样成立。
 
-## 证明结构（探索性，非验证）
+## 理解这一证明（探索性，非验证）
 
-根据构建好的项目在声明层面的依赖图得出（`scripts/extra/depgraph/`）。我们没有检查其中的数学。
+本节的两部分都不是上述结论的证据。我们没有检查其中的数学。
+
+**证明的解读。** [`paper/`](paper/) 文件夹中有一份用通常数学语言解释该论证的文本
+（[PDF](paper/GRH-reading.pdf)，145 页：正文 112 页，共 22 节，其后为附录）。它由 Claude 根据 Lean
+源码起草。随后每一节都对照其所引用的形式化命题检查过一遍，承载证明主要部分的几节还对照 Lean 证明
+检查了第二遍。它未经同行评审。Lean 代码在 `Lib` 文件夹中证明的背景结果，在文中只作陈述而不给证明。
+文本与 Lean 代码不一致之处，以 Lean 代码为准。它的现状和尚未完成的部分见
+[`paper/README.md`](paper/README.md)。
+
+**依赖结构。** 根据构建好的项目在声明层面的依赖图得出（`scripts/extra/depgraph/`）。下面提到的声明在
+数学上是什么，论文中有说明；论文引用的百分比就是这里算出的独占份额。
 
 - 项目共有 64,456 条声明，其中 26,524 条为人工编写，依赖边 713,214 条。
 - `riemannHypothesis` 需要其中的 49,815 条（77.3%），包括人工编写声明中的 25,127 条（94.7%）。其他
@@ -173,6 +187,6 @@ AWS `c8gn.8xlarge`：Graviton4，32 个 vCPU（aarch64），61 GiB 内存，无�
 | 五个定理只依赖 `propext`、`Classical.choice` 和 `Quot.sound` | 已复现，通过我们自己的审计和 nanoda 的允许列表 |
 | 导出被 nanoda、con-leche 和 con-ron 接受 | 已复现，使用我们自己构建的导出 |
 | Comparator v4.35.0 对照 `Challenge.lean` 接受了这些证明 | 未运行；我们的第 6 步改为将命题与我们自己审阅的文本进行比较 |
-| “No mathematician has read it through, and no paper comes with it” | 不变：我们只验证了形式化证明 |
+| “No mathematician has read it through, and no paper comes with it” | 不变：我们只验证了形式化证明。[`paper/`](paper/README.md) 中有一份在本仓库中起草、未经同行评审的证明解读 |
 
 我们的运行还对整个环境做了一次全新的内核重放（第 7 步）。

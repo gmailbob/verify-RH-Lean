@@ -1,0 +1,372 @@
+\section{The data, prime sums, heights and twisted lattices}\label{sec:setup}
+
+This section fixes the objects that depend on the length $x$ of the prime sum, defines the
+quantities that the main inequality compares, and proves the general lower bound for a Gram
+determinant on which Theorem~C rests. The Lean files are those of
+\leanfile{New/Reduction/Data}, \leanfile{New/Reduction/PrimeSums} and
+\leanfile{New/Reduction/Lattices}.
+
+\subsection{Parameters, the field and its places}
+
+\begin{definition}[\lean{New.Parameters}]\label{setup:def:parameters}
+The \emph{parameters} are a positive integer $q_0$ divisible by $18480 = 16\cdot3\cdot5\cdot7\cdot11$
+and a prime $d$ with $q_0 \mid 2(d+1)$ and $q_0 \nmid d+1$; equivalently
+$d \equiv q_0/2 - 1 \bmod q_0$. Put $K = \Q(\sqrt{-d})$ and let $\chiK$ be its quadratic
+character.
+\end{definition}
+
+Then $d \equiv 7 \bmod 8$ (\lean{New.Parameters.instPrimeSevenModEight}), every prime $p$ dividing
+$q_0$ (or $q_1$ below) has $\chiK(p) = 1$, so splits in $K$
+(\lean{New.Parameters.chiK_eq_one_of_dvd}), and a prime that does not split in $K$ is at least
+$13$ (\lean{New.Parameters.thirteen_le_of_chiK_ne_one}).
+
+For an integer $s \ge 1$ let $l_0$ be the least power of $3$ above $27s$, and put
+\[
+  T = 3\, l_0\, 2^s, \qquad q_1 = q_0 T, \qquad q_2 = (q_0 d)^{s+6}
+\]
+(\lean{New.towerDeg}, \lean{New.Parameters.q₁}, \lean{New.Parameters.q₂}). Let $E = K(\zeta)$ with
+$\zeta$ a primitive $q_1$-th root of unity (\lean{New.Parameters.E}). The cyclotomic polynomial of
+order $q_1$ is irreducible over $K$ (\lean{New.Parameters.irreducible_cyclotomic}), so
+$\Gal(E/K) \cong (\Z/q_1)^\times$; the field $E$ is a CM field, abelian over $\Q$. Each infinite
+place of $E$ is complex, and a fixed embedding $E \to \C$ over $K$ composed with the elements of
+$\Gal(E/K)$ gives one embedding for each place. So the set $\Phi$ of infinite places of $E$ is
+identified with the group $(\Z/q_1)^\times$ (\lean{New.Parameters.placeMulEquiv}), and these
+embeddings form a CM type. We write $f = \#\Phi = T\varphi(q_0)$, and for an integer $\nu$ prime to
+$q_1$ and $\tau \in \Phi$ we write $\nu\tau$ for the product of $\tau$ with the place of the class
+of $\nu$. A place has a \emph{class modulo $q_0$}, its image in $(\Z/q_0)^\times$; exactly $T$
+places have class $1$ (\lean{New.Parameters.card_placeClass_eq_one_eq_towerDeg}). Finally
+\[
+  \Omega = \exp\bigl(\gamma - \Re \tfrac{L'}{L}(1,\chiK)\bigr)\cdot \frac{2\pi}{\rdE},
+\]
+with $\gamma$ Euler's constant and $\rdE$ the root discriminant of $E$
+(\lean{New.Parameters.bigOmega}).
+
+\subsection{Admissible data}
+
+\begin{definition}[\lean{New.Data}]\label{setup:def:data}
+\emph{Admissible data} $D$ for the parameters $(q_0, d)$ consist of the following.
+\begin{enumerate}[label=(\alph*)]
+\item \emph{Scales}: integers $x$, $x_1$, $b$ with
+  $(\log b)^{100} \le x$, $x^{10^6} \le x_1$, $x_1^{10^6} \le b$, $(\log x_1)^6 \le \log b$ and
+  $\log\log b \ge 10^{12} c_P$, where $c_P$ is a constant that depends on $q_0$ and $d$ only
+  (\lean{New.Parameters.constantBound}). Put $a = x b$.
+\item \emph{Ranks}: a power of two $m \in [\sqrt{x}, 2\sqrt{x}]$, the number of lifts; a power of
+  three $r \in [x^5, 3x^5]$; and the exponent $s$ with $2^s = m^{22}$, which fixes $E$, $q_1$ and
+  $q_2$ as above, with $s \le 32 \log x$. Further $q_1 x_1$ divides $b$. Put
+  \[
+    k = r + 1 - m, \qquad t = 5r, \qquad n_j = k + j(t+1), \qquad \Delta = 2r^8 .
+  \]
+\item \emph{Places}: the set $\Phi_a$ of \emph{$a$-places}, the $T$ places of class $1$ modulo
+  $q_0$, and a set $\Phi_b$ of \emph{$b$-places}, all of class $-1$ modulo $q_0$, with
+  $\#\Phi_b \ge T/\log b$, that is \emph{sparse}: for every prime $\ell \le kt$ and all
+  $0 < i < j < l_0$ there are no $\sigma, \tau, \rho \in \Phi_b$ with
+  $\tau/\sigma \equiv \pm\ell^i$ and $\rho/\sigma \equiv \pm\ell^j$ (independent signs) modulo the
+  part of $q_1$ prime to $\ell$ (\lean{New.Parameters.IsSparse}).
+\item \emph{Weights}: $\kappa(\tau) = b = a/x$ for $\tau \in \Phi_b$ and $\kappa(\tau) = a/x_1$
+  for all other places; and $\kappa_j(\tau) = \kappa(\tau) + (j + \tfrac12)\Delta$, the weight of
+  the $j$-th lift.
+\item \emph{Primes}: distinct primes $p_0, p_1 \in [b^{10}, b^{11}]$ and a prime $N$, all
+  $\equiv 1 \bmod q_2^2$, with an integer of $K$ of norm $M = p_0 p_1$ (its conjugate is written
+  $\pi_M$) and an integer $\pi_N$ of $E$ with $\pi_N \overline{\pi_N} = N$. The level $N$ satisfies
+  $\log N_- \le \log N \le \log N_- + \sqrt{\log b}$, where
+  \[
+    N_- = \bar\kappa^{\,m}\, \Bigl( \frac{M\,\rdE}{2\pi} \Bigr)^{m-1} b^{-15/2}
+  \]
+  and $\bar\kappa$ is the geometric mean of the weights $\kappa(\tau)$ over the $f$ places.
+\end{enumerate}
+\end{definition}
+
+Table~\ref{setup:tab:sizes} lists the sizes. All of them follow from the definition
+(\leanfile{New/Reduction/Data/Sizes}, \leanfile{New/Reduction/Data/Magnitudes},
+\leanfile{New/Reduction/Data/LevelAndTwists}; for $\rdE$, \lean{New.Data.rootDisc_mem_Icc}). In the Lean text
+each quantity carries an upper and a lower bound for its logarithm, and an inequality between two
+quantities is proved by comparing these bounds, which is a linear problem in $\log x$, $\log x_1$,
+$\log b$, $\log\log b$, $\log\log x_1$ and $c_P$ (\lean{New.Data.le_of_hasLogBound}). We use such
+inequalities freely and cite them by this name.
+
+\begin{table}[ht]
+\centering
+\begin{tabular}{lll}
+\toprule
+quantity & role & size \\
+\midrule
+$\log x_1$, $\log b$ & scales & $(\log x_1)^6 \le \log b$, $(\log b)^{100} \le x$ \\
+$m$ & number of lifts & $[\sqrt{x}, 2\sqrt{x}]$ \\
+$r$, $k$, $t$ & ranks & $r \in [x^5, 3x^5]$, $r/2 \le k \le r$, $t = 5r$ \\
+$s$, $l_0$ & tower & $s \le 32\log x$, $27s < l_0 \le 81s$ \\
+$T$, $f$, $q_1$ & places & $x^{11} \le m^{22} = 2^s \le T \le f \le q_1 \le x^{12}$ \\
+$\rdE$, $1/\Omega$ & field & $[x^{10}, x^{12}]$, $[1, x^{13}]$ \\
+$\Delta$ & gap of weights & $2r^8$ \\
+$a$, $\kappa(\tau)$ & orders & $a = xb$, $\ a/x_1 \le \kappa(\tau) \le b$ \\
+$M = p_0p_1$ & principal level & $[b^{20}, b^{22}]$ \\
+$N$ & level & $\log N \in [m\log b, 30\, m\log b]$ \\
+$f a \log^3 b$ & unit of the errors & \lean{New.Data.errorUnit} \\
+\bottomrule
+\end{tabular}
+\caption{Sizes of admissible data. In increasing order: $\log b$, $x$, $x_1$, $b$, $M$, $N$.}
+\label{setup:tab:sizes}
+\end{table}
+
+\begin{theorem}[Existence of the data; \lean{New.eventually_exists_data}]\label{setup:thm:existence}
+Let $0 < \eps < 1/100$. For every large integer $x$ there are admissible data with first scale
+$x$, with $x_1 = \floor{\exp(x^{\eps/6})}$ and with $x^\eps \le \log b \le x^\eps + 1$.
+\end{theorem}
+
+The proof is a construction (\leanfile{New/Reduction/Data/Existence}). The $b$-places are the
+places $-g^e$, $g = 1 + 3l_0q_0$, with $e$ in a Behrend-type set without solutions of several
+linear equations at once (\lean{New.exists_three_term_free}; Behrend, 1946; Shapira, 2006): a
+forbidden triple of places would give a solution. The primes come from the prime number theorem in progressions, with the logarithm of
+the prime in a prescribed window (\leanfile{Lib/Analytic/Primes}); the integer of norm $M$ from a
+pigeonhole in the class group of $K$; $\pi_N$ from $N \equiv 1 \bmod 4$, a sum of two squares.
+
+\subsection{Prime sums}
+
+\begin{definition}[\lean{New.Data.primeSum}, \lean{New.Data.jetSize},
+\lean{New.Data.directionAmount}, \lean{New.Data.mainAmount}, \lean{New.Data.mainPrimeSum},
+\lean{New.Data.totalRemainder}]\label{setup:def:primesums}
+For real $y \ge 0$, a place $\tau$ and an integer $j \ge 0$ put
+\[
+  \sfin(y,\tau) = \sum_{1 \le \nu \le a} \LambdaK(\nu)\,
+     \Bigl( \frac{y}{\nu} - \kappa(-\nu\tau) \Bigr)_{\!+},
+  \qquad
+  \sinf(j) = \log j! + j \log\frac{M}{\Omega},
+\]
+where $u_+ = \max(u,0)$. (If $\nu$ is not prime to $q_1$, $-\nu\tau$ is read as $\tau$; then
+$\LambdaK(\nu) = 0$ anyway, as $\Lambda$ lives on prime powers and $\chiK(p) = 1$ for $p \mid q_1$.) The \emph{direction amount}, the \emph{main amount}, the \emph{expected value} and
+the \emph{total remainder} are
+\begin{align*}
+  \hdir &= \sum_{\tau \in \Phi} \bigl( \sinf(\kappa(\tau)) - \sfin(\kappa(\tau),\tau) \bigr),
+  & \hmain &= m\,k\,\hdir, \\
+  \smain &= a\,\Bigl( \log a - \frac1f \sum_{\tau\in\Phi} \log\kappa(\tau) + c_1 \Bigr),
+  & \rem &= \sum_{\tau \in \Phi_a} \bigl( \sfin(a,\tau) - \smain \bigr),
+\end{align*}
+with $c_1 = \Re G_1(1)$ as in Definition~\ref{zeros:def:remainder}.
+\end{definition}
+
+The quantity $\sinf(j)$ is the logarithmic size charged to a derivative of order $j$ of a theta
+function, and $\sfin(y,\tau)$ is the sum of $2v_p\log p$ over the primes $p$ that do not split in $K$,
+with $p^{v_p}$ the predicted divisibility of such a derivative (Section~\ref{sec:der}). The main amount is
+large and positive: $\hmain \ge x^4 f a$ (\lean{New.Data.le_mainAmount}). It will cancel. What
+does not cancel is the total remainder, and it is a combination of the remainders of
+Section~\ref{sec:zeros}:
+
+\begin{proposition}[\lean{New.Data.totalRemainder_eq}]\label{setup:prop:rem}
+\[
+  \rem = a\,\Bigl( \#\Phi_b\,\bigl( R_{q_0}(x) - R_{q_0}(x_1) \bigr) + \#\Phi_a\, R_1(x_1) \Bigr).
+\]
+\end{proposition}
+
+\begin{proof}
+Fix $\nu \le a$ prime to $q_1$ (for other $\nu$ both sides of the next display vanish) and let
+$\tau$ run over $\Phi_a$. Then $-\nu\tau$ runs once over
+the places of the class of $-\nu$ modulo $q_0$. The $b$-places have class $-1$. So $-\nu\tau$ is a
+$b$-place for exactly $\#\Phi_b$ values of $\tau$ if $\nu \equiv 1 \bmod q_0$, and for none
+otherwise (\lean{New.Data.card_filter_mem_bPlaces}). As $\kappa = a/x$ on $\Phi_b$ and
+$\kappa = a/x_1$ elsewhere,
+\[
+  \sum_{\tau\in\Phi_a} \LambdaK(\nu)\Bigl(\frac a\nu - \kappa(-\nu\tau)\Bigr)_{\!+}
+  = \#\Phi_a\,\lambda_1(\nu)\Bigl(\frac a\nu - \frac a{x_1}\Bigr)_{\!+}
+  + \#\Phi_b\,\lambda_{q_0}(\nu)\Bigl[\Bigl(\frac a\nu - \frac a{x}\Bigr)_{\!+}
+       - \Bigl(\frac a\nu - \frac a{x_1}\Bigr)_{\!+}\Bigr].
+\]
+For $0 < z \le a$, the definition \eqref{zeros:eq:R} gives
+$\sum_{\nu \le a} \lambda_q(\nu)(a/\nu - a/z)_+ = a\,(R_q(z) + \log z/\varphi(q) + c_q)$
+(\lean{New.sum_lambdaKResidueClass_mul_posPart}). Summing over $\nu$,
+\[
+  \sum_{\tau\in\Phi_a} \sfin(a,\tau)
+  = a\,\Bigl( \#\Phi_a\bigl(R_1(x_1) + \log x_1 + c_1\bigr)
+     + \#\Phi_b\Bigl(R_{q_0}(x) - R_{q_0}(x_1) + \frac{\log(x/x_1)}{\varphi(q_0)}\Bigr) \Bigr);
+\]
+the constant $c_{q_0}$ has cancelled. On the other hand
+$\sum_\tau \log\kappa(\tau) = f\log(a/x_1) - \#\Phi_b\log(x/x_1)$
+(\lean{New.Data.sum_log_weight}) and $f = \#\Phi_a\,\varphi(q_0)$, so $\#\Phi_a\,\smain = a\,(\#\Phi_a(\log x_1 + c_1) + \#\Phi_b\log(x/x_1)/\varphi(q_0))$
+(\lean{New.Data.card_aPlaces_mul_mainPrimeSum}). Subtract.
+\end{proof}
+
+Hence the two kinds of places: only $\nu \equiv 1 \bmod q_0$ moves an $a$-place to a $b$-place,
+where the weight is larger, so the class modulo $q_0$, and with it the Dirichlet characters
+modulo $q_0$, enters through the weights alone.
+
+\subsection{Heights}
+
+Let $\mathcal{I}$ be the set of pairs $\iota = (\ell, \iota)$ of a prime $\ell$ and a field
+isomorphism $\iota \colon \C \isom \Qlbar$ (\lean{New.PrimePadicIso}); we write $\iota \mid \ell$,
+and $\norm{\cdot}_\ell$ for the absolute value of $\Qlbar$ with $\norm{\ell}_\ell = \ell^{-1}$. A
+complex number $z$ is \emph{integral at $\iota$} if $\norm{\iota z}_\ell \le 1$. The conjugate
+isomorphism is $\bar\iota(z) = \iota(\bar z)$.
+
+\begin{definition}[\lean{New.HeightLe}]\label{setup:def:height}
+A family $y = (y_\iota)_{\iota \in \mathcal{I}}$ of complex numbers has \emph{height at most $c$}
+if there are a complex number $H \ne 0$, a real number $\alpha$ and real numbers $h_\ell \ge 0$
+such that
+\[
+  \abs{\sigma H} \le e^{\alpha} \ \text{ for all } \sigma \in \Aut(\C), \qquad
+  \norm{\iota(H y_\iota)}_\ell \le \ell^{h_\ell} \ \text{ for all } \iota \mid \ell, \qquad
+  \alpha + \sum_{\ell \in S} h_\ell \log \ell \le c
+\]
+for every finite set $S$ of primes.
+\end{definition}
+
+The multiplier $H$, and with it the bound at infinity, is the same for all $\iota$, while the
+number $y_\iota$ may depend on $\iota$. This is what later lets each prime use its own twist.
+Heights add under pointwise products and powers (\lean{New.HeightLe.mul}, \lean{New.HeightLe.pow})
+and are monotone (\lean{New.HeightLe.mono}); they may be negative.
+
+\begin{lemma}[Product formula; \lean{New.HeightLe.neg_le_of_norm_map_le}]\label{setup:lem:product}
+Let $z \ne 0$ be a complex number. If the constant family $z$ has height at most $c$, and
+$\abs{\sigma z} \le e^{c'}$ for all $\sigma \in \Aut(\C)$, then $c + c' \ge 0$.
+\end{lemma}
+
+\begin{proof}
+Take $H$, $\alpha$, $h_\ell$ as in the definition and put $w = Hz \ne 0$. All conjugates
+$\sigma w$ are bounded by $e^{\alpha + c'}$, and $\norm{\iota w}_2 \le 2^{h_2}$ for all $\iota \mid 2$;
+the latter makes $w$ algebraic (\lean{New.isAlgebraic_of_norm_complexToCp_le}), of some degree
+$n$. Its norm
+$\Nm(w) \in \Q^\times$ has $\abs{\Nm(w)} \le e^{n(\alpha + c')}$ and
+$\norm{\Nm(w)}_\ell \le \ell^{n h_\ell}$ for each prime $\ell$
+(\lean{New.HeightLe.norm_algebraMap_norm_gen_le}). By the product formula for $\Q$,
+$0 = \log\abs{\Nm(w)} + \sum_\ell \log\norm{\Nm(w)}_\ell \le n(\alpha + c') + n\sum_\ell h_\ell\log\ell
+\le n(c + c')$, the sums being over the finitely many $\ell$ with $\norm{\Nm(w)}_\ell \ne 1$.
+\end{proof}
+
+\subsection{Twisted lattices}
+
+\begin{definition}[\lean{New.TwistedLattice}]\label{setup:def:lattice}
+Let $V$ be a complex vector space and $\mathcal{T}$ a set with a distinguished element $1$, whose
+elements are called \emph{twists}; inner products are linear in the second variable. A \emph{twisted lattice} on $V$ consists of
+\begin{itemize}
+\item for each twist $\xi$ a complex inner product space $U_\xi$ and a linear map
+  $\Theta_\xi \colon V \to U_\xi$;
+\item for each prime $\ell$ a set of twists \emph{allowed at $\ell$};
+\item for each $\xi$ and each $\iota \mid \ell$ a module $U_\xi(\iota) \subset U_\xi$ over the
+  ring $\cO_\iota$ of complex numbers integral at $\iota$, the vectors \emph{integral at $\iota$},
+  such that $\pair{\varphi, \varphi'}$ is integral at $\iota$ whenever $\xi$ is allowed at $\ell$,
+  $\varphi \in U_\xi(\bar\iota)$ and $\varphi' \in U_\xi(\iota)$;
+\item finitely many linear forms on $U_1$, the \emph{coordinates}, in which the inner product has a
+  rational matrix that is positive definite on the whole coordinate space.
+\end{itemize}
+A vector $v \in V$ is \emph{integral at $\iota \mid \ell$} if $\Theta_\xi v \in U_\xi(\iota)$ for
+every twist $\xi$ allowed at $\ell$ (\lean{New.TwistedLattice.integralVectors}).
+\end{definition}
+
+For $\sigma \in \Aut(\C)$ and $v \in V$ let $\sigma\Theta_1 v$ be the coordinate vector of
+$\Theta_1 v$ with $\sigma$ applied to each coordinate, and pair such vectors by the rational
+matrix. Write $\norm{\Theta_1 v}_\sigma^2$ for the product of $\sigma\Theta_1 v$ with itself
+(\lean{New.TwistedLattice.normSqAt}).
+
+\begin{definition}[\lean{New.TwistedLattice.IndexLe}, \lean{New.TwistedLattice.CovolumeLe},
+\lean{New.TwistedLattice.volume}]\label{setup:def:index}
+Let $y = (y_1, \dots, y_n)$ be a family in $V$.
+\begin{itemize}
+\item $y$ has \emph{index at most $\delta$} if there are $\delta_\ell \ge 0$ with
+  $\sum_{\ell \in S}\delta_\ell\log\ell \le \delta$ for all finite sets $S$ of primes, such that
+  for every $\iota \mid \ell$ some $n \times n$ matrix $u$ over $\cO_\iota$ with
+  $\norm{\iota(\det u)}_\ell \ge \ell^{-\delta_\ell}$ has all combinations $\sum_k u_{ik} y_k$
+  integral at $\iota$. The matrix does not depend on the twist.
+\item $y$ has \emph{covolume at most $c$} if
+  $\abs{\det(\pair{\sigma\Theta_1 y_i, \sigma\Theta_1 y_k})_{i,k}} \le e^{c}$ for every
+  $\sigma \in \Aut(\C)$.
+\end{itemize}
+If $V$ is a finite-dimensional inner product space, put $Z(\xi) = \det(\Theta_\xi^*\Theta_\xi)$,
+the Gram determinant of the images under $\Theta_\xi$ of an orthonormal basis of $V$.
+\end{definition}
+
+The index measures how far the family is from integral, at the same price for all twists; the
+covolume measures its size, for the trivial twist only. By Hadamard's inequality,
+if $\norm{\Theta_1 y_i}_\sigma^2 \le e^h$ for all $i$ and $\sigma$, then $y$ has covolume at most
+$nh$ (\lean{New.TwistedLattice.covolumeLe_of_normSqAt_le}).
+
+\begin{theorem}[A twist for each prime; \lean{New.TwistedLattice.covolume_add_index_nonneg}]
+\label{setup:thm:twist}
+Let $V$ be a finite-dimensional inner product space with a twisted lattice all of whose maps
+$\Theta_\xi$ are injective. Let $y_1, \dots, y_n, z_1, \dots, z_{n'}$ be a basis of $V$, and for
+each $\iota \mid \ell$ let $\xi_\iota$ be a twist allowed at $\ell$. Suppose that
+\begin{enumerate}[label=(\roman*)]
+\item $y$ has covolume at most $c$ and index at most $\delta$;
+\item for each twist $\xi$ there is a number $\gamma(\xi) \ne 0$ such that
+  $\gamma(\xi)\Theta_\xi z_i$ is integral at every $\iota \mid \ell$ for which $\xi$ is allowed at
+  $\ell$;
+\item $\norm{\Theta_1 z_i}_\sigma^2 \le e^{b_{\mathrm{short}}}$ for all $i$ and all
+  $\sigma \in \Aut(\C)$;
+\item the families $\iota \mapsto \abs{\gamma(\xi_\iota)}^{-2}$ and
+  $\iota \mapsto Z(1)/Z(\xi_\iota)$ have height at most $b_{\mathrm{denom}}$ and
+  $b_{\mathrm{vol}}$.
+\end{enumerate}
+Then
+\[
+  c + 2\delta + n'\,(b_{\mathrm{short}} + b_{\mathrm{denom}}) + b_{\mathrm{vol}} \ge 0 .
+\]
+\end{theorem}
+
+\begin{proof}
+Let $w = (y, z)$ and let $\mathrm{Gram}(\xi)$ be the determinant of the matrix
+$(\pair{\Theta_\xi w_i, \Theta_\xi w_k})$. If $B$ is the matrix of $w$ in an orthonormal basis of
+$V$, then $\mathrm{Gram}(\xi) = Z(\xi)\,\abs{\det B}^2$. So for every $\iota$
+\begin{equation}\label{setup:eq:factor}
+  \mathrm{Gram}(1) = \Bigl[ \abs{\gamma(\xi_\iota)}^{2n'}\, \mathrm{Gram}(\xi_\iota) \Bigr]
+     \cdot \Bigl[ \abs{\gamma(\xi_\iota)}^{-2} \Bigr]^{n'} \cdot \frac{Z(1)}{Z(\xi_\iota)} .
+\end{equation}
+The left side does not depend on $\iota$, and it is non-zero because $\Theta_1$ is injective.
+
+\emph{The first factor has height at most $2\delta$}
+(\lean{New.TwistedLattice.heightLe_pow_mul_det_gram}). Fix $\iota \mid \ell$, write
+$\xi = \xi_\iota$, and let $u$ and $u'$ be the matrices of the definition of the index at $\iota$
+and at $\bar\iota$. Enlarge them by the scalar block $\gamma(\xi)$ on the $z_i$. The resulting
+matrices carry the vectors $\Theta_\xi w_i$ into $U_\xi(\iota)$ and into $U_\xi(\bar\iota)$. As
+$\xi$ is allowed at $\ell$, all inner products between the two transformed families are integral
+at $\iota$, hence so is the determinant
+$\overline{\det u'}\cdot\abs{\gamma(\xi)}^{2n'}\,\mathrm{Gram}(\xi)\cdot\det u$. Since
+$\norm{\iota(\det u)}_\ell$ and $\norm{\bar\iota(\det u')}_\ell$ are at least $\ell^{-\delta_\ell}$, we get
+$\norm{\iota(\abs{\gamma(\xi)}^{2n'}\mathrm{Gram}(\xi))}_\ell \le \ell^{2\delta_\ell}$; this is
+height at most $2\delta$, with $H = 1$ and $\alpha = 0$.
+
+By (iv) and the additivity of heights, \eqref{setup:eq:factor} shows that the constant family
+$\mathrm{Gram}(1)$ has height at most $2\delta + n' b_{\mathrm{denom}} + b_{\mathrm{vol}}$. On the
+other hand, as the matrix of the inner product is rational, $\sigma\,\mathrm{Gram}(1)$ is the
+determinant of the pairings of the vectors $\sigma'\Theta_1 w_i$ with the $\sigma\Theta_1 w_k$, where
+$\sigma'$ is $\sigma$ conjugated by complex conjugation; by the Cauchy--Schwarz inequality for determinants its
+square is at most the product of the Gram determinants of these two families. By (i), (iii) and
+the inequalities of Fischer and Hadamard, each is at most $e^{c + n' b_{\mathrm{short}}}$, so
+$\abs{\sigma\,\mathrm{Gram}(1)} \le e^{c + n' b_{\mathrm{short}}}$ for all $\sigma$
+(\lean{New.TwistedLattice.CovolumeLe.sumElim},
+\lean{New.TwistedLattice.CovolumeLe.norm_map_det_gram_le}). The product formula,
+Lemma~\ref{setup:lem:product}, gives the claim.
+\end{proof}
+
+\begin{remark}
+This is the determinant method of transcendence theory, by which a non-zero algebraic number
+cannot be small at all places (compare Laurent's interpolation determinants, Laurent, 1994, and Bost's slope
+inequalities, Bost, 2001), with a twist $\xi_\iota$ for each $\iota$; as
+$\mathrm{Gram}(\xi)/Z(\xi)$ does not depend on $\xi$, the price is the height of $Z(1)/Z(\xi_\iota)$.
+\end{remark}
+
+\subsection{The lattice of target forms}
+
+The objects named here are defined in Section~\ref{sec:ub-objects}. The \emph{target forms}
+$\mathcal{T}_D$ (\lean{New.Data.targetForms}) are a finite-dimensional space of automorphic forms
+on the unitary group of a hermitian space $Y_0$ over $E$; put $\dT = \dim \mathcal{T}_D$. Twists are
+defined in Definition~\ref{data:def:twist}; in short, a
+\emph{twist} $\vartheta$ is an automorphic character of $\U(1)$ of weight $0$ that is tamely
+ramified at a finite set $Q$ of places, its \emph{modulus}, disjoint from its conjugate and of norm
+prime to $MN$ (\lean{New.Data.TameChar}, \lean{New.Data.Twist}); it is \emph{$m$-fold} if
+$\vartheta, \vartheta^2, \dots, \vartheta^m$ all ramify at every place of $Q$
+(\lean{New.Data.MFoldTwist}). For an $m$-fold twist, the chain of $m$ theta lifts
+$\Theta_\vartheta$ maps $\mathcal{T}_D$ to a space of algebraic modular forms on the definite
+unitary group of $Y_m$; such forms are functions on a finite set of classes with values in a
+representation with a $\Z$-structure, whence an inner product, integrality at each $\iota$ and
+conjugates under $\Aut(\C)$.
+
+\begin{proposition}[\lean{New.Data.targetLattice}]\label{setup:prop:targetlattice}
+The maps $\Theta_\vartheta$, with the forms on $Y_m$ that are integral at $\iota$ as integral
+vectors, and with $\vartheta$ allowed at $\ell$ if the norm of its modulus is prime to $\ell$, are
+a twisted lattice on $\mathcal{T}_D$, with twists the $m$-fold twists. In it,
+$\norm{\Theta_1 y}_\sigma^2$ is the squared norm of the conjugate form
+(\lean{New.Data.normSqAt_targetLattice}), $Z(\vartheta)$ is the \emph{chain determinant}
+$\det(\Theta_\vartheta^*\Theta_\vartheta)$ (\lean{New.Data.volume_targetLattice}), and every
+$\Theta_\vartheta$ is injective (\lean{New.Data.injective_lift_targetLattice}).
+\end{proposition}
+
+Inner products are integral because the level of the forms on $Y_m$ is so small that all classes
+have trivial stabilisers (\lean{New.Data.classAut_lastResidueLevel_eq_bot}); the coordinates for
+the trivial twist are the values at class representatives. Injectivity is proved in
+Section~\ref{sec:det-chain}.

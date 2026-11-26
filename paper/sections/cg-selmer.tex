@@ -1,0 +1,546 @@
+\section{Congruences: regular families of twists, Galois representations and Selmer groups}
+\label{sec:cg-selmer}
+
+Theorem~C uses a twist $\xi_\iota$ for each $\iota\colon\C\isom\Qlbar$
+(Theorem~\ref{setup:thm:twist}), taken from a \emph{regular family}
+(\lean{New.Data.IsRegularFamily}, Section~\ref{sec:det-chain}). This section proves that such families
+exist, Theorem~\ref{cg-selmer:thm:regular} (\lean{New.exists_isRegularFamily}). Of the declarations
+that the proof needs, the share needed only through this one is about a third; the share needed
+only through Fact~\ref{cg-selmer:fact:galois} (via \lean{New.GaloisRep.sphericalCompat_of_odd}) is
+$14\%$, and the share needed only through (4) below is $6.5\%$ (Section~\ref{sec:intro} says where
+these figures come from). Fix $\iota\mid\ell$. Ribet's method bounds the denominators of projections
+of integral forms to theta lifts by Selmer groups of the Galois representations of the lifted
+eigensystems; this is proved in Section~\ref{sec:cg-first}
+(\lean{New.Selmer.denominatorLe_clearingBound}), with the local loss above $\ell$ from
+Section~\ref{sec:cg-lifting}. We supply the Galois representations, the main summands
+(\S\ref{cg-selmer:sec:galois}); the twisting theorem
+(\S\ref{cg-selmer:sec:twisting}--\S\ref{cg-selmer:sec:proof}): one anticyclotomic twist $\xi_\iota$ of
+$\ell$-power order at new primes such that, for all $j\le m$, the twists by $\xi_\iota^j$ of finitely many
+main summands have short Selmer groups and the twisted $L$-values are hardly divisible by $\ell$; and
+the sum over $\ell$ (\S\ref{cg-selmer:sec:main}), each $\iota$ having its own twist, with no budget
+shared out. Section~\ref{sec:cg-first} also uses the definitions and the base data of
+\S\ref{cg-selmer:sec:galois}.
+
+\subsection{Set-up}\label{cg-selmer:sec:setup}
+
+Notation is that of Section~\ref{sec:setup}. Write $G_E=\Gal(\Qbar/E)$, $g^c=cgc$ for a complex
+conjugation $c$, and $\chi_{\mathrm{cyc}}$ for the $\ell$-adic cyclotomic character. The valuation $v$ on $\Qlbar$
+has $v(\ell)=1$ and is truncated below at $0$. A \emph{coefficient ring} $\cO$ is the ring of integers
+of a finite Galois extension of $\Ql$ in $\Qlbar$. ``For all large $\cO$'' refers to inclusion, and
+lengths of $\cO$-modules are normalised by $\length(\cO/\ell)=1$. An $\ell$-adic representation is a
+continuous $R\colon G_E\to\GL_n(\Qlbar)$. A \emph{lattice} in $R$ is a $u\colon G_E\to\mathrm M_n(\cO)$
+conjugate to $R$ over $\Qlbar$ (\lean{New.Selmer.IsLatticeIn}). Further letters: $S_\ell$
+(\lean{New.Selmer.badPlaces}) is the set of places dividing $\ell MN$, and $S_M\subset S_\ell$
+(\lean{New.Selmer.placesAboveM}) the set of those above $p_0p_1$; $n_{\mathrm{Aut}}$
+(\lean{New.Data.chosenGroupOrder}, as in Definition~\ref{ol-values:def:rankone}) is the order of
+$\prod_w\GL_{rt}(\F_w)$ over the chosen places $w$; $h_1$ is the class number of $\U(1)$ at the chosen level
+(\lean{New.StdClasses}); for a twist $\vartheta$, $Q_\vartheta$ is its modulus and $\psi_\vartheta$
+(\lean{New.Data.TameChar.invAvatar}) is the avatar through $\iota$ of the base change of
+$\vartheta^{-1}$, a character of $G_E$. A finite set $Q$ of places is \emph{auxiliary} for $S$ (\lean{New.IsAuxiliary}) if its places have
+prime norm and $Q$, $\bar Q$, $S$ are pairwise disjoint. A character $\psi$ of $G_E$ \emph{comes from
+$\U(1)$ with modulus $Q$} (\lean{New.IsFromU1}) if it is locally constant and
+$\psi(\mathrm{Art}\,y)=\eta(y/\bar y)$ for an idele class character $\eta$ of modulus $Q$ trivial
+above $\ell$. For the $j$-th lift $W_j\to V_j$ with twist $\vartheta$ (\lean{New.Data.descentPair}),
+$\Theta_{j,\vartheta}\mathcal G_j$ is the space of lifts of good forms (the range of
+\lean{New.Data.goodLift}; Section~\ref{sec:ol-values}). Critical, ramified and main
+pairs $p=(\nu,z)$, the budget $\beta_D=f a\log^3b/(mk)$ (\lean{New.Data.denominatorBudget}) and the
+ratio $\mathrm{rat}_p(\vartheta,\epsilon)$ of a pair at a twist $\vartheta$ and a sign $\epsilon=\pm1$,
+a quotient of absolute values of Hecke $L$-values, are those of Section~\ref{sec:det-chain}
+(\lean{New.Data.CriticalPair.ratio}).
+
+Denominators of a projection (\lean{New.Selmer.DenominatorLe}) are those of
+Definition~\ref{ol-values:def:false}(b). The statement that \emph{the denominators at
+$(\iota,\vartheta,j)$ are at most $\beta$} (\lean{New.Data.HasDenominatorsLe}) and regular families
+$\xi=(\xi_\iota)$ of $m$-fold twists, one for each $\iota$ (\lean{New.Data.IsRegularFamily}), are
+those of Definition~\ref{det-chain:def:regular}. There, condition (i) bounds the denominator of the
+projection to $\Theta_{j,\vartheta}\mathcal G_j$ for $e=e_0$, without the last clause
+(\lean{New.Data.ClearsProjection}, \lean{New.Selmer.DenominatorLe.clearsProjection}), and condition
+(ii) bounds the inner products of the projections of test forms to the lines of the lifts of
+$\nu\vartheta$ from $\U(1)$, for the main pairs $(\nu,z)$ for $j$. A regular family has moduli of norm
+prime to $\ell$ at $\iota\mid\ell$, small ratios (\lean{New.Data.HasSmallRatios}), and denominators
+within the budget $\beta_D$.
+
+The bounds use the \emph{twist error}
+$e'_\ell=(4f+3)\,r\,v_\ell(n_{\mathrm{Aut}})+2^{-\ell}$ (\lean{New.Selmer.twistError}); the local loss
+$\mathrm{loc}_\ell=4f\,\mathrm{defect}_\ell$, where
+$\mathrm{defect}_\ell=10^6\tfrac mk\bigl(b\,v_\ell(M)+\lambda_\ell\bigr)$ and the crystalline loss is
+$\lambda_\ell=v_\ell\bigl((2b)!\,(\prod_{b-30h^3<n\le b+30h^3}n)^{h^3}\bigr)$ with $h=r^8=\Delta/2$
+(\lean{New.Selmer.localDefectBound};
+Definition~\ref{cg-lifting:def:loss}); and an integer
+combination $e_\ell$ of $v_\ell(n_{\mathrm{Aut}})$ and $v_\ell$ of the integer bounding the odd classes
+(\lean{New.Selmer.denominatorError}, \lean{New.Selmer.oddClassBound}). The \emph{clearing bound} is $\beta_\ell=\mathrm{loc}_\ell+(1+2t)e'_\ell+e_\ell+v_\ell(n_{\mathrm{Aut}})$
+(\lean{New.Selmer.clearingBound}). These constants are given in full in
+Definition~\ref{cg-first:def:constants}.
+
+\subsection{The theorem and its proof}\label{cg-selmer:sec:main}
+
+\begin{theorem}[\lean{New.exists_isRegularFamily}]\label{cg-selmer:thm:regular}
+All admissible data have a regular family of $m$-fold twists.
+\end{theorem}
+
+\begin{proposition}[\lean{New.Selmer.exists_mFoldTwist_hasDenominatorsLe}]
+\label{cg-selmer:prop:oneprime}
+Let $\iota\mid\ell$. There is an $m$-fold twist $\xi_\iota$ whose modulus has norm prime to $\ell$ such
+that for $1\le j\le m$: (a) $\norm{\iota\mathrm{rat}_p(\xi_\iota^j,\epsilon)^{-1}}\le\ell^{e'_\ell}$ for every
+ramified pair $p$ and $\epsilon=\pm1$, and (b) the denominators at $(\iota,\xi_\iota^j,j)$ are at most
+$\gamma_\ell=(\beta_\ell+v_\ell(h_1))\log\ell$.
+\end{proposition}
+
+\begin{lemma}[\lean{New.Selmer.sum_clearingBound_add_padicValNat_le}]\label{cg-selmer:lem:budget}
+For every finite set $S$ of primes,
+$\sum_{\ell\in S}(\beta_\ell+v_\ell(h_1))\log\ell\le\beta_D=f a\log^3b/(mk)$ and
+$\sum_{\ell\in S}e'_\ell\log\ell\le x^{999}$ (\lean{New.Selmer.isNegligible_twistError}).
+\end{lemma}
+
+\begin{proof}
+For every integer $n\ge1$ we have $\sum_\ell v_\ell(n)\log\ell\le\log n$
+(\lean{New.Selmer.sum_padicValNat_mul_log_le}), and $\sum_\ell2^{-\ell}\log\ell\le2$. This makes
+every term except the local loss \emph{negligible}, that is, at most a fixed power of $x$
+(\lean{New.Data.IsNegligible}): $x^{999}$ for $e'_\ell$, as $\log n_{\mathrm{Aut}}\le x^{32}$; $x^{4000}$ for
+$e_\ell$, as the odd-class integer is at most $2^{4(q_E+t+3)^{27}}h_E$ ($q_E$ the cyclotomic conductor,
+$h_E$ the class number of $E$); $x^{30}$ for $h_1$ (\lean{New.Selmer.isNegligible_twistError},
+\lean{New.Selmer.isNegligible_denominatorError},
+\lean{New.Selmer.isNegligible_padicValNat_card_stdClasses}). The local loss sums to at most
+$4\cdot10^6\tfrac mk f(b\log M+\log((2b)!\,(b+30h^3)^{60h^6}))\le4\cdot10^6e^{180}f\tfrac mk\,b\log b$
+(\lean{New.Selmer.sum_localDefectBound_mul_log_le}). The budget $f x b\log^3b/(mk)$ is larger by the
+factor $x\log^2b/(4\cdot10^6e^{180}m^2)$, large as $m^2\le4x$, and it dominates the powers of $x$ as
+$b\ge x_1^{10^6}$ (\lean{New.Data.le_of_hasLogBound}).
+\end{proof}
+
+\begin{proof}[Proof of Theorem~\ref{cg-selmer:thm:regular}]
+For each $\iota$ let $\xi_\iota$ be a twist given by
+Proposition~\ref{cg-selmer:prop:oneprime}. That the norms of the moduli are prime to $\ell$ is part
+of the proposition; the denominators are within the budget with the $\gamma_\ell$ of the proposition,
+by Lemma~\ref{cg-selmer:lem:budget}. For the small ratios, take $H=1$, $\alpha=0$ and
+$h_\ell=e'_\ell$ in Definition~\ref{setup:def:height}; then $\sum_{\ell\in S}h_\ell\log\ell\le
+x^{999}\le x_1$ (\lean{New.HeightLe.of_le}).
+\end{proof}
+
+The proposition combines five results.
+\begin{enumerate}[label=(\arabic*)]
+\item \emph{Splitting} (\lean{New.Selmer.range_goodLift_le_span_hasLiftHeckePolynomial}).
+  $\Theta_{j,\vartheta}\mathcal G_j$ is spanned by forms $y$ in the image of the idempotent of a lift setting $c$
+  (Definition~\ref{cg-selmer:def:setting}), itself inside the image of $e_0$, that have the Hecke
+  polynomials of a lift of an eigensystem $\pi$ of the good forms on $W_m$. These $\pi$ form a finite set
+  independent of $\vartheta$ and $j$, since eigensystems have equal multiplicities on $W_j$ and on
+  the definite $W_m$ (\lean{New.Data.goodForms_inf_eigenPart_eq_bot_of_eq_bot},
+  Section~\ref{sec:sp-moment}).
+\item \emph{Main summands} (Proposition~\ref{cg-selmer:prop:rows}): $R_{j,\pi}$ of rank $r$, and $R_p$
+  of rank one for each main pair $p$.
+\item \emph{The twisting theorem} (Theorem~\ref{cg-selmer:thm:twisting}), applied to the finite
+  family of all $R_{j,\pi}$ and $R_p$.
+\item \emph{The bound for denominators}, from Section~\ref{sec:cg-first}
+  (\lean{New.Selmer.denominatorLe_clearingBound}). Let $\psi=\psi_\vartheta$ satisfy (a) of
+  Theorem~\ref{cg-selmer:thm:twisting} with $Q_\vartheta$ (\lean{New.Selmer.IsAuxTwist}), and let $Z$ be
+  spanned by forms of lift-setting type lifting eigensystems with main summands $R$ such that
+  $\mathrm{Sel}(\psi_\vartheta R)\le e'_\ell$ (\lean{New.Selmer.IsLiftGenerator}). Then the
+  projection to $Z$ has denominator at most $\ell^{\beta_\ell}$ at $\iota$.
+\item \emph{Lines of lifts from $\U(1)$}, from Section~\ref{sec:ol-values}
+  (\lean{New.Selmer.DenominatorLe.norm_inner_starProjection_le}). If the line has denominator at most
+  $e^\beta$ (and stabilisers are trivial), then
+  $\norm{\iota\pair{\mathrm{pr}\,\Xi,\mathrm{pr}\,\Xi'}}\le e^\beta\ell^{v_\ell(h_1)}$ for test forms.
+\end{enumerate}
+
+\begin{proof}[Proof of Proposition~\ref{cg-selmer:prop:oneprime}]
+Item (3) gives $\xi_\iota$ with (a)--(c) of Theorem~\ref{cg-selmer:thm:twisting} for all $R_{j',\pi}$ and
+$R_p$; so its modulus has norm prime to $\ell$ (\lean{New.Selmer.coprime_prod_q_of_isAuxiliary}),
+and (a) of the proposition holds. The
+twisted descent pair has the untwisted character times $\xi_\iota^j$, so by (1), (4) applies to
+$\Theta_{j,\xi_\iota^j}\mathcal G_j$ with the $R_{j,\pi}$ and gives (i) of Definition~\ref{det-chain:def:regular}
+(\lean{New.Selmer.denominatorLe_range_goodLift}). For a main pair, the lift of $\nu\xi_\iota^j$ from
+$\U(1)$ lies in the image of the idempotent of the labels $X-1$, a lift setting
+(\lean{New.Selmer.isLiftSetting_mainPair}), and lifts the trivial eigensystem; so (4) applies with
+$R_p$ (\lean{New.Selmer.denominatorLe_span_trivialLift}), and (5) gives (ii), the stabilisers being
+trivial (\lean{New.Data.classAut_eq_bot_of_le_chosenLevel}).
+\end{proof}
+
+\subsection{Galois representations and main summands}\label{cg-selmer:sec:galois}
+
+\begin{fact}[Galois representations of eigenforms; \lean{New.GaloisRep.sphericalCompat_std}; a weak
+analogue of the Galois representations of Shin, of Chenevier--Harris, 2013, and of
+Barnet-Lamb--Gee--Geraghty--Taylor, 2014]\label{cg-selmer:fact:galois}
+Let $E$ be a CM field with Weil data and $y$ an eigenform of weight $\kappa$ on a definite unitary
+group of rank $n\ge1$, with Hecke polynomials $P_w$. Then some $\ell$-adic $\rho$ of rank $n$ is
+\emph{attached} to $P$ (\lean{New.GaloisRep.Attached}): $\rho$ is continuous with non-degenerate
+trace form, and for each $\eta>0$, for most Frobenius data $(w,g)$ (\lean{New.mostFrobenii}; ``most''
+implies ``on a dense set''), all coefficients of $\det(X-\rho(g))-\iota P_w$ have norm at most $\eta$.
+If $y$ is spherical at $w$, every attached $\rho$ is unramified there (crystalline if $w\mid\ell$)
+with the Hodge--Tate jumps of $\kappa$, and if $w$ is split $\iota P_w$ kills the geometric Frobenius.
+At a split place where $y$ has a product label, a polynomial made from the label kills inertia
+(\lean{New.GaloisRep.Attached.isLabelledAt}).
+The Lean file of \lean{New.GaloisRep.sphericalCompat_std} calls it a weak analogue of the Galois
+representations of Shin, Chenevier--Harris and Barnet-Lamb--Gee--Geraghty--Taylor (forms on definite
+unitary groups, local compatibility only at spherical places), and says that its files replace these
+and base change (Labesse, 2011); for odd rank, the file \leanfile{Lib/GaloisRep/Main/OddRank} names
+Chenevier--Harris, 2013, Labesse, 2011, and Barnet-Lamb--Gee--Geraghty--Taylor, 2014, as its sources.
+\end{fact}
+
+By duality of the Hecke operators at $w,\bar w$,
+$\tr\rho(g^c)=\chi_{\mathrm{cyc}}(g)^{1-n}\tr\rho(g^{-1})$ (\lean{New.Selmer.isConjSelfDual_of_attached}).
+
+\begin{definition}[\lean{New.Selmer.IsConjSelfDualOfLevel}]\label{cg-selmer:def:csd}
+$R$ is \emph{conjugate self-dual of twist $1-t'$} if it is continuous with non-degenerate trace form
+and $\tr R(g^c)=\chi_{\mathrm{cyc}}(g)^{1-t'}\tr R(g^{-1})$. It has \emph{level $S$ and jumps $J$} if moreover, at
+the places off $S$ and those in $S_M$ or above $\ell$, it is of finite type with jumps $J(\sigma)$,
+and unramified (crystalline above $\ell$) unless the place lies in $S_M$.
+\end{definition}
+
+\begin{definition}[\lean{New.Selmer.IsMainSummandLike}]\label{cg-selmer:def:row}
+A \emph{row} of rank $1\le n\le r$ is a conjugate self-dual $R$ of twist $1-t'$ with $t'\le t$, level
+$\emptyset$ and jumps $J$ such that the following hold.
+\begin{enumerate}[label=(\roman*)]
+\item The jumps satisfy \lean{New.Selmer.IsMainSummandWeights} (Section~\ref{sec:cg-lifting}):
+  for one $j\le m$ each jump is either low, $h/2\le\abs u\le4mh$, or within
+  $t$ of $\mp\kappa_j(\sigma)$. At most $nm/k$ jumps at $\sigma$ have $\abs u\le2h^2$, and at most
+  $n$ jumps at $\sigma,\bar\sigma$ together are negative.
+\item At each place of $S_M$ prime to $\ell$, the $n'$-th powers of inertia act trivially for some
+  $n'$ prime to the place. For some inertia element $\gamma$ (the tame generator at chosen places), both
+  $\det(R\gamma-1)$ and $\det(R(\gamma^c)^{-1}-1)$ have valuation at most $n\,v(n_{\mathrm{Aut}})$.
+\item For all large $\cO$ and every lattice $u$ in $R$, the image of $u$ spans $\mathrm M_n(\cO)$, and some
+  $g$ with $\chi_{\mathrm{cyc}}(g)=p_i^n$ acts on $u$ as a scalar.
+\item Some inertia element above $S_M$, prime to $\ell$, acts as a scalar $y$ with
+  $\norm{y^{\ell^ij}-1}=1$ for all $i\ge0$ and $1\le j\le4n+2$.
+\end{enumerate}
+\end{definition}
+
+\begin{definition}[\lean{New.Selmer.IsLiftSetting}, \lean{New.Selmer.IsRepOfType}]
+\label{cg-selmer:def:setting}
+Let $O$ be a descent pair (a lift from rank $r'$ to rank $r'+t'$, with character $\mu$) and let
+$c_w$ be labels at its chosen places. Then $(O,c)$ is a \emph{lift setting} for the twist $\vartheta$
+if: the places of $O$ are the chosen places and those of $Q_\vartheta$; the tame part of $\mu$ is
+$\omega^j\vartheta$ for some $1\le j\le m$, $\omega$ the residue character \lean{New.Data.chiMLocal};
+$r'\le r$ and $t'\le t$ are odd; each $c_w$ is a label of degree $r'$ and no scaled label
+(\lean{New.Selmer.scaledTypePoly}: roots multiplied by the name of $\mu_w^{-1}$) has the root $1$;
+and above each $p_i$ some label is primitive with $r'=r$, or equals $X-1$ with $r'=1$.
+A \emph{representation of type $c$} is conjugate self-dual, of given level and jumps, and inertia
+at each chosen place $w$ is killed by the polynomial made from the roots of $c_w$.
+\end{definition}
+
+\begin{definition}[\lean{New.Selmer.IsMainSummand}]\label{cg-selmer:def:summand}
+$R$ is a \emph{main summand} for $O$ and the eigensystem $\pi$ if $R$ is a row with twist $1-t'$ and the
+following holds for every tame character $\vartheta$. Let $O'$ be a descent pair with character
+$\mu\vartheta$, let $y$ be an eigenform on $O'$ with the Hecke polynomials of a lift of $\pi$
+(\lean{New.DescentPair.HasLiftHeckePolynomial}), let $\rho$ be attached to $y$, and let $\tilde\rho$ be
+$\rho$ twisted by the normalising avatar of $O'$ (\lean{New.Selmer.normalisedRep}). Then
+$\tr\tilde\rho=\psi_\vartheta\tr R+\sum_{e<t'}\chi_{\mathrm{cyc}}^{-e}$ (\lean{New.Selmer.HasLiftTrace}). A twist thus
+multiplies only the block $R$ (unramified theta correspondence; Rallis, 1982).
+\end{definition}
+
+\begin{proposition}[\lean{New.Selmer.exists_isMainSummand_descentPair},
+\lean{New.Selmer.exists_isMainSummand_mainPair}]\label{cg-selmer:prop:rows}
+(a) Let $\pi$ occur in the good forms on $W_m$ and let $1\le j\le m$. Then there is a main summand
+$R_{j,\pi}$ of rank $r$ for the $j$-th untwisted descent pair and $\pi$. (b) For a main pair $p$ there
+is a rank-one main summand $R_p$ for the untwisted lift of $\nu$ from $\U(1)$ and the trivial
+eigensystem.
+\end{proposition}
+
+\begin{proof}
+(a) Let $y\ne0$ be a good form with eigensystem $\pi$. As $e_0$ is the sum of the idempotents of the
+good tuples of labels, some good tuple $c$ (a lift setting, \lean{New.Selmer.isLiftSetting_descentPair})
+does not kill $y$. As $W_m$ is definite, Fact~\ref{cg-selmer:fact:galois} gives an $R$ attached to
+$y$, of type $c$, empty level and the jumps of the weight
+(\lean{New.Selmer.isRepOfType_of_hasProductLabel}). Let $R'$ be $R$ twisted by the avatar of
+$\mu^{-1}(u/\bar u)\abs u^{e}$, $\mu$ the character of the pair, $2e=r-t$. The jumps of $R'$ are
+$\floor{t/2}-\epsilon_\sigma(\lambda_i+\kappa_j)$, $i<r$, with $\lambda_i=\lambda_i(\sigma)$ the target
+parameter of Definition~\ref{data:def:target} at $\sigma$ and
+$\epsilon_\sigma=\pm1$ according as $\sigma$ is in the CM type. They satisfy (i)
+(\lean{New.Selmer.isMainSummandWeights_descentPair}): for $i+1<k$ the jump is within $t$ of
+$-\epsilon_\sigma\kappa_j$, as $\abs{\lambda_i}\le k/2$; for the other $m\le rm/k$ indices
+$\lambda_i+\kappa_j=(j-i'+\frac12)\Delta$ with $1\le i'\le m$, a low jump; and the $i$-th jumps at
+$\sigma,\bar\sigma$ add up to $2\floor{t/2}\ge0$. So $R'$ is a row (Lemma~\ref{cg-selmer:lem:typerow}). For the trace identity, let $y'$ lift $\pi$: at split $w$ off the
+level, minus the $X^{n-1}$-coefficient of its Hecke polynomial is
+$\Nm w^{t}\nu_W\nu_V^{-1}\pi(w,1)+\nu_W\sum_{i<t}\Nm w^i$, with $\nu_W,\nu_V$ the characters at a
+uniformiser (\lean{New.Selmer.neg_coeff_eq_of_hasLiftHeckePolynomial}); after normalisation the
+identity holds at most Frobenii, hence everywhere (\lean{New.Selmer.exists_isMainSummand_of_isRepOfType}). (b) As in (a), from the trivial character, of
+type $X-1$ with the single jump $0$ (\lean{New.Selmer.isRepOfType_one}); the shifted jump satisfies
+(i) as $m<z\le r$ and the weight $-c$ of $\nu$ has $\kappa_j+r-t\le c\le\kappa_j$
+(\lean{New.Selmer.isMainSummandWeights_mainPair}).
+\end{proof}
+
+\begin{lemma}[\lean{New.Selmer.IsRepOfType.isMainSummandLike}]\label{cg-selmer:lem:typerow}
+Let $c$ be a lift setting, and let $R$ be of rank $r'$, level $\emptyset$, type given by the scaled
+labels, and jumps satisfying (i). Then $R$ is a row.
+\end{lemma}
+
+\begin{proof}[Idea]
+Inertia above $p_i$ is killed by polynomials whose roots are roots of unity of order dividing
+$p_i^{r'!}-1$ and some $p_i^l-1\mid n_{\mathrm{Aut}}$, $l\le r$, and $1$ is not a root for the tame generator at a
+chosen place (\lean{New.Selmer.exists_inertiaGroup_isInertiaSpectrum}): (ii). Take $p_i\ne\ell$ and
+the chosen $w\mid p_i$ with primitive label (or $X-1$). An inertia element $g$ at $w$ of tame exponent
+$1$ has an eigenvalue with $r'$ Frobenius conjugates distinct modulo $\ell$, and a Frobenius $\phi$
+conjugates $R(g)$ to $R(g)^{\Nm w}$; so every lattice spans $\mathrm M_{r'}(\cO)$ and $\phi^{r'}$ acts as a
+scalar: (iii) (\lean{New.Selmer.eventually_span_eq_top_and_exists_scalar_of_tame_pair}). A power of
+$g$ acts by a root of unity $y$ with $y^e=1$ only if $\omega^j(w)^e=1$, and the order of $\omega(w)$
+has a divisor $p^{c'}>m(4r+2)$, $p\in\{2,5\}$, $p\ne\ell$: (iv).
+\end{proof}
+
+For Section~\ref{sec:cg-first}, \lean{New.Selmer.exists_baseLevel} gives, for a lift setting $c$ for
+$\vartheta$ with $Q_\vartheta$ auxiliary for $S_\ell$, base data for patching that contain the image
+of the idempotent of $c$ (integral after multiplying by $n_{\mathrm{Aut}}$) and whose eigensystems have normalised
+representations $\tilde\rho$ of type $c$ (scaled labels times $(X-1)^{t'}$), of level $Q_\vartheta\cup\bar
+Q_\vartheta$ plus the added places, with $(\tilde\rho(g)-\psi_\vartheta(g))(\tilde\rho(g)-1)=0$ on inertia above
+$Q_\vartheta\cup\bar Q_\vartheta$, from the parahoric type there (\lean{New.Selmer.normalisedRep_quadratic_on_inertia}).
+
+\subsection{Selmer data, Stickelberger systems and the twisting theorem}
+\label{cg-selmer:sec:twisting}
+
+\begin{definition}[\lean{New.Selmer.SelmerDatum}]\label{cg-selmer:def:datum}
+Let $S_0\supseteq\{v\mid\ell\}$ be finite and let $g_0$ lie in inertia at a place of $S_0$ prime to
+$\ell$. A \emph{Selmer datum} $\Lambda$ consists of a lattice $\cO^n$, with action $\rho$ unramified outside
+some $S\subseteq S_0$ and with image spanning $\mathrm M_n(\cO)$; modules $Z_w$ of local cocycles at the
+places $w\mid\ell$, with $\sum_w(\rk Z_w-n)\le fn$; and an element $\gamma_*$ of inertia at a place
+of $S$ prime to $\ell$ such that $\gamma_*$ and $(\gamma_*^c)^{-1}$ act as one scalar $\zeta_*$ with
+$\zeta_*^2-1$ a unit. Its Selmer groups modulo an element $I$ of $\cO$ consist of the cocycles with values
+in $(\cO/I)^n$ that obey the relations holding on the $Z_w$ and vanish at $\gamma_*$ (one cocycle
+per class; Sah's lemma). Its number is $\beta_\Lambda=\mathrm{gl}(\Lambda)+\mathrm{lt}_S(\Lambda)+\sum_\pm
+v\det(\rho(g_0^\pm)-1)$, with $g_0^+=g_0$, $g_0^-=(g_0^c)^{-1}$; the \emph{global term}
+$\mathrm{gl}(\Lambda)$ is $\sup_I\length\Hom_G(\Lambda/I,(\Lambda/I)^{*c})$, for the Cartier dual twisted by $c$, and
+$\mathrm{lt}_S$ sums the local excess lengths at the places of $S$ prime to $\ell$.
+\end{definition}
+
+Let $\mathrm{Sel}_Q(\Lambda\psi)$ be the Selmer group of $\Lambda\psi$ with coefficients in
+$\mathrm{Frac}(\cO)/\cO$, unramified outside $S\cup Q\cup\bar Q$. For a representation $R$,
+$\mathrm{Sel}(\psi R)\le\mathrm{sel}$ (\lean{New.Selmer.HasDivisibleSelmerLengthLe}) means: for some $\gamma$ in
+inertia away from $\ell$ and some $\zeta_\gamma$ with $\zeta_\gamma-1$ a unit, for all large $\cO$ some lattice $u$
+in $R$ has $\gamma$ acting on $\psi u$ by $\zeta_\gamma$, and the cocycles of $\psi u$ in $\mathrm{Frac}(\cO)/\cO$ unramified off
+$S_M\cup Q\cup\bar Q\cup\{v\mid\ell\}$, crystalline above $\ell$ and zero at $\gamma$ have length at
+most $\mathrm{sel}$.
+
+\begin{proposition}[\lean{New.Selmer.IsMainSummandLike.eventually_exists_selmerDatum}]
+\label{cg-selmer:prop:selmerdatum}
+Let $R$ be a row of rank $n$ and let $g_0$ be the tame generator at a chosen place prime to $\ell$.
+For all large $\cO$, $R$ has a lattice that is a Selmer datum for $(S_\ell,g_0)$, with places
+$S_M\cup\{v\mid\ell\}$, crystalline local conditions, and $\beta_\Lambda\le(4f+3)\,n\,v(n_{\mathrm{Aut}})$.
+\end{proposition}
+
+\begin{proof}
+By (iii) some $g$ with $\chi_{\mathrm{cyc}}(g)=p_i^n$ acts as a scalar $\lambda$; by self-duality $(g^c)^{-1}$ acts by
+$\chi_{\mathrm{cyc}}(g)^{t'-1}\lambda$, so $\lambda(1-p_i^{nt'})$ kills $\Hom_G(\Lambda/I,(\Lambda/I)^{*c})$, which embeds into the
+dual of $\Lambda/I$ by evaluation at a basis vector, as the image spans; hence
+$\mathrm{gl}(\Lambda)\le n\,v(p_i^{nt'}-1)\le n\,v(n_{\mathrm{Aut}})$ (\lean{New.Selmer.congruenceTerm_le}). By (ii) the
+local excess at each of the $\le4f$ places of $S_M$ prime to $\ell$ is at most
+$v\det(R(\gamma)-1)\le n\,v(n_{\mathrm{Aut}})$, and so are the terms at $g_0^\pm$
+(\lean{New.Selmer.IsMainSummandLike.normLength_placeTerms_add_firstPrimeTerms_le}). The element
+$\gamma_*$ is that of (iv) ($j=2$; $(\gamma_*^c)^{-1}$ acts alike as $\chi_{\mathrm{cyc}}(\gamma_*)=1$), and
+$\sum_w\rk Z_w$ is bounded through the negative jumps in (i).
+\end{proof}
+
+\begin{definition}[\lean{New.Selmer.StickelbergerSystem}]\label{cg-selmer:def:stickel}
+A \emph{Stickelberger system} for $(S_0,g_0)$ consists of a character $\alpha$ unramified outside
+$S_0$ with $\alpha(g_0)\ne1$, integers $e_1,\dots,e_n$, and for each finite $Q$ an element
+$\theta_Q\in\bar\Z_\ell[\mathrm{Cl}_Q]$, $\mathrm{Cl}_Q$ the class group of $\U(1)$ of modulus $Q$, with
+$1(\theta_\emptyset)\ne0$. They satisfy the \emph{norm relation}: if $P\notin Q$, $Q\cup\{P\}$ is auxiliary for $S_0$ and $\psi$ comes from
+$\U(1)$ with modulus $Q$, then
+\[
+  \psi(\theta_{Q\cup\{P\}})=\psi(\theta_Q)\prod_{i,\pm}\bigl(1-(\alpha\psi)(\phi_P)^{\pm1}
+  \Nm P^{-e_i}\bigr)\qquad(\phi_P\text{ a Frobenius at }P).
+\]
+Put $\beta=v(1(\theta_\emptyset))+2n\,v(\alpha(g_0)-1)$.
+\end{definition}
+
+\begin{proposition}[\lean{New.Selmer.exists_stickelbergerSystem_β_le_and_norm_eq}]
+\label{cg-selmer:prop:stickel}
+Let $p=(\nu,z)$ be ramified, $\epsilon=\pm1$, and $w$ a chosen place prime to $\ell$. There is a system
+for $S_\ell$ and the tame generator at $w$ with $\beta\le v(1(\theta_\emptyset))+4v(\Nm w-1)$ such
+that, for every twist $\vartheta$ with auxiliary modulus for which $\psi_\vartheta$ comes from $\U(1)$,
+$\norm{\psi_\vartheta(\theta_{Q_\vartheta})}=\norm{1(\theta_\emptyset)}\,\norm{\iota\mathrm{rat}_p(\vartheta,\epsilon)}^i$,
+where $i=2$ if $z=1$ and $i=1$ otherwise. So $v(\psi_\vartheta(\theta_{Q_\vartheta}))\le\beta+c'$ implies $v(\iota\mathrm{rat}_p(\vartheta,\epsilon))\le
+4v(\Nm w-1)+c'$.
+\end{proposition}
+
+\begin{proof}[Idea]
+The source is an \emph{integral measure} $F$ on tame characters
+(\lean{New.Data.CriticalPair.exists_isTwistMeasure}): at each modulus it is evaluation on points
+with coefficients integral away from the modulus; adding a place multiplies it by inverse Euler
+factors; and $F(\vartheta)=F(1)(\Nm Q_\vartheta)^{m'}\mathrm{rat}_p(\vartheta)^{m'+1}$. For $z\ge2$, $m'=0$ and
+$F$ is a fixed integer times $\norm{\varphi_{p,\vartheta}}^2/(\Nm Q_\vartheta)^{2z-1}$, $\varphi_{p,\vartheta}$ a fixed multiple of
+the theta lift of $\nu\vartheta$ from $\U(1)$ (\lean{New.Data.CriticalPair.integralAlgebraicPart},
+Definition~\ref{ol-values:def:rankone}), a fixed multiple of $L(z,(\nu\vartheta)^{-1})$. For $z=1$, $m'=1$ and
+$F$ is a constant times $\abs{\Pi_\vartheta}^2$ for a period $\Pi_\vartheta$ on $\U(2)$ (\lean{New.Rows.detPeriod})
+with $\abs{\Pi_\vartheta}^2$ proportional to $\Nm Q_\vartheta\abs{L(1,(\nu\vartheta)^{-1})}^2$; a new place
+multiplies $\Pi_\vartheta$ by two linear factors, whence $e\in\{0,1\}$
+(\lean{New.Data.CriticalPair.exists_isTwistMeasure_of_z_eq_one}). These are theta elements of Katz's
+measure (Katz, 1978; Bertolini--Darmon, 1996; Chida--Hsieh, 2018). The character $\alpha$ is the
+avatar of $\nu^{-\epsilon}$; $\alpha(g_0)\ne1$ is a root of unity of order dividing $\Nm w-1$, so
+$v(\alpha(g_0)-1)\le v(\Nm w-1)$; there are at most two exponents.
+\end{proof}
+
+\begin{theorem}[The twisting theorem]\label{cg-selmer:thm:twisting}
+Let $R_i$ be finitely many rows. There is an $m$-fold twist $\xi_\iota$ such that for $1\le j\le m$ the
+character $\psi=\psi_{\xi_\iota^j}$ has the following properties
+(\lean{New.Selmer.exists_mFoldTwist_hasDivisibleSelmerLengthLe}).
+\begin{enumerate}[label=(\alph*)]
+\item $Q_{\xi_\iota}$ is auxiliary for $S_\ell$, $\psi$ comes from $\U(1)$ with modulus $Q_{\xi_\iota}$, and
+  $\sum_{w\in Q_{\xi_\iota}}v(\psi(\sigma_w)-1)\le e'_\ell$ for some tame generators $\sigma_w$.
+\item $\mathrm{Sel}(\psi R_i)\le e'_\ell$ for all $i$.
+\item $v(\iota\mathrm{rat}_p(\xi_\iota^j,\epsilon))\le e'_\ell$ for all ramified $p$ and $\epsilon=\pm1$.
+\end{enumerate}
+\end{theorem}
+
+\begin{proof}
+As $p_0\ne p_1$, some chosen place $w_0$ lies over some $p_i\ne\ell$
+(\lean{New.Selmer.exists_chosen_notMem_placesDividing}); let $g_0$ be its tame generator. By
+Proposition~\ref{cg-selmer:prop:selmerdatum}, over one $\cO$ with large residue field all $R_i$ have
+Selmer data with $\beta_{\Lambda_i}\le c:=(4f+3)\,r\,v(n_{\mathrm{Aut}})$, and $\ell^{c+2}$ is a torsion level
+(\lean{New.Selmer.exists_selmerData_isTorsionLevel}). Apply
+Theorem~\ref{cg-selmer:thm:general} to these data, to the systems of
+Proposition~\ref{cg-selmer:prop:stickel} and to $\eps=2^{-\ell}$. By class field theory, the character
+$\psi$ it gives is $\psi_{\xi_\iota}$ for a tame $\xi_\iota$ of modulus $Q$
+(\lean{New.Selmer.exists_tameChar_invAvatar_eq}). The character $\xi_\iota$ is $m$-fold because every
+$\psi^j$ ramifies at every prime of $Q$. Now (a) is part of the conclusion; (b) follows as
+$c+\eps=e'_\ell$, since $\Lambda_i\psi$ is a lattice in $\psi R_i$ on which $\gamma_*$ still acts by
+$\zeta_*$, $\psi$ being trivial on inertia at $S_\ell$ and on decomposition groups above $\ell$
+(\lean{New.Selmer.SelmerDatum.TwistedLengthLe.hasDivisibleSelmerLengthLe}); and (c) as
+$4v(p_i-1)+\eps\le e'_\ell$.
+\end{proof}
+
+\begin{theorem}[\lean{New.Selmer.exists_anticyclotomic_twist}]\label{cg-selmer:thm:general}
+Let $\Lambda_i$ be finitely many Selmer data and $\Upsilon_l$ finitely many Stickelberger systems for $(S_0,g_0)$
+over $\cO$. Let $\ell^{\mathsf M}$ be a torsion level (\lean{New.Selmer.IsTorsionLevel}: $\mathsf M>\beta_{\Lambda_i}+1$ and
+$\#(\cO/\fm)>2n_ie_\cO\mathsf M+1$, $e_\cO$ the ramification index of $\cO$), let $m\ge1$ and $\eps>0$. Then there are an auxiliary $Q$ and a
+$\psi$ of $\ell$-power order such that each $\psi^j$, $1\le j\le m$, comes from $\U(1)$ with modulus
+$Q$, ramifies at every prime of $Q$, and satisfies $\mathrm{Sel}_Q(\Lambda_i\psi^j)\le\beta_{\Lambda_i}+\eps$,
+$v(\psi^j(\theta^{(l)}_Q))\le\beta_{\Upsilon_l}+\eps$ and $\sum_{w\in Q\cup\bar Q}v(\psi^j(\gamma_w)-1)\le
+\eps$ for all tame generators $\gamma_w$.
+\end{theorem}
+
+The bounds do not grow with $Q$; compare Mazur--Rubin (2018), Fakhruddin--Khare--Patrikis (2021) and
+Kriz--Nordentoft (2023).
+
+\subsection{Proof of the general twisting theorem}\label{cg-selmer:sec:proof}
+
+\begin{fact}[\lean{New.chebotarev}; Milne, Class Field Theory, 2020, VIII 7.4]\label{cg-selmer:fact:cheb}
+For $\mathcal K$ a number field, $W\ne\emptyset$ open in $\Gal(\Qbar/\mathcal K)$ and $S$ finite, some $v\notin S$ of
+prime norm has a place above it at which every arithmetic Frobenius lies in $W$.
+\end{fact}
+
+\emph{Ties.} Let $S'$, $\Sigma'$ be finite sets of places and $\mathsf N\ge1$. For any $g$ in the normal closure
+of the inertia groups at the places of $\Sigma'$ outside $S'\cup\bar S'$ and prime to $\ell$ there is a
+prime $P\notin\Sigma'\cup\bar\Sigma'$ of prime norm $\equiv1\bmod\ell^{\mathsf N}$ with a Frobenius $\phi_P$ near $g$,
+a tame generator $\gamma_P$, and a character $\lambda_P\colon G_E\to\Z/\ell^{\mathsf N}$ from $\U(1)$ with
+modulus $P$, trivial on the decomposition groups above $S'$ and $\ell$, with $\lambda_P(\gamma_P)=1$
+and $\lambda_P(\phi_P)=0$ (\lean{New.Selmer.exists_isAuxPrimeDataAt}). Indeed, Chebotarev gives $P$
+whose Frobenius fixes $\mu_{\ell^{\mathsf N}}$ and the $\ell^{\mathsf N}$-th roots of the $\Sigma$-units, for a finite
+$\Sigma\supseteq S'\cup\bar S'\cup\{v\mid\ell\}$ meeting $\Sigma'$ only there; so the $\Sigma$-units are $\ell^{\mathsf N}$-th
+powers modulo $P$, the discrete logarithm of the residue field at $P$ extends to an idele class
+character $\eta$, $\lambda_P(\mathrm{Art}\,u)=\eta(u/\bar u)$, and $\phi_P$ is corrected by a
+power of $\gamma_P$. A set $J$ of such primes, auxiliary for $S_0$, is \emph{tied}
+(\lean{New.Selmer.IsTiedPrimes}) if it
+has a first prime $P_0$ of slope $0$ with $\phi_{P_0}$ near $g_0$; if $\lambda_{P_0}(\phi_v)=1$ and
+$\lambda_w(\phi_v)=0$ for the other $v$ and all $w\ne P_0$; and if $\phi_v^\pm$ acts trivially on
+$\Lambda_i/\ell^{\mathsf M}$ where the slope $s_v^{(i)}$ is non-zero. The tied Selmer group $\mathrm{Sel}^{(i)}(J)$
+allows ramification at $J\cup\bar J$ and imposes the ties $z(\gamma_v)=s_v^{(i)}z(\phi_v)$ at $v$
+and $\bar v$ (\lean{New.Selmer.tieRelations}).
+
+\begin{theorem}[Descent]\label{cg-selmer:thm:descent}
+There is $\varsigma$ such that for every $\mathsf N>\mathsf M$ some tied $J$ has $\#J\le\varsigma$ and
+$\length\mathrm{Sel}^{(i)}(J)\bmod\ell^{\mathsf M}\le\mathrm{gl}(\Lambda_i)+\mathrm{lt}_S(\Lambda_i)$ for all $i$
+(\lean{New.Selmer.exists_isTiedPrimes_card_le_and_length_le}).
+\end{theorem}
+
+\begin{proof}[Idea]
+Start with $J=\{P_0\}$; the sum of the lengths of the tied groups over all data and levels
+$\varpi^n\mid\ell^{\mathsf M}$ (\lean{New.Selmer.totalTiedLength}) is bounded independently of $\mathsf N$, as with
+slopes $0$ they lie in the groups without new primes. If at a new admissible prime $P$ some class
+has values at $\phi_P^\pm$ that are not the values at $\gamma_P^\pm$ of a class ramified at $P$, then
+adding $P$, with a unit slope for that datum and slope $0$ for the others, lowers the sum by at
+least $1$; at each level the tilting lemma excludes at most $2n$ residue classes of slopes
+(\lean{New.Selmer.exists_slope_totalTiedLength_lt}, \lean{New.Selmer.tilting}). So after at most $\varsigma$
+steps no prime helps. Pass to a level at which some class $z$ has full order
+(\lean{New.Selmer.exists_length_selmerModule_pow_le}). The Greenberg--Wiles count
+(Fact~\ref{cg-selmer:fact:gw}), avoiding $\Nm P_0$, bounds the tied group by the dual group of
+relations at split primes plus $\mathrm{lt}_S$: the local terms are at most $\rk Z_w\cdot\length(\cO/I)$
+above $\ell$, $\mathrm{lt}_S$ at $S$, and $\length(\Lambda/I)$ at a tied prime, where the tie fixes
+$z(\gamma_v)$ by $z(\phi_v)$ (\lean{New.Selmer.SelmerDatum.exists_length_tiedSelmer_le}).
+Reciprocity bounds the dual group by $\mathrm{gl}(\Lambda)$
+(\lean{New.Selmer.SelmerDatum.length_dualSelmer_le}): for $y$ dual, $H$ generated by the
+commutators with $\gamma_*,\gamma_*^c$ and $u\in\cO$, the form
+$\mathcal M_u(h,h')=\pair{uz(h),y(h')}-\pair{uz(h'^c),y(h^c)}$ vanishes on the diagonal of $H\times H$, as
+$\mathcal M_u(h,h)=\mathcal M_u(\phi,\phi)$ for the Frobenius $\phi$ of a new prime near $\gamma_{P_0}h$, where
+$z(\phi^\pm)$ are tame values of a class ramified there and the reciprocity law of $y$ applies. So
+$\mathcal M_u$ is alternating on $H$; conjugating $h$ by $\gamma_*$ gives $\mathcal M_{\zeta_*u}=\mathcal M_{\zeta_*^{-1}u}$
+there, and $\zeta_*-\zeta_*^{-1}$ is a unit (\lean{New.Selmer.SelmerDatum.mirrorForm_eq_zero}). As
+$z(H)$ spans $\Lambda/I$, $\eta(z(h))=y(h^c)$ defines a $G$-map $\Lambda/I\to(\Lambda/I)^{*c}$, which determines $y$.
+\end{proof}
+
+\begin{fact}[\lean{New.RelationSetting.exists_card_cocycles_le}; Greenberg--Wiles, lower bound;
+Darmon--Diamond--Taylor, 1995, Thm.~2.19]\label{cg-selmer:fact:gw}
+Let $\mathcal K$ be totally complex, $M'$ finite, killed by $\ell^{r'}$, $r'\ge1$, with local conditions at a
+finite $S$ and an open normal $U$ fixing $M'$ and $\mu_{\ell^{r'}}$, without complex conjugations
+(which fix $M'$; \lean{New.RelationSetting}). Let some $g$ fix the $\ell$-power roots of unity
+and no non-zero element of $M'$, and be central modulo $U$. If $p$ can be avoided
+(\lean{New.RelationSetting.Avoids}), then for some finite $T'\supseteq S$ prime to $p$, $\#Z(\emptyset)\,\#M'^{\#S+r_2}\le\#\mathrm{Rel}(T')\,\#M'\prod_{v\in
+S}\#A_v$. Here $Z(\emptyset)$ is the group of Selmer cocycles, $\mathrm{Rel}(T')$ the relations off
+$T'$ (in place of dual cocycles), $A_v$ the local conditions, $r_2$ the number of infinite places.
+\end{fact}
+
+\emph{One system and the line.} Put $\psi_X(g)=\prod_P(1+X_P)^{\lambda_P(g)}$
+(\lean{New.Selmer.universalChar}). The Selmer modules modulo $\ell^{\mathsf M}$ of all $\Lambda\psi_{\mathsf x}$ are kernels
+of one matrix $A(\mathsf x)$ over $\cO[X]$, so some polynomial (a minor) is sharp at a given point and bounds
+the length everywhere (\lean{New.Selmer.exists_sharp_polynomial}). At $\mathsf x=(\zeta_P-1)_P$,
+$\zeta_P^{\ell^{\mathsf N}}=1$, $\psi_{\mathsf x}=\prod_P\zeta_P^{\lambda_P}$ is a character.
+
+\begin{proposition}[\lean{New.Selmer.exists_twistPolynomials}]\label{cg-selmer:prop:line}
+There is $s_0\ge1$ such that for each rational $r_0>0$ with $s_0r_0<1$ and each large $\mathsf N$ there are
+an auxiliary $Q$ of at most $s_0/2$ primes with characters $\lambda_P$, and for each datum and system
+a polynomial $F$ and a point with coordinates of valuation $\ge r_0$ at which $v(F)\le\beta+s_0r_0$.
+At $\mathsf x=(\zeta_P-1)$, a system's $F(\mathsf x)$ is $\psi_{\mathsf x}(\theta_Q)$, and for a datum $v(F(\mathsf x))<\beta_\Lambda+1$
+implies $\mathrm{Sel}_Q(\Lambda\psi_{\mathsf x})\le v(F(\mathsf x))$.
+\end{proposition}
+
+\begin{proof}[Idea]
+Take $Q=J$ from Theorem~\ref{cg-selmer:thm:descent}. For datum $i$, restrict to the line
+$X_{P_0}=Y$, $X_v=s^{(i)}_vY$; there $\psi_{\mathsf x}(\phi_v)=1+y$ and $\psi_{\mathsf x}(\gamma_v)=1+s_vy$. At primes of
+norm $\equiv1\bmod\ell^{\mathsf N}$ the cocycles of the twist have $(\phi-1)z(\gamma)=(\gamma-1)z(\phi)$, as
+$v(y)\ge r_0\ge\mathsf M/\mathsf N$ (\lean{New.Selmer.sub_one_smul_eq_of_tame}). As $\rho(\gamma_v)\equiv1$, and
+$\rho(\phi_v)\equiv1$ where $s_v\ne0$, the defect $z(\gamma_v)-s_vz(\phi_v)$ of a tie lies in the
+kernel of $(1+y)\rho(\phi_v)-1$. Hence dropping the ties costs at most $v(F^1(y))$, where
+$F^1=\prod_{v,\pm}\det((1+Y)\rho(\phi_v^\pm)-1)$ (\lean{New.Selmer.IsTiedPrimes.relLength_tied_le}).
+At $y=0$ the tie at $P_0$ puts $z(\gamma_{P_0}^\pm)$ in the kernels of
+$\rho(\phi_{P_0}^\pm)-1\equiv\rho(g_0^\pm)-1$, of lengths $\le v\det(\rho(g_0^\pm)-1)$; with
+Theorem~\ref{cg-selmer:thm:descent} the module tied at $J\setminus\{P_0\}$ has a minor
+$F^0$, sharp at $0$, with $v(F^0(0))\le\beta_\Lambda$. For Gauss valuations of radius $r_0$,
+$v_{r_0}(F^0)\le\beta_\Lambda$ and $v_{r_0}(F^1)\le s_0r_0$ (each factor has a unit coefficient in degree
+$n$); at a $y$ where both attain them, the minor $F$ of the untied module sharp at $\mathsf x$ has
+$v(F(\mathsf x))\le v(F^0(y))+v(F^1(y))$ (\lean{New.Selmer.SelmerDatum.exists_boundsSelmer_and_eval_dvd}).
+For a system, on the line where all $X_v$ with $v\ne P_0$ vanish, $\psi_X(\theta_J)\equiv R_0R_1\bmod
+(1+X)^{\ell^{\mathsf N}}-1$, up to a power of $1+X$, as both sides agree at all $X=\zeta_{P_0}-1$ by the norm
+relation, $\lambda_{P_0}(\phi_v)$ being $1$. Here $v(R_0(0))=v(1(\theta_{\{P_0\}}))\le\beta$ as
+$\alpha(\phi_{P_0})\equiv\alpha(g_0)$ and $\Nm P_0\equiv1$, and
+$v_{r_0}(R_1)\le s_0r_0$; at a $y$ where $R_0R_1$ attains $v_{r_0}(R_0R_1)<\mathsf Nr_0\le
+v((1+y)^{\ell^{\mathsf N}}-1)$ the congruence gives $v(\psi_{\mathsf x}(\theta_J))\le v_{r_0}(R_0R_1)$
+(\lean{New.Selmer.StickelbergerSystem.exists_point_ellVal_universalChar_le}).
+\end{proof}
+
+\begin{theorem}[Roots of unity; \lean{New.Selmer.exists_rootsOfUnity_ellVal_eval_le_add}]
+\label{cg-selmer:thm:roots}
+Given $s_0$, $\rho_0>0$, $\beta$, $\eps>0$, there is $h_0$ such that: if $F_i$ are finitely many
+polynomials over $\bar\Z_\ell$ in at most $s_0$ variables and $\mathsf x_i$ points with coordinates of
+valuation $\ge\rho_0$ and $\sum_iv(F_i(\mathsf x_i))\le\beta$, then some $\zeta_u$ with $\zeta_u^{\ell^{h_0}}=1$
+and $v(\zeta_u-1)\le\rho_0$ have $v(F_i((\zeta_u-1)_u))\le v(F_i(\mathsf x_i))+\eps$ for all $i$.
+\end{theorem}
+
+\begin{proof}
+Consider first one variable (\lean{New.Selmer.exists_rootOfUnity_eval_le_gaussVal_add}). Let
+$v_{\rho_0}(g)\le c$, $\rho_h=1/\varphi(\ell^h)$, $\delta<1$. At $y$ with $v(y)=\rho_h$,
+$v(g(y))=v_{\rho_h}(g)+\sum_{\mathsf r\in R_h}(v(y-\mathsf r)-\rho_h)$, where $R_h$ is the multiset of roots
+of valuation $\rho_h$. By the Newton polygon, $\sum_{\rho_h\le\rho_0}\#R_h\rho_h\le c$. As
+$\sum1/(h+1)$ diverges, for $h_0$ large some $h\le h_0$ has $\#R_h\rho_h\le\delta/(h+1)$. For each $\mathsf r$, the
+sum of $\min(v(\zeta_h-1-\mathsf r),1)$ over the $1/\rho_h$ primitive $\ell^h$-th roots $\zeta_h$ is at most
+$h+1$. Averaging, some $\zeta_h$ has $\sum_{\mathsf r\in R_h}\min(v(\zeta_h-1-\mathsf r),1)\le\#R_h\rho_h(h+1)
+\le\delta<1$, hence $v(g(\zeta_h-1))\le v_{\rho_h}(g)+\delta$. For several variables, move one coordinate
+at a time, the same for all points: apply the step to the product of the restrictions, using
+$v_{\rho_0}(g)\le v(g(\mathsf x_{ij}))$; each factor loses at most $\delta=\min(\eps,1)/(s_0+2)$, as none
+falls below its Gauss valuation (\lean{New.Selmer.exists_ellVal_eval_piecewise_le_add}).
+\end{proof}
+
+\begin{proof}[Proof of Theorem~\ref{cg-selmer:thm:general}]
+Take $s_0$ from Proposition~\ref{cg-selmer:prop:line}, $r_0$ with $s_0r_0\le\eps/2$, $h_0$ from
+Theorem~\ref{cg-selmer:thm:roots} with $\rho_0=r_0/m$, then $\mathsf N\ge h_0$ and the polynomials of the
+proposition. Apply the theorem to all $F((1+X)^j-1)$, $j\le m$, at points $\mathsf x'$ with $(1+\mathsf x')^j=1+\mathsf x$
+(\lean{New.Selmer.exists_rootsOfUnity_ellVal_eval_le}): it gives $\zeta_P$ with
+$v(F((\zeta_P^j-1)_P))\le\beta+\eps$ for all $F$ and $j\le m$. Put $\psi=\prod_P\zeta_P^{\lambda_P}$, so
+that $\psi^j$ is the character at $(\zeta_P^j-1)$. As $v(\zeta_P^j-1)\le r_0<1$, $\zeta_P^j\ne1$ and
+$\psi^j$ ramifies at each $P$, and $\sum_wv(\psi^j(\gamma_w)-1)\le s_0r_0<\eps$
+(\lean{New.Selmer.TwistPolynomials.isSmallTwist_twist}). The proposition gives the other bounds.
+\end{proof}

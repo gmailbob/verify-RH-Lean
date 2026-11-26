@@ -1,0 +1,79 @@
+\section{Notation}\label{sec:app-notation}
+
+The symbols below have one meaning in the whole paper. Sections introduce further symbols of
+their own for local objects and say what they mean where they first appear.
+
+\subsection*{The data}
+
+\begin{center}\small
+\begin{tabular}{@{}l p{0.58\textwidth} l@{}}
+\toprule
+symbol & meaning & where \\
+\midrule
+$q_0$, $d$ & the modulus, a multiple of $18480$, and the prime $d \equiv q_0/2 - 1 \bmod q_0$ & Def.~\ref{setup:def:parameters} \\
+$K$, $\chiK$ & the field $\Q(\sqrt{-d})$ and its quadratic character & Def.~\ref{setup:def:parameters} \\
+$q_1$, $q_2$, $T$, $l_0$ & $q_1 = q_0 T$, $q_2 = (q_0 d)^{s+6}$, $T = 3 l_0 2^s$ & \S\ref{sec:setup} \\
+$E$, $\zeta$ & the CM field $K(\zeta)$, $\zeta$ a primitive $q_1$-th root of unity & \S\ref{sec:setup} \\
+$\Phi$, $f$ & the infinite places of $E$, a group $\cong (\Z/q_1)^\times$; their number & \S\ref{sec:setup} \\
+$\Phi_a$, $\Phi_b$ & the $a$-places (class $1$ modulo $q_0$) and the $b$-places (class $-1$, sparse) & Def.~\ref{setup:def:data} \\
+$\nu\tau$ & the product of a place $\tau$ with the place of the class of an integer $\nu$ & \S\ref{sec:setup} \\
+$x$, $x_1$, $b$, $a$ & the scales, $x < x_1 < b$, and $a = x b$ & Def.~\ref{setup:def:data} \\
+$m$, $s$ & the number of lifts; the exponent with $2^s = m^{22}$ & Def.~\ref{setup:def:data} \\
+$r$, $k$, $t$, $n_j$, $\varrho$ & ranks: $k = r+1-m$, $t = 5r$, $n_j = k + j(t+1)$, $m = 2\varrho + 2$ & Def.~\ref{setup:def:data} \\
+$\Delta$ & the gap $2r^8$ between the weights of consecutive lifts & Def.~\ref{setup:def:data} \\
+$\kappa(\tau)$, $\kappa_j(\tau)$ & the weight of a place; the weight of lift $j$ & Def.~\ref{setup:def:data} \\
+$p_0$, $p_1$, $M$, $\pi_M$ & the level primes, $M = p_0 p_1$, an integer of $K$ with $\pi_M\overline{\pi_M} = M$ & Def.~\ref{setup:def:data} \\
+$N$, $\pi_N$ & the level, a prime; an integer of $E$ with $\pi_N\overline{\pi_N} = N$ & Def.~\ref{setup:def:data} \\
+$\Omega$, $\rdE$ & the period constant; the root discriminant of $E$ & \S\ref{sec:setup} \\
+$\delta_E$ & a purely imaginary generator of the different of $E$ & Def.~\ref{der:def:field} \\
+$X_j$, $Y_j$, $W_j$, $V_j$ & the hermitian spaces over $E$ & Def.~\ref{ub-objects:def:spaces} \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\subsection*{Places of $\Q$ and sizes}
+
+\begin{center}\small
+\begin{tabular}{@{}l p{0.58\textwidth} l@{}}
+\toprule
+symbol & meaning & where \\
+\midrule
+$\iota \mid \ell$, $\cO_\iota$ & an isomorphism $\C \isom \Qlbar$ with its prime; the numbers integral at $\iota$ & \S\ref{sec:setup} \\
+$\sigma \in \Aut(\C)$ & a field automorphism of $\C$; ``at every conjugate'' means for all $\sigma$ & \S\ref{sec:setup} \\
+height at most $c$ & of a family of numbers indexed by the $\iota$ & Def.~\ref{setup:def:height} \\
+$\Lambda$, $\LambdaK$, $\lambda_q$ & von Mangoldt's function; $\Lambda(n)(1 - \chiK(n))$; its restriction to $n \equiv 1 \bmod q$ & Def.~\ref{zeros:def:remainder} \\
+$R_q$, $G_q$, $c_q$ & the remainder of the weighted prime sum, and the function and constant in it & Def.~\ref{zeros:def:remainder} \\
+$\sfin(y,\tau)$, $\sinf(j)$ & the prime sum at a place; the size charged to a derivative of order $j$ & Def.~\ref{setup:def:primesums} \\
+$\hdir$, $\hmain$ & the direction amount; the main amount $m k\,\hdir$ & Def.~\ref{setup:def:primesums} \\
+$\smain$, $\rem$ & the expected value of the prime sums; the total remainder & Def.~\ref{setup:def:primesums} \\
+$f a\log^3 b$ & the unit in which errors are counted & \S\ref{sec:setup} \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\subsection*{Forms, lifts and the lattice}
+
+\begin{center}\small
+\begin{tabular}{@{}l p{0.58\textwidth} l@{}}
+\toprule
+symbol & meaning & where \\
+\midrule
+$\mathcal{S}$, $\mathcal{S}^{\mathrm{ram}}$ & the source forms on $\U(X_0)$; the ramified ones & Def.~\ref{ub-objects:def:source} \\
+$\mathcal{T}_D$, $\dT$ & the target forms on $\U(Y_0)$; their dimension & Def.~\ref{ub-objects:def:target} \\
+$\Gbar$, $e_0$ & the finite group $\prod_w \GL_r(\F_w)$; the idempotent of the good forms & Def.~\ref{ub-objects:def:target} \\
+$\mathfrak{s}$ & a finite set of elements $s$ of $\Gbar$ (the translates of Theorems A and B) & Thm.~\ref{main:thm:A} \\
+$\lambda_i(v)$ & the parameter at infinity of the target forms & Def.~\ref{data:def:target} \\
+$J^\circ$ & the stabiliser of the standard lattice & \S\ref{ub-objects:sec:spaces} \\
+$\vartheta$, $Q$, $\Nm Q$ & a twist; its modulus; the norm of the modulus & Def.~\ref{data:def:twist} \\
+$\xi = (\xi_\iota)$ & a family of twists, one for each $\iota$ & Def.~\ref{det-chain:def:regular} \\
+$\Theta_\vartheta$ & the chain of $m$ theta lifts from forms on $Y_0$ to forms on $Y_m$ & Def.~\ref{ub-objects:def:lowerchain} \\
+$\Psi$, $B_{\vartheta,\Psi}$ & a chain datum; the composite lift & Def.~\ref{ub-objects:def:chaindatum} \\
+$\Poin$, $s\nPoin$ & the Poincar\'e map; the normalised Poincar\'e map, $s \in \Gbar$ & Defs.~\ref{ub-objects:def:poincare}, \ref{main:def:npoincare} \\
+$c_{\mathrm{ss}}$, $c_B$ & the constant of the seesaw identity; the rational number that removes the gains & Def.~\ref{main:def:npoincare} \\
+$\mathrm{gain}_\ell$, $\mathrm{err}_\ell$, $\mathcal{N}$ & the gain and the error at $\ell$; the primes below $x_1$ that do not split in $K$ & \S\ref{sec:main} \\
+index, covolume & of a family in a twisted lattice & Def.~\ref{setup:def:index} \\
+$Z(\vartheta)$, $Z_j(\vartheta)$ & the determinant $\det(\Theta_\vartheta^*\Theta_\vartheta)$ of the chain; that of the single lift $j$ & Defs.~\ref{setup:def:index}, \ref{det-chain:def:det} \\
+colength & of one module in another & Def.~\ref{data:def:colength} \\
+\bottomrule
+\end{tabular}
+\end{center}

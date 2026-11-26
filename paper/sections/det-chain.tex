@@ -1,0 +1,472 @@
+\section{The lower bound: Theorem C and the determinant of a chain of lifts}\label{sec:det-chain}
+
+This section proves Theorem~\ref{main:thm:C} (\lean{New.Data.integral_forms_long}) along the lines
+described after it in Section~\ref{sec:main}; \emph{regular families} are defined here, and exist
+by Section~\ref{sec:cg-selmer}. The height bound comes from a factorisation (Theorem~\ref{det-chain:thm:factor}) of
+$Z(\vartheta)/Z(1)$, up to a power of $\Nm Q$ and ratios of Hecke $L$-values, into the ratios
+$Z_j(\vartheta)/Z_j(1)$ of the $m$ single lifts $W_j\to V_j$, bounded in Section~\ref{sec:ol-values};
+it rests on Rallis' inner product formula for the first lift of each row of a \emph{triangle} of
+lifts and on the exchange identities of Section~\ref{sec:det-exchange} for its squares.
+
+\subsection{Set-up}\label{det-chain:sec:setup}
+
+The data $D$ are fixed (Definition~\ref{setup:def:data}). From Section~\ref{sec:ub-objects} we take
+the \emph{chosen places} (the prime divisors of $\pi_M$), the level $J_M$, the \emph{principal
+forms} on a hermitian space of rank $r$ (level $J_M$, the fixed parameter;
+\lean{New.Data.principalForms}) and the \emph{good forms}, the image of $e_0$ in them, which on
+$Y_0$ are the target forms; and the spaces of Definition~\ref{ub-objects:def:spaces}: $Y_j$ of rank
+$r+jt$, $Y_m$ definite, $W_j$ of rank $r$ with $m-j$ minus signs
+(\lean{New.Data.negCount_signsW}), for which the target parameter fits the theta lift with a
+character of weight $-\kappa_j$ to the definite space $V_j=I_{r+t}$
+(\lean{New.Data.fitsParams_descentPair}). Twists, $m$-fold twists (\lean{New.Data.MFoldTwist}) and
+the character $\mu_j^0\vartheta^j$ of the $j$-th lift, $\mu_j^0$ of weight $-\kappa_j$ and tame part
+$\omega^j$, are those of Definitions~\ref{data:def:twist} and~\ref{data:def:liftchar}. For a tame
+$\vartheta$ of modulus $Q=Q(\vartheta)$ put $\Nm Q=\prod_{w\in Q}q_w$, $q_w$ the norm of $w$, and let
+$\Sigma_\vartheta$ be the set of the chosen places and the places of $Q$.
+
+\begin{definition}[\lean{New.Data.singleLift}, \lean{New.Data.goodLift},
+\lean{New.Data.liftDeterminant}, \lean{New.Data.chainDeterminant}]\label{det-chain:def:det}
+For $1\le j\le m$ and a tame character $\vartheta$, the \emph{single lift} $\Theta_{j,\vartheta}$
+sends principal forms on $W_j$ to algebraic forms on $V_j$: it is the theta lift of the descent
+pair $(W_j,V_j)$ with character $\mu_j^0\vartheta$, whose Schwartz datum is the Fock polynomial of
+the highest vector at infinity, the \emph{block datum} modulo $\pi_M Q$ (the indicator of the
+inclusion matrix at the chosen places, a character of the determinant of the top block at the
+places of $Q$) and the vacuum elsewhere. For an $m$-fold twist $\vartheta$ let $\Theta_\vartheta$
+be the chain of $m$ lifts from $Y_0$ to $Y_m$ (\lean{New.Data.lowerChainAtLevel},
+Section~\ref{sec:ub-objects}) on the target forms. The \emph{chain determinant} and the \emph{lift
+determinants} are
+\[
+  Z(\vartheta)=\det\bigl(\Theta_\vartheta^*\Theta_\vartheta\bigm|\mathcal{T}_D\bigr),\qquad
+  Z_j(\vartheta)=\det\bigl(\Theta_{j,\vartheta^j}^*\Theta_{j,\vartheta^j}\bigm|
+  \text{good forms on }W_j\bigr).
+\]
+\end{definition}
+
+For a set $S$ of finite places let $L^S(s,\nu)$ be the Hecke $L$-function of $x\mapsto\nu(x/\bar x)$
+without the Euler factors at $S\cup\bar S$. For a
+character $\nu$ of $\U(1)(\A)$, an integer $n$ and a tame $\vartheta$ put
+\begin{equation}\label{det-chain:eq:rho}
+  \rho_n(\nu,\vartheta)=\prod_{z=1}^{n}
+  \frac{\abs{L^{\Sigma_\vartheta}(z,(\nu\vartheta)^{-1})}}{\abs{L^{\Sigma_1}(z,\nu^{-1})}}
+\end{equation}
+(\lean{New.Data.lRatioProd}), and define the \emph{quotient ratios} and the \emph{turn ratios}
+\[
+  q_{ij}(\vartheta)=\rho_t\bigl(\mu_j^0/\mu_i^0,\vartheta^{j-i}\bigr)\ \ (1\le i<j\le m),\qquad
+  \tau_{ij}(\vartheta)=\rho_t\bigl(\mu_{i+1}^0\mu_{j+1}^0,\vartheta^{j+1}\bigr)\ \ (0\le i,j<m)
+\]
+(\lean{New.Data.quotientRatio}, \lean{New.Data.turnRatio}). A \emph{critical pair} $p=(\nu,z)$, $\nu$
+of weight $-c$ and $1\le z\le t$, is as in Definition~\ref{der:def:field}\,(c); it is
+\emph{ramified} if the tame part is non-trivial exactly at the chosen places
+(\lean{New.Data.CriticalPair.IsRamified}). Its \emph{ratio} at a tame $\vartheta$ and a sign
+$\epsilon=\pm1$ is $\mathrm{rat}_p(\vartheta,\epsilon)=\abs{L^{\Sigma_\vartheta}(z,(\nu\vartheta^\epsilon)^{-1})}/\abs{L^{\Sigma_1}(z,\nu^{-1})}$,
+and $\mathrm{rat}_p(\vartheta)=\mathrm{rat}_p(\vartheta,1)$
+(\lean{New.Data.CriticalPair.ratio}). A function $F$ of $m$-fold twists is a \emph{ramified
+ratio} if $F(\vartheta)=\rho_z(\nu,\vartheta^n)$ for a ramified pair $(\nu,z)$ and a fixed
+$1\le n\le m$ (\lean{New.Data.IsRamifiedRatio}); then $F\ge0$ and $F(1)=1$. The $q_{ij}$ and the
+$\tau_{ij}$ are ramified ratios (\lean{New.Data.isRamifiedRatio_quotientRatio},
+\lean{New.Data.isRamifiedRatio_turnRatio}).
+
+A function $c$ of $m$-fold twists \emph{has modulus $F$} if $\abs{c(\vartheta)}^2=C\,(\Nm
+Q)^{u}F(\vartheta)^2$ for all $\vartheta$, with $C\in\R$ and $u\in\Z$ independent of $\vartheta$
+(\lean{New.Data.HasAbsUpToNormPower}). Moduli multiply, and if $F\ge0$, $F(1)=1$ and $c(1)\ne0$,
+then $\abs{c(\vartheta)/c(1)}=(\Nm Q)^{e/2}F(\vartheta)$ for some $e\in\Z$
+(\lean{New.Data.HasAbsUpToNormPower.exists_norm_div_eq}).
+
+\subsection{Regular families of twists}\label{det-chain:sec:regular}
+
+A \emph{family of twists} is a map $\iota\mapsto\xi_\iota$ from the set $\mathcal{I}$ of pairs
+$\iota\mid\ell$ (Section~\ref{sec:setup}) to the $m$-fold twists. The \emph{budget} is
+$\beta_D=f a\log^3 b/(mk)$ (\lean{New.Data.denominatorBudget}). A critical pair $p=(\nu,z)$ is a
+\emph{main pair for $j$} (\lean{New.Data.CriticalPair.IsMainPair}) if $1\le j\le m$,
+$m<z\le r$, the tame part of $\nu$ is $\omega^j$, and $\kappa_j+r-t\le c\le\kappa_j$ at every
+infinite place; main pairs are ramified. Test forms and false lifts are defined in
+Section~\ref{sec:ol-values}.
+
+\begin{definition}[\lean{New.Data.ClearsProjection}, \lean{New.Data.HasDenominatorsLe},
+\lean{New.Data.IsDenominatorBound}, \lean{New.Data.HasSmallRatios},
+\lean{New.Data.IsRegularFamily}]\label{det-chain:def:regular}
+Let $\iota\mid\ell$, $\vartheta$ a twist, $1\le j\le m$ and $\beta\in\R$. Let $\mathcal{Z}$ be the
+image of $\Theta_{j,\vartheta}$ on the good forms and $\mathrm{pr}$ the orthogonal projection onto
+it. \emph{The denominators at $(\iota,\vartheta,j)$ are at most $\beta$} if
+\begin{enumerate}[label=(\roman*)]
+\item some operator $\Lambda$ on $\mathcal{Z}$ with $\norm{\iota\det\Lambda}_\ell\ge
+  \exp(-\dim\mathcal{Z}\cdot r\beta)$ makes $\Lambda(\mathrm{pr}\,y)$ integral at $\iota$ for every
+  form $y$ on $V_j$ that is integral at $\iota$ and orthogonal to the false lifts (this is the
+  denominator bound of Definition~\ref{ol-values:def:false}(b) for $Z=\mathcal Z$, without its last
+  clause on pairings; \lean{New.Selmer.DenominatorLe.clearsProjection});
+\item for every main pair $p=(\nu,z)$ for $j$ and all test forms $\Xi,\Xi'$ for the lift of
+  $\nu\vartheta$ from $\U(1)$ to the definite space of rank $2z$, the inner product of the
+  projections of $\Xi$ and $\Xi'$ to the line of that lift has $\norm{\iota(\cdot)}_\ell\le e^\beta$.
+\end{enumerate}
+A family $\xi$ has \emph{small ratios} if $\Nm Q(\xi_\iota)$ is prime to $\ell$ for each
+$\iota\mid\ell$, and for each $1\le j\le m$, each ramified pair $p$ and each sign $\epsilon$ the family
+$\iota\mapsto\mathrm{rat}_p(\xi_\iota^j,\epsilon)^{-1}$ has height at most $x_1$. It is
+\emph{regular} if it has small ratios and for each $1\le j\le m$ there are reals $\gamma_\ell$,
+one for each prime, with $\sum_{\ell\in S}\gamma_\ell\le\beta_D$ for every finite set $S$ of primes,
+such that the denominators at $(\iota,\xi_\iota^j,j)$ are at most $\gamma_\ell$ for every
+$\iota\mid\ell$.
+\end{definition}
+
+Every admissible datum $D$ has a regular family of twists (Theorem~\ref{cg-selmer:thm:regular},
+\lean{New.exists_isRegularFamily}).
+
+\subsection{The norm of one lift}\label{det-chain:sec:onelift}
+
+\begin{fact}[Rallis' inner product formula for sharp data, as a sum over cosets;
+\lean{New.SiegelWeil.rallis_inner_product_cosetTerm}]\label{det-chain:fact:rallis}
+Let $S$, $S'$ be hermitian spaces over $E$ with $2\rk S<\rk S'$, and let $v$ be a real datum of the
+Fock model that carries forms of type $e$ on $S$ to forms of type $e'$ on $S'$ (an edge). There is
+$A\ne0$, depending only on $S$, $S'$ and the real data, such that the following holds for all
+characters $\chi$, $\chi'$ of the given weights. Let the finite datum $F$ be sharp for a level $J$ at a
+set $S_0$ of places, of mass $c$: $F$ lies in the finite part, $v\otimes F$ is clean (a condition on
+the support) and the vacuum off $S_0$, the matrix coefficient
+$\pair{F,\omega(g)F}$ at finite points $g$ integral off $S_0$ is $\pair{F,F}\ne0$ on $J\cap K_0$ and $0$
+elsewhere, and $c=\pair{F,F}/[K_0:J\cap K_0]$ (\lean{New.SiegelWeil.IsSharp}). Let $L$ be the theta lift by $v\otimes F$. Then $L$ is injective on the forms of
+type $e$ fixed by $J$, and for such a form $y$ and every form $y'$ of type $e$,
+$\pair{Ly',Ly}=\sum_\gamma A\,c\,\mathrm{mc}(\gamma)\pair{y',R(\gamma)y}$, an absolutely
+convergent sum over the cosets $\gamma$ of the finite points modulo those integral off $S_0$, with
+$\mathrm{mc}(\gamma)$ the matrix coefficient of the vacuum of the Weil representation. (Sources
+that the Lean file names. For the formula: Rallis, $L$-functions and the oscillator
+representation, 1987; J.-S. Li, Non-vanishing theorems for the cohomology of certain arithmetic
+quotients, 1992. For the injectivity: Rallis, Injectivity properties of liftings associated to
+Weil representations, 1984; J.-S. Li, 1992.)
+\end{fact}
+
+For $1\le j\le m$ and a tame $\vartheta$ let $R_{j,\vartheta}$ (\lean{New.Data.rallisOperator}) be
+the operator $y\mapsto\sum_\gamma\mathrm{mc}(\gamma)\,\gamma y$ on principal forms on a space of
+rank $r$, with the rank $r+t$ of $V_j$, the character of $V_j$ in the $j$-th pair and the cosets
+off $\pi_MQ$; it is a spherical Hecke operator and preserves the good forms
+(Section~\ref{sec:sp-moment}, \lean{New.Data.rallisOnGood}). Put
+\[
+  c_Q=(\Nm Q)^{rt}\prod_{w\in Q}\ \prod_{i=t+1}^{t+r}\bigl(1-q_w^{-i}\bigr)
+  \qquad(\lean{New.DescentPair.twistFactor}).
+\]
+
+\begin{proposition}[Norm of one lift; \lean{New.Data.singleLift_injective},
+\lean{New.Data.coe_adjoint_singleLift}, \lean{New.Data.normalizedDescent_eq_zero_iff},
+\lean{New.Data.exists_adjoint_singleLift_comp_eq}]
+\label{det-chain:prop:onelift}
+Let $1\le j\le m$. For every tame character $\vartheta$ the lift $\Theta_{j,\vartheta}$ is
+injective, and its adjoint sends a form $\Xi$ on $V_j$ to the descent
+$g\mapsto\pair{\theta_W(g,\cdot),\Xi}$, the class sum of $\Xi$ against the theta kernel; so the
+descent of $\Xi$ vanishes exactly when $\Xi$ is orthogonal to all lifts. There is $c_j\ne0$,
+independent of $\vartheta$, with
+$\Theta_{j,\vartheta}^*\Theta_{j,\vartheta}=c_j\,c_Q\,R_{j,\vartheta}$. Consequently
+\begin{equation}\label{det-chain:eq:Zj}
+  Z_j(\vartheta)=(c_j\,c_Q)^{\dT}\,\det\bigl(R_{j,\vartheta^j}\bigm|\mathcal{T}_D\bigr)
+  \qquad(\lean{New.Data.exists_normDet_goodLift_sq_eq}).
+\end{equation}
+\end{proposition}
+
+\begin{proof}
+Here $\rk V_j=6r>2\rk W_j$. The block datum modulo $\pi_MQ$ is sharp for $J_M$
+(\lean{New.DescentPair.isSharpFn_blockFn}): its squared norm counts one matrix at each chosen place
+and, at $w\in Q$, the matrices whose top block is invertible. Fact~\ref{det-chain:fact:rallis}
+gives the injectivity and the Gram form; the class sum product on $V_j$ is the index of the level
+times the dimension of the weight times the Petersson product, and the index times the mass is
+(\lean{New.DescentPair.gramFactor_div_card}) a factor of the chosen places, independent of
+$\vartheta$, times $c_Q$. The adjoint is computed by writing the lift as the integral
+$\int y(g)\,\theta_W(g,\cdot)\,dg$ and exchanging the integral with the class sum
+(\lean{New.DescentPair.inner_thetaLift}). For \eqref{det-chain:eq:Zj}: the powers of $\vartheta$
+have the same modulus, hence the same $c_Q$; the good forms on $W_j$ and on $Y_0$ have the same
+dimension $\dT$, and $R_{j,\vartheta}$ has the same determinant on both, since every Hecke
+eigensystem has the same multiplicity in both (Section~\ref{sec:sp-moment},
+\lean{New.Data.targetDim_eq_finrank_goodForms_spaceW}, \lean{New.Data.det_rallisOnGood_eq}).
+\end{proof}
+
+\subsection{Triangles of lifts}\label{det-chain:sec:triangle}
+
+The chain $\Theta_\vartheta$ leaves Weil's range after its first lift ($\rk Y_{n+1}<2\rk Y_n$ for
+$n\ge1$), so Fact~\ref{det-chain:fact:rallis} does not apply to it.
+
+\begin{definition}[\lean{New.Exchange.IsTriangle}, \lean{New.Exchange.weightedChain}]
+\label{det-chain:def:triangle}
+Let $V$ and $F(i,n)$, $i,n\ge0$, be inner product spaces, with isometries $j_i\colon V\to F(i,0)$,
+and for a parameter $\vartheta$ let $\mathsf a_{i,n}\colon F(i,n)\to F(i,n+1)$ and
+$\mathsf d_{i,n}\colon F(i,n+1)\to F(i+1,n)$ be linear maps and $w_n\ne0$ weights. They form a
+\emph{triangle of size $m$} if
+\begin{enumerate}[label=(\roman*)]
+\item for $i+n+1<m$ there is $\beta$ with
+  $w_n\,\mathsf a_{i+1,n}\mathsf d_{i,n}=(w_{n+2}/\bar\beta)\,\mathsf d_{i,n+1}\mathsf a_{i,n+1}$ on $F(i,n+1)$ (the square at
+  $(i,n)$ commutes up to $\beta$);
+\item for $i<m$: $\pair{z,\mathsf a_{i,0}j_iy}=\pair{\mathsf d_{i,0}z,j_{i+1}y}$, and $\mathsf d_{i,0}\mathsf a_{i,0}$ maps $j_i(V)$
+  injectively into $j_{i+1}(V)$.
+\end{enumerate}
+The \emph{weighted chain} of row $i$ is $\mathsf X_i(n)=w_{n-1}\mathsf a_{i,n-1}\circ\dots\circ w_0\mathsf a_{i,0}$.
+\end{definition}
+
+\begin{lemma}[\lean{New.Exchange.IsTriangle.eq_zero_of_weightedChain_eq_zero},
+\lean{New.Exchange.IsTriangle.exists_inner_weightedChain_eq}]\label{det-chain:lem:triangle}
+In a triangle of size $m$:
+\begin{enumerate}[label=(\alph*)]
+\item for $i+n\le m$, $\mathsf X_i(n)$ is injective on $j_i(V)$; if $V\ne0$, all $\beta$ in (i) are
+  non-zero;
+\item suppose that the $\beta$ of the square at $(i,n)$ has modulus $L(i+1,i+n+2)$, that an adjoint
+  law holds in each square with constants of modulus $1$
+  (\lean{New.Exchange.HasSquareModuli}), and that
+  $w_0\pair{\mathsf a_{i,0}j_ix,\mathsf a_{i,0}j_ix'}=C_i\pair{x,S_ix'}$ with $C_i$ of modulus $1$ and operators
+  $S_i$ on $V$. Then
+  $\pair{\mathsf X_0(m)j_0x,\mathsf X_0(m)j_0x'}=\varpi\,(w_0w_1^m/w_m)\,\pair{x,S_0S_1\cdots S_{m-1}x'}$ with
+  $\varpi$ of modulus $\prod_{0<u<v\le m}L(u,v)$.
+\end{enumerate}
+\end{lemma}
+
+\begin{proof}
+Composing the squares (i) along row $i$ gives
+$\mathsf X_{i+1}(n)\circ \mathsf d_{i,0}\mathsf a_{i,0}=\varsigma\cdot \mathsf d_{i,n}\circ \mathsf X_i(n+1)$ on $F(i,0)$, with $\varsigma$ a multiple of
+$\bar\beta^{-1}$ for the product $\beta$ of the constants
+(\lean{New.Exchange.IsTriangle.exists_chainCommutes}). (a) By induction on $n$: if
+$\mathsf X_i(n+1)j_iy=0$, write $\mathsf d_{i,0}\mathsf a_{i,0}j_iy=j_{i+1}y'$; then $\mathsf X_{i+1}(n)j_{i+1}y'=0$, so $y'=0$, so
+$y=0$ by (ii). If some $\beta$ were $0$, then $\varsigma=0$ and the same argument kills every $y$.
+(b) Composing the adjoint laws along row $i$ gives
+$\pair{v,\mathsf a_{i,n}\mathsf X_i(n)j_iz}=\varpi'\pair{\mathsf d_{i,n}v,\mathsf X_{i+1}(n)j_{i+1}z}$ for $z\in V$
+(\lean{New.Exchange.IsTriangle.exists_chainAdjoint}). Take $v=\mathsf X_i(n+1)j_ix$ and use the composed
+squares: $\pair{\mathsf X_i(n+1)j_ix,\mathsf X_i(n+1)j_iz}$ is a scalar times
+$\pair{\mathsf X_{i+1}(n)j_{i+1}u,\mathsf X_{i+1}(n)j_{i+1}z}$, where $j_{i+1}u=\mathsf d_{i,0}\mathsf a_{i,0}j_ix$. The left
+vector moves down a row and loses its first lift; the right one is only copied. By induction over
+the rows the last pairing is a scalar times $\pair{u,S_{i+1}\cdots S_{m-1}z}$, and by (ii)
+$\pair{u,w}=\pair{\mathsf a_{i,0}j_ix,\mathsf a_{i,0}j_iw}=(C_i/w_0)\pair{x,S_iw}$. The moduli multiply.
+\end{proof}
+
+\begin{theorem}[The triangle of the chain; \lean{New.Data.exists_isTriangle}]
+\label{det-chain:thm:triangle}
+The following data form a triangle of size $m$ satisfying the hypotheses of
+Lemma~\ref{det-chain:lem:triangle}\,(b), with $L(u,v)=q_{uv}$. $F(i,n)$ is the space of forms on a
+hermitian space of rank $r+nt$, made of a stem of rank $r$ and the blocks $i+1,\dots,i+n$ of rank
+$t$ (\lean{New.Data.TriangleForm}); $F(0,n)$ holds the forms on $Y_n$, and $F(i,0)$ those on $Y_0$
+or on its opposite space, according to the parity of $i$. $V$ is the space of principal forms on $Y_0$ and $j_i$ the
+passage to the opposite space $i$ times. $\mathsf a_{i,n}$ is the theta lift adding the block $i+n+1$, with
+the character $\mu^0_{i+n+1}\vartheta^{i+n+1}$ and the indicator of the inclusion matrix modulo
+$\pi_MQ$, times a power of the splitting character (\lean{New.Data.triangleLift}); $w_n$ is the
+order of $\GL_{r+nt}$ modulo $\pi_MQ$ (\lean{New.Data.triangleGLCard}). $\mathsf d_{i,n}$ is a transposed lift that removes the block $i+1$
+(\lean{New.Data.triangleTransposedLift}); it stands for the adjoint of the map that adds it.
+Finally $C_i$ is a constant and $S_i$ is $R_{i+1,\vartheta^{i+1}}$ divided by the number of
+$(r+t)\times r$ matrices modulo $\pi_MQ$.
+\end{theorem}
+
+\begin{proof}
+\emph{First lifts.} $\mathsf a_{i,0}$ goes from rank $r$ to rank $r+t>2r$, and its finite datum is sharp
+for the principal level of $\pi_MQ$ (\lean{New.Data.isSharp_pointDatum}).
+Fact~\ref{det-chain:fact:rallis} gives its Gram form: $w_0$ times it is a constant times
+$R_{i+1,\vartheta^{i+1}}$ divided by that number of matrices
+(\lean{New.Data.exists_hasSum_inner_triangleFirstLift}); and its injectivity on forms of level
+$J_M$. The datum of $\mathsf d_{i,0}$ is chosen so that $\mathsf d_{i,0}$ is the adjoint of $\mathsf a_{i,0}$
+(\lean{New.Exchange.IsEdgeFamily.exists_inner_modLift_eq_inner_modTransposedLift}); then
+$\mathsf d_{i,0}\mathsf a_{i,0}j_iy=j_{i+1}v$ with $\pair{v,x}=\pair{\mathsf a_{i,0}y,\mathsf a_{i,0}x}$, so $v$ has level $J_M$
+and $v=0$ forces $y=0$. This is (ii).
+\emph{Squares.} At $(i,n)$ the two composites from $F(i,n+1)$ to $F(i+1,n+1)$, ``add the last
+block, remove the first'' and ``remove the first, add the last'', are compared by the exchange
+identity of Section~\ref{sec:det-exchange} (\lean{New.Exchange.one_square_identity_of_isEdgeFamily}).
+With single matrices as finite data, the two composites satisfy a finite square law with constant
+$\eta/c(\vartheta)$, where $\eta$ is the constant of Theorem~\ref{det-exchange:thm:square} and $\abs{c(\vartheta)}^2$ is a constant times
+$\prod_{z=1}^{t}\abs{L^{\Sigma_\vartheta}(z,(\nu\vartheta^{n+1})^{-1})}^2$ times a power of residue
+cardinalities, $\nu=\mu^0_{i+n+2}/\mu^0_{i+1}$
+(\lean{New.Data.exists_squareLaw_triangleTransposedLift}). Linear algebra over the residue ring
+(\leanfile{New/Determinant/Chain/SquareLaw}) turns this law into the relation (i) for the data
+defined recursively from that of $\mathsf d_{i,0}$ (\lean{New.Data.exists_triangleLift_triangleTransposedLift_comm}).
+The product of the twisted $L$-values is the untwisted one times $(\Nm Q)^{t^2}q_{i+1,i+n+2}^2$
+(\lean{New.Data.CriticalPair.lValueProd_mul_inv_eq}), so $\beta$ has modulus $q_{i+1,i+n+2}$. The
+adjoint law is a second commutation relation, for the transposed lifts along the reversed pairs;
+these are adjoint to the descents up to constants of modulus $1$ (reversal of the theta kernels,
+Fourier transform of the data), and the constants of this relation have modulus $1$
+(\lean{New.Data.exists_triangleLift_triangleReversedLift_comm},
+\lean{New.Data.exists_triangleTransposedLift_adjoint_comm}).
+\end{proof}
+
+\subsection{The norm and the determinant of the chain}\label{det-chain:sec:chain}
+
+\begin{theorem}[Injectivity; \lean{New.Data.lowerChainAtLevel_injective}]\label{det-chain:thm:inj}
+For every $m$-fold twist $\vartheta$, the chain $\Theta_\vartheta$ is injective on the principal
+forms on $Y_0$, in particular on $\mathcal{T}_D$.
+\end{theorem}
+
+\begin{proof}
+The forms $\Theta_\vartheta y$ are algebraic forms on the definite space $Y_m$, and their inner
+product, a sum over classes, is $[K_0:J_\vartheta(Y_m)]$ times the dimension of the weight times
+the Petersson product of the chains $\mathsf X_0(m)y$ of Theorem~\ref{det-chain:thm:triangle}
+(\lean{New.Data.inner_lowerChainAtLevel}). So $\Theta_\vartheta y=0$ gives $\mathsf X_0(m)y=0$, and
+$y=0$ by Lemma~\ref{det-chain:lem:triangle}\,(a).
+\end{proof}
+
+\begin{theorem}[Norm of the chain; \lean{New.Data.exists_adjoint_chain_comp_eq_smul_rallisProduct}]
+\label{det-chain:thm:norm}\emergencystretch=4em
+There are $C>0$, $e\in\Z$ and numbers $c(\vartheta)$ with
+$\abs{c(\vartheta)}=\allowbreak C(\Nm Q)^{e/2}\prod_{1\le i<j\le m}q_{ij}(\vartheta)$ such that for every
+$m$-fold twist $\vartheta$, on $\mathcal{T}_D$,
+\[
+  \Theta_\vartheta^*\Theta_\vartheta
+  =c(\vartheta)\,c_Q^{\,m}\,R_{1,\vartheta}R_{2,\vartheta^2}\cdots R_{m,\vartheta^m}.
+\]
+\end{theorem}
+
+\begin{proof}
+By \lean{New.Data.inner_lowerChainAtLevel} and Lemma~\ref{det-chain:lem:triangle}\,(b) with
+Theorem~\ref{det-chain:thm:triangle}, $\pair{\Theta_\vartheta x,\Theta_\vartheta y}$ is
+$[K_0:J_\vartheta(Y_m)]$ times the dimension of the weight times $\varpi(\vartheta)\,w_0w_1^m/w_m$ times
+$\pair{x,R_{1,\vartheta}\cdots R_{m,\vartheta^m}y}$ divided by the $m$-th power of the number of
+matrices modulo $\pi_MQ$ (\lean{New.Data.exists_inner_weightedChain_eq}). Counting block triangular
+groups gives $[K_0:J_\vartheta(Y_m)]=C'(\Nm Q)^{u}\,\delta^m w_m/(w_0w_1^m)$, $u\in\Z$
+(\lean{New.Data.exists_stdLevelIndex_lastLevel_eq}), where $\delta$ is the factor
+\lean{New.DescentPair.gramFactor} of the first single lift; $\delta$ divided by the number of
+matrices modulo $\pi_MQ$ is a constant times $c_Q$. The orders $w_n$ cancel. So
+the constant has modulus $\prod_{i<j}q_{ij}$, and dividing by its value at $\vartheta=1$ gives the
+form of $\abs{c(\vartheta)}$. (If that value is $0$, Theorem~\ref{det-chain:thm:inj} forces
+$\mathcal{T}_D=0$ and there is nothing to prove.)
+\end{proof}
+
+\begin{theorem}[Factorisation of the determinant;
+\lean{New.Data.exists_chainDeterminant_pos_and_div_chainDeterminant_one_eq}]
+\label{det-chain:thm:factor}
+There is $e\in\Z$ such that for every $m$-fold twist $\vartheta$ the numbers $Z(\vartheta)$ and
+$Z_j(\vartheta)$, $1\le j\le m$, are positive and
+\[
+  \frac{Z(\vartheta)}{Z(1)}=\Bigl((\Nm Q)^{e/2}\prod_{1\le i<j\le m}q_{ij}(\vartheta)\Bigr)^{\dT}
+  \prod_{j=1}^{m}\frac{Z_j(\vartheta)}{Z_j(1)} .
+\]
+\end{theorem}
+
+\begin{proof}
+Positivity follows from the injectivity of $\Theta_\vartheta$ and $\Theta_{j,\vartheta^j}$. Take
+determinants in Theorem~\ref{det-chain:thm:norm}:
+$Z(\vartheta)=(c(\vartheta)c_Q^m)^{\dT}\prod_j\det(R_{j,\vartheta^j}\mid\mathcal{T}_D)$. By
+\eqref{det-chain:eq:Zj}, $\prod_jZ_j(\vartheta)=(c_1\cdots c_m\,c_Q^m)^{\dT}
+\prod_j\det(R_{j,\vartheta^j}\mid\mathcal{T}_D)$. The Hecke operators, whose determinants are not
+computed, and the factor $c_Q$ cancel: $Z(\vartheta)=(c(\vartheta)/c_1\cdots c_m)^{\dT}\prod_jZ_j(\vartheta)$
+(\lean{New.Data.exists_chainDeterminant_eq_pow_mul_prod_liftDeterminant}). At $\vartheta=1$,
+$\Nm Q=1$ and $q_{ij}(1)=1$; divide.
+\end{proof}
+
+\begin{remark}
+The constants $\beta$ of the squares come from the one-square identity,
+whose constant $\eta$ is not computed and not shown non-zero (Theorem~\ref{det-exchange:thm:square});
+they are non-zero by Lemma~\ref{det-chain:lem:triangle}\,(a), which needs the space $V$ of the
+triangle (Definition~\ref{det-chain:def:triangle}) to be non-zero, and only their moduli, ratios of
+$L$-values, enter.
+\end{remark}
+
+\subsection{The height of the inverse ratio}\label{det-chain:sec:height}
+
+\begin{lemma}[\lean{New.Data.HasSmallRatios.heightLe_inv_rpow_mul_prod}]\label{det-chain:lem:ratios}
+Let $\xi$ have small ratios, $e\in\Z$, and $F_i$, $i\in I$, finitely many ramified ratios. Then
+$\iota\mapsto\bigl((\Nm Q(\xi_\iota))^{e/2}\prod_iF_i(\xi_\iota)\bigr)^{-1}$ has height at most
+$\#I\cdot t\,x_1$.
+\end{lemma}
+
+\begin{proof}
+$F_i(\vartheta)=\rho_z(\nu,\vartheta^n)$ is a product of $z\le t$ ratios of the ramified pairs
+$(\nu,z')$, $z'\le z$, at $\vartheta^n$; the inverse of each has height at most $x_1$. Since
+$\Nm Q(\xi_\iota)$ is prime to $\ell$, $\norm{\iota((\Nm Q(\xi_\iota))^{-e/2})}_\ell=1$, so this
+factor has height $0$ (take $H=1$, $\alpha=0$, $h_\ell=0$). Heights add over products.
+\end{proof}
+
+\begin{theorem}[The inverse ratio; \lean{New.Data.heightLe_chainDeterminant_one_div},
+\lean{New.Data.exists_hasSmallRatios_heightLe_liftDeterminant_div}]\label{det-chain:thm:height}
+There is a family $\xi$ with small ratios such that $\iota\mapsto Z(1)/Z(\xi_\iota)$ has height at
+most $\dT\,(b+f a\log^4b-\hmain)$.
+\end{theorem}
+
+\begin{proof}
+Take a regular family (Theorem~\ref{cg-selmer:thm:regular}). As $k\log b\cdot\beta_D=f a\log^4b/m$,
+Theorem~\ref{ol-values:thm:main} (\lean{New.Data.heightLe_liftDeterminant_ratio}) says that
+$\iota\mapsto Z_j(1)/Z_j(\xi_\iota)$ has height at
+most $\dT(f a\log^4b/m-k\hdir)$ for each $j$. Invert Theorem~\ref{det-chain:thm:factor}
+(\lean{New.Data.exists_chainDeterminant_one_div_eq}):
+\[
+  \frac{Z(1)}{Z(\xi_\iota)}=\Bigl((\Nm Q(\xi_\iota))^{e/2}\prod_{i<j}q_{ij}(\xi_\iota)\Bigr)^{-\dT}
+  \prod_{j=1}^{m}\frac{Z_j(1)}{Z_j(\xi_\iota)} .
+\]
+There are at most $m^2$ pairs $i<j$, so by Lemma~\ref{det-chain:lem:ratios} the inverse of the
+bracket has height at most $m^2t\,x_1\le b$ (sizes of the data), and its $\dT$-th power at most $\dT b$. The $m$ factors
+of the product add up to $\dT(f a\log^4b-mk\hdir)=\dT(f a\log^4b-\hmain)$.
+\end{proof}
+
+\subsection{Auxiliary forms}\label{det-chain:sec:aux}
+
+\begin{definition}[\lean{New.Data.IsAuxiliaryForm}]\label{det-chain:def:aux}
+Let $\gamma(\vartheta)$ be numbers, one for each $m$-fold twist. A target form $y$ is
+\emph{auxiliary for $\gamma$} if $\gamma(\vartheta)\Theta_\vartheta y$ is integral at every
+$\iota\mid\ell$ with $\ell\nmid\Nm Q(\vartheta)$, for every $\vartheta$, and
+$\norm{\Theta_1y}_\sigma^2\le\exp(2x_1^2b^2)$ for every $\sigma\in\Aut(\C)$.
+\end{definition}
+
+\begin{theorem}[Auxiliary forms; \lean{New.Data.exists_span_isAuxiliaryForm_eq_top}]
+\label{det-chain:thm:aux}
+There are $e\in\Z$ and numbers $\gamma(\vartheta)\ne0$ with $\gamma(1)=1$ and
+$\abs{\gamma(\vartheta)}=(\Nm Q)^{e/2}\prod_{0\le i,j<m}\tau_{ij}(\vartheta)$, such that
+$\mathcal{T}_D$ is spanned by forms auxiliary for $\gamma$.
+\end{theorem}
+
+\begin{proof}
+\emph{Reduction.} By \lean{New.Data.exists_span_short_lifts_eq_top}, there are $c(\vartheta)\ne0$
+of modulus $\prod_{i,j}\tau_{ij}$ such that the principal forms on $Y_0$ are spanned by forms $y$
+for which $(c(\vartheta)/c(1))\Theta_\vartheta y$ is integral at all $\iota\mid\ell$,
+$\ell\nmid\Nm Q(\vartheta)$, and the conjugates of the values of $\Theta_1y$ have squared norm at
+most $\exp(x^{202}b^2)$. Put $\gamma=c/c(1)$. As in the proof of Theorem~\ref{main:thm:A},
+$\#\Gbar\,e_0$ maps the principal forms onto $\mathcal{T}_D$ and keeps integrality, and
+$\norm{\Theta_1\#\Gbar e_0y}_\sigma^2\le e^{B+x^{99}}$ if the conjugate values of $\Theta_1y$ have
+squared norm at most $e^B$
+(\lean{New.Data.goodProjTranslate_mem_integralForms},
+\lean{New.Data.normSqAt_goodProjTranslate_le}); and $x^{99}+x^{202}b^2\le2x_1^2b^2$.
+
+\emph{Spanning forms with short lifts} (\leanfile{New/Determinant/AuxiliaryForms}).
+Two square grids of hermitian spaces, the $Y^i_j$ of rank $r+(i+j)t$ with $Y^0_j=Y_j$,
+and the $\tilde Y^j_i$, built on $\tilde Y^0_0=Y_0\oplus E\tilde e$ with blocks of ranks $t\pm1$,
+carry on their edges theta lifts and transposed lifts with single matrices modulo
+$\pi_M^{\,b}Q$ as data (\leanfile{New/Determinant/AuxiliaryForms/PathData}); a path runs through
+both grids and meets the diagonal once. On the \emph{first path}
+$\tilde Y^m_0,\dots,\tilde Y^0_0,Y_0,\dots,Y_m$, every principal form on $Y_0$ is some
+$\operatorname{res}(\varphi)$, $\varphi$ of deep level $\pi_M^{\,b}$ on the definite space $\tilde Y^m_0$:
+$\operatorname{res}(\varphi)$ has the Petersson products with forms of level $\pi_MQ$ of $\varphi$
+moved down by the transposed chain and restricted to $\U(Y_0)$ at a real point
+(\lean{New.Data.exists_isFlatRestriction_range_eq_top}). It is onto because
+deep-level forms on $\tilde Y^0_0$ detect every non-zero principal form on $Y_0$: the period of a
+deep-level Poincar\'e series is close to its identity term at a real point where the parameters
+are steep (\lean{New.Data.exists_eq_zero_of_orthogonal_gridLevelForms}). The pairing of a form
+on $Y_m$ with $\Theta_\vartheta\operatorname{res}(\varphi)$ is a period of a path datum on the first path
+(\lean{New.Data.exists_isPathDatum_integral_eq}), and $m^2$ \emph{turns}, each crossing one square
+by the exchange identity or the diagonal by two seesaws, carry it to the \emph{last
+path}, where all spaces are definite; the turn at $(i,j)$ divides by a constant of modulus
+$\tau_{ij}$ (\lean{New.Data.exists_transfersPeriods_first_last}). There the period is a
+finite sum $\Xi$ of branching pairings of algebraic values; $n_\Xi\Xi$ is integral away from
+$\Nm Q$ for some $n_\Xi$ with $\log n_\Xi\le x^{99}b^2$, and for $\vartheta=1$ its conjugates are bounded
+(\lean{New.Data.exists_mul_lastPathPeriod_mem_embValRing},
+\lean{New.Data.norm_lastPathPeriod_le}). Pairing with delta forms on $Y_m$ reads the values of
+$\Theta_\vartheta\operatorname{res}(\varphi)$ (\lean{New.Data.exists_dualPairing_eq_mul_lastPathPeriod}), and the
+deep-level forms on $\tilde Y^m_0$ are spanned by short ones
+(\lean{New.Data.span_isShort_eq_top_gridLevelForms}).
+\end{proof}
+
+\subsection{Proof of Theorem C}\label{det-chain:sec:proofC}
+
+\begin{proof}[Proof of Theorem~\ref{main:thm:C} (\lean{New.Data.integral_forms_long})]
+Let $y_1,\dots,y_n$, $c$ and $\delta$ be as there. We apply Theorem~\ref{setup:thm:twist} to the twisted lattice of
+Proposition~\ref{setup:prop:targetlattice} on $V=\mathcal{T}_D$ (its maps are injective by
+Theorem~\ref{det-chain:thm:inj}).
+
+\emph{The twists.} Let $\xi$ be the family of Theorem~\ref{det-chain:thm:height}. Since
+$\Nm Q(\xi_\iota)$ is prime to $\ell$, the twist $\xi_\iota$ is allowed at $\ell$.
+
+\emph{The completion $z$.} Let $\gamma$ be as in Theorem~\ref{det-chain:thm:aux}. As the auxiliary
+forms span $\mathcal{T}_D$, some of them, $z_1,\dots,z_{n'}$, complete $y$ to a basis
+(\lean{New.exists_extend_basis_of_span_eq_top}); then $n+n'=\dT$, so $n'\le4\dT/b^2$.
+
+\emph{The hypotheses.} (i) holds by assumption. (ii) holds with $\gamma(\vartheta)\ne0$, by
+Definition~\ref{det-chain:def:aux}. (iii) holds with $b_{\mathrm{short}}=2x_1^2b^2$
+(\lean{New.Data.normSqAt_targetLattice}). For (iv),
+$\abs{\gamma(\xi_\iota)}^{-2}=\bigl((\Nm Q(\xi_\iota))^{e/2}\prod_{i,j}\tau_{ij}(\xi_\iota)
+\bigr)^{-2}$ is the square of a family as in Lemma~\ref{det-chain:lem:ratios} with $m^2$ ramified
+ratios, so it has height at most $2m^2t\,x_1\le b=:b_{\mathrm{denom}}$
+(\lean{New.Data.HasSmallRatios.heightLe_inv_rpow_mul_prod_turnRatio}); and
+$b_{\mathrm{vol}}=\dT(b+f a\log^4b-\hmain)$ by Theorem~\ref{det-chain:thm:height}.
+
+\emph{The arithmetic.} Theorem~\ref{setup:thm:twist} gives
+\[
+  c+2\delta+n'\,(2x_1^2b^2+b)+\dT\,(b+f a\log^4b-\hmain)\ \ge\ 0 .
+\]
+The completion costs at most $n'(2x_1^2b^2+b)\le(4\dT/b^2)(2x_1^2b^2+b)=\dT\cdot4(2x_1^2+b^{-1})\le
+\dT b$, because $b\ge x_1^{10^6}$ (\lean{New.Data.mul_completion_cost_le}). Hence
+\[
+  c+2\delta\ \ge\ \dT\,(\hmain-f a\log^4b-2b)\ \ge\ \dT\,(\hmain-3f a\log^4b),
+\]
+using $b\le f a\log^4b$.
+\end{proof}

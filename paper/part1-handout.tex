@@ -1,0 +1,40 @@
+\input{preamble}
+\input{build/leanindex-part1}
+\title[A reading of a formal proof of GRH: Part 1]{A reading of the Lean proof
+of the Generalized Riemann Hypothesis for Dirichlet $L$-functions\\ Introduction and Part 1: the reduction}
+\input{author}
+\date{Draft of \today}
+\AtBeginDocument{\makeatletter\InputIfFileExists{build/extlabels.tex}{}{}\makeatother}
+\begin{document}
+\begin{abstract}
+A Lean~4 proof of the Riemann Hypothesis and of the Generalized Riemann Hypothesis for Dirichlet
+$L$-functions has been published as machine-checked code without an accompanying paper. This
+document reads that code and writes its argument in ordinary mathematical language. It is an
+exposition and not a second verification: the correctness of the theorems rests on the Lean
+kernel alone.
+
+This excerpt contains the introduction, Part~1 (Sections 2--5), the table of notation and the
+index of the Lean declarations cited in these sections. It reduces the theorem to three theorems,
+A, B and~C, which are stated here and proved in Parts 2--4 of the full text. Section and theorem
+numbers are those of the full text: references to Sections 6--22 and to Appendices B and~C point
+there.
+\end{abstract}
+\maketitle
+\tableofcontents
+\input{sections/s01-intro}
+\part{The reduction}
+\input{sections/s02-zeros}
+\input{sections/s03-setup}
+\input{sections/data}
+\input{sections/s04-main}
+\appendix
+\input{sections/zz-notation}
+\setcounter{section}{3}
+\section{Index of Lean declarations cited in this excerpt}\label{sec:app-leanindex}
+A marker such as \leanmark{12} in the text stands for the Lean declaration with that number in
+the list below; the numbers are those of the full text. In the PDF the marker and the name both
+link to the declaration in the repository \texttt{lsernau/grh-lean}, folder \texttt{grh/src}, at
+the commit \texttt{72fead1} that the code was checked at; the link gives the file and the line.
+
+\printleanindex
+\end{document}

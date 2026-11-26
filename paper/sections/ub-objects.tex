@@ -1,0 +1,525 @@
+\section{Theta kernels, source forms, target forms and chains of lifts}\label{sec:ub-objects}
+
+This section is the reference for the objects of the proof and the structural facts on them that
+other parts use (\leanfile{New/UpperBound/Kernels}, \leanfile{New/UpperBound/Objects}); the
+integral vacuum, standard data and the Galois action on CM theta functions come from
+Section~\ref{sec:der}.
+
+\subsection{Letters, groups and the hermitian spaces}\label{ub-objects:sec:spaces}
+
+The letters are those of Section~\ref{sec:setup} and Definition~\ref{setup:def:data} (\lean{New.Data.liftWeight},
+\lean{New.Data.n}, \lean{New.Data.piM}, \lean{New.Data.piN}); each place $\tau$ is read as the
+embedding $\Phi_\tau\colon E\to\C$ of the CM type, and $a_\tau=a$ on $\Phi_a$, $a_\tau=0$ elsewhere
+(\lean{New.Data.firstRowExcess}). Put $\varrho=m/2-1$, so $m=2\varrho+2$
+(\lean{New.Data.m_eq_two_mul_varrho_add_two}).
+
+For a finite index set $n$, $I_n$ is $E^n$ with the form $\sum z_i\bar z'_i$ and the standard lattice
+(\lean{New.stdSpace}); $G_{\mathrm f}(n)=\set{g\in\GL_n(\Af):g^*g=1}$ is its finite adelic unitary group,
+$\Gamma_n=\U(I_n)(E^+)$ its rational points (\lean{New.stdRatPoints}), $J^\circ=G_{\mathrm f}(n)\cap\GL_n(\widehat\cO)$
+the stabiliser of the lattice (\lean{New.stdLevel}), and, for an open subgroup $\mathcal K$,
+$\Gamma\cap g\mathcal Kg^{-1}$ the stabiliser of $g\mathcal K$ (\lean{New.classAut}). A general space
+(\lean{New.Space}) is a hermitian matrix $J$ over $E$ with signs $s$ and a point
+$g_J\in\GL_n(\A_E)$ with $g_J^*Jg_J=\diag(s)$ at the infinite and $1$ at the finite places; its
+adelic group is $G=G_\infty\times G_{\mathrm f}$. For places $w_i$ and $H\subseteq\prod_i\GL_n(\F_{w_i})$,
+$\operatorname{level}(H)$ is the group of $g\in J^\circ$ with reductions in $H$ (\lean{New.levelOf}).
+
+\begin{definition}[\lean{New.Data.X}, \lean{New.Data.spaceY}, \lean{New.Data.spaceW}]
+\label{ub-objects:def:spaces}
+(a) $X_j=I_{n_j}$, indexed by $n_j-1$ indices and a last one. (b) For $j<m$, $Y_j$ is $X_j$
+followed by a string $\mathbf e_0,\dots,\mathbf e_{m-2-j}$ with Gram matrix $1$ on $X_j$,
+$\pair{\mathbf e_i,\mathbf e_{i'}}=1$ for $i+i'=m-2-j$, $i\ne i'$, and
+$\pair{\mathbf e_i,\mathbf e_i}=-N$ for the middle vector if there is one
+(\lean{New.Data.spaceY_gram_eq}, \lean{New.gradedGram}). So $Y_0=X_0\perp H^\varrho\perp\pair{-N}$,
+$H$ a hyperbolic plane, with basis $e_1,\dots,e_\varrho$, $X_0$, $z$, $e^*_1,\dots,e^*_\varrho$
+(\lean{New.Data.RowIndex}, \lean{New.Shape.besselIndexEquiv}). The lattice basis is an explicit
+matrix (\lean{New.gradedLatticeBasis}: for even $j$ the last vector $y$ of $X_j$ becomes
+$y/\bar\pi_N+uz/N$ and the string is scaled by $u$; for odd $j$ the two halves of the string are
+scaled by $u\fa^{-1}$, $u\bar\fa$; $\fa=$\lean{New.Data.ideleA}, $u=(\fa/\bar\fa)^{\lceil(m-j)/2\rceil}=$\lean{New.Data.latticeScale}) times an integral $g$ with $g\equiv1$ at the chosen places
+(\lean{New.Data.exists_spaceY_xFin_eq}). $Y_m=I_{n_m-1}$, read in $X_m$ by $h\mapsto\diag(h,1)$
+(\lean{New.Data.borderU}). (c) $W_j$ is diagonal of rank $r$, the basis vector numbered
+$i<r$ (\lean{New.Data.basisNumber}) having sign $-1$ iff $i\ge k+j-1$ (\lean{New.Data.signsW});
+$V_j=I_{r+t}$.
+\end{definition}
+
+$Y_j$ is defined by \texttt{choose} and characterised by the properties in (b)
+(\lean{New.Data.exists_space_isStd_of_le_and_gram_eq_of_lt}). Its signs are the same at all
+infinite places (\lean{New.Data.signsY}). Counting gives $\rk Y_j=r+jt$
+(\lean{New.Data.card_rowIndex}), $\rk Y_m=n_m-1$ (\lean{New.Data.card_Y_m}), $\lfloor(m-j)/2\rfloor$
+minus signs on $Y_j$ (\lean{New.Data.negCount_gridSigns}), so $Y_0$ has signature $(r-\frac m2,\frac
+m2)$, and $m-j$ minus signs on $W_j$ (\lean{New.Data.negCount_signsW}).
+
+\subsection{Places, levels and free levels}\label{ub-objects:sec:levels}
+
+A finite place $w$ is \emph{chosen} if $\pi_M\in w$ (\lean{New.Data.IsChosen}): $f$ places above
+each $p_i$, one of each conjugate pair (\lean{New.Data.card_chosenPlace},
+\lean{New.Data.isChosen_star_iff}). The $f$ primes $w\mid\pi_N$ (\lean{New.Data.piNPlaces}) have
+degree one, one in each conjugate pair above $N$ (\lean{New.Data.isSplitLevel_piNPlaces}). The
+\emph{chosen level} $J_M$ is the group of $g\in J^\circ$ with $g\equiv1$ at every chosen place
+(\lean{New.Data.chosenLevel}). As chosen places split over $E^+$, the reduction of $J^\circ(Y_0)$
+there is $\GL_r(\F_w)$, and the finite group is $\Gbar=\prod_{w\text{ chosen}}\GL_r(\F_w)$
+(\lean{New.Data.chosenGL}). The level of stage $j$, $\operatorname{level}_X(j)$
+(\lean{New.Data.levelX}), is the group of $g\in J_M\subseteq G_{\mathrm f}(X_j)$ whose last row is
+$\equiv(0,\dots,0,1)\bmod\pi_N$; it contains the principal congruence subgroup of level
+$\pi_M\pi_N$ (\lean{New.Data.principalLevel_le_levelX}).
+
+\begin{fact}[\lean{New.Variety.classAut_eq_bot}, \leanfile{Lib/Shimura/HeckeTower/HeckeData}]
+\label{ub-objects:fact:minkowski}
+Let $w_i$ be distinct finite places of a CM field $E$ with at least two infinite places, with
+$\prod\Nm w_i>(2\#n)^{[E:\Q]}$, and
+$\mathcal K\subseteq G_{\mathrm f}(n)$ a group of integral elements that reduce to $1$ at all $w_i$. Then
+$\Gamma_n\cap g\mathcal Kg^{-1}=1$ for all $g$ (a case of Minkowski's lemma on integral matrices of finite
+order).
+\end{fact}
+
+\begin{proposition}[Free levels]\label{ub-objects:prop:free}
+Let $\#n\le2n_m$. (i) If $\mathcal K\le J_M$, then $\Gamma_n\cap g\mathcal Kg^{-1}=1$ for all $g$
+(\lean{New.Data.classAut_eq_bot_of_le_chosenLevel}); so every $\operatorname{level}_X(j)$,
+$j\le m$, is free (for $j=0$: \lean{New.Data.classAut_levelX_zero_eq_bot}). (ii) If $\mathcal K\le J^\circ$,
+then $\#(\Gamma_n\cap g\mathcal Kg^{-1})$ divides $\#\prod_{w\text{ chosen}}\GL_{rt}(\F_w)$
+(\lean{New.Data.card_classAut_dvd_chosenGroupOrder}, \lean{New.Data.chosenGroupOrder}), a number
+of logarithm at most $x^{32}$ (\lean{New.Data.log_chosenGroupOrder_le}).
+\end{proposition}
+
+\begin{proof}
+(i) The chosen places above $p_0$ have norm $p_0$, there are $f$ of them, $[E:\Q]=2f$ and
+$(8n_m)^2<p_0$; apply Fact~\ref{ub-objects:fact:minkowski}. (ii) Conjugating by $g^{-1}$ and
+reducing at the chosen places embeds the stabiliser in $\prod_w\GL_n(\F_w)$, since the kernel lies in
+the stabiliser for $J_M$, trivial by (i); and $2n_m\le rt$.
+\end{proof}
+
+\subsection{Weights, source forms, gauges and conjugate norms}\label{ub-objects:sec:source}
+
+A weight $(c,\epsilon)$ in rank $n$ gives at each $\tau$ the number $c_\tau(h)$ of columns of height $h<n$
+of a Young diagram and a power $\epsilon_\tau$ of the determinant: the highest weight is
+$\mu_{\tau,p}=\epsilon_\tau+\sum_{p<h<n}c_\tau(h)$. Its Weyl module $\mathbb V_{c,\epsilon}$ has a basis of standard
+fillings (\lean{New.WeylIndex}) and a Gram norm (\lean{New.weylNormSq}). An \emph{algebraic form}
+of weight $(c,\epsilon)$ (\lean{New.AlgForm}; Gross, Algebraic modular forms, 1999) is a function
+$\phi\colon G_{\mathrm f}(n)\to \mathbb V_{c,\epsilon}$ with $\phi(\gamma g)=\rho(\gamma)\phi(g)$ for $\gamma\in\Gamma_n$
+(acting through the $\Phi_\tau$) and an open stabiliser; $R_g$ is right translation.
+
+\begin{definition}[\lean{New.Data.columnCount}, \lean{New.Data.lastEntry}, \lean{New.Data.columnsY}]
+\label{ub-objects:def:weights}
+On all $X_j$, $c_\tau(1)=a_\tau$, $c_\tau(k)=\kappa_1(\tau)-n_1/2$, $c_\tau(h)=\Delta-t-1$ for
+$h>k$, $h\equiv k\bmod t+1$, and $c_\tau(h)=0$ otherwise; $\mu(X_j)=(c,\epsilon_j)$ with $\epsilon_0=0$ and
+$\epsilon_j=n_{j-1}/2-\kappa_j$ (\lean{New.Data.weightX_eq}). On $Y_m$, $\lambda^\circ=\mu(Y_m)$ has last
+entry $\epsilon_m$ and $c^Y(h)=c'(h)+c(h+1)-c'(h+1)$ columns of height $h$, where $c'(h)=\Delta/2-(t+1)/2$
+for $h\ge k$, $h\equiv k\bmod t+1$, and $0$ otherwise (\lean{New.Data.keptColumns}).
+\end{definition}
+
+The weights $\mu(X_m),\mu(Y_m)$ interlace
+(\lean{New.Data.weightY_eq_weightX_add}, \lean{New.Data.keptColumns_le_columnCount}) and
+$\mathfrak n_\tau:=|\mu(X_m)_\tau|-|\mu(Y_m)_\tau|=a_\tau-m\Delta/2$ (\lean{New.Data.branchExponent_eq}).
+$(c,\epsilon_j)\to(c,\epsilon_{j+1})$ is a \emph{lift weight} from $X_j$ to $X_{j+1}$: no column has height
+strictly between $n_j$ and $n_{j+1}$, and $\epsilon_j=n_{j+1}/2-\kappa_{j+1}+c(n_j)$
+(\lean{New.Data.isLiftWeight_columnCount}).
+
+\begin{definition}[\lean{New.Data.SourceForm}, \lean{New.Data.ramifiedSourceForms},
+\lean{New.Data.integralSourceForms}]\label{ub-objects:def:source}
+A \emph{source form} is an algebraic form on $X_0$ of weight $(c,0)$, i.e.\ $(a,0,\dots,0)$ at the
+$a$-places and $0$ elsewhere, fixed by $\operatorname{level}_X(0)$. For $w\mid\pi_N$ let $z_w$ be
+an integral norm-one idele, $1$ off $w,\bar w$, whose component at $w$ generates $\F_w^\times$
+(\lean{New.Data.scalingGenerator}, chosen; only these properties are used). A source form $\phi$
+is \emph{ramified} if $\sum_{i=0}^{N-2}R_{z_w^i}\phi=0$ for all $w\mid\pi_N$, equivalently $\phi$
+is in the image of $\prod_w(1-R_{z_w})$ (\lean{New.Data.ramifiedSourceForms_eq_range}); it is
+\emph{integral} at $\iota$ if it has gauge at most $1$ at $1$ (Definition~\ref{ub-objects:def:gauge}).
+\end{definition}
+
+\begin{definition}[\lean{New.weylGauge}, \lean{New.GaugeLe}, \lean{New.LevelPlaces.LevelForm.normSqAt}]
+\label{ub-objects:def:gauge}
+For $\iota\colon\C\to\Cl$, the \emph{gauge} of $\xi\in \mathbb V_{c,\epsilon}$ at $g\in G_{\mathrm f}(n)$ is the sup norm of
+$\rho(g^{-1})\iota(\xi)$, $g^{-1}$ acting at $\tau$ through its component at the prime induced by
+$x\mapsto\iota(\Phi_\tau(\bar x))$; a form has gauge at most $C$ at $g_0$ if the gauge of $\phi(g)$ at
+$gg_0$ is at most $C$ for all $g$. The gauge is ultrametric, and unchanged when $g$ is multiplied on
+the right by an element integral above $\ell$ (\lean{New.weylGauge_add_le_max},
+\lean{New.weylGauge_mul_of_mem_integralAbove}). For a form $\phi$ of a level $\mathcal K$ cut out at finitely
+many places (\lean{New.LevelPlaces.LevelForm}) and $\sigma\in\Aut(\C)$, the \emph{conjugate norm} is
+$\norm{\phi}_\sigma^2=\sum_{c\in\Gamma\backslash G_{\mathrm f}/\mathcal K}\operatorname{weylNormSq}(\sigma\phi(g_c))/
+\#(\Gamma\cap g_c\mathcal Kg_c^{-1})$; the same class sum of Gram pairings is the inner product
+(\lean{New.LevelPlaces.LevelForm.inner_eq_stdClassSum}).
+\end{definition}
+
+\subsection{Labels, good forms and target forms}\label{ub-objects:sec:target}
+
+A \emph{label} of degree $r$ over a finite field $\F$ (\lean{New.IsLabel}) is a monic squarefree
+$c\in \F[X]$ of degree $r$ with $c(0)\ne0$; it is \emph{primitive} (\lean{New.IsPrimitivePolynomial})
+if irreducible with a root of order $|\F|^r-1$, and \emph{allowed} (\lean{New.IsAllowedPolynomial})
+if no root $z\in \F$ has $z^{q_2}=1$. A family $(c_w)_{w\text{ chosen}}$ is \emph{good}
+(\lean{New.Data.goodTupleFamilies}) if, above $p_0$ and above $p_1$, every $c_w$ is allowed and some
+$c_w$ is primitive (\lean{New.goodTuples}).
+
+\begin{fact}[\lean{New.labelIdem_orthogonal}, \lean{New.isCentralProj_tupleIdem},
+\lean{New.hyperplaneSum_mul_labelIdem}; \leanfile{Lib/LocalGL/Green/LabelCharacters}]
+\label{ub-objects:fact:green}
+For a label $c$ let $\Xi_c$ be Green's irreducible character of $\GL_r(\F)$ and
+$e_c=\frac{\Xi_c(1)}{|G|}\sum_g\overline{\Xi_c(g)}g$ (\lean{New.labelIdem}). The $e_c$ are
+orthogonal idempotents; the $e_{(c_w)}=\bigotimes_we_{c_w}$ (\lean{New.tupleIdem}) are orthogonal
+central idempotents. If $l\ne0$ and the element $z_\chi\in \F^\times$ naming $\chi$ is not a root of
+$c$, then $(\sum_h\chi(\det h)^{-1}h)\,e_c=0$, over invertible $h=1+ul^T$ (Green, The characters of
+the finite general linear groups, 1955).
+\end{fact}
+
+\begin{lemma}[\lean{New.Data.isCentralProj_e₀}, \lean{New.Data.hyperplaneSum_mul_e₀}]
+\label{ub-objects:lem:e0}
+$e_0=\sum_{(c_w)\text{ good}}e_{(c_w)}\in\C[\Gbar]$ (\lean{New.Data.e₀}) is a central
+idempotent, and $y\,e_0=0$ for every pure tensor $y=\bigotimes y_v$ with one factor
+$y_v=\sum_h\chi(\det h)^{-1}h$, $l\ne0$, $\chi^{q_2}=1$.
+\end{lemma}
+
+\begin{proof}
+A sum of orthogonal central idempotents is one. As naming is an isomorphism, $z_\chi^{q_2}=1$, so
+$z_\chi$ is not a root of the allowed $c_v$ and $y\,e_{(c_w)}=0$ for each good family.
+\end{proof}
+
+\begin{definition}[\lean{New.Data.targetParameter}, \lean{New.Data.principalForms},
+\lean{New.Data.goodForms}, \lean{New.Data.targetForms}]\label{ub-objects:def:target}
+The \emph{target parameter} at $\tau$ is the sequence $\lambda(\tau)=(\lambda_i(\tau))_{i\ge0}$ of
+Definition~\ref{data:def:target}, strictly decreasing and read on the
+basis of $Y_0$ through its numbering (the doubled parameter $2\lambda(\tau)$ is \lean{New.Data.paramW}). On a space $V$ of
+rank $r$ (here $Y_0$ or $W_j$), the \emph{forms of principal level} are the automorphic forms on $G$
+whose archimedean type is the discrete series of Harish-Chandra parameter $\lambda(\tau)$ at each
+$\tau$ (\lean{New.typeKernel}) and that are right invariant under $J_M$. $\Gbar$ acts on them
+through elements of $J^\circ$ with given reductions at the chosen places (\lean{New.Data.principalRep}).
+The \emph{good forms} are the image of $e_0$; the \emph{target forms} are the good forms on $Y_0$.
+\end{definition}
+
+\begin{fact}[\lean{New.isCuspKernel_typeKernel}, \lean{New.Space.finite_levelSpace};
+\leanfile{Lib/Adelic/AutomorphicForms/Cuspidality}]\label{ub-objects:fact:cusp}
+If at every $\tau$ the parameter is a Harish-Chandra parameter (distinct entries in
+$\frac{\#n-1}2+\Z$) whose entries at coordinates of opposite signs are at least
+$500(\#n)^3+B$ apart, the discrete series kernel is a cusp kernel of order $B$, and its forms that
+are invariant under an open subgroup of $G_{\mathrm f}$ form a finite dimensional space (Borel, Automorphic
+forms on reductive groups, 2007; Satake, S\'em.\ Cartan 10, exp.~9 bis, 1957/58; Godement, S\'em.\
+Cartan 10, exp.~10, 1957/58).
+\end{fact}
+
+\begin{proposition}[\lean{New.Data.isCuspKernel_typeKernel_paramW}]\label{ub-objects:prop:finite}
+For the signs of $Y_0$ and of each $W_j$, $\lambda(\tau)$ is a Harish-Chandra parameter whose
+entries at coordinates of opposite signs differ by at least $\Delta$ (\lean{New.Data.hasGap_signsY_paramW}, \lean{New.Data.hasGap_paramW}).
+Hence the forms of principal level on $Y_0$ and $W_j$, and the target forms, form finite
+dimensional spaces.
+\end{proposition}
+
+\begin{proof}
+On $W_j$ the signs change at the number $k+j-1$, and $\lambda_p(\tau)$ lies at least $\Delta/2$ above
+$-\kappa_j$ for $p<k+j-1$ and at least $\Delta/2$ below it otherwise
+(\lean{New.Data.targetParameter_add_liftWeight_gap}); for $Y_0$ this is the case $(0,0)$ of
+Lemma~\ref{ub-objects:lem:grids}. As $500r^3\le\Delta/2$, Fact~\ref{ub-objects:fact:cusp} applies
+with $B=\Delta/2$ and the open group $J_M$.
+\end{proof}
+
+\subsection{Theta kernels between definite spaces, twists and chains}\label{ub-objects:sec:kernels}
+
+\begin{definition}[\lean{New.Kernel}, \lean{New.Kernel.lift}, \lean{New.thetaKernel}]
+\label{ub-objects:def:kernel}
+A \emph{theta kernel} from $(c,\epsilon)$ in rank $n$ to $(c,\epsilon')$ in rank $n'$ with data in $S$ is a
+representation $\omega$ of $G_{\mathrm f}(n)\times G_{\mathrm f}(n')$ on $S$ and a linear $\mathcal F\mapsto j_{\mathcal F}\in
+\Hom(\mathbb V_{c,\epsilon},\mathbb V_{c,\epsilon'})$ with $j_{\omega(\gamma,\delta)\mathcal F}\rho(\gamma)=\rho(\delta)j_{\mathcal F}$ for
+rational $\gamma,\delta$, every datum having an open stabiliser. For an open $\mathcal K$ the \emph{lift} is
+$(\theta_{\mathcal F}\phi)(h)=\int_{\Gamma\backslash G_{\mathrm f}(n)}j_{\omega(g,h)\mathcal F}(\phi(g))\,dg$ with
+$\vol(\mathcal K)=1$; then $\theta_{\omega(u,u')\mathcal F}(R_u\phi)=R_{u'}\theta_{\mathcal F}\phi$
+(\lean{New.Kernel.lift_equivariant}). The theta kernel of the definite pair $(I_n,I_{n'})$ has as
+data the span $\mathscr S_{\mathrm f}$ of the finite Heisenberg translates $\mathrm H_{\mathbf x}$ of the vacuum in the
+Weil representation on $\Hom(I_n,I_{n'})$, with the Weil action twisted by two characters
+(\lean{New.pairWeilFinite}), and $j_{\mathcal F}=\operatorname{schurJet}(F)$: the matrix of the
+\emph{jets} $P(\partial)F(0)$ (\lean{New.jet}) of the Taylor series $F$ at $0$ of the theta function
+of $\mathcal F$ in the archimedean variables, scaled by a constant, along the entries $P$ of the Schur matrix
+$S_c(z)$; these are homogeneous of degree $L$, the number of boxes (\lean{New.boxes}; Section~\ref{sec:der} writes
+it $B$).
+\end{definition}
+
+\begin{definition}[\lean{New.Data.TameChar}, \lean{New.Data.Twist}, \lean{New.Data.MFoldTwist},
+\lean{New.Data.chainChar}, \lean{New.Data.liftKernel}]\label{ub-objects:def:liftkernel}
+Tame characters, twists and $m$-fold twists $\vartheta$, with modulus $Q$ and tame part
+$(\psi_w)$, are those of Definition~\ref{data:def:twist}. Lift $j$ uses $\mu^0_j\vartheta^j$
+(\lean{New.Data.chainChar}) of Definition~\ref{data:def:liftchar}, $\mu^0_j$ of weight $-\kappa_j$
+and tame part $\omega^j$ (\lean{New.Data.untwistedLiftChar}), where $\omega_w$ has
+order $q_2$ at chosen $w$ and is trivial elsewhere (\lean{New.Data.orderOf_chiMLocal},
+\lean{New.Data.chiMLocal_zpow_ne_one_iff_isChosen}).
+The kernel of lift $j+1$ is the theta kernel of $(X_j,X_{j+1})$ with this lift weight, characters
+$\mu^0_{j+1}\vartheta^{j+1}\upsilon^{\lfloor n/2\rfloor}$ for the two ranks $n$ (\lean{New.rankTwist}),
+scale $\pi_M\cdot$\lean{New.Parameters.jetScale}, and level $\operatorname{level}_X(j)$.
+\end{definition}
+
+For kernels along a tower with levels $\mathcal K_j$ and data $\mathcal F_j$,
+the \emph{chain} is
+$\theta_{\mathcal F_{j-1}}\circ\dots\circ\theta_{\mathcal F_0}$ (\lean{New.chain}); its values are linear in
+$\bigotimes_j\mathcal F_j$ (\lean{New.exists_linearMap_chain_eq_apply_pure}), so chains extend to tensors
+of data (\lean{New.TensorChain.lift}). A combination $\sum_{\mathbf x\in s}L_{\mathbf x}\otimes\mathcal F_{\mathbf x}$, $L_{\mathbf x}$ linear on
+$\mathbb V_{c,\epsilon_m}$, is \emph{jointly invariant} (\lean{New.IsJointlyInvariant}) if, against every linear
+map $\beta$ on tensors of data, it is unchanged when each $\mathcal F_{\mathbf x,j}$ is moved by
+$\omega(u_j,u_{j+1})$, for all $u_j\in \mathcal K_j$ with $u_j=1$ for $j\ge m$. The \emph{kernel product} at
+points $g_0,\dots,g_m$ is $j_{\omega(g_{m-1},g_m)\mathcal F_{m-1}}\cdots j_{\omega(g_0,g_1)\mathcal F_0}\phi(g_0)$
+(\lean{New.kernelProduct}).
+
+\begin{theorem}[\lean{New.IsJointlyInvariant.sum_chain_eq_sum_kernelProduct}]
+\label{ub-objects:thm:plainsum}
+Let $\phi$ be fixed by $\mathcal K_0$, $\sum_{\mathbf x}L_{\mathbf x}\otimes\mathcal F_{\mathbf x}$ jointly invariant and the levels $\mathcal K_j$,
+$j<m$, free. Then
+\[
+\sum_{\mathbf x}L_{\mathbf x}\bigl((\theta_{\mathcal F_{\mathbf x,m-1}}\cdots\theta_{\mathcal F_{\mathbf x,0}}\phi)(g_m)\bigr)
+=\sum_{c}\sum_{\mathbf x}L_{\mathbf x}\bigl(\operatorname{kernelProduct}(\mathcal F_{\mathbf x};g_{c_0},\dots,g_{c_{m-1}},g_m)\bigr),
+\]
+the sum over
+tuples of double cosets $c_j\in\Gamma\backslash G_{\mathrm f}/\mathcal K_j$ with chosen representatives $g_{c_j}$.
+\end{theorem}
+
+\begin{proof}
+Induction on $m$. The last lift is $\int_{\Gamma\backslash G_{\mathrm f}}F$, with $F(g)=\sum_{\mathbf x}L_{\mathbf x}
+j_{\omega(g,g_m)\mathcal F_{\mathbf x,m-1}}$ applied to the shorter chain at $g$. Joint invariance for a tuple
+with one entry $u\in \mathcal K_{m-1}$ and the equivariance of the shorter chain
+(\lean{New.chain_equivariant}) give $F(gu)=F(g)$; so the integral is the class sum
+$\sum_cF(g_c)/\#(\Gamma\cap g_c\mathcal K_{m-1}g_c^{-1})$ with trivial stabilisers. Each $F(g_c)$ is a
+jointly invariant combination of shorter chains with coefficients
+$L_{\mathbf x}\circ j_{\omega(g_c,g_m)\mathcal F_{\mathbf x,m-1}}$.
+\end{proof}
+
+Hence sizes multiply along chains (\lean{New.apply_kernelProduct_le_prod_mul}), and properties kept
+by the kernels pass to the sum, with no denominators (\lean{New.IsJointlyInvariant.sum_chain_mem_nsmul}).
+
+\subsection{The chain $Y_0\to Y_m$}\label{ub-objects:sec:lower}
+
+Fix a tame character $\vartheta$. The level places are the chosen places and those of $Q$
+(\lean{New.Data.levelPlaces}); $J_\vartheta(Y_j)$ is the group of $g\in J^\circ(Y_j)$ with
+$g\equiv1$ at all of them (\lean{New.Data.levelY}). Lift $j+1$ (\lean{New.Data.liftY}) is
+$[J^\circ:J_\vartheta(Y_j)]$ times the theta lift from $Y_j$ to $Y_{j+1}$ for the characters
+$\nu\upsilon^{\lfloor n/2\rfloor}$, $\nu=\mu^0_{j+1}\vartheta^{j+1}$ (\lean{New.Data.thetaKernelY}),
+with datum a chosen joint harmonic at infinity (\lean{New.Data.harmonicY}) times $\Upsilon_{j+1}$
+(\lean{New.Data.pointDatumY}): at the level places the indicator of the matrix of the inclusion of
+index sets $Y_j\subset Y_{j+1}$ (first summand), elsewhere the vacuum. The parameter of $Y_j$ (\lean{New.Data.paramY} is its double) is $\lambda(\tau)$
+with the blocks $-\kappa_l+[t]$, $l\le j$, lowered by $\frac12$ for odd $j$; consecutive
+parameters correspond, so the datum is an arrow (\lean{New.Data.isArrow_datumY}).
+
+\begin{definition}[\lean{New.Data.lowerChain}, \lean{New.Data.lowerChainAtLevel},
+\lean{New.Data.Θ}]\label{ub-objects:def:lowerchain}
+$\Theta_\vartheta$ is the composite of the $m$ lifts, from forms of principal level on $Y_0$ to
+algebraic forms of weight $\lambda^\circ$ on the definite $Y_m$ (\lean{New.Data.isHCParam_paramY}).
+Restricted to target forms, for $m$-fold twists, it is \lean{New.Data.Θ}, the map of the twisted
+lattice of Proposition~\ref{setup:prop:targetlattice}.
+\end{definition}
+
+\begin{proposition}[\lean{New.Data.lowerChain_mem_levelSpace}, \lean{New.Data.lowerChain_principalRep}]
+\label{ub-objects:prop:lowerlevel}
+Let $J_m$ (\lean{New.Data.lastLevel}) be the group of $g\in J^\circ(Y_m)$ with $g\equiv1$ at the chosen
+places and block upper triangular modulo each $w\in Q$. Then
+$R_g\Theta_\vartheta y=\chi_\vartheta(g)\Theta_\vartheta y$ on $J_m$, with
+$\chi_\vartheta(g)=\prod_w\prod_{l<m}\psi_{l,w}(\det g_w^{(l+1)})$, $g_w^{(l+1)}$ the diagonal block
+$l+1$ modulo $w$ and $\psi_l$ the tame part of $\mu^0_{l+1}\vartheta^{l+1}$
+(\lean{New.Data.lastLevelChar}). For $s\in\Gbar$, $\Theta_\vartheta(s y)=R_{g_s}\Theta_\vartheta y$ with
+$g_s\in J^\circ(Y_m)$ reducing to $\diag(s,1)$ at the chosen places and to $1$ at $Q$
+(\lean{New.Data.firstBlockLift}).
+\end{proposition}
+
+\begin{proof}
+If integral $h,h'$ on $Y_j,Y_{j+1}$ have reductions with $g'\,\mathrm{inc}=\mathrm{inc}\,g$ for the inclusion matrix
+$\mathrm{inc}$, a direct computation gives $\omega(h,h')\Upsilon_{j+1}=\prod_w\psi(\det g'_w)/\psi(\det
+g_w)\cdot\Upsilon_{j+1}$ (\lean{New.Data.thetaKernelY_omega_pointDatumY_eq_smul}), so
+$R_{h'}\theta z$ is that factor times $\theta(R_hz)$ (\lean{New.Data.formRep_liftY}). Iterating
+along the blocks, $R_h$ of the first $j$ lifts at $y$, for $h$ block upper triangular with first
+block $s$ at the chosen places, is the composite at $c\cdot(sy)$, $c$ the product of the tame
+characters at the diagonal blocks $1,\dots,j$
+(\lean{New.Data.formRep_lowerChainUpTo_eq_lowerChainUpTo_smul}). On $J_m$, $s=1$; for $g_s$ these
+blocks are $1$.
+\end{proof}
+
+\subsection{Chain data and the composite lift}\label{ub-objects:sec:composite}
+
+A \emph{branching map} (\lean{New.Data.IsBranchingMap}) is an integral matrix
+$\beta\colon \mathbb V_{\mu(X_m)}\to \mathbb V_{\mu(Y_m)}$ with $\beta\rho(\diag(g,z))=\prod_\tau
+z_\tau^{\mathfrak n_\tau}\rho(g)\beta$ over every field of characteristic $0$, squared operator norm at most
+$\exp(x^{70})$, and such that every map equivariant for $\diag(g,1)$, $g$ unitary, is a multiple of
+$\beta$. One exists by interlacing (\lean{New.Data.exists_isBranchingMap},
+\lean{New.exists_branching_matrix}; Goodman--Wallach, 2009, Thm.~8.1.1); \lean{New.Data.branching}
+is a chosen one; it is not shown to be nonzero. The \emph{restriction} (\lean{New.Data.restrictToY}) is
+$\operatorname{res}\psi(h)=\prod_\tau\Phi_\tau(\bar\pi_N)^{-\mathfrak n_\tau}\beta\,\psi(\diag(h,1))$.
+
+Data are translates of the integral vacuum $\theta^\circ_j$ of $\Hom(X_j,X_{j+1})$ (the $\theta^\circ_V$
+of Definition~\ref{der:def:std} for this space; \lean{New.Parameters.intVacuum}): for finite adelic matrices $\mathbf x=(\mathbf x_j)$ (\lean{New.Data.Translations})
+the $j$-th datum is $\mathrm H_{\mathbf x_j}\theta^\circ_j$ (\lean{New.Data.translateDatum}), and a
+finitely supported $\Psi$ gives $\operatorname{res}\circ\sum_{\mathbf x}\Psi(\mathbf x)\mathrm{chain}_{\mathbf x}$
+(\lean{New.Data.restrictedChain}). Lifts are paired, $X_{2i}\to X_{2i+1}\to X_{2i+2}$, $i\le\varrho$,
+and glued at $N$: $\operatorname{Glue}(v\otimes v')=\sum_y\mathrm H_{C_y}v\otimes\mathrm H_{R_y}v'$ over
+$y\in(\cO/\pi_N)^{X_{2i+1}}$, where $C_y$ has last column $-y/N$ at the places $w\mid\pi_N$ and $0$
+elsewhere, and $R_y$ last row $-\bar y/N$ at their conjugates (\lean{New.Seesaw.doubleLiftGluing},
+\lean{New.Data.gluedDoubleLiftDatum}). The glued tensor is $\phi^{\mathrm{ch}}_\Psi=\sum_{\mathbf x}\Psi(\mathbf x)
+\bigotimes_i\operatorname{Glue}(\mathrm H_{\mathbf x_{2i}}\theta^\circ_{2i}\otimes\mathrm H_{\mathbf x_{2i+1}}
+\theta^\circ_{2i+1})$ (\lean{New.Data.gluedTensor}).
+
+\begin{definition}[\lean{New.Data.IsChainDatum}, \lean{New.Data.compositeLift}]
+\label{ub-objects:def:chaindatum}
+Let $\vartheta$ be a twist and $\Nm Q=\prod_{w\in Q}\Nm w$. A finitely supported $\Psi$ is a \emph{chain
+datum} for $\vartheta$ if: (i) for $\mathbf x\in\operatorname{supp}\Psi$, $\bar\pi_M\mathbf x_j$ is integral at all
+places prime to $\Nm Q$ and $\mathbf x_j$ vanishes at all places prime to $M\Nm Q$
+(\lean{New.Data.admissibleTranslations}, \lean{New.Data.supportedTranslations}); (ii) each
+$\Psi(\mathbf x)$ is integral at every $\iota\colon\C\to\C_\ell$, $\ell\nmid \Nm Q$
+(\lean{New.Seesaw.integralAway}); (iii) if $Q=\emptyset$, $\sum_{\mathbf x}|\sigma\Psi(\mathbf x)|\le M^{3fmn_m^2}$
+for all $\sigma\in\Aut(\C)$; (iv) $\phi^{\mathrm{ch}}_\Psi$ is fixed by
+$\bigotimes_i(\omega(u_{2i},u_{2i+1})\otimes\omega(u_{2i+1},u_{2i+2}))$ for $u_j\in
+\operatorname{level}_X(j)$, $u_m=1$ (\lean{New.Data.ChainTensor.IsInvariant}). The \emph{composite
+lift} of a source form is $B_{\vartheta,\Psi}\phi=\operatorname{res}(\theta_{\phi^{\mathrm{ch}}_\Psi}
+\phi)$, the chain of the $\varrho+1$ double lifts with data $\phi^{\mathrm{ch}}_\Psi$, restricted.
+\end{definition}
+
+A \emph{weak chain datum} (\lean{New.Data.IsWeakChainDatum}) has (i) for $N\Nm Q$ without support
+condition, (ii), (iii) with bound $\exp(x^{60})$ and joint invariance without gluing; a composite
+lift is $\operatorname{res}\circ\sum\Psi'(\mathbf x)\mathrm{chain}_{\mathbf x}$ for such a $\Psi'$
+(\lean{New.Data.IsChainDatum.exists_isWeakChainDatum_compositeLift_eq}, Section~\ref{sec:ub-divis}),
+and Theorem~\ref{ub-objects:thm:plainsum} applies. At the level $N$: the pair of scalars $(z,z)$, $z$
+a scaling at $w\mid\pi_N$, acts trivially on the data of each lift
+(\lean{New.Data.liftKernel_omega_scaling}), so a chain whose datum at one lift is fixed by
+$\omega(1,z_w)$ kills $\psi-R_{z_w}\psi$ and hence the ramified source forms
+(\lean{New.Data.tensorChainLift_eq_zero_of_ramified}). In the Schr\"odinger model at the $w\mid\pi_N$,
+for lifts obeying a lift law and a ramified $\phi$, $p$ glued double lifts are a scalar times $2p$
+direct lifts of $\mathrm{Up}^p\phi$ (\lean{New.IsSplitLevel.compUpTo_gluedLift_eq_smul},
+\lean{New.IsSplitLevel.upOperator}).
+
+\subsection{The Poincar\'e map}\label{ub-objects:sec:poincare}
+
+Let $R_0\subset\U(Y_0)$ be the Bessel subgroup of the grading $Y_0=X_0\oplus(\text{string})$
+(\lean{New.Data.gradingY}, \lean{New.Grading.besselGroup}). For a source form $\phi$ and a linear
+form $\mathfrak t$ on $\mathbb V_{c,0}$, $\mathcal W_\phi(uh)=\psi_U(u)\,\mathfrak t(\rho(h_\infty^{-1})\phi(h_{\mathrm f}))$ on $R_0(\A)$
+(\lean{New.Grading.sourceFn}) is continuous, left $R_0(E^+)$-invariant and $\psi_U$-equivariant, and
+$[R_0]$ is compact (\lean{New.Grading.IsEquivariant.integrable_mul}).
+
+\begin{definition}[\lean{New.Data.poincareAt}, \lean{New.Data.poincare}]\label{ub-objects:def:poincare}
+$\Poin_{g,\mathfrak t}\phi$ is the form of principal level on $Y_0$ with $\pair{y,\Poin_{g,\mathfrak t}\phi}=
+\int_{[R_0]}\mathcal W_\phi(r)\overline{y(rg)}\,dr$ for all $y$ (\lean{New.Data.inner_poincareAt};
+Riesz in the space of Proposition~\ref{ub-objects:prop:finite}). The Poincar\'e map is
+$\Poin=\Poin_{g_B,\mathfrak t_B}$ for $g_B,\mathfrak t_B$ chosen in Section~\ref{sec:sp-unfold}
+(\lean{New.Data.besselPoint}, \lean{New.Data.besselForm}) so that $\Poin\phi$ is the Poincar\'e series
+of the Bessel function with the coefficients of $\phi$ (\lean{New.Data.poincare_eq_poincareMap_comp};
+Theorem~\ref{sp-unfold:thm:series}(b), where $g_B$, $\mathfrak t_B$ are written $g_0$, $\mathfrak t$).
+Definition~\ref{sp-unfold:def:poincare} restates this definition, and Section~\ref{sec:sp-unfold}
+computes with $\Poin$ as that series.
+\end{definition}
+
+For $z$ of the conjugate type right invariant under $J$, with $J\cap J_M$ of finite index in $J_M$, $[J_M:J\cap J_M]\int_{[G]}z\Poin_{g,\mathfrak t}\phi=\sum_{q\in J_M/J\cap J_M}
+\int_{[R_0]}\mathcal W_\phi(r)z(rgq)\,dr$ (\lean{New.Data.integral_mul_poincareAt}).
+
+\subsection{Jets: Galois conjugation and bounds}\label{ub-objects:sec:jets}
+
+With $\Omega$ the period constant of Section~\ref{sec:setup}, let $V$ be standard (signs $+1$, point $1$),
+and for $\sigma\in\Aut(\C/K)$ let $\tilde\sigma$ be the induced permutation of $\Phi$
+(\lean{New.Parameters.placePerm}).
+
+\begin{theorem}[\lean{New.Parameters.exists_isJetConjugation}]\label{ub-objects:thm:conj}
+There are $\alpha\in\C$ with $|\alpha|^2=\Omega^{-1}$, $\mathsf B_\sigma\in\Af$ and a $\sigma$-semilinear $L$ on $\mathscr S(V)$
+(\lean{New.Parameters.IsJetConjugation}) such that $L$ preserves $\mathscr S_{\mathrm f}(V)$ with
+$L\mathrm H_{\mathbf x}\mathcal F=\mathrm H_{\mathsf B_\sigma\mathbf x}L\mathcal F$ there; $\sigma(\psi_0(z))=\psi_0(\mathsf B_\sigma\bar{\mathsf B}_\sigma z)$ for the additive character
+$\psi_0$; and for $\mathcal F\in\mathscr S_{\mathrm f}(V)$ the Taylor series of the theta function of $L\mathcal F$ at scale $\alpha$
+is $\sigma$ of that of $\mathcal F$ at scale \lean{New.Parameters.jetScale}, places renamed by $\tilde\sigma$.
+Hence $\sigma(\theta_{\mathcal F}(\mathbf x))=\theta_{L\mathcal F}(\mathsf B_\sigma\mathbf x)$ at finite vectors
+(\lean{New.Parameters.IsJetConjugation.map_apply_finVec}), and for a set $R$ of places disjoint
+from its conjugate $L$ maps the vacuum and $\mathcal F_R\otimes\mathrm{vac}$, $\mathcal F_R$ Schwartz--Bruhat above
+$R$, to $c\,\omega(u)$ of the vacuum and of $(\sigma\circ\mathcal F_R)\otimes\mathrm{vac}$,
+$c\ne0$, $u\bar u=1$ (\lean{New.Parameters.IsJetConjugation.exists_map_schrodingerOp}).
+\end{theorem}
+
+\begin{proof}
+Section~\ref{sec:der} (\lean{New.Parameters.exists_isJetConjugate_translates}, Proposition~\ref{der:prop:scale};
+it rests on the main theorem of complex multiplication in the form of Fact~\ref{der:fact:cm}, without
+the reciprocity law) gives $F$ whose translates span $\mathscr S_{\mathrm f}(V)$,
+an adele $\mathsf B_\sigma$ and $F'$ with $\mathrm H_{\mathbf x}F$, $\mathrm H_{\mathsf B_\sigma\mathbf x}F'$ of conjugate jets. A vector of
+$\mathscr S_{\mathrm f}(V)$ is determined by its Taylor series (\lean{New.Space.eq_zero_of_jetSeries_eq_zero}), so
+``conjugate the jets'' defines $L$ into $\mathscr S_{\mathrm f}(V)$. The law for $\psi_0$ comes from rank one
+(\lean{New.Space.map_selfDualAddChar_of_isJetConjugate}); the others hold on the translates of $F$,
+hence on their span.
+\end{proof}
+
+A combination $\mathcal F=\sum_{\mathbf x}\gamma_{\mathbf x}\mathrm H^\circ_{\mathbf x}\theta^\circ_V$ of Heisenberg translates of the
+integral vacuum $\theta^\circ_V$ of $V$ (Definition~\ref{der:def:std}) is a \emph{vacuum combination of size $B$} (\lean{New.Parameters.IsVacuumCombination})
+if $\sum_{\mathbf x}|\sigma \gamma_{\mathbf x}|\le B$ for all $\sigma\in\Aut(\C)$. For a lift weight with row lengths
+$\mathsf r_{\tau,i}$ (\lean{New.diagramWeight}) put $w(L,u)=\frac12\sum_{\tau,i}(\mathsf r_{\tau,i}/L+\log
+\mathsf r_{\tau,i}!+u\,\mathsf r_{\tau,i})$ (\lean{New.schurGrowthExponent}) and
+$\operatorname{jsb}(B,L,w)=Be^{c_P(q_1|n||n'|+1)^2+w}(2L+2)^{f|n||n'|}$
+(\lean{New.Parameters.jetSizeBound}), $c_P$ = \lean{New.Parameters.constantBound}.
+
+\begin{proposition}[Size of jets]\label{ub-objects:prop:arch}
+(\lean{New.Parameters.sqrt_weylNormSq_schurJet_le_of_isVacuumCombination}.) Let $\mathcal F$ be a vacuum combination of size $B$ on $\Hom(I_n,I_{n'})$, moved by the Weil action (twisted
+by characters with a weight) of finite points $(g,h)$, and $F$ the Taylor series of its theta
+function at scale $\eta\cdot$\lean{New.Parameters.jetScale}. For $\sigma\in\Aut(\C)$ and $L\ge1$,
+$\sqrt{\operatorname{weylNormSq}(\sigma(\operatorname{schurJet}(F)\xi))}\le
+\operatorname{jsb}(B,L,w(L,\log(|\sigma\eta|^2/\Omega)))\sqrt{\operatorname{weylNormSq}(\sigma\xi)}$.
+More generally $|\sigma(P(\partial)F(0))|\le\operatorname{jsb}(B,L,w)A$ if $A\ge0$ and $|\sigma P(z)|\le
+Ae^{w+LR}$ whenever $\sum|\sigma z_i|^2\le \Lambda(2L+2)R$, with $\Lambda\ge|\sigma\eta|^2/\Omega$
+(\lean{New.Parameters.norm_jet_le_of_isVacuumCombination}).
+\end{proposition}
+
+\begin{proof}
+Expand $\mathcal F$ in translates and replace $\sigma$ by an automorphism over $K$ that gives the same
+absolute values. By Theorem~\ref{ub-objects:thm:conj} and the reproducing property of the Fock model, $\sigma$ of a
+jet of $F$ is a Gaussian integral $\int(\sigma P)(\alpha\bar y)e^{-|y|^2/2}(LF)(y)\,dy$
+(\lean{New.Parameters.map_jet_eq_integral}). The values of $L\mathrm H_{\mathbf x}\omega(g)\theta^\circ_V$
+are at most $e^{c_P(q_1|n||n'|+1)^2}$ (\lean{New.Parameters.IsJetConjugation.norm_map_intVacuum_le},
+from \lean{New.Parameters.norm_omega_vac_le}). With $R=|y|^2/(2L+2)$, $e^{LR}e^{-|y|^2/2}=e^{-R}$,
+whose integral is $(2L+2)^{f|n||n'|}$ (\lean{New.Parameters.norm_jet_translate_le}); characters
+have conjugates of modulus $1$ (\lean{New.Parameters.norm_map_pairChar}). The matrix coefficients of
+$S_c(z)$ have the growth $w(L,\log \Lambda)$ (\lean{New.Parameters.hasConjugateGrowth_schurCoeffPoly}).
+\end{proof}
+
+A datum $\mathcal F$ \emph{raises gauges by at most $C$} (\lean{New.Kernel.raises}) if the gauge of
+$j_{\omega(g,h)\mathcal F}\xi$ at $h$ is at most $\max(C,0)$ times that of $\xi$ at $g$, for all $g,h,\xi$.
+\emph{Standard data} for $\delta\in\cO_K$ at $\ell$ (\lean{New.Parameters.standardData}) are as in
+Definition~\ref{der:def:std}.
+
+\begin{proposition}[\lean{New.Parameters.mem_raises_of_standardData},
+\lean{New.Parameters.smul_mem_raises_of_dvd}, \lean{New.Parameters.smul_vacuumDatum_mem_standardData}]
+\label{ub-objects:prop:padic}
+For the theta kernel of scale $\eta\cdot$\lean{New.Parameters.jetScale} and a lift weight with $L$
+boxes: (i) a standard datum for $\delta\ne0$ raises gauges by at most
+$(|\iota\eta|/|\iota(\bar\delta d)|)^L$; (ii) if $|\iota\eta|\le1$, $d'\mathcal F$ is standard for $N'$ and
+$d'(N'd)^L\mid M'$, then $M'\mathcal F$ raises gauges by at most $1$; (iii) if $qN'\in\mathfrak m$ and the
+values of $\mathcal F_{\mathfrak m}$ on matrices modulo $\mathfrak m$ are integral away from $q$, then
+$N'^{2f|n||n'|}$ times its scaled vacuum datum is standard for $N'$ at every $\ell\nmid q$.
+\end{proposition}
+
+\begin{proof}
+(i) The entries of the Schur jet matrix are jets along integral homogeneous polynomials of degree
+$L$; apply the integrality of jets of Section~\ref{sec:der}
+(\lean{New.Parameters.norm_jet_jetSeries_le_pow}) in
+\lean{New.Parameters.omega_mem_raises_of_schurJet_le}. (ii) is (i) for $\delta=N'$ after scaling
+(\lean{New.Kernel.smul_mem_raises}). (iii) The datum is a Schr\"odinger operator at the places of
+$\mathfrak m$ applied to the integral vacuum; by Fourier inversion modulo $\mathfrak m$ it combines
+translates by $y$ with $N'y$ integral away from $q$, with denominator $\Nm(N')^{|n||n'|}$
+(\lean{New.Parameters.smul_schrodingerOp_mem_standardData}).
+\end{proof}
+
+At $\ell$ not split in $K$ and for $|\iota\eta|\le1$, a standard datum for $\delta=1$ raises gauges by at most
+$\ell^{-(\mathrm{pred}-f|n'|^3(1+\log_\ell\max(L,1)))}$ (\lean{New.Parameters.mem_raises_predictedDivisibility},
+$\mathrm{pred}$ from Section~\ref{sec:der}; see also \lean{New.Parameters.isVacuumCombination_vacuumDatum}
+and the kernel scale \lean{New.Rows.exists_ne_zero_isModKernelScale}).
+
+\subsection{Descent pairs and grids}\label{ub-objects:sec:grids}
+
+A \emph{descent pair} (\lean{New.DescentPair}) holds the data of one lift $W\to V=I_n$, $\rk W<n$:
+the level places $\Sigma_M$ (chosen) and $Q$ (twist), $W$ with its signs, an embedding of index sets, a
+numbering of the basis of $W$, column numbers $c^\pm$ (the forms on $V$,
+\lean{New.DescentPair.FormV}, have weight $(c^+(\tau,i)+c^-(\tau,n-i),-\sum_ic^-(\tau,i))$), and a
+character $\mu$ with tame part trivial off $\Sigma_M\cup Q$; the level fixes the image of $W$ modulo $\Sigma_M$
+and preserves the span of the others modulo $Q$ (acting by $\prod_Q\psi_w^{-1}\det$ of the
+$W$-block). The normalized descent is a multiple of the transposed lift
+(\lean{New.DescentPair.normalizedDescent_eq_smul_star_lift_swap}). The $j$-th pair
+(\lean{New.Data.descentPair}) is $(W_j,V_j)$ with the character $\mu^0_j\vartheta$; its parameters
+correspond to the doubled target parameter $2\lambda(\tau)$ by insertion of the block of the centre $-\kappa_j$
+(\lean{New.Data.paramsCorrespond_descentPair}, \lean{New.Data.fitsParams_descentPair}).
+
+\begin{lemma}[\lean{New.Data.GridIndex}, \lean{New.Data.gridParam}, \lean{New.Data.hasGap_gridParam},
+\lean{New.Data.paramsCorrespond_grid}]\label{ub-objects:lem:grids}
+The node $(i,j)$ of the grid $Y$ is the base of $r$ indices with blocks of length $t$ at the up
+centres $\kappa_1,\dots,\kappa_i$ and the down centres $-\kappa_1,\dots,-\kappa_j$ (in $\tilde Y$:
+$r+1$ base indices, lengths $t\pm1$); its doubled parameter is $2\lambda(\tau)$ on the base and the
+centred blocks, lowered by $1$ in $Y$ for odd $i+j$ (in $\tilde Y$ the vector is minus the parameter of
+$\tilde Y^j_i$, with base $2\lambda(\tau)+1$), and the sign of an entry is $(-1)$ to the
+number of absent centres that count for it (\lean{New.CentreSystem.sign}); the node $(0,j)$ is
+$Y_j$. Every node has gap $\Delta$ and, for $i,j\le m$, rank at most $2n_m$
+(\lean{New.Data.card_gridIndex_le}); the parameters at the ends of a step correspond by the block
+rule.
+\end{lemma}
+
+\begin{proof}
+The gap $\Delta$ is checked directly on base, up and down entries (\lean{New.Data.hasGap_gridParam}).
+The centres are at distance at least $\Delta-t-2\ge500(\#n+\#n')^3$ from each other and from the
+stem (\lean{New.Data.isSeparated_gridCentres}), which gives the gap of the block rule
+(\lean{New.CentreSystem.IsParam.hasGap}); inserting the block of one centre changes exactly the signs
+of the entries it counts for (\lean{New.CentreSystem.sign_eq_ite_sign_insert}), whence the block rule
+(\lean{New.CentreSystem.IsParam.isBlockRule_insert_of_down}).
+\end{proof}

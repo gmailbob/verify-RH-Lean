@@ -1,0 +1,524 @@
+\section{Divisibility and size of the composite lift}\label{sec:ub-divis}
+
+This section proves the divisibility and the size of the composite lift $B_{\vartheta,\Psi}$
+(\lean{New.Data.compositeLift}), Theorems~\ref{ub-divis:thm:divis} and~\ref{ub-divis:thm:size},
+quoted as Theorems~\ref{main:thm:divis} and~\ref{main:thm:size}, and that short forms span
+(Proposition~\ref{ub-divis:prop:short}). It uses the kernel bounds of Sections~\ref{sec:der}
+and~\ref{sec:ub-objects} and the elementary divisors of Section~\ref{sec:ub-eldiv}.
+
+\subsection{Set-up}
+
+The letters are those of Sections~\ref{sec:setup} and~\ref{sec:ub-objects} ($\kappa$ is $b$ on
+$\Phi_b$ and the integer $a/x_1$ elsewhere). We write $\mathcal S$ for the space of source forms
+and $D_X=\dim\mathcal S$. For a
+translation $\mathbf x$, the lift $X_j\to X_{j+1}$ with datum
+$\mathcal F_{\mathbf x,j}=\mathrm H_{\mathbf x_j}\theta^\circ_j$, $\theta^\circ_j$ the integral vacuum of
+$\Hom(X_j,X_{j+1})$ (\S\ref{ub-objects:sec:composite}; \lean{New.Data.translateDatum}) is written $\Theta_{\mathbf x,j}$.
+
+\begin{definition}[Valuation, colength]\label{ub-divis:def:val}
+Fix a prime $\ell$ and $\iota\colon\C\to\C_\ell$, with $\cO_\iota$ as in Section~\ref{sec:setup}
+(\lean{New.embValRing}). A form $F$ \emph{has valuation at least $v$} if it has gauge
+(\lean{New.weylGauge}, Definition~\ref{ub-objects:def:gauge}) at most $\ell^{-v}$ at $1$
+(\lean{New.GaugeLe}); it is integral if $v=0$ works. The integral source forms form an
+$\cO_\iota$-module $\mathcal M_\iota$ (\lean{New.Data.integralSourceForms}). Colength and
+``onto up to colength'' (\lean{New.ColengthDvd}, \lean{New.IsOntoUpToColength}) are as in
+Definition~\ref{data:def:colength}.
+\end{definition}
+
+\begin{definition}[Local prime sums, gains; \lean{New.Data.localPrimeSum}, \lean{New.Data.localPrimeSumTotal}, \lean{New.Data.gain}]
+\label{ub-divis:def:gain}
+For a prime $\ell$, the number $v(\pi_\ell)$ ($\frac12$ if $\ell=d$ and $1$ otherwise) and the set
+$I_\ell$ (the odd $e\ge1$ if $\ell$ is inert in $K$, all $e\ge1$ if $\ell=d$, empty if $\ell$ splits)
+are those of Definition~\ref{der:def:nonsplit} (which, for split $\ell$, defines only $I_\ell=\emptyset$).
+The local prime sums and their total are those of
+\S\ref{der:sec:primesums}, which defines them: for $y\in\R$ and $\tau\in\Phi$,
+\[
+s_\ell(y,\tau)=v(\pi_\ell)\sum_{e\in I_\ell}\Bigl(\frac{y}{\ell^e}-\kappa\bigl(-\ell^e\tau\bigr)\Bigr)_+,
+\qquad S_\ell=\sum_{\tau\in\Phi}s_\ell(\kappa(\tau),\tau)
+\]
+($S_\ell$ is a number; it has nothing to do with the sets of places $S$ and $S_\Lambda$ below). The
+\emph{gain} is $\mathrm{gain}_\ell=m\bigl(\sum_{\tau\in\Phi_a}s_\ell(a,\tau)+kS_\ell\bigr)$. As in
+Section~\ref{sec:main}, $\mathcal N$ is the set of primes $\ell<x_1$ with $\chi_K(\ell)\ne1$
+(\lean{New.Data.smallNonsplitPrimes}).
+\end{definition}
+
+So $\mathrm{gain}_\ell$ is the exponent of $\ell$ asked of the $m$ lifts: each differentiates $a$ times along the long
+row at each $a$-place, and $\kappa(\tau)$ times in about $k$ further rows at $\tau$. The prime
+sums $\sfin$, $\sinf$, $\hmain$, $\smain$ and $\rem$ are those of Definition~\ref{setup:def:primesums}.
+
+\begin{lemma}[Prime by prime]\label{ub-divis:lem:primesums}
+\begin{enumerate}[label=(\alph*)]
+\item If $\ell\ge x_1$ and $y\le a$, then $s_\ell(y,\tau)=0$ (\lean{New.Data.localPrimeSum_eq_zero}). So $\mathrm{gain}_\ell=0$ if $\chi_K(\ell)=1$
+  or $\ell\ge x_1$ (\lean{New.Data.gain_eq_zero}).
+\item If $y\le a$ and $U\ge x_1$, then $\sfin(y,\tau)=\sum_{\ell<U}2s_\ell(y,\tau)\log \ell$
+  (\lean{New.Data.primeSum_eq_sum_localPrimeSum}; this is the identity of \S\ref{der:sec:primesums},
+  restated in the form, with any bound $U\ge x_1$, in which Lean proves it). For a finite set
+  $\mathcal U$ of primes, $\sum_{\ell\in\mathcal U}2S_\ell\log \ell\le\sum_\tau\sfin(\kappa(\tau),\tau)$
+  (\lean{New.Data.sum_localPrimeSumTotal_mul_log_le}).
+\item $2\sum_{\ell\in\mathcal N}\mathrm{gain}_\ell\log \ell=m\sum_{\tau\in\Phi_a}\sfin(a,\tau)
+  +mk\sum_\tau\sfin(\kappa(\tau),\tau)$ (\lean{New.Data.two_mul_sum_gain_mul_log}). Hence
+  $h_{\mathrm{main}}-m\rem+2\sum_{\ell\in\mathcal N}\mathrm{gain}_\ell\log
+  \ell=m\abs{\Phi_a}\smain+mk\sum_\tau\sinf(\kappa(\tau))$
+  (\lean{New.Data.mainAmount_sub_add_two_mul_sum_gain}).
+\end{enumerate}
+\end{lemma}
+
+\begin{proof}
+(a) All weights are at least $a/x_1$, so $y/\ell^e\le\kappa$ for $e\ge1$. (b) The weight
+$\LambdaK(\nu)=\Lambda(\nu)(1-\chi_K(\nu))$ of $\sfin$ lives on $\nu=\ell^e$, where it is $2\log \ell\cdot\frac{1-\chi_K(\ell^e)}2$,
+and $s_\ell(y,\tau)=\sum_{e\ge1}\frac{1-\chi_K(\ell^e)}2(y/\ell^e-\kappa(-\ell^e\tau))_+$
+(\lean{New.Data.localPrimeSum_eq_tsum}). The terms with $\nu\ge x_1$ vanish by (a). (c) Sum (b) over
+$\tau$, exchange the sums and use (a); then expand $h_{\mathrm{main}}$ and $\rem$.
+\end{proof}
+
+\begin{definition}[Classes of primes]\label{ub-divis:def:classes}
+For a prime $\ell$ put $\mathfrak r_\ell=\lceil\log_\ell m\rceil$, $j_\ell=\lceil2mfa/\ell\rceil$ and
+$\nu_\ell=\mathfrak r_\ell f(n_m+\mathfrak r_\ell)$ (\lean{New.Data.ceilLogLifts},
+\lean{New.Data.collisionExponent}, \lean{New.Data.transferExponent}). Let $\mathrm{loss}(\ell)=fa\log^2b/\ell$,
+times $m$ if $\ell\equiv\pm1\bmod m$ (\lean{New.Data.loss}), and let $o_0(\ell)$ be the order of $-\ell$ in
+$(\Z/q_0)^\times$. The prime $\ell$ is \emph{exceptional} (\lean{New.Data.IsExceptional}) if
+$\chi_K(\ell)=-1$, $\ell\not\equiv\pm1\bmod m$, and $o_0(\ell)$ is odd and at most $\mathfrak r_\ell$. For
+$S\subseteq\Phi$, a \emph{collision outside $S$} (\lean{New.Data.IsCollision}) is a pair
+$(\tau,e)$ with $e\in I_\ell$ and with $\tau$ and $-\ell^e\tau$ both in $\Phi_a\setminus S$. The sum of
+$a/\ell^e$ over these is $c_\ell(S)$ (\lean{New.Data.collisionSum}). The \emph{allowed loss}
+(\lean{New.Data.allowedLoss}) is $\mathrm{err}_\ell=2\,\mathrm{loss}(\ell)$ for $\ell\in\mathcal N$, $\mathrm{err}_N=2mfb$, and $\mathrm{err}_\ell=0$ otherwise.
+\end{definition}
+
+For odd $e$, $-\ell^e\tau$ is an $a$-place exactly when $o_0(\ell)\mid e$.
+
+\begin{lemma}[Collisions and losses; \lean{New.Data.mul_collisionSum_le_loss}, \lean{New.Data.sum_allowedLoss_mul_log_le}]
+\label{ub-divis:lem:losses}
+(a) $m\,c_\ell(\emptyset)\le j_\ell$, and $m\,c_\ell(\emptyset)\le\mathrm{loss}(\ell)$ if $\ell\in\mathcal N$ is not exceptional. (b) $\sum_{\ell\in U}\mathrm{err}_\ell\log \ell\le fa\log^3b$ for every
+finite set $U$.
+\end{lemma}
+
+\begin{proof}
+(a) If all collisions have $e\ge o$, then $c_\ell\le2fa/\ell^o$, by a geometric series at each place;
+take $o=1$. If $\ell\equiv\pm1\bmod m$, the factor $m$ in $\mathrm{loss}(\ell)$ suffices. Otherwise a
+collision has $\ell\ne d$ (no power of $d$ is $\equiv-1\bmod q_0$,
+Proposition~\ref{data:prop:field}(a)), hence odd $e$, and $o_0(\ell)\mid e$
+(\lean{New.Data.IsCollision.ne_and_odd_and_dvd}). So either there is none, or $o_0(\ell)$ is odd and greater
+than $\mathfrak r_\ell$, as $\ell$ is not exceptional. Then $\ell^e\ge \ell^{\mathfrak r_\ell+1}\ge m\ell$.
+(b) For $\ell\in\mathcal N$ write $c=\ell$, or $\ell=mc\pm1$ if $\ell\equiv\pm1\bmod m$. Then
+$\mathrm{err}_\ell\log \ell\le A/c$ with $A=4fa\log^2b\log x_1$. For $N$ take $c=1$, as $\log N\le
+30m\log b$ and $m^2\le4x$. Each $c\le x_1$ serves at most the four numbers $N$, $mc\pm1$ and $c$,
+so the sum is at most $4A(1+\log x_1)\le fa\log^3b$, because $(\log x_1)^6\le\log b$.
+\end{proof}
+
+\subsection{The divisibility theorem}
+
+\begin{theorem}[Divisibility of the composite lift; \lean{New.Data.exists_err_gaugeLe_compositeLift}]
+\label{ub-divis:thm:divis}
+There are real numbers $\mathrm{err}_\ell$, $\ell\in\N$, with:
+(a) $\mathrm{err}_\ell\ge0$;
+(b) $\mathrm{err}_\ell=0$ if $\ell\ne N$ and ($\chi_K(\ell)=1$ or $\ell\ge x_1$);
+(c) $\sum_{\ell\in U}\mathrm{err}_\ell\log \ell\le fa\log^3b$ for every finite set $U$;
+(d) for every prime $\ell$ and $\iota\colon\C\to\C_\ell$ there are a natural number $l\le\mathrm{err}_\ell\dim\mathcal S$
+and an $\cO_\iota$-submodule $\mathfrak V$ of $\mathcal M_\iota^{\mathrm{ram}}=\mathcal
+M_\iota\cap\{\text{ramified source forms}\}$ whose colength in $\mathcal M^{\mathrm{ram}}_\iota$
+divides $\ell^l$, such that $B_{\vartheta,\Psi}\varphi$ has valuation at least
+$\mathrm{gain}_\ell-\mathrm{err}_\ell$ for every twist $\vartheta$ whose modulus has norm
+prime to $\ell$, every chain datum $\Psi$ for $\vartheta$, and every $\varphi\in\mathfrak V$.
+\end{theorem}
+
+\begin{proof}
+Take $\mathrm{err}$ to be the allowed loss. Then (a) and (b) hold by definition, and (c) is
+Lemma~\ref{ub-divis:lem:losses}(b). For (d) it suffices to find $l\le\mathrm{err}_\ell D_X$ and a module
+$\mathfrak V$ of colength dividing $\ell^l$ in $\mathcal M_\iota$ such that the bound holds for the ramified
+$\varphi\in\mathfrak V$ (\lean{New.Data.exists_colengthDvd_gaugeLe_compositeLift}). Then $\mathfrak V\cap\mathcal
+M^{\mathrm{ram}}_\iota$ serves. There are four cases: $\ell\notin\mathcal N\cup\{N\}$
+(\S\ref{ub-divis:sec:away}); $\ell\in\mathcal N$ not exceptional
+(Proposition~\ref{ub-divis:prop:nonexc}); $\ell\in\mathcal N$ exceptional
+(Proposition~\ref{ub-divis:prop:exc});
+$\ell=N$ (Proposition~\ref{ub-divis:prop:N}). Note that $d$ lies in $\mathcal N$ and is
+not exceptional, and that $\mathrm{gain}_N=0$ because $N\ge x_1$.
+\end{proof}
+
+Theorem~\ref{main:thm:divis} is this theorem for the choice $\mathrm{err}_\ell=$\,\lean{New.Data.divisibilityError}:
+\lean{New.Data.exists_colengthDvd_gaugeLe_divisibilityError} is (d) for it, without
+$\mathfrak V\subseteq\mathcal M^{\mathrm{ram}}_\iota$, and its valuation bound is read there through
+\lean{New.GaugeLe.zpow_neg_smul} (if $F$ has gauge at most $\ell^\rho$ and $\beta\le-\rho$ is an
+integer, then $\ell^{-\beta}F$ is integral). Two further differences remain: there the errors
+are indexed by the primes (here, as in Lean, by all $\ell\in\N$), and the colength exponent is
+written $j$ (here $l$). Section~\ref{sec:main} also uses
+\lean{New.Data.chiK_eq_one_or_le_of_notMem_smallNonsplitPrimes} (a prime outside $\mathcal N$
+splits or is at least $x_1$).
+
+\subsubsection{Away from $N$}\label{ub-divis:sec:away}
+Weak chain data $\Psi'$ (\lean{New.Data.IsWeakChainDatum}) are as in \S\ref{ub-objects:sec:composite}:
+$\sum_{\mathbf x}\Psi'(\mathbf x)\bigotimes_j\mathcal F_{\mathbf x,j}$ is invariant under the levels
+$\operatorname{level}_X(j)$, the values are integral away from $\Nm Q$, the translations are
+admissible for $N\Nm Q$, and $\sum_{\mathbf x}\abs{\sigma\Psi'(\mathbf x)}\le e^{x^{60}}$ for all
+$\sigma\in\Aut\C$ if $Q=\emptyset$ (as for $\vartheta=1$). Put
+$\mathrm{rc}_{\Psi'}=\mathrm{res}_{Y_m}\circ\sum_{\mathbf x}\Psi'(\mathbf x)\,\Theta_{\mathbf x,m-1}\circ\dots\circ\Theta_{\mathbf x,0}$
+(\lean{New.Data.restrictedChain}).
+
+\begin{lemma}[Expanding the gluing; \lean{New.Data.IsChainDatum.exists_isWeakChainDatum_compositeLift_eq}]
+\label{ub-divis:lem:expand}
+For every chain datum $\Psi$ there is a weak chain datum $\Psi'$ with $B_{\vartheta,\Psi}=\mathrm{rc}_{\Psi'}$.
+\end{lemma}
+
+\begin{proof}
+The tuples of $\Psi$ vanish above $N$ (by \lean{New.Data.exists_supported_translateDatum_eq} such
+tuples suffice). The gluing of the $i$-th double lift sums, over vectors $y$
+modulo $N$ at the primes $w\mid\pi_N$, the translates by the last column $-y/N$ and the last row
+$-\bar y/N$. Translations with disjoint supports add without phase, so the glued tensor is
+$\sum_{\mathbf x}\Psi(\mathbf x)\sum_y\bigotimes_j\mathcal F_{\mathbf x+z(y),j}$, with at most $N^{fmn_m/2}$ classes $y$
+(\lean{New.Data.IsChainDatum.gluedTensor_eq_sum_translates}). Finally $M^{3fmn_m^2}N^{fmn_m}\le
+e^{x^{60}}$.
+\end{proof}
+
+\begin{lemma}[Chains; \lean{New.Data.IsWeakChainDatum.gaugeLe_chain}]\label{ub-divis:lem:chain}
+Let $\ell\ne N$ be prime to $\Nm Q$. Suppose that the data of lift $j<m$
+(possibly changed by operators $\eta_j$ that commute with $\operatorname{level}_X(j)\times\operatorname{level}_X(j+1)$) multiply $\ell$-adic gauges
+by at most $\ell^{\rho_j}$ (\lean{New.Kernel.raises}). Then $\mathrm{rc}_{\Psi'}$ maps $\mathcal
+M_\iota$ to forms of valuation at least $-\sum_{j<m}\rho_j$.
+\end{lemma}
+
+\begin{proof}
+By joint invariance, a value of the chain is a sum, over tuples of classes in
+$\prod_j\Gamma\backslash G_{\mathrm f}/\operatorname{level}_X(j)$ and over $\mathbf x$, of $\Psi'(\mathbf x)$ times products of kernels at class
+points (\lean{New.Data.chainCombination_eq_sum}); the gauge is ultrametric. Restriction to $Y_m$
+applies an integral branching matrix and the $\ell$-unit $\prod_\tau\Phi_\tau(\bar\pi_N)^{-\mathfrak n_\tau}$.
+\end{proof}
+
+\emph{Split and large primes.} Let $\ell\notin\mathcal N\cup\{N\}$. Then $\ell\ne d$ and
+$\mathrm{gain}_\ell=0$. The data are standard for $\delta=\bar\pi_M$, so by
+\lean{New.Parameters.mem_raises_of_standardData} (Section~\ref{sec:ub-objects}) each lift raises
+gauges by at most $\abs{\iota d}^{-\#\mathrm{boxes}}=1$. So $B_{\vartheta,\Psi}$ maps $\mathcal M_\iota$
+to integral forms (\lean{New.Data.IsWeakChainDatum.gaugeLe_restrictedChain_one}): take $\mathfrak V=\mathcal
+M_\iota$, $l=0$.
+
+\subsubsection{Non-split primes below $x_1$}
+Let $\ell\in\mathcal N$ and $j<m$, and read the diagrams of lift $j$ at heights below
+$n_{j+1}$. At $\tau$ there are $L_\tau$ columns of height one ($a$ at an $a$-place and $0$
+otherwise), $\lambda_j(\tau)$ other columns, and $\beta_j(\tau)$ boxes in these. Then
+$k\kappa(\tau)\le\beta_j(\tau)\le k\kappa(\tau)+x^{60}$ and $\lambda_j(\tau)\le\kappa(\tau)+x^{60}$.
+
+\begin{definition}[\lean{New.Data.divisibilityBound}]
+For $S\subseteq\Phi$, remove the columns of height one at $S$. Then $\delta_j(S)$ is the predicted
+divisibility at $\ell$ (\lean{New.predictedDivisibility}, Section~\ref{sec:der}; partner map
+$\tau\mapsto-\ell^e\tau$) of the remaining diagrams, plus $\gamma_\ell=v(\pi_\ell)\sum_{e\in I_\ell}\ell^{-e}$
+for each removed box, minus $fn_{j+1}^3(1+\log_\ell\max(\#\mathrm{boxes},1))$.
+\end{definition}
+
+By the jet estimates of Sections~\ref{sec:der} and~\ref{sec:ub-objects}, a standard datum of level one for lift $j$ raises
+gauges by at most $\ell^{-\delta_j(\emptyset)}$ (\lean{New.Data.mem_raises_neg_divisibilityBound},
+from \lean{New.Parameters.mem_raises_predictedDivisibility}).
+
+\begin{lemma}[Only collisions lose; \lean{New.Data.le_divisibilityBound}]\label{ub-divis:lem:only}
+For $j<m$, $\ell\in\mathcal N$ and $S\subseteq\Phi$,
+\[\mathrm{gain}_\ell/m-c_\ell(S)+v(\pi_\ell)\abs{\Phi_a\cap S}\,a/x_1-fa\log^2b/(m\ell)\le\delta_j(S).\]
+\end{lemma}
+
+\begin{proof}
+Compare $\mathrm{gain}_\ell/m$ with the predicted divisibility term by term. For an $a$-place $\tau$
+and $\tau'=-\ell^e\tau$, the term $(a/\ell^e-\kappa(\tau'))_+$ is at most the predicted term
+$(L_\tau/\ell^e-L_{\tau'}-\lambda_j(\tau'))_+$ (with $L$ read after the removal, so $L=0$ on $S$) plus
+$x^{60}$, plus $a/\ell^e$ if $\tau\in S$ or if
+$(\tau,e)$ is a collision. For $\tau\in S$ and $e=1$ this holds even with $a/x_1$ added on the left.
+Likewise $k(\kappa(\tau)/\ell^e-\kappa(\tau'))_+\le(\beta_j(\tau)/\ell^e-\beta_j(\tau'))_++x^{60}$. The
+removed boxes at $\tau\in S$ are paid by $\gamma_\ell a$, and only $e$ with $\ell^e<x_1$ count. The errors
+are $2x^{60}$ per pair $(\tau,e)$, $\gamma_\ell\lambda_j(\tau)\le a/(\ell m)$, the correction at $\ell=d$ and
+the logarithmic term. Together they are at most $fa\log^2b/(m\ell)$, as $a=xb$ with $b$ far larger
+than $x_1$ (\lean{New.Data.localPrimeSum_add_le_mul_tsum_partnerTerm_add}).
+\end{proof}
+
+\begin{proposition}[Non-exceptional primes; \lean{New.Data.IsWeakChainDatum.gaugeLe_restrictedChain_collisionSum}]
+\label{ub-divis:prop:nonexc}
+For $\ell\in\mathcal N$ prime to $\Nm Q$, $\mathrm{rc}_{\Psi'}$ has
+valuation at least $\mathrm{gain}_\ell-\mathrm{loss}(\ell)-m\,c_\ell(\emptyset)$ on $\mathcal M_\iota$.
+This is at least $\mathrm{gain}_\ell-\mathrm{err}_\ell$ if $\ell$ is not exceptional, and $\mathfrak V=\mathcal
+M_\iota$, $l=0$ serve.
+\end{proposition}
+
+\begin{proof}
+The prime factors of $MN$ exceed $x_1$, so the data are standard of level one. By
+Lemma~\ref{ub-divis:lem:only} with $S=\emptyset$, each lift gains
+$\delta_j(\emptyset)\ge\mathrm{gain}_\ell/m-c_\ell(\emptyset)-\mathrm{loss}(\ell)/m$. Sum over $j$
+(Lemma~\ref{ub-divis:lem:chain}) and use Lemma~\ref{ub-divis:lem:losses}(a).
+\end{proof}
+
+As $m\,c_\ell(\emptyset)\le j_\ell$, we get valuation at least $\mathrm{gain}_\ell-\mathrm{loss}(\ell)$ on
+$\ell^{j_\ell}\mathcal M_\iota$ (\lean{New.Data.IsWeakChainDatum.gaugeLe_pow_collisionExponent_smul}).
+
+\subsubsection{Exceptional primes}
+Let $\ell<x_1$ be exceptional. Each $\tau\in\Phi$ induces a prime $\mathfrak l_\tau$ of $E$ above
+$\ell$, the centre of $\iota\circ\tau$ (\lean{New.Data.inducedPlace}). A set $\Lambda$ of such primes
+is \emph{marked} (\lean{New.Data.IsMarked}) if it is disjoint from its conjugate and every member is
+some $\mathfrak l_\tau$ with $\tau\in\Phi_a$. It is a \emph{full mark} (\lean{New.Data.IsFullMark}) if
+it contains $\mathfrak l_\tau$ or $\bar{\mathfrak l}_\tau$ for every $\tau\in\Phi_a$. Let
+$S_\Lambda$ be the set of places inducing a prime of $\Lambda$, and put $A_{\mathfrak
+l}=a\cdot\#\set{\tau\in\Phi_a:\mathfrak l_\tau=\mathfrak l}$. Let $\mathcal H_{\mathfrak l,i}$ be the Hecke
+operator of $\diag(\varpi1_i,1)$ at $\mathfrak l$, and put $\mathcal Y_{\mathfrak l}=\ell^{A_{\mathfrak
+l}}\mathcal H_{\mathfrak l,\mathfrak r_\ell}$ on $\mathcal S$ (\lean{New.Data.IsMarked.scaledHeckeOperator}) and
+$\mathcal Y=\prod_{\mathfrak l\in\Lambda}\mathcal Y_{\mathfrak l}$.
+
+\begin{lemma}[Orbits; \lean{New.Data.IsExceptional.hasExceptionalOrbits}]\label{ub-divis:lem:orbits}
+Let $\ell$ be exceptional and $o$ the order of $-\ell$ in $(\Z/q_1)^\times$. Then $m\mid o$. Every prime
+above $\ell$ has residue field of $\ell^o$ elements and differs from its conjugate
+(\lean{New.Data.IsExceptional.card_residueField}, \lean{New.Data.IsExceptional.star_ne}). For odd
+$e$, $-\ell^e\tau$ induces $\bar{\mathfrak l}_\tau$. Two places induce equal or conjugate primes
+iff they differ by a power of $(-\ell)$. If $\ell<x_1$, a full mark exists
+(\lean{New.Data.exists_isFullMark}), and for a full mark $c_\ell(S_\Lambda)=0$.
+\end{lemma}
+
+\begin{proof}
+As $m$ is a power of $2$, $m^{22}\mid q_1$ and $\ell\not\equiv\pm1\bmod m$, the order of $-\ell$ modulo
+the $2$-part of $q_1$ is a multiple of $m$. The rest is Galois theory in $(\Z/q_1)^\times$, $\ell$
+being inert in $K$. If $(\tau,e)$ is a collision, $\tau$ and $-\ell^e\tau$ induce $\mathfrak l$ and
+$\bar{\mathfrak l}$, one of which lies in a full mark; so one of the two places lies in $S_\Lambda$.
+\end{proof}
+
+\begin{proposition}[Valuation on $\mathcal Y^m\mathcal M_\iota$; \lean{New.Data.IsWeakChainDatum.gaugeLe_restrictedChain_of_isFullMark}]
+\label{ub-divis:prop:Yval}
+Let $\Lambda$ be a full mark, $\ell$ prime to $\Nm Q$, and $v\in\mathcal M_\iota$.
+Then $\mathrm{rc}_{\Psi'}(\mathcal Y^mv)$ has valuation at least $\mathrm{gain}_\ell-2\,\mathrm{loss}(\ell)$.
+\end{proposition}
+
+\begin{proof}
+\emph{(i) Hecke transfer.} Let $\mathfrak l\in\Lambda$ with $\mathrm N\mathfrak l=z^2$. The
+base-changed characters of the lifts are unramified at $\mathfrak l$, and their values at a
+uniformiser are $\ell$-units, because the weights at the places inducing $\mathfrak l$ and
+$\bar{\mathfrak l}$ balance. By Fact~\ref{ub-divis:fact:hecke}, on forms spherical at $\mathfrak l$
+we have $P_{\mathfrak l}(U)\,\Theta=R(U)\,\Theta\,P_{\mathfrak l}(z^{t+1}U)$ with $R\in\cO_\iota[U]$,
+$R(0)=1$. Comparing coefficients, $z^{(t+1)i}\mathrm N\mathfrak l^{\binom i2}\,\Theta
+\mathcal H_{\mathfrak l,i}$ is an integral combination of the $\mathcal H_{\mathfrak l,i'}\Theta$, $i'\le i$. Since
+$z^2=\ell^{2h}$ with $2h\le f$, for $i\le\mathfrak r_\ell$ the scalar divides $\ell^{f\mathfrak r_\ell t}$. Over
+$j+1\le m$ lifts, as $mt\le n_m$, this gives
+$\ell^{\nu_\ell}C_{j+1}\mathcal H_{\mathfrak l,\mathfrak r_\ell}=\sum_{i\le\mathfrak r_\ell}c_i\mathcal H_{\mathfrak
+l,i}C_{j+1}$ with $c_i\in\cO_\iota$, for the chain $C_{j+1}$ of the first $j+1$ lifts
+(\lean{New.Data.IsWeakChainDatum.exists_hecke_transfer}).
+
+\emph{(ii) Into the data.} A Hecke operator after a lift is the lift by the transformed datum. So
+there are operators $\eta_j$ on data, commuting with the levels, with $\Theta_{\eta_j\mathcal F_{\mathbf x,j}}C_j=
+C_{j+1}\mathcal Y$ (\lean{New.Data.IsWeakChainDatum.exists_lift_eq_chain_scaledHeckeOperator}). Thus
+$\mathrm{rc}_{\Psi'}(\mathcal Y^mv)$ is the $\Psi'$-combination of the chains with data $\eta_j\mathcal F_{\mathbf x,j}$,
+applied to $v$. Each $\eta_j\mathcal F_{\mathbf x,j}$ is a combination of translates $\omega(1,g)\mathcal F_{\mathbf x,j}$ by
+neighbours $g$ (in double cosets of $\diag(\varpi1_i,1)$, $i\le\mathfrak r_\ell$, at the primes of
+$\Lambda$), with coefficients of valuation at least $\sum_{\mathfrak l}(A_{\mathfrak l}-\nu_\ell)$.
+
+\emph{(iii) One lift at a neighbour} (\lean{New.Data.IsMarked.ω_ofSplitPlaces_mem_raises}). Up to
+integral factors, $g$ is diagonal with entry $\ell$ on a set $J_{\mathfrak l}$ of at most $\mathfrak
+r_\ell$ indices at $\mathfrak l\in\Lambda$, and $\ell^{-1}$ there at $\bar{\mathfrak l}$. So a box with
+index in $J_{\mathfrak l}$ costs a factor $\ell$ in the gauge at a place inducing $\mathfrak l$, and
+gains one at a place inducing $\bar{\mathfrak l}$. The jet bound with charges of Section~\ref{sec:der}
+(\lean{New.Parameters.norm_schurJet_jetSeries_le_of_charges}) gives divisibility $\delta_j(S_\Lambda)$ less the
+charges. Exponents and charges together cost at most $\sum_{\mathfrak l\in\Lambda}A_{\mathfrak
+l}+\mathfrak r_\ell\lambda_j(S_\Lambda)$, where $\lambda_j(S)=\sum_{\tau\in S}\lambda_j(\tau)$; the
+determinant factors cancel by the balance. With (ii), lift $j$ multiplies gauges by at most
+$\ell^{\abs\Lambda\nu_\ell+\mathfrak r_\ell\lambda_j(S_\Lambda)-\delta_j(S_\Lambda)}$: the $A_{\mathfrak l}$
+cancel against the scaling in $\mathcal Y_{\mathfrak l}$.
+
+\emph{(iv) Count.} By Lemmas~\ref{ub-divis:lem:orbits} and~\ref{ub-divis:lem:only},
+$\delta_j(S_\Lambda)\ge\mathrm{gain}_\ell/m+\abs{\Phi_a\cap S_\Lambda}a/x_1-\mathrm{loss}(\ell)/m$. Also
+$\abs\Lambda\nu_\ell+\mathfrak r_\ell\lambda_j(S_\Lambda)\le\mathrm{loss}(\ell)/m+\abs{\Phi_a\cap
+S_\Lambda}a/x_1$ (\lean{New.Data.IsMarked.card_mul_transferExponent_add_sum_lowColumns_le}). Indeed,
+places of $S_\Lambda$ are not $b$-places, so they carry at most $a/x_1+x^{60}$ low columns. If
+$\ell\le m$, then $\mathfrak r_\ell(a/x_1+x^{60})\le a/(\ell m)$. If $\ell>m$, then $\mathfrak r_\ell=1=o_0(\ell)$
+and $S_\Lambda\subseteq\Phi_a$. So each lift costs at most $(2\mathrm{loss}(\ell)-\mathrm{gain}_\ell)/m$.
+Conclude by Lemma~\ref{ub-divis:lem:chain}.
+\end{proof}
+
+\begin{fact}[Hecke transfer; \lean{New.SiegelWeil.hecke_transfer_of_pairing}, \leanfile{Lib/Weil/Unramified/HeckeTransfer}]
+\label{ub-divis:fact:hecke}
+Let $w$ be a split place of norm $q$, and let $\Theta$ be a theta lift from a hermitian space of
+rank $n$ to one of rank $n+n'$, with characters unramified at $w$ and datum the vacuum at $w$. If $v$
+is spherical at $w$, then so is $\Theta v$, and $P_w(U)\Theta v=\prod_{l<n'}(1-q^l\alpha U)\,\Theta\,
+P_w(q^{n'}\alpha\beta^{-1}U)v$, with $P_w$ the Hecke polynomials and $\alpha$, $\beta$ the Frobenius
+values of the characters. (Compare Howe, 1979; Rallis, Langlands' functoriality and the Weil
+representation, 1982; Kudla, On the local theta-correspondence, 1986.) This is the version for the
+lift; Fact~\ref{ol-values:fact:tower}(b) is the same formula for the descent.
+\end{fact}
+
+\begin{proposition}[Colength]\label{ub-divis:prop:col}
+For $\Lambda$ marked, $\mathfrak l\in\Lambda$ and every $j_0$, $\mathcal Y_{\mathfrak l}$ is onto up to
+colength $(12A_{\mathfrak l}/(m\ell)+j_0/(m^2f))D_X$ modulo $\ell^{j_0}$ on $\mathcal M_\iota$
+(\lean{New.Data.IsMarked.isOntoUpToColength_scaledHeckeOperator}). Hence $\mathcal Y^m$ is onto up to
+colength $\mathrm{loss}(\ell)D_X$ modulo $\ell^{j_\ell}$
+(\lean{New.Data.IsMarked.isOntoUpToColength_prod_scaledHeckeOperator_pow}).
+\end{proposition}
+
+\begin{proof}
+The $a$-places inducing $\mathfrak l$ or $\bar{\mathfrak l}$ form one orbit $\tau_0,\dots,\tau_{N'-1}$
+under the place $-\ell^{o_0}$. The embeddings $\Phi_{\tau_i}$, conjugated where $\tau_i$ induces
+$\bar{\mathfrak l}$, form a Frobenius cycle on the valuation ring of $\mathfrak l$, of alternating
+parity (\lean{New.Data.IsMarked.exists_frobeniusCycle}). Integral source forms are families of
+integral vectors on the classes, $\mathcal H_{\mathfrak l,\mathfrak r_\ell}$ is a sum over edges, and on the
+$a$-th symmetric powers at the orbit an edge acts by letter matrices and powers of $\ell$
+(\leanfile{New/UpperBound/Divisibility/HeckeEdges}). So $\mathcal Y_{\mathfrak l}$ is an edge Hecke operator,
+and \lean{New.FrobeniusCycle.elementary_divisors} (Theorem~\ref{ub-eldiv:thm:main}) applies with
+$\theta=1/(m^2f)$ (\lean{New.Columns.isOntoUpToColength_scaledHeckeOperator_of_frobeniusCycle}). In
+the letters of that theorem: the operator $y$ is $\mathcal Y_{\mathfrak l}$; the lattice $\mathcal L$
+is the module $\mathcal M_\iota$ of integral source forms; the block size $e$ is
+$\mathfrak r_\ell=\lceil\log_\ell m\rceil$; $k$ and $a$ are those of Definition~\ref{setup:def:data};
+the Frobenius cycle has the prime $\ell$, the valuation ring $R$ of $\mathfrak l$ and the letters
+$\Phi_{\tau_i}$; and $\mathcal V$ is the set of classes, so that $\abs{\mathcal V}\abs I=D_X$. The
+size conditions hold as $m\le o$, and $3c_{\mathrm{div}}\le12A_{\mathfrak l}/(m\ell)$. For $\mathcal Y^m$ the exponents add over the $m\abs\Lambda$ factors, and
+$m\sum_{\mathfrak l}(12A_{\mathfrak l}/(m\ell)+j_\ell/(m^2f))\le(14fa+\ell/m)/\ell\le\mathrm{loss}(\ell)$.
+\end{proof}
+
+\begin{proposition}[Exceptional primes; \lean{New.Data.IsChainDatum.gaugeLe_compositeLift_of_isFullMark}]
+\label{ub-divis:prop:exc}
+For exceptional $\ell<x_1$ and a full mark $\Lambda$, let $\mathfrak V=\mathcal Y^m\mathcal M_\iota+\ell^{j_\ell}\mathcal M_\iota$.
+Its colength in $\mathcal M_\iota$ divides $\ell^l$ for some $l\le\mathrm{loss}(\ell)D_X$, and on $\mathfrak V$ the
+composite lift has valuation at least $\mathrm{gain}_\ell-2\,\mathrm{loss}(\ell)$ if
+$\Nm Q$ is prime to $\ell$.
+\end{proposition}
+
+\begin{proof}
+Write $\varphi=\mathcal Y^mu+\ell^{j_\ell}v$. Apply Lemma~\ref{ub-divis:lem:expand}, then
+Proposition~\ref{ub-divis:prop:Yval} to $u$ and the remark after
+Proposition~\ref{ub-divis:prop:nonexc} to $v$. The colength is Proposition~\ref{ub-divis:prop:col}.
+\end{proof}
+
+\subsubsection{The level prime $N$}
+Let $\ell=N$. The conjugates of the primes induced by $\iota$ form a set $\Sigma_N$ with one prime of
+each conjugate pair above $N$. At $\Sigma_N$ let $L_j$ be the lattice of integral vectors with last
+coordinate divisible by $\pi_N$. Let $\mathrm{Up}$ be the operator of Section~\ref{sec:ub-objects} at
+$\Sigma_N$, and let $\mathcal A'$ be the module of the $\varphi$ for which
+$\mathrm{Up}^{m/2}\varphi$ is a source form integral for $L_0$ (\lean{New.Data.upIntegralForms}).
+
+\begin{proposition}[The prime $N$; \lean{New.Data.gaugeLe_compositeLift_at_N}, \lean{New.Data.exists_colengthDvd_upIntegralForms_pow}]
+\label{ub-divis:prop:N}
+For ramified $\varphi\in\mathcal A'$, $B_{\vartheta,\Psi}\varphi$ has $N$-adic valuation at least
+$-2mfb=\mathrm{gain}_N-\mathrm{err}_N$. The colength of $\mathcal A'$ in $\mathcal M_\iota$ divides
+$N^e$ for some $e\le mfbD_X$.
+\end{proposition}
+
+\begin{proof}
+The gluing cannot be expanded at $N$, as $y/N$ is not $N$-integral. Instead, the projection to the
+vacuum above $N$ fixes the data, and the lift laws modulo $N$ (\lean{New.IsSplitLevel.compUpTo_gluedLift_eq_smul},
+Section~\ref{sec:ub-objects}; they need $\varphi$ ramified) turn the glued double lifts into $c$
+times the chain of $m$ direct lifts applied to $\mathrm{Up}^{m/2}\varphi$
+(\lean{New.Data.doubleLiftChain_gluedDoubleLiftDatum_eq_smul_chain}). Here $c$ is a product of
+values of the lift characters at $\diag(1,\dots,1,N)$ and of integers, and $\abs{\iota c}\le N^{mfb}$. The direct
+datum is the indicator of the integral matrices whose last column is the last basis vector modulo
+$N$, in bases of $L_j$, $L_{j+1}$. It commutes with the levels and raises gauges from $L_j$ to
+$L_{j+1}$ by at most $N^{fb}$ (\lean{New.Data.schrodingerOpAtN_directDatum_mem_raises}). This gives
+$N^{mfb}$ at $L_m$, and passing from $L_m$ to the standard lattice cancels the normalising factor of
+the restriction.
+
+Colength: $\mathcal M_\iota$ lies in the module $\mathcal A^\vee$ of forms integral for
+$L_0^\vee$, in which the forms integral for $L_0$ have colength dividing $N^l$, $l$ the total degree
+in the last variable over classes and basis vectors; $\mathrm{Up}$ maps the latter into
+$\mathcal A^\vee$. By induction the preimage under $\mathrm{Up}^i$ has colength dividing
+$N^{l(i+1)}$. By symmetry in the $k$ variables $kl\le faD_X$, and $(m/2+1)a\le mbk$.
+\end{proof}
+
+\subsection{Short forms and size}
+
+Ramified source forms (\lean{New.Data.ramifiedSourceForms}) are those of
+Definition~\ref{ub-objects:def:source}, for the scalings $z_w$, $w\mid\pi_N$
+(\lean{New.Data.IsScalingAt}, \lean{New.Data.scalingGenerator},
+\lean{New.Data.isScalingAt_scalingGenerator}), acting by right translation with $z_w^{N-1}=1$
+(\lean{New.algFormCentralRep}). The scalar matrix of $z_w$ lies in the maximal compact subgroup at
+$w$ (\lean{New.Data.scalarFin_mem_maxCompactAt_of_isScalingAt}), and neither $w$ nor $\bar w$ is
+chosen (\lean{New.Data.not_isChosen_of_N_mem}).
+
+\begin{lemma}[\lean{New.Data.le_finrank_ramifiedSourceForms}, \lean{New.Data.f_div_N_sub_one_le}]\label{ub-divis:lem:ram}
+The ramified forms are the image of $\prod_w(1-z_w)$, and for each $w$ they have the form
+$\psi-z_w\psi$ (\lean{New.Data.exists_eq_sub_scalingGenerator}). They have dimension at least
+$(1-f/(N-1))D_X$, and $f/(N-1)\le b^{-8}$.
+\end{lemma}
+
+\begin{proof}
+If $z^n=1$ in characteristic $0$, then $\ker\sum_{i<n}z^i=\image(1-z)$. A form fixed by $z_w$ has
+level $\langle\operatorname{level}_X(0),z_w\rangle$, of index $\ge N-1$ over $\operatorname{level}_X(0)$; at free levels dimensions are
+proportional to indices, so $\dim\ker(1-z_w)\le D_X/(N-1)$. Kernels of products are at most sums of
+kernels. Finally $f\le b$ and $b^9+1\le N$.
+\end{proof}
+
+A form $\varphi$ is \emph{$B$-short} (\lean{New.IsShort}) if it is integral at every $\ell$ and $\iota$
+and $\norm{\sigma\varphi(g)}^2\le B$ for all $\sigma\in\Aut\C$ and all $g$. Here $\norm\cdot^2$ is
+the Gram norm \lean{New.weylNormSq}.
+
+\begin{fact}[Short bases; \lean{New.Space.exists_short_basis_stdSpace}]\label{ub-divis:fact:short}
+Let $c_E\ne0$ be an integer in the different of $E$ (not the generator $\delta_E$ of
+Definition~\ref{der:def:field}(d)) and $g\in G_{\mathrm f}$. Some $\Xi\in\GL_n(E)$ has
+$g^{-1}\Xi$ integral and entries of absolute value at most $6c_E(fn)^2$ under every complex embedding.
+(Lagarias--Lenstra--Schnorr, Korkin--Zolotarev bases and successive minima of a lattice and its
+reciprocal lattice, 1990.)
+\end{fact}
+
+\begin{proposition}[\lean{New.Data.span_isShort_ramifiedSourceForms_eq_top}]\label{ub-divis:prop:short}
+The ramified source forms are spanned by ramified $e^{fa\log^3b}$-short forms.
+\end{proposition}
+
+\begin{proof}
+The level is free, so a source form is a sum of delta forms at classes $c$. With a short basis
+$\Xi_c$, the vectors $\Xi_c\cdot\mathrm{ev}(y)$, $y$ an array of roots of unity, span the weight space.
+They are integral, with squared norms at most $(6c_E(fn)^2)^{6M'}\le e^{fa\log^3b}/4^f$, where
+$n=k$ is the rank of $X_0$ and $M'$ is $nf$ plus the number of boxes of the weight
+(\lean{New.span_isShort_eq_top}). Each factor $1-z_w$ keeps integrality and multiplies the bound by
+$4$, and $\prod_w(1-z_w)$ maps onto the ramified forms.
+\end{proof}
+
+\begin{theorem}[Size of the composite lift; \lean{New.Data.weylNormSq_compositeLift_le}]\label{ub-divis:thm:size}
+(This is Theorem~\ref{main:thm:size}, restated; the exponent below is $\beta_0+\beta$ with $\beta$
+as there.) Let $\Psi$ be a chain datum for the trivial twist, $\sigma\in\Aut\C$, and $\varphi$ a source form
+with $\norm{\sigma\varphi(g)}^2\le e^{\beta_0}$ for all $g$. Then for all $y\in G_{\mathrm f}(Y_m)$,
+\[\norm{\sigma(B_{1,\Psi}\varphi)(y)}^2\le\exp\Bigl(\beta_0+h_{\mathrm{main}}-m\rem+2\sum_{\ell\in\mathcal N}\mathrm{gain}_\ell\log \ell+fa\log^3b\Bigr).\]
+\end{theorem}
+
+\begin{proof}
+By Lemma~\ref{ub-divis:lem:expand}, $B_{1,\Psi}=\mathrm{rc}_{\Psi'}$ with
+$\sum_{\mathbf x}\abs{\sigma\Psi'(\mathbf x)}\le e^{x^{60}}$. As in Lemma~\ref{ub-divis:lem:chain}, the value at
+$\diag(y,1)$ is a sum, over at most $e^{mx^{30}}$ tuples of classes and over $\mathbf x$, of $\Psi'(\mathbf x)$
+times products of $m$ kernels.
+
+\emph{One kernel} (\lean{New.Data.sqrt_weylNormSq_jetMap_le}). By the jet bound of
+Section~\ref{sec:ub-objects}, lift $j$ multiplies norms by at most
+$\exp(x^{50}+\frac12\sum_\tau\sum_{i<n_j}\sinf(\mathsf r_{\tau,i}))$, with $\mathsf r_{\tau,i}$ the length of
+row $i$ of its diagram at $\tau$. A derivative of order $n$ costs $n!\,(M/\Omega)^n$: the jets are
+taken at the scale $\pi_M$ times the jet scale of Section~\ref{sec:der}, with
+$\abs{\sigma\pi_M}^2=M$, and $\Omega$ is the period (Proposition~\ref{der:prop:scale}).
+
+\emph{Rows.} Row $0$ has length $a$ at $a$-places and $0$ elsewhere, and rows $1,\dots,k-1$ have
+length $\kappa(\tau)$. Each diagram exceeds this by at most $b+a/x_1+n_jr^{16}$ boxes, each costing
+at most $25\log b$. Over the $m$ lifts the row sizes add up to at most $\mathrm{cs}+
+\frac12fa\log^3b$, where $\mathrm{cs}=m(\abs{\Phi_a}\sinf(a)+k\sum_\tau\sinf(\kappa(\tau)))$
+(\lean{New.Data.sum_rowSizeSum_le}).
+
+\emph{Restriction} (\lean{New.Data.weylNormSq_restrictToY_le}). Restriction to $Y_m$ multiplies
+squared norms by at most $e^{x^{70}}N^{-\sum_\tau \mathfrak n_\tau}$, and $\sum_\tau
+\mathfrak n_\tau=\abs{\Phi_a}a-fmr^8$: the level saves $a\log N$ per $a$-place. So the exponent is at most
+$\beta_0+\mathrm{cs}-\abs{\Phi_a}a\log N+\frac12fa\log^3b+O(x^{70}+fmr^8\log N)$; apply
+Lemma~\ref{ub-divis:lem:excess}(c).
+\end{proof}
+
+\begin{lemma}[The level compensates the excess]\label{ub-divis:lem:excess}
+Let $\bar\kappa$ be as in Definition~\ref{setup:def:data} and $G=\log(M\rdE/2\pi)$. Then:
+\begin{enumerate}[label=(\alph*)]
+\item $\sinf(a)-\smain\le a(\log\bar\kappa+G)+1+\frac12\log a$
+  (\lean{New.Data.jetSize_sub_mainPrimeSum_le});
+\item $m(\sinf(a)-\smain)-a\log N\le32\,a\log b$
+  (\lean{New.Data.mul_jetSize_sub_mainPrimeSum_sub_le});
+\item $\mathrm{cs}-\abs{\Phi_a}a\log N\le h_{\mathrm{main}}-m\rem+2\sum_{\ell\in\mathcal N}\mathrm{gain}_\ell\log \ell+32fa\log b$ (\lean{New.Data.chainSize_sub_le}).
+\end{enumerate}
+\end{lemma}
+
+\begin{proof}
+(a) By Stirling, $\log a!\le a\log a-a+1+\frac12\log a$. Also $\smain=a(\log(a/\bar\kappa)+c_1)$,
+and $\log(M/\Omega)=1+c_1+G$ by the definition of $\Omega$, so $c_1$ cancels. (b) The level was
+chosen with $\log N\ge m\log\bar\kappa+(m-1)G-\frac{15}2\log b$
+(\lean{New.Data.log_N_mem_Icc_logLevelTarget}). With (a) the terms $ma(\log\bar\kappa+G)$ cancel,
+and $m(1+\frac12\log a)+a(G+\frac{15}2\log b)\le32a\log b$ remains, as $\abs G\le23\log b$.
+(c) By Lemma~\ref{ub-divis:lem:primesums}(c), $\mathrm{cs}$ minus the right side without the last
+term is $m\abs{\Phi_a}(\sinf(a)-\smain)$. Use (b) and $\abs{\Phi_a}\le f$. So $\log N$, which
+enters through the restriction, absorbs $M\rdE/2\pi$, which enters through $\log(M/\Omega)$.
+\end{proof}
+
+The passage to target forms (\lean{New.Data.goodProjTranslate_mem_integralForms},
+\lean{New.Data.normSqAt_goodProjTranslate_le}) is as in the proof of Theorem~\ref{main:thm:A}:
+for $z$ of principal level on $Y_0$ and $s\in\Gbar$, $\Theta_\vartheta(\abs{\Gbar}e_0sz)(g)=\sum_{u\in\Gbar}\abs{\Gbar}e_0(u)(\Theta_\vartheta z)(gh_{us})$
+with integral $h_{us}$, the $\abs{\Gbar}e_0(u)$ are algebraic integers with $\abs{\sigma e_0(u)}\le1$,
+and $\abs{\Gbar}^4e^{x^{30}}\le e^{x^{99}}$.
+
+\emph{Numerical inequalities} (\leanfile{New/UpperBound/Size/Estimates}) are cited where used.
+Also used elsewhere are \lean{New.Data.jetSize_le_add}; $\abs{\sigma\pi_M}^2=M$ for every
+$\sigma\in\Aut\C$ (\lean{New.Data.norm_map_star_piMBar_sq}) and $\abs{\iota\pi_M}\le1$ for every
+$\iota\colon\C\to\C_\ell$ (\lean{New.Data.norm_star_piMBar_le_one}), as $\pi_M$ is an integer of $K$
+of norm $M$; and the class counts \lean{New.Data.card_stdClasses_le_exp}
+($\le e^{x^{30}}$ classes at levels containing the principal level $\pi_M\pi_N$, rank $\le n_m$) and
+\lean{New.Data.card_stdClasses_le_exp_mul_log}, from \lean{New.Space.card_stdClasses_le}.

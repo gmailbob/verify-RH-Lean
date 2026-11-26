@@ -1,0 +1,448 @@
+\section{Steps cited without explanation}\label{sec:app-open}
+
+The lists below name, section by section, the steps for which the text states the result and
+cites the Lean text without saying why it holds, or says why only as far as the documentation of
+the code does. Each item names the step and the place where it is used, cites the declarations or
+files to read, and says what the text gives. Background results admitted as Facts are listed in
+Appendix~\ref{sec:app-facts} and appear here only where the text describes in part how the Lean
+text proves them; sections with no such steps have no list.
+
+\begingroup\small
+
+\subsection*{Section~\ref{sec:zeros}: From a one-sided bound to the zeros}
+\begin{itemize}[leftmargin=2em,itemsep=1pt]
+\item The prime number theorem for the remainder, Theorem~\ref{zeros:thm:pnt}: the zero-free
+  region with the bound for $G_q(s)/s$ (\lean{New.eventually_norm_logDerivMean_div_le},
+  \leanfile{Lib/Analytic/PrimeNumberTheorem/ZeroFreeRegion},
+  \leanfile{Lib/Analytic/PrimeNumberTheorem/LFunctionGrowth}) and the Tauberian step
+  (\lean{New.eventually_abs_le_inv_pow_of_transform}). The text describes the two steps in a
+  paragraph and refers to the literature; the proof is not given.
+\item Landau's lemma, Fact~\ref{zeros:fact:landau}. The text derives it from Landau's theorem on
+  Laplace transforms of non-negative functions, with a reference; how the Lean text proves that
+  theorem (\lean{New.mem_integrableExpSet_of_summable_taylor}, \leanfile{Lib/Analytic/Landau}) is
+  not described.
+\item The choice of the prime, Fact~\ref{zeros:fact:prime}, through the zero-density estimate for
+  quadratic twists (\lean{New.zero_density_quadTwist}, \leanfile{Lib/Analytic/QuadraticTwist}). The
+  text gives the role of the estimate, the sources, and the weak form proved in Lean in one
+  sentence.
+\end{itemize}
+
+\subsection*{Section~\ref{sec:setup}: The data, prime sums, heights and twisted lattices}
+\begin{itemize}[leftmargin=2em,itemsep=1pt]
+\item The sizes of the data in Table~\ref{setup:tab:sizes}, and every inequality between sizes that
+  the paper quotes by \lean{New.Data.le_of_hasLogBound} (for instance in the proofs of
+  Lemma~\ref{data:lem:N} and of Theorems~\ref{main:thm:A} and~\ref{main:thm:star}). The text gives
+  the method, a comparison of upper and lower bounds for logarithms, not the bounds themselves
+  (\leanfile{New/Reduction/Data/Magnitudes}, \leanfile{New/Reduction/Data/Sizes}; for
+  Section~\ref{sec:ub-divis} also \leanfile{New/UpperBound/Size/Estimates}).
+\end{itemize}
+The construction of the data behind Theorem~\ref{setup:thm:existence}, which
+Section~\ref{sec:setup} only sketches, is carried out in Section~\ref{sec:data}; apart from the
+comparisons of sizes in Lemma~\ref{data:lem:N}, that section leaves no step to list.
+
+\subsection*{Section~\ref{sec:main}: Three theorems, the main inequality and the proof of the theorem}
+\begin{itemize}[leftmargin=2em,itemsep=1pt]
+\item The inequality \eqref{main:eq:cB} for $\log c_B$, used in the proof of
+  Theorem~\ref{main:thm:A}(a) (\lean{New.Data.log_invGainFactor_le}). The text gives the statement
+  and says only that the term $b$ bounds the loss from rounding the exponents.
+\end{itemize}
+
+\subsection*{Section~\ref{sec:ub-objects}: Theta kernels, source forms, target forms and chains of lifts}
+\begin{itemize}[leftmargin=2em,itemsep=1pt]
+\item The lift laws modulo $N$ (end of \S\ref{ub-objects:sec:composite}): $p$ glued double lifts of
+  a ramified $\phi$ are a scalar times $2p$ direct lifts of $\mathrm{Up}^p\phi$.
+  \lean{New.IsSplitLevel.compUpTo_gluedLift_eq_smul}. The text gives the statement only, not the laws
+  of the mirror and direct data behind it.
+\item The bound $\exp(x^{70})$ for the branching map (\S\ref{ub-objects:sec:composite}), used in the
+  proof of Theorem~\ref{ub-divis:thm:size} through \lean{New.Data.weylNormSq_restrictToY_le}.
+  \lean{New.Data.exists_sum_columnsY_le_and_pow_le_exp}. The text gives the statement only.
+\item The gauge bound for standard data at $\ell$ not split in $K$, and the normalising constant of the
+  definite theta kernels (after Proposition~\ref{ub-objects:prop:padic}).
+  \lean{New.Parameters.mem_raises_predictedDivisibility}, \lean{New.Rows.exists_ne_zero_isModKernelScale}.
+  The text gives the statements only; the count behind the first is Theorem~\ref{der:thm:schur}.
+\item The descent pairs (\S\ref{ub-objects:sec:grids}): the normalized descent is a multiple of the
+  transposed lift, and the parameters of the $j$-th pair correspond to $2\lambda(\tau)$.
+  \lean{New.DescentPair.normalizedDescent_eq_smul_star_lift_swap}, \lean{New.Data.fitsParams_descentPair}.
+  The text gives the statements only.
+\item The description of the nodes of the grids $Y$ and $\tilde Y$ in
+  Lemma~\ref{ub-objects:lem:grids}, their parameters and the rule for the signs.
+  \lean{New.Data.gridSigns_eq_mul_sign}, \leanfile{New/UpperBound/Objects/Parameters}. The text
+  proves the gap and the block rule, not this description.
+\end{itemize}
+
+\subsection*{Section~\ref{sec:der}: Derivatives of theta functions and the primes they count}
+\begin{itemize}[leftmargin=2em,itemsep=1pt]
+\item Step (3) of the sketch of proof of Theorem~\ref{der:thm:sharp}: the passage from
+  $\mathrm{val}_6\le-\sum_\tau j_\tau$ to $S_\ell+2\sum_\tau v(\Pi_\tau)$ (choice of the $j_\tau$, Legendre's
+  formula). \lean{New.Data.padicValNat_factorial_sub_min_le},
+  \lean{New.Data.gammaPrime_mul_degree_sub_le_localPrimeSumTotal_add}. The text gives the result only.
+\item In the same step: pairs of $b$-places sparse along the powers of $-\ell$ form a coupling family,
+  and for $\ell>k$ the rest of the degree comes at valuation $\le0$.
+  \lean{New.Data.isCouplingFamily_of_isNearPair}, \lean{New.Data.leastValLE_six_zero_of_inert}. The text
+  gives the statements only.
+\item Step (4) of the same sketch: the twelve copies are the jet series of a vector with integral
+  values, and Fourier inversion passes to the indicator datum $\mathcal F_{\fm,\mathbf y_0}$.
+  \lean{New.Data.exists_integral_isThetaFunction_twelveTaylor_eq},
+  \lean{New.Data.exists_norm_le_norm_indicatorDatum}. The text gives a one-sentence summary.
+\item The construction of the tight frames, of length $b'^2$ with $\ell\nmid b'$
+  (Proposition~\ref{der:prop:product}, step (1)) and of length $M$ with $c_i\ge6fb$ (sketch of proof of
+  Theorem~\ref{der:thm:sharp}). \lean{New.Data.exists_isTightFrame},
+  \leanfile{New/Derivatives/Vacuum/ShortVectors}. The text uses their existence only.
+\end{itemize}
+
+\subsection*{Section~\ref{sec:ub-seesaw}: The seesaw identity}
+\begin{itemize}[leftmargin=2em,itemsep=1pt]
+\item The absorption of the unipotent parts of the two Bessel groups into the zero term (proof of
+  Lemma~\ref{ub-seesaw:lem:double}).
+  \lean{New.Seesaw.DoubleLiftData.exists_integral_constTermAtStringMap_mul_eq}. The text gives the
+  mechanism as the documentation of the code describes it.
+\item The finite computations in the proof of Lemma~\ref{ub-seesaw:lem:seesawDatum}: the evaluation of
+  translates of the vacuum, the zero term as a sum over a neighbour lattice above $N$, and the
+  denominator $\mathcal B^4$ of each $\mathrm{ev}_i$. \leanfile{New/UpperBound/Seesaw/AdmissibleEvaluation},
+  \leanfile{New/UpperBound/Seesaw/NeighbourLattice}. The text gives the statements only.
+\item The top-stage formula $\int_{[G(Y_m)]}F\bar v=C_l\langle v,\operatorname{res}_{Y_m}\psi\rangle$, used in
+  the proof of Proposition~\ref{ub-seesaw:prop:chain}.
+  \lean{New.Data.exists_integral_eq_mul_inner_restrictToFormY}. The text calls it a direct computation
+  with the highest vector and the branching map.
+\item In the proof of Lemma~\ref{ub-seesaw:lem:cut}: up to $R_{\mathrm f}(Y_j)$ the points
+  satisfying~\eqref{ub-seesaw:eq:bounds} lie in finitely many cosets $cJ^\circ$, $c$ supported on
+  $Q\cup\bar Q$. \lean{New.Grading.exists_finite_representatives}. The text gives the statement only.
+\end{itemize}
+
+\subsection*{Section~\ref{sec:ub-divis}: Divisibility and size of the composite lift}
+\begin{itemize}[leftmargin=2em,itemsep=1pt]
+\item The error terms in the proof of Lemma~\ref{ub-divis:lem:only}: $x^{60}$ per pair $(\tau,e)$, and
+  the surplus $a/x_1$ for $\tau\in S$, $e=1$. \lean{New.Data.posPart_sub_weight_le_posPart_longRow},
+  \lean{New.Data.localPrimeSum_add_le_mul_tsum_partnerTerm_add}. The text gives the comparison term by
+  term and states the errors.
+\item In Lemma~\ref{ub-divis:lem:orbits}: $m$ divides the order of $-\ell$, the residue fields of the
+  primes above $\ell$, and a full mark exists. \lean{New.Data.IsExceptional.m_dvd_orderOf},
+  \lean{New.Data.exists_isFullMark}. The text sketches the first in one sentence and states the others.
+\item The identification of $\mathcal Y_{\mathfrak l}$ with an edge Hecke operator (proof of
+  Proposition~\ref{ub-divis:prop:col}): edges, letter matrices, integral source forms as families of
+  vectors. \leanfile{New/UpperBound/Divisibility/HeckeEdges}. The text gives a one-sentence summary.
+\item The rewriting of the glued double lifts at $\Sigma_N$ as $c$ times a chain of direct lifts of
+  $\mathrm{Up}^{m/2}\varphi$, with $\abs{\iota c}\le N^{mfb}$ (proof of Proposition~\ref{ub-divis:prop:N}).
+  \lean{New.Data.doubleLiftChain_gluedDoubleLiftDatum_eq_smul_chain}, \lean{New.Data.norm_gluedFactor_le}.
+  The text gives the statements only.
+\item The colength in the same proof: the forms integral for $L_0$ have colength dividing $N^l$ in
+  $\mathcal A^\vee$. \lean{New.Data.colengthDvd_integralFormsAt_diagPointN}. The text gives the
+  statement only, not the comparison of the lattices class by class.
+\item The count of at most $e^{x^{30}}$ classes at levels containing the principal level
+  $\pi_M\pi_N$, used in the proof of Theorem~\ref{ub-divis:thm:size}.
+  \lean{New.Data.card_stdClasses_le_exp}, \lean{New.Space.card_stdClasses_le}. The text gives the
+  statement only.
+\end{itemize}
+
+\subsection*{Section~\ref{sec:ub-eldiv}: Elementary divisors of a Hecke operator}
+\begin{itemize}[leftmargin=2em,itemsep=1pt]
+\item The comparison of the weight of a monomial in one copy with the defect of its row, in the idea
+  of proof of Theorem~\ref{ub-eldiv:thm:average}. \lean{New.FrobeniusCycle.abs_defect_sub_copyWeight_le}.
+  The text attributes it to telescoping filtration levels; the choice of the weights, the cofactors
+  at odd letters and the number $\nu/2$ of copies are not explained.
+\item The weights of the auxiliary variable $\varsigma$ and the bookkeeping of the filtration in the
+  proof of Theorem~\ref{ub-eldiv:thm:root}.
+  \lean{New.FrobeniusCycle.RootAt.HasBoundedIncrements.aeval_mem_and_sub_mem_iteratedGaussFiltration}.
+  The text writes ``filtering with a suitable weight''.
+\item In the idea of the proof of Proposition~\ref{ub-eldiv:prop:count}: the integral shift into the
+  cone, the passage from lattice points to volume as $j\to\infty$, and the comparison of flags and
+  slab. \lean{New.FrobeniusCycle.exists_mem_defectCone_sum_le},
+  \lean{New.FrobeniusCycle.exists_finrank_defectConditions_le_volume}. The text gives the statements
+  only.
+\item The volume of the cone in a slab, the part $\prod_{l<k}(q-1)/(q^{l+1}-1)$ (same proof).
+  \lean{New.prod_mul_volume_real_inter_degreeSlab}. The text names the mechanism and the literature;
+  the evaluation of the signed sum is not reproduced.
+\item The construction of the points $z(\mathfrak y)$ and of the unipotent $g_{\mathfrak y}$ in the
+  proof of Proposition~\ref{ub-eldiv:prop:deep}. \lean{New.FrobeniusCycle.entryCoeff},
+  \lean{New.FrobeniusCycle.mem_lowPowerForms}. The text gives a summary.
+\item That the $\varphi(g)^{\otimes\delta}$, $\delta+k\le q$, span the Schur algebra of a Levi subgroup
+  over a local ring (proof of Proposition~\ref{ub-eldiv:prop:schur}).
+  \lean{New.Average.eq_top_of_schurMap_eq_leviMonomialValues}. The text gives the statement, with the
+  literature for the classical case.
+\end{itemize}
+
+\subsection*{Section~\ref{sec:sp-moment}: Spanning: the second moment, multiplicities and Bessel functions}
+\begin{itemize}[leftmargin=2em,itemsep=1pt]
+\item The bound for the pairing of $W^\flat$ with its translate over the open cell (paragraph
+  \emph{The open cell}, \S\ref{sp-moment:ss:bessel}), used in Section~\ref{sec:sp-remain}.
+  \lean{New.BesselSystem.enorm_integral_pairKernel_cut_le},
+  \leanfile{New/Spanning/Bessel/OpenCellBound}. The text gives the statement and names its three
+  ingredients.
+\item Schur's bound for the Bessel system and its derivatives, in the proof of
+  Theorem~\ref{sp-moment:thm:system}. \lean{New.IsBesselFunction.hasSchurBound_of_convolve_eq}. The
+  text gives the statement and the mechanism in one sentence.
+\item The proof of Proposition~\ref{sp-moment:prop:cut}: the covering argument for the decay
+  integral and the majorant of the normalised Bessel average.
+  \lean{New.DiscreteSeries.lintegral_decay_le_besselBallVolume},
+  \lean{New.exists_isDecayMajorant_besselAverage}. The text gives a sketch.
+\item The periods of discrete series (\S\ref{sp-moment:ss:appendix}): the proofs of
+  Theorems~\ref{sp-moment:thm:laplace}, \ref{sp-moment:thm:stationary} and
+  \ref{sp-moment:thm:restriction}. \lean{New.DiscreteSeries.IsLaplaceDatum.laplace_method},
+  \lean{New.DiscreteSeries.IsSteep.exists_isStationary}. The text gives the statements and, for the
+  first two, an outline as the documentation of the code describes it.
+\end{itemize}
+
+\subsection*{Section~\ref{sec:sp-unfold}: Unfolding the Poincar\'e series: the second moments}
+\begin{itemize}[leftmargin=2em,itemsep=1pt]
+\item The convergence of the amplitude sums and of the Poincar\'e series (after
+  Definition~\ref{sp-unfold:def:amp}; Theorem~\ref{sp-unfold:thm:series}(a)), and the integral
+  formula for $\mathrm{co}\varphi(c)\cdot W(x)$ in the proof of (b).
+  \lean{New.Filling.tsum_amplitudeMajorant_lt_top},
+  \lean{New.Filling.Fits.exists_dotProduct_besselFn_eq_integral}. The text gives one sentence for the
+  first and the statement of the second.
+\item The formula for the covolume $\nu$ and the identity $\int_{\mathsf
+  U_\infty}\beta_c(uy)\,du=\nu$ (Definition~\ref{sp-unfold:def:amp}).
+  \lean{New.Filling.lintegral_classCutoff_eq_unipotentCovolume}. The text describes $\nu$ only as an
+  explicit product of powers and states the identity.
+\item The verification of the standing hypotheses for the data $D$ (\S\ref{sp-unfold:ss:data}), among them the bound for
+  the Siegel constant that \S\ref{sp-main:ss:proof} uses, and the size of $\mathcal
+  D_{\mathrm{main}}/\mathcal D_{\mathrm{id}}$. \lean{New.Data.scaledSiegelConst_le},
+  \lean{New.Data.abs_log_mainSecondMoment_div_identitySecondMoment_sub_le}. The text gives the
+  statements and a two-sentence summary.
+\item Proposition~\ref{sp-unfold:prop:cells}: in (a) the norm identity for $\Phi_v(\mathsf
+  g(\gamma))$ and the criterion for $\mathsf g(\gamma)=0$, in (c) the decomposition $A=A_{\le
+  j}\oplus(A\cap\gamma A)$. \lean{New.Filling.map_termDisc_eq_norm},
+  \lean{New.Filling.termDisc_eq_zero_iff},
+  \lean{New.Filling.CharsAgree.hasCellRank_of_add_finrank_eq}. The text gives the statements and
+  names the mechanisms.
+\item The values $\operatorname{sr}(u)=\tau\alpha$, $\operatorname{sr}(u')=\tau\alpha'$ of the
+  Eichler transformations in the proof of Lemma~\ref{sp-unfold:lem:climb}.
+  \lean{New.exists_mem_besselU_eq_eichlerMap}. The text gives the statement only.
+\item The blocks of the Bessel subgroup (Proposition~\ref{sp-unfold:prop:sort}(b)) and the
+  representation $r_\psi$ (Lemma~\ref{sp-unfold:lem:rpsi}(b), (c)).
+  \lean{New.Filling.amplitudeSum_besselS_one_eq_ite},
+  \lean{New.Filling.HasAmplitudeBlocks.adjoint_comp_rep_mul_left}. The text gives a sketch.
+\item The bound $\sum_s\abs{\psi^\natural(s)}^2\le2$ in the proof of Theorem~\ref{sp-unfold:thm:good},
+  through a local mass integral of Section~\ref{sec:sp-frames}.
+  \lean{New.Filling.sum_norm_reducedCharMean_sq_le}. The text gives the statement and names the
+  source of the bound.
+\end{itemize}
+
+\subsection*{Section~\ref{sec:sp-main}: The main term of the second moment}
+\begin{itemize}[leftmargin=2em,itemsep=1pt]
+\item In the proof of Theorem~\ref{sp-main:thm:sieve}: the count of frequencies behind the sum of the
+  decay over nonzero frequencies, and the bound for $(\sum\Lambda_i)^2$.
+  \lean{New.sum_height_inv_cube_le}, \lean{New.Filling.sq_sum_globalWeight_le}. The text gives the
+  statements and one sentence for the second.
+\item That $E_{\mathcal P}$ is a finite place in the sense of Section~\ref{sec:sp-frames} with a
+  large lattice datum of modulus $M$ (\S\ref{sp-main:ss:local}). \lean{New.Filling.exists_isFillingData},
+  \lean{New.Filling.exists_integralPlace}. The text gives the statement only.
+\item The constants: $c_{\mathrm n}$ and the identity for $\rho_\alpha\mathsf h_\varrho(\alpha,1)$, the
+  bound for $\operatorname{mr}(Z)$ in step (iv) of the proof of Proposition~\ref{sp-main:prop:siegel},
+  the value of $\prod_iP_i$ and the final comparison with $1+b^{-4}$ (\S\ref{sp-main:ss:proof}).
+  \lean{New.Filling.IsFillingData.exists_scaledSiegelConst_eq_and_massRatio_le},
+  \lean{New.Filling.sieve_constant_le}. The text gives the statements only.
+\end{itemize}
+
+\subsection*{Section~\ref{sec:sp-frames}: Two frames at one place: the local estimates}
+\begin{itemize}[leftmargin=2em,itemsep=1pt]
+\item Proposition~\ref{sp-frames:prop:gains}(i): solving the equation of $Q_j$ in two blocks of
+  orthonormal coordinates, and the Fourier kernel between two quadrics.
+  \lean{New.Floors.Gauge.fourierSqNormLe_floorQuadricMeasure}. The text gives one sentence.
+\item Proposition~\ref{sp-frames:prop:gains}(iii), (iv): the bound $\int\delta_a^{\mathsf
+  s}\le\Lambda^{10^4n}$ on each floor, and the floor-by-floor induction with its constants.
+  \lean{New.Floors.Gauge.floorMassLe_depth_pow},
+  \lean{New.Floors.Gauge.lintegral_weightedSquareIntegral_le}. The text gives the mechanism as the
+  documentation of the code describes it, without the constants.
+\item The shell sum (paragraph \emph{Shells}, \S\ref{sp-frames:ss:gains}): the covering of a shell by
+  position balls, and why bounded depths bound $(y-1)/M$ (comparison of gauges at two points).
+  \lean{New.Floors.Gauge.hasMatrixSize_sub_one_of_stableProducts},
+  \lean{New.Floors.Size.GaugesDifferLe.of_succ}. The text gives the statements and an outline.
+\item The comparison $c_{\mathrm H}\vol\U(k)\le\vol\U(r)$ at $\C$ (\S\ref{sp-frames:ss:real}).
+  \lean{New.Floors.RealPlaceSizes.haarRatio_ne_zero_and_groupMeasure_eq_smul}. The text gives the
+  statement only.
+\item The proof of Theorem~\ref{sp-frames:thm:findecay}: the gauge adapted to two heads, the common
+  divisor $\eta$, and the exponent arithmetic. \leanfile{New/Spanning/Frames/FiniteDepth},
+  \leanfile{New/Spanning/Frames/FiniteShells}. The text gives a sketch.
+\item The top floor (Proposition~\ref{sp-frames:prop:top}; step (iii) of the proof of
+  Proposition~\ref{sp-main:prop:siegel}): local constancy and compact support of the scaled orbital
+  integrals, so that $\Phi$ is a step function. \leanfile{New/Spanning/Frames/TopCorrelation}. The
+  text gives the statement only.
+\item The passage to several places in the proof of Theorem~\ref{sp-frames:thm:fixed}, as products
+  over the fibres $\{w,\bar w\}$. \lean{New.Filling.IsFillingData.massIntegral_pi_mul_le}. The text
+  gives one sentence.
+\end{itemize}
+
+\subsection*{Section~\ref{sec:sp-remain}: The remaining terms of the second moment}
+\begin{itemize}[leftmargin=2em,itemsep=1pt]
+\item Schur's test in the proof of Proposition~\ref{sp-remain:prop:size}: the majorant of the weight
+  $\prod_v\nu_v(y)^{-(k+i)}$ behind the bound for $\int\varphi$, and the packing of the isotropic
+  parts at a cost $\tau$. \lean{New.RealPlace.exists_majorant_volumeRatio_inv_pow},
+  \lean{New.Filling.prod_kernelBound_le}. The text gives the statements only.
+\item The proof of Proposition~\ref{sp-remain:prop:gain}: the discriminant of $L^+_\gamma$, and the
+  lower bound $\operatorname{mn}(s)$ for the minor of the two $z$-forms in the cut.
+  \lean{New.Filling.exists_hasLevelLifts_linkDiscSq_le},
+  \lean{New.Filling.HasIntegralLifts.le_genIndex_det_zRowBlockDiagonal}. The text gives one sentence
+  for each.
+\item The bound $2^k$ for the zeta function of sublattices in the proof of
+  Proposition~\ref{sp-remain:prop:lattices}. \lean{New.Filling.tsum_index_saturatedLattice_le}. The
+  text gives the statement only.
+\item The proof of Proposition~\ref{sp-remain:prop:frames}: the power of $b$ that each of the three
+  rounds yields, and the exponent $2000n^6(l+1)f$.
+  \leanfile{New/Spanning/RemainingTerms/FramesOverLattice}. The text gives the three rounds as the
+  documentation of the code describes them.
+\end{itemize}
+
+\subsection*{Section~\ref{sec:det-chain}: The lower bound: Theorem C and the determinant of a chain of lifts}
+\begin{itemize}[leftmargin=2em,itemsep=1pt]
+\item The conversion of the finite square law of the two composites into the commutation
+  relation~(i) of a triangle, by linear algebra over the residue ring (proof of
+  Theorem~\ref{det-chain:thm:triangle}). \leanfile{New/Determinant/Chain/SquareLaw},
+  \lean{New.Data.exists_triangleLift_triangleTransposedLift_comm}. The text gives a one-sentence
+  summary.
+\item The adjoint law in the squares: the second commutation relation, for the transposed lifts
+  along the reversed pairs, with constants of modulus~$1$ (proof of
+  Theorem~\ref{det-chain:thm:triangle}). \lean{New.Data.exists_triangleLift_triangleReversedLift_comm},
+  \lean{New.Data.exists_triangleTransposedLift_adjoint_comm}. The text gives a one-sentence summary.
+\item The index $[K_0:J_\vartheta(Y_m)]=C'(\Nm Q)^{u}\delta^mw_m/(w_0w_1^m)$, by a count of block
+  triangular groups (proof of Theorem~\ref{det-chain:thm:norm}).
+  \lean{New.Data.exists_stdLevelIndex_lastLevel_eq}. The text gives the statement only.
+\item The spanning of the principal forms on $Y_0$ by forms with short lifts (proof of
+  Theorem~\ref{det-chain:thm:aux}). \lean{New.Data.exists_span_short_lifts_eq_top}. The text gives
+  the route (first path, $m^2$ turns, last path, delta forms), not the estimates by which deep-level
+  forms on $\tilde Y^0_0$ detect the principal forms on $Y_0$
+  (\lean{New.Data.exists_eq_zero_of_orthogonal_gridLevelForms}), nor the diagonal turns
+  (\lean{New.Data.exists_transfersPeriods_first_last}).
+\item The integrality of $n_\Xi\Xi$ away from $\Nm Q$, with $\log n_\Xi\le x^{99}b^2$, and the bound
+  for the conjugates of the period at $\vartheta=1$, on the last path (proof of
+  Theorem~\ref{det-chain:thm:aux}). \lean{New.Data.exists_mul_lastPathPeriod_mem_embValRing},
+  \lean{New.Data.norm_lastPathPeriod_le}. The text gives the statements only.
+\end{itemize}
+
+\subsection*{Section~\ref{sec:det-exchange}: The exchange identity}
+\begin{itemize}[leftmargin=2em,itemsep=1pt]
+\item The reduction in step (ii) of the proof of Proposition~\ref{det-exchange:prop:top}, from the
+  coefficients at $\Xi$ unimodular at $S$ to the points where $L_0^*\Xi L_0$ is unimodular at all
+  finite places, through the partial means along the extra plane of $\widetilde W$ and
+  Fact~\ref{det-exchange:fact:lib}(b).
+  \lean{New.Exchange.IsEquivariantLift.exists_linear_partialMean},
+  \lean{New.Exchange.IsEquivariantLift.shearInvariant_stdColDatum}. The text states the reduction
+  and names its inputs; it does not show how the partial means meet the hypotheses of the criterion.
+\item The constant $C_\nu$ of step (iii) of the proof of Proposition~\ref{det-exchange:prop:top},
+  with $\abs{C_\nu}=C_2\abs{I_0(\nu)}$, and the period identity for the vectors of step (iv).
+  \lean{New.Exchange.exists_integral_thetaTerm_eq_of_periods},
+  \lean{New.Exchange.IsWittBump.isPeriodIdentity}. The text gives the shape of the unfolding and
+  the definition of the vectors; the constants of the unfolding are not given.
+\item The two analytic inputs of the non-vanishing in the proof of
+  Proposition~\ref{det-exchange:prop:equalrank}: the vanishing of the large side in case (b) for
+  $V'=J^-$, and the vector $v'$ whose cone integral has prescribed theta integrals up to a positive
+  analytic factor $B(y)$. \lean{New.Exchange.centreCoeff_eq_zero_of_not_representedBy},
+  \lean{New.Exchange.exists_thetaLarge_cone_eq_mul}. The text gives the mechanism of each in one
+  sentence.
+\item The archimedean step of the proof of Theorem~\ref{det-exchange:thm:explicit} (circle mean,
+  average over $\U(I)(\R)$ and polarisation). \lean{New.Rows.exists_mul_apply_eq_apply_matchedPoly}.
+  The text gives a one-sentence summary.
+\end{itemize}
+
+\subsection*{Section~\ref{sec:ol-values}: One lift: its determinant, false lifts and Hecke L-values}
+\begin{itemize}[leftmargin=2em,itemsep=1pt]
+\item At the bottom of the tower in the proof of Theorem~\ref{ol-values:thm:periods}: the
+  approximation of general data by indicators of small cosets, and the form of the mean of their
+  translates under the level group. \lean{New.IsSchwartzBruhat.mem_of_eventually_coset},
+  \lean{New.DescentPair.eq_smul_translatedBlockFn}. The text gives the mechanism as the
+  documentation of the code describes it.
+\item In the step of the tower (proof of Theorem~\ref{ol-values:thm:periods}): the boundedness of
+  the theta kernel of $(W',I_n)$ minus its zero term after a rational translation, a reduction-theory
+  argument, and the inequalities on the size of the Hecke root.
+  \lean{New.SiegelWeil.exists_norm_theta_sub_zeroTerm_le},
+  \lean{New.SiegelWeil.lift_eq_zero_of_heckePolyOp_eq_zero}. The text gives the statements only.
+\item The seesaw at one point, which factors the pairing of the test form with the theta kernel of
+  $p$ along the blocks of sizes $12,4,4,2z-20$ (proof of Proposition~\ref{ol-values:prop:test}).
+  \lean{New.Data.inner_pointForm_kernelForm}. The text gives the statement only.
+\item The integrality of the integral algebraic part: $n_L$ clears the denominators of the kernel
+  values and of the stabilisers (proof of Proposition~\ref{ol-values:prop:untwisted}).
+  \lean{New.Data.CriticalPair.norm_integralAlgebraicPart_one_le_one},
+  \lean{New.Data.CriticalPair.weylGauge_denomBound_smul_pointKernel_le_one}. The text gives the
+  statement only.
+\item Results (2) and (3) at the end of the section: the bound for the product of the projections
+  of two test forms to the line of $\varphi^\circ$, through the central action of $\U(1)$, and the
+  factor gained by the period of the determinant theta kernel when a prime is added to the modulus.
+  \lean{New.Selmer.DenominatorLe.norm_inner_starProjection_le}, \lean{New.Rows.detPeriod_insert}.
+  The text gives the statements only.
+\end{itemize}
+
+\subsection*{Section~\ref{sec:ol-compare}: One lift: the comparison operator}
+\begin{itemize}[leftmargin=2em,itemsep=1pt]
+\item The construction of the glued lattice $\gamma_\Lambda\cO^n$ and the proof that it is glued
+  (\S\ref{ol-compare:sec:gluing}). \lean{New.Rows.DividedSplitting.exists_isGlued},
+  \lean{New.Rows.DividedSplitting.glueMatrix}. The text gives the statement only.
+\item The size estimates in Propositions~\ref{ol-compare:prop:first}(b)
+  and~\ref{ol-compare:prop:glue}(b). \lean{New.Data.firstFactorSize_sq_le_exp},
+  \lean{New.Rows.M_pow_denominatorExponent_sq_mul_le_exp}. The text gives the ingredients, not the
+  arithmetic.
+\item The holomorphy of the $\mathsf F_i$, and the dominance of the weights of $\bar y$,
+  $\theta^\circ$ and $\mathsf F_i$ with gaps $300n_*$ (proof of Theorem~\ref{ol-compare:thm:span}).
+  \lean{New.Data.isAdelicHol_choiceFn}, \lean{New.Data.conjHolomorphicWeight_eq_add_kernelWeight}.
+  The text gives the statement only.
+\item The analytic estimates of steps 3 and 4 of the proof of Theorem~\ref{ol-compare:thm:span}:
+  the approximation of $c_P$ by a kernel with a finite datum, and the isolation estimate by a mean
+  over a circle of peaks. \lean{New.Data.exists_datum_norm_modKernel_sub_polyMatrixCoeff_le},
+  \lean{New.Data.norm_apply_one_le_of_forall_isPeak}. The text gives the mechanism of each in one
+  sentence.
+\end{itemize}
+
+\subsection*{Section~\ref{sec:cg-selmer}: Congruences: regular families of twists, Galois representations and Selmer groups}
+\begin{itemize}[leftmargin=2em,itemsep=1pt]
+\item The Burnside-type step in the proof of Lemma~\ref{cg-selmer:lem:typerow}: from an eigenvalue
+  of $R(g)$ with $r'$ Frobenius conjugates distinct modulo $\ell$, every lattice spans
+  $\mathrm M_{r'}(\cO)$ and $\phi^{r'}$ acts as a scalar.
+  \lean{New.Selmer.IsLatticeIn.span_range_eq_top_of_map_pow_eq_map_conj}. The text gives the
+  statement only.
+\item The integrality of the measures $F$, and the identity between $\abs{\Pi_\vartheta}^2$ and
+  $\Nm Q_\vartheta\abs{L(1,(\nu\vartheta)^{-1})}^2$, in the idea of proof of
+  Proposition~\ref{cg-selmer:prop:stickel}.
+  \lean{New.Data.CriticalPair.isIntegralMeasure_integralAlgebraicPart},
+  \lean{New.Data.CriticalPair.exists_isIntegralMeasure_norm_sq_detPeriod},
+  \lean{New.Data.CriticalPair.exists_mul_norm_sq_detPeriod_eq}. The text gives the statements only.
+\item Sah's lemma ($z(H)$ spans $\Lambda/I$) and the tilting lemma (at most $2n$ residue classes of
+  slopes are excluded at each level), in the idea of proof of Theorem~\ref{cg-selmer:thm:descent}.
+  \lean{New.Selmer.SelmerDatum.span_image_sahGroup_eq_top}, \lean{New.Selmer.tilting}. The text
+  gives the statements only.
+\item The sharp polynomial in \S\ref{cg-selmer:sec:proof}: the Selmer modules modulo
+  $\ell^{\mathsf M}$ of all $\Lambda\psi_{\mathsf x}$ are the kernels of one matrix over $\cO[X]$,
+  and some minor is sharp at a given point. \lean{New.Selmer.exists_sharp_polynomial}. The text
+  gives the statement in one sentence.
+\item The base data for patching of a lift setting (end of \S\ref{cg-selmer:sec:galois}): the
+  construction of the forms and the bookkeeping of product labels and parahoric types.
+  \lean{New.Selmer.exists_baseLevel}, in
+  \leanfile{New/Congruences/GaloisRepresentations/BaseLevelOfLabel}. The text states what the
+  result gives, not how the data are built.
+\end{itemize}
+
+\subsection*{Section~\ref{sec:cg-first}: Congruences to first order: Ribet's method and the bound for denominators}
+\begin{itemize}[leftmargin=2em,itemsep=1pt]
+\item The relation $\mathrm{red}(c\,\partial_j(g-1))=\mathrm{red}(\mathrm{Nm}_jZ_g)$ with
+  $\delta'\mathrm{Nm}\,Z_g=0$, the source of the last two properties of
+  Theorem~\ref{cg-first:thm:tie} (end of its idea of proof).
+  \lean{New.Patching.exists_map_nsmul_mul_sub_one_eq_sum_mul},
+  \lean{New.Patching.BaseLevel.heckeAction_mul_norm_mul_eq_zero}. The text names the two inputs,
+  Fact~\ref{cg-first:fact:chain}(ii) and Fact~\ref{cg-first:fact:tw} for $\Pi$, but does not carry
+  out the computation.
+\item The congruence used in the proof of Proposition~\ref{cg-first:prop:one}.
+  \lean{New.Selmer.exists_prod_sub_det_one_sub_eq_zero}. The text gives the statement only.
+\end{itemize}
+
+\subsection*{Section~\ref{sec:cg-lifting}: The local loss above \texorpdfstring{$\ell$}{l}: crystalline classes in large weight}
+\begin{itemize}[leftmargin=2em,itemsep=1pt]
+\item The stop at a long gap, in the proof of Theorem~\ref{cg-lifting:thm:cuts}: how the point of
+  Lemma~\ref{cg-lifting:lem:costs}(c) gives a stop of depth $2b$ at the pivot that obeys the rule
+  of Lemma~\ref{cg-lifting:lem:pairing}(b).
+  \lean{New.Lift.KummerChart.PairingSide.pointsOver_longGapDepth_nonempty},
+  \lean{New.Lift.KummerChart.PairingSide.ruleBound_le_inf_add_longGapDepth}. The text gives the
+  statement only.
+\item In the proof of Theorem~\ref{cg-lifting:thm:generic}, why the depth must be raised at
+  level~$1$ at the letters with a negative far window.
+  \lean{New.Lift.KummerChart.PairingSide.negativeWindowDepth},
+  \lean{New.Lift.KummerChart.PairingSide.isSafeMoveFst_of_negativeWindowDepth}. The text gives what
+  this step costs, not why it is needed.
+\item In the same proof, the step by which, among $f_\Gamma\cdot\mathrm{mult}+1$ points, some
+  primitive combination gains one step of order.
+  \lean{New.Lift.KummerChart.JumpLattice.exists_sum_smul_mem_locKisinPart_sup}. The text gives the
+  statement only, as the documentation of the code states it.
+\item Lemma~\ref{cg-lifting:lem:local}, on the local lattices of a conjugate self-dual
+  representation. \lean{New.Selmer.IsConjSelfDualOfLevel.hasJumps_localLattice},
+  \lean{New.Selmer.IsConjSelfDualOfLevel.inClass_localLattice},
+  \lean{New.Selmer.isTameType_of_roots}. The text gives the statement only.
+\end{itemize}
+
+\endgroup

@@ -1,0 +1,229 @@
+\section{From a one-sided bound to the zeros}\label{sec:zeros}
+
+This section is classical analytic number theory. It reduces the theorem to an upper bound for
+one weighted sum over primes. The Lean files are \leanfile{New/Reduction/Zeros/PrimeError},
+\leanfile{New/Reduction/Zeros/Criterion}, \leanfile{New/Reduction/Zeros/PrimeNumberTheorem} and
+\leanfile{New/Main}.
+
+\subsection{The weighted prime sum}
+
+Throughout, $d$ is a prime and $\chiK = (\cdot/d)$ is the Legendre symbol modulo $d$. When
+$d \equiv 3 \bmod 4$ it is the quadratic character of the field $K = \Q(\sqrt{-d})$: for a prime
+$p \ne d$ we have $\chiK(p) = 1$ if $p$ splits in $K$ and $\chiK(p) = -1$ if $p$ is inert. Let
+$\Lambda$ be the von Mangoldt function and let $q \ge 1$.
+
+\begin{definition}[\lean{New.lambdaKResidueClass}, \lean{New.logDerivMean},
+\lean{New.primeRemainder}]\label{zeros:def:remainder}
+For $n \ge 1$ put
+\[
+  \lambda_q(n) =
+  \begin{cases}
+    \Lambda(n)\,\bigl(1 - \chiK(n)\bigr) & \text{if } n \equiv 1 \bmod q, \\
+    0 & \text{otherwise,}
+  \end{cases}
+  \qquad \LambdaK = \lambda_1 .
+\]
+For a Dirichlet character $\psi$ let $L^*(s,\psi)$ be the entire function that equals
+$L(s,\psi)$ if $\psi$ is not principal and $(s-1)L(s,\psi)$ if $\psi$ is principal
+(\lean{New.entireL}). Write $\psi\chiK$ for the product character modulo $qd$
+(\lean{New.quadTwist}). Put
+\[
+  G_q(s) = \frac{1}{\varphi(q)} \Bigl( \sum_{\psi \bmod q}
+     \Bigl( \frac{L^{*\prime}}{L^*}(s,\psi\chiK) - \frac{L^{*\prime}}{L^*}(s,\psi) \Bigr) - 1 \Bigr),
+  \qquad c_q = \Re G_q(1),
+\]
+and, for real $x > 0$,
+\begin{equation}\label{zeros:eq:R}
+  R_q(x) = \sum_{n \le x} \lambda_q(n) \Bigl( \frac1n - \frac1x \Bigr)
+           - \frac{\log x}{\varphi(q)} - c_q .
+\end{equation}
+\end{definition}
+
+The weight $\lambda_q$ is non-negative and at most $2\Lambda$. For $d \equiv 3 \bmod 4$ it is
+supported on the powers of primes that do not split in $K$. The function $R_q$ depends on $d$; we write $R_{d,q}$ when the
+prime matters. For odd $d$ prime to $q$ the constant $c_q$ is the one for which $R_q(x) \to 0$
+(Theorem~\ref{zeros:thm:pnt}). The smooth weight $1/n - 1/x$ is what the later sections produce;
+it also makes $R_q$ vary slowly:
+
+\begin{lemma}[\lean{New.abs_primeRemainder_sub_le}]\label{zeros:lem:slow}
+For $1 \le y \le z$ we have $\abs{R_q(z) - R_q(y)} \le 13\,(z-y)/y$.
+\end{lemma}
+
+\begin{proof}
+Let $\mathcal{E}(t) = \sum_{n \le t} \lambda_q(n) - t/\varphi(q)$. Partial summation gives
+$R_q(y) = \int_1^y \mathcal{E}(t)\,t^{-2}\,dt - c_q$ for $y \ge 1$
+(\lean{New.primeRemainder_eq_integral_countError_sub}), and Chebyshev's bound
+$\sum_{n \le t} \Lambda(n) \le 6t$ gives $\abs{\mathcal{E}(t)} \le 13t$.
+\end{proof}
+
+\subsection{The Dirichlet series and the Laplace transform}
+
+\begin{lemma}[\lean{New.LSeries_lambdaKResidueClass_eq_add_logDerivMean}]\label{zeros:lem:series}
+Let $d$ be odd and prime to $q$. For $\Re s > 1$,
+\[
+  \sum_{n \ge 1} \lambda_q(n)\, n^{-s} = \frac{s}{\varphi(q)\,(s-1)} + G_q(s).
+\]
+\end{lemma}
+
+\begin{proof}
+By orthogonality of characters, the indicator of $n \equiv 1 \bmod q$ is
+$\varphi(q)^{-1} \sum_\psi \psi(n)$. Since $-L'/L(s,\chi) = \sum \Lambda(n)\chi(n) n^{-s}$, the
+left side is $\varphi(q)^{-1} \sum_\psi \bigl( L'/L(s,\psi\chiK) - L'/L(s,\psi) \bigr)$. No
+$\psi\chiK$ is principal, as $d$ is odd and prime to $q$. For the principal
+character $\psi_0$ modulo $q$ we have
+$L^{*\prime}/L^*(s,\psi_0) = L'/L(s,\psi_0) + 1/(s-1)$. Hence the left side equals
+$G_q(s) + \varphi(q)^{-1}\bigl(1 + 1/(s-1)\bigr)$.
+\end{proof}
+
+\begin{lemma}[\lean{New.integral_primeRemainder}]\label{zeros:lem:laplace}
+Let $d$ be odd and prime to $q$. For $\Re s > 2$,
+\[
+  \int_0^\infty R_q(e^v)\, e^{(1-s)v}\, dv = \frac{G_q(s)/s - c_q}{s-1}.
+\]
+\end{lemma}
+
+\begin{proof}
+For $r \in \{0,1\}$ let $S_r(y) = y^{-r} \sum_{n \le y} \lambda_q(n)\, n^{r-1}$, so that the sum in
+\eqref{zeros:eq:R} is $S_0(x) - S_1(x)$. Partial summation and the substitution $t = e^v$ give
+$\int_0^\infty S_r(e^v) e^{(1-s)v}\,dv = D(s)/(s+r-1)$ with $D(s) = \sum \lambda_q(n) n^{-s}$
+(\lean{New.LSeries_lambdaKResidueClass}). So the transform of $S_0 - S_1$ is $D(s)/(s(s-1))$. The
+transforms of $v$ and of $1$ are $(s-1)^{-2}$ and $(s-1)^{-1}$. Insert
+Lemma~\ref{zeros:lem:series}: the term $s/(\varphi(q)(s-1))$ of $D$ cancels the transform of
+$v/\varphi(q)$, and $G_q(s)/(s(s-1)) - c_q/(s-1)$ remains.
+\end{proof}
+
+\begin{proposition}[Poles; \lean{New.isPolar_primeRemainder}]\label{zeros:prop:poles}
+Let $d \equiv 7 \bmod 8$ be a prime that does not divide $q$. Then $v \mapsto R_q(e^v)$ is
+measurable, $\abs{R_q(e^v)} \le C e^v$ for $v \ge 0$ with a constant $C$, and the function
+$F(s) = \int_0^\infty R_q(e^v) e^{(1-s)v}\,dv$ continues from $\Re s > 2$ to a meromorphic function
+on $\C$. In $\Re s > 0$ its poles are at most simple. It has no pole at $s = 1$, and at
+$\rho \ne 1$ with $\Re \rho > 0$ its residue is
+\begin{equation}\label{zeros:eq:residue}
+  r(\rho) = \frac{1}{\varphi(q)\,\rho\,(1-\rho)} \sum_{\psi \bmod q}
+     \Bigl( \ord_{\rho} L^*(\cdot,\psi) - \ord_{\rho} L^*(\cdot,\psi\chiK) \Bigr).
+\end{equation}
+\end{proposition}
+
+\begin{proof}
+Of the condition $d \equiv 7 \bmod 8$ only the oddness of $d$ is used (in
+Lemma~\ref{zeros:lem:laplace}). One may take $C = \abs{c_q} + 5$, as $0 \le \lambda_q(n) \le 2n$
+(\lean{New.abs_primeRemainder_exp_le}). By Lemma~\ref{zeros:lem:laplace},
+$F(s) = (G_q(s)/s - c_q)/(s-1)$, and the right side is
+meromorphic on $\C$. A logarithmic derivative has simple poles, with residue the order of
+vanishing. So $G_q$ has at most a simple pole at $\rho$, of residue
+$\varphi(q)^{-1} \sum_\psi (\ord_\rho L^*(\cdot,\psi\chiK) - \ord_\rho L^*(\cdot,\psi))$
+(\lean{New.tendsto_sub_mul_logDerivMean}); dividing by $\rho(\rho - 1)$ gives
+\eqref{zeros:eq:residue}. No $L^*$ vanishes on $\Re s \ge 1$, so $G_q$ is analytic there, and
+$G_q(x)/x - c_q = (x-1)F(x)$, real for $x > 2$, is real for $x \ge 1$ by the identity theorem
+(\lean{New.ofReal_re_logDerivMean_one}). So $G_q(1) = c_q$: no pole at $1$.
+\end{proof}
+
+With the weight $1 - \chiK(n)$ the twists enter \eqref{zeros:eq:residue} with a minus sign; the
+next two facts deal with this.
+
+\subsection{Two inputs: Landau's lemma and the choice of the prime}
+
+\begin{fact}[Landau's lemma; \lean{New.IsPolar.landau}]\label{zeros:fact:landau}
+Let $E \colon \R \to \R$ be measurable with $\abs{E(v)} \le C e^v$ for $v \ge 0$, and suppose that
+$\int_0^\infty E(v) e^{(1-s)v}\,dv$ continues from $\Re s > 2$ to a meromorphic function whose
+poles in $\Re s > 0$ are at most simple, with residue $r(\rho)$ at $\rho$. Let $\beta > 0$. If
+$E(v) \le e^{(\beta-1)v}$ for all large $v$, and $\Re r(x) \ge 0$ for every real $x > \beta$, then
+$r(\rho) = 0$ for every $\rho$ with $\Re \rho > \beta$.
+\end{fact}
+
+This is a form of Landau's theorem that the Laplace transform of a non-negative function is
+singular at the real point of its abscissa of convergence (Montgomery and Vaughan,
+Multiplicative number theory I, 2007, Lemma~15.1). One applies it to
+$K e^{(\beta-1)v} - E(v)$, non-negative on $v > 0$ for a suitable constant $K$, whose transform is $K/(s-\beta)$ minus that of $E$ (\lean{New.exists_measure_laplace_eq}), with
+residue $-r(\rho)$ at $\rho$ if $\Re\rho > \beta$. Were its abscissa of convergence $\sigma_0 >
+\beta$, then $-r(\sigma_0) \ge 0$, as the transform is non-negative on $(\sigma_0,\infty)$; so
+$r(\sigma_0) = 0$ by hypothesis, and the transform would continue analytically to $\sigma_0$,
+against Landau's theorem. So it is analytic in $\Re s > \beta$, and all residues there vanish.
+
+\begin{fact}[Choice of the prime; \lean{New.exists_entireL_quadTwist_ne_zero}]\label{zeros:fact:prime}
+Let $N \ge 1$, $\beta > 1/2$ and $H \in \R$. Let $a$ be an invertible residue class modulo $N$ such
+that every prime $d \equiv a \bmod N$ satisfies $d \equiv 7 \bmod 8$ and $d \nmid N$. Then there
+is a prime $d \equiv a \bmod N$ such that $L(s, \xi\chiK) \ne 0$ for every character $\xi$ modulo
+$N$ and every $s$ with $\Re s \ge \beta$ and $\abs{\Im s} \le H$; here $\chiK = (\cdot/d)$.
+\end{fact}
+
+This rests on a zero-density estimate for quadratic twists: for $\delta > 0$, the number of primes
+$d \le X$ of the class for which some twist has a zero with $\Re s \ge 1/2 + 9\delta$,
+$\abs{\Im s} \le H$ is $O(X^{1-\delta/2})$ (\lean{New.zero_density_quadTwist}), while the sum of
+$\log p/p$ over the primes $p$ of the class diverges (Dirichlet). The sources
+are Jutila, \emph{On mean values of Dirichlet polynomials with real characters}, 1975, and
+Heath-Brown, \emph{A mean value estimate for real character sums}, 1995. The Lean file
+\leanfile{Lib/Analytic/QuadraticTwist} proves a weak form: a zero of a twist in the box makes a
+tail integral of its theta series large (three-lines theorem), and their sum over
+$d$ is small (mean square of Jacobi symbol sums, P\'olya--Vinogradov).
+
+\subsection{The criterion}
+
+\begin{theorem}[One-sided criterion; \lean{New.LFunction_ne_zero_of_primeRemainder_le}]
+\label{zeros:thm:criterion}
+Let $q_0$ be a positive multiple of $8$, let $d_0 \equiv 7 \bmod 8$ be prime to $q_0$, and let
+$\beta > 1/2$. Suppose that for every prime $d \equiv d_0 \bmod q_0$ we have
+\[
+  R_{d,q_0}(x) \le x^{\beta - 1} \qquad \text{for all large } x .
+\]
+Then $L(\rho,\psi) \ne 0$ for every Dirichlet character $\psi$ modulo $q_0$ and every
+$\rho \ne 1$ with $\Re \rho > \beta$.
+\end{theorem}
+
+\begin{proof}
+Every prime $d \equiv d_0 \bmod q_0$ is $\equiv 7 \bmod 8$, since $8 \mid q_0$, and is prime to
+$q_0$. Apply Fact~\ref{zeros:fact:prime} with $N = q_0$ and $H = \abs{\Im \rho}$: there is such a
+prime $d$ for which no $L(s,\psi\chiK)$, $\psi$ modulo $q_0$, vanishes in the box
+$\Re s \ge \beta$, $\abs{\Im s} \le \abs{\Im\rho}$. Fix this $d$ and let $r$ be the residue
+function of Proposition~\ref{zeros:prop:poles} for $E(v) = R_{d,q_0}(e^v)$. In the box the twisted
+terms of \eqref{zeros:eq:residue} vanish, so $r(s) = n(s)/(\varphi(q_0)\,s\,(1-s))$ with
+$n(s) = \sum_\psi \ord_s L^*(\cdot,\psi) \ge 0$, over $\psi$ modulo $q_0$. For real $x$ with $\beta < x < 1$ we have $x(1-x) > 0$, so $r(x) \ge 0$. For real $x \ge 1$ no
+$L^*(\cdot,\psi)$ vanishes at $x$, so $n(x) = 0$ and there is no pole. The hypothesis gives
+$E(v) \le e^{(\beta-1)v}$ for large $v$. By Landau's lemma (Fact~\ref{zeros:fact:landau}),
+$r(\rho) = 0$. As $\rho \ne 0, 1$, this means $n(\rho) = 0$: no $L^*(\cdot,\psi)$ vanishes at
+$\rho$, and $L(\rho,\psi) = L^*(\rho,\psi)$ or $L^*(\rho,\psi)/(\rho - 1)$.
+\end{proof}
+
+\begin{remark}
+A one-sided bound suffices because of the sign of the residues on the real axis. All primes $d$
+of the class are needed because $d$ is chosen after $\rho$, so that the zeros of the twists stay
+out of the way; nothing is assumed about real zeros.
+\end{remark}
+
+\subsection{The prime number theorem for the remainder}
+
+The proof of the one-sided bound also uses the remainder at a much larger point, where this applies:
+
+\begin{theorem}[\lean{New.eventually_abs_primeRemainder_le}, \lean{New.tendsto_primeRemainder}]
+\label{zeros:thm:pnt}
+Let $d$ be an odd prime and let $q \ge 1$ be prime to $d$. For every natural number $B$ we have
+$\abs{R_q(y)} \le (\log y)^{-B}$ for all large $y$. In particular $R_q(y) \to 0$.
+\end{theorem}
+
+This is the prime number theorem in progressions to a fixed modulus with an error that saves
+every power of the logarithm (Siegel--Walfisz; Montgomery and Vaughan, Multiplicative number theory I, 2007, Cor.~11.19). The
+Lean proof uses the crude zero-free region that the $3$--$4$--$1$ inequality gives (\leanfile{Lib/Analytic/PrimeNumberTheorem/ZeroFreeRegion}): for all large $l$
+the function $G_q(s)/s$ is holomorphic and at most $l^{26}$ in absolute value on
+$\Re s \ge 1 - l^{-26}$, $\abs{s} \le e^l$ (\lean{New.eventually_norm_logDerivMean_div_le}). A
+Tauberian argument (\leanfile{Lib/Analytic/PrimeNumberTheorem/Tauberian}), with
+Lemma~\ref{zeros:lem:slow} as the Tauberian condition, is applied to the transform of
+Lemma~\ref{zeros:lem:laplace}: a high Taylor coefficient at a real point far to the right is a
+Gamma-weighted mean of $R_q(e^v)$ near a given $v$, and is small by Cauchy's estimate on a disc
+reaching left of $\Re s = 1$.
+
+\subsection{From the half-plane to the critical line}
+
+\begin{proposition}[\lean{New.zeros_on_line}, \lean{New.zeta_zeros_on_line}]\label{zeros:prop:line}
+Suppose that $L(s,\chi) \ne 0$ for every Dirichlet character $\chi$ and every $s$ with
+$\Re s > 1/2$, except $s = 1$ when $\chi$ is principal. Then every zero of a Dirichlet
+$L$-function in the strip $0 < \Re s < 1$ has real part $1/2$, and every zero $s \ne 1$ of $\zeta$
+other than $-2, -4, \dots$ has real part $1/2$.
+\end{proposition}
+
+\begin{proof}
+Let $L(s,\chi) = 0$ with $0 < \Re s < 1$. The gamma factor of the completed $L$-function has no
+pole at $s$, so the functional equation gives $L(1-s,\chi^{-1}) = 0$
+(\lean{New.gammaFactor_eq_zero_or_LFunction_one_sub_eq_zero}, \leanfile{Lib/Analytic/ZeroSymmetry}). The hypothesis applied to both zeros gives
+$\Re s \le 1/2$ and $1 - \Re s \le 1/2$. For $\zeta$ (the character modulo $1$), a zero $s \notin \{1, 0, -2, -4, \dots\}$ is one of $\pi^{-s/2}\Gamma(s/2)\zeta(s)$, which is
+symmetric under $s \mapsto 1 - s$; as $\zeta(0) \ne 0$, $1 - s \ne 1$ is again a zero of $\zeta$; argue as before.
+\end{proof}

@@ -1,0 +1,59 @@
+% Diagram of the proof of Theorem B (Part 3). Boxes are results; an arrow X -> Y means that the proof of Y uses X.
+\begin{figure}[tbp]
+\centering
+\begin{tikzpicture}[x=1cm,y=1cm]
+% top: Theorem B and the spanning argument
+\node[pfmain] (B) at (0,0) {Thms.~\ref{main:thm:B}, \ref{sp-moment:thm:B}\\Theorem~B};
+\node[pfnode, text width=2.0cm] (RAM) at (-4.4,-0.6) {Lem.~\ref{ub-divis:lem:ram}\\ramified forms (Part~2)};
+\node[pfnode] (SP) at (0,-1.8) {Props.~\ref{sp-moment:prop:one}, \ref{sp-moment:prop:few}, Thm.~\ref{sp-moment:thm:spread}\\spanning argument};
+% row 2: the inputs of the spanning argument
+\node[pfnode] (PET) at (-6.3,-3.7) {Thms.~\ref{sp-unfold:thm:series}, \ref{sp-unfold:thm:petersson}\\Petersson products};
+\node[pfnode, text width=2.0cm] (DIM) at (-1.275,-3.7) {Prop.~\ref{sp-moment:prop:dim}\\dimension of the target};
+\node[pfnode, text width=2.0cm] (GOOD) at (1.275,-3.7) {Thm.~\ref{sp-unfold:thm:good}\\good forms};
+\node[pfnode, text width=2.0cm] (MOM) at (3.825,-3.7) {Thm.~\ref{sp-unfold:thm:moment}\\second moment};
+\node[pfnode, text width=2.0cm] (BAD) at (6.375,-3.7) {Thm.~\ref{sp-main:thm:bad}\\bad share};
+% row 3
+\node[pffact, text width=2.0cm] (FUN) at (-6.375,-5.6) {Fact~\ref{sp-unfold:fact:unfold}\\unfolding};
+\node[pfnode, text width=2.0cm] (SYS) at (-3.825,-5.6) {Thm.~\ref{sp-moment:thm:system}\\Bessel systems};
+\node[pfnode, text width=2.0cm] (MULT) at (-1.275,-5.6) {Thm.~\ref{sp-moment:thm:trace}, Cor.~\ref{sp-moment:cor:mult}\\multiplicities};
+\node[pffact, text width=2.0cm] (FDIM) at (1.275,-5.6) {Fact~\ref{sp-moment:fact:dim}\\algebraic forms};
+\node[pfnode, text width=2.0cm] (MAIN) at (3.825,-5.6) {Thm.~\ref{sp-main:thm:main}\\main term};
+\node[pfnode, text width=2.0cm] (REM) at (6.375,-5.6) {Thm.~\ref{sp-remain:thm:main}\\remaining terms};
+% row 4
+\node[pfnode, text width=2.0cm] (REAL) at (-6.375,-7.5) {Thm.~\ref{sp-frames:thm:real}\\local bounds at~$\mathbb{C}$};
+\node[pfnode, text width=2.0cm] (STAT) at (-3.825,-7.5) {Thms.~\ref{sp-moment:thm:laplace}, \ref{sp-moment:thm:stationary}\\Laplace's method,\\stationary point};
+\node[pffact, text width=2.0cm] (FTR) at (-1.275,-7.5) {Fact~\ref{sp-moment:fact:trace}\\comparison of traces};
+\node[pfnode, text width=2.0cm] (SIEVE) at (1.275,-7.5) {Thm.~\ref{sp-main:thm:sieve}\\the sieve};
+\node[pffact, text width=2.0cm] (FSIEG) at (3.825,-7.5) {Fact~\ref{sp-main:fact:siegel}\\Siegel's formula};
+\node[pfnode, text width=2.0cm] (FIN) at (6.375,-7.5) {\S\ref{sp-frames:ss:finite}\\local estimates at finite places};
+% row 5
+\node[pffact, text width=2.0cm] (FPOI) at (1.275,-9.2) {Fact~\ref{sp-main:fact:poisson}\\Poisson summation};
+% arrows: premise -> conclusion
+\draw[pfedge] (RAM) -- (B);
+\draw[pfedge] (SP) -- (B);
+\draw[pfedge] (PET) |- (SP);
+\draw[pfedge] (DIM) -- (SP);
+\draw[pfedge] (GOOD) -- (SP);
+\draw[pfedge] (MOM) -- (SP);
+\draw[pfedge] (BAD) |- (SP);
+\draw[pfedge] (FDIM) -- (DIM);
+\draw[pfedge] (MULT) -- (DIM);
+\draw[pfedge] (SYS) -- (DIM);
+\draw[pfedge] (SYS) -- (PET);
+\draw[pfedge] (FUN) -- (PET);
+\draw[pfedge] (FTR) -- (MULT);
+\draw[pfedge] (REAL) -- (SYS);
+\draw[pfedge] (STAT) -- (SYS);
+\draw[pfedge] (MAIN) -- (MOM);
+\draw[pfedge] (REM) -- (MOM);
+\draw[pfedge] (SIEVE) -- (MAIN);
+\draw[pfedge] (FSIEG) -- (MAIN);
+\draw[pfedge] (FIN) -- (MAIN);
+\draw[pfedge] (FPOI) -- (SIEVE);
+\end{tikzpicture}
+\caption{The proof of Theorem~B (Part~3, Sections~\ref{sec:sp-moment}--\ref{sec:sp-remain}). Each
+box is a result, with its number and a short name; a box with several numbers, or with the number
+of a subsection, stands for a group of results. An arrow from one box to another means that the proof of the second, as written in
+this paper, uses the first. Dashed grey boxes are background results admitted without proof.}
+\label{fig:part3}
+\end{figure}

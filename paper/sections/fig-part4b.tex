@@ -1,0 +1,69 @@
+% Diagram of the proof of the existence of regular families of twists (Part 4, Sections cg-selmer, cg-first, cg-lifting).
+\begin{figure}[tbp]
+\centering
+\begin{tikzpicture}[x=1cm,y=1cm]
+% row 0: the conclusion
+\node[pfnode, text width=3.0cm] (reg) at (-1.4,0) {Thm.~\ref{cg-selmer:thm:regular}, Prop.~\ref{cg-selmer:prop:oneprime}\\regular families};
+% row 1
+\node[pfnode] (twist) at (-5.2,-1.7) {Thm.~\ref{cg-selmer:thm:twisting}\\twisting theorem};
+\node[pfnode] (denom) at (2.6,-1.7) {Thm.~\ref{cg-first:thm:main}\\bound for\\denominators};
+% row 2
+\node[pfnode, text width=3.4cm] (general) at (-5.2,-3.4) {Thm.~\ref{cg-selmer:thm:general}, Prop.~\ref{cg-selmer:prop:line}\\general twisting theorem};
+\node[pfnode] (rows) at (-1.4,-3.4) {Prop.~\ref{cg-selmer:prop:rows}\\main summands};
+\node[pfnode, text width=2.6cm] (oper) at (2.6,-3.4) {Props.~\ref{cg-first:prop:operator}, \ref{cg-first:prop:one}\\operator from\\one congruence};
+% row 3
+\node[pfnode] (descent) at (-6.3,-5.1) {Thm.~\ref{cg-selmer:thm:descent}\\descent};
+\node[pfnode] (roots) at (-3.6,-5.1) {Thm.~\ref{cg-selmer:thm:roots}\\roots of unity};
+\node[pfnode, text width=2.6cm] (places) at (0.2,-5.1) {Lem.~\ref{cg-first:lem:chain},\\Prop.~\ref{cg-first:prop:places}\\Taylor--Wiles places};
+\node[pfnode, text width=2.6cm] (tie) at (3.3,-5.1) {Thms.~\ref{cg-first:thm:tie}, \ref{cg-first:thm:top}\\the tie;\\top coefficient};
+\node[pfnode] (ribet) at (6.3,-5.1) {Thm.~\ref{cg-first:thm:ribet}\\Ribet's element};
+% row 4
+\node[pffact, text width=1.9cm] (cheb) at (-4.9,-6.8) {Fact~\ref{cg-selmer:fact:cheb}\\Chebotarev};
+\node[pffact, text width=2.1cm] (galois) at (-2.1,-6.8) {Fact~\ref{cg-selmer:fact:galois}\\Galois\\representations};
+\node[pffact, text width=2.9cm] (chaintw) at (1.0,-6.8) {Facts~\ref{cg-first:fact:chain}, \ref{cg-first:fact:tw}\\spherical chains;\\Taylor--Wiles freeness};
+\node[pffact, text width=2.4cm] (oddfit) at (4.3,-6.8) {Facts~\ref{cg-first:fact:odd}, \ref{cg-first:fact:fitting}\\odd classes;\\Fitting bound;\\Brauer--Nesbitt};
+% row 5
+\node[pffact] (gw) at (-6.3,-8.5) {Fact~\ref{cg-selmer:fact:gw}\\Greenberg--Wiles};
+\node[pfnode, text width=2.9cm] (loss) at (3.0,-8.5) {Thm.~\ref{cg-lifting:thm:main}, Prop.~\ref{cg-lifting:prop:tatedual}\\local loss above~$\ell$};
+% row 6
+\node[pffact, text width=1.9cm] (duality) at (0.3,-10.2) {Fact~\ref{cg-lifting:fact:duality}\\local duality};
+\node[pfnode, text width=1.9cm] (cuts) at (3.0,-10.2) {Thm.~\ref{cg-lifting:thm:cuts}\\cuts};
+\node[pfnode, text width=2.1cm] (generic) at (5.7,-10.2) {\S\ref{cg-lifting:sec:generic}\\generic primes,\\tame types};
+% row 7
+\node[pfnode, text width=1.9cm] (walk) at (4.35,-11.9) {\S\ref{cg-lifting:sec:walk}\\safe moves,\\the walk};
+% row 8
+\node[pffact] (frame) at (4.35,-13.6) {Fact~\ref{cg-lifting:fact:frame}\\Kummer charts,\\Kisin modules};
+% arrows: premise -> conclusion
+\draw[pfedge] (twist) -- (reg);
+\draw[pfedge] (rows) -- (reg);
+\draw[pfedge] (denom) -- (reg);
+\draw[pfedge] (general) -- (twist);
+\draw[pfedge] (descent) -- (general);
+\draw[pfedge] (roots) -- (general);
+\draw[pfedge] (cheb) -- (descent);
+\draw[pfedge] (gw) -- (descent);
+\draw[pfedge] (galois) -- (rows);
+\draw[pfedge] (oper) -- (denom);
+\draw[pfedge] (places) -- (oper);
+\draw[pfedge] (tie) -- (oper);
+\draw[pfedge] (ribet) -- (oper);
+\draw[pfedge] (galois) -- (places);
+\draw[pfedge] (chaintw) -- (places);
+\draw[pfedge] (chaintw) -- (tie);
+\draw[pfedge] (loss.east) -| (ribet.south);
+\draw[pfedge] (oddfit) -- (ribet);
+\draw[pfedge] (duality) -- (loss);
+\draw[pfedge] (cuts) -- (loss);
+\draw[pfedge] (generic) -- (loss);
+\draw[pfedge] (walk) -- (cuts);
+\draw[pfedge] (walk) -- (generic);
+\draw[pfedge] (frame) -- (walk);
+\end{tikzpicture}
+\caption{The existence of regular families of twists (Part~4,
+Sections~\ref{sec:cg-selmer}--\ref{sec:cg-lifting}), used in the proof of Theorem~C
+(Figure~\ref{fig:part4a}). Each box is a result, with its number and a short name; a box with
+several numbers, or with the number of a subsection, stands for a group of results. An arrow from
+one box to another means that the proof of the second, as written in this paper, uses the first.
+Dashed grey boxes are background results admitted without proof.}
+\label{fig:part4b}
+\end{figure}

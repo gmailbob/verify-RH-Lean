@@ -1,0 +1,373 @@
+\section{The seesaw identity}\label{sec:ub-seesaw}
+
+This section proves the seesaw identity \lean{New.Data.seesaw_identity}
+(Theorem~\ref{ub-seesaw:thm:seesaw}): on ramified source forms $\varphi$, the chain
+$\Theta_\vartheta$ applied to $\Poin\varphi$ is a constant $c\neq0$, the same for all twists
+$\vartheta$, times a composite lift $B_{\vartheta,\Psi}\varphi$.
+
+\subsection{Set-up}\label{ub-seesaw:sec:setup}
+
+Notation is that of Section~\ref{sec:ub-objects}. A tame character $\vartheta$
+(Definition~\ref{data:def:twist}) has modulus $Q$, and
+$\Nm Q=\prod_{w\in Q}\Nm w$ (\lean{New.Data.TameChar.normQ}). Statements about tame characters
+hold without the non-triviality on $Q$ that makes $\vartheta$ a twist.
+$G(Y_j)=\U(Y_j)(\A)=G_\infty(Y_j)\times G_{\mathrm f}(Y_j)$, $\Gamma_j$ is its group of rational points,
+$[G(Y_j)]=\Gamma_j\backslash G(Y_j)$, and $\mathcal B=M^{fn_m^2}$ (\lean{New.Data.residueMatrixCount}). In
+$G_{\mathrm f}(Y_j)$, $J^\circ\supset J_M\supset J_\vartheta(Y_j)$ are the stabiliser of the standard lattice,
+the chosen level (\lean{New.Data.chosenLevel}) and the level of \S\ref{ub-objects:sec:lower}
+(\lean{New.Data.levelY}).
+
+\emph{Gradings.} For $j\le m-1$ the grading \lean{New.Data.gradingY} presents $Y_j$ as $X_j$
+(orthonormal, grade $0$) plus a \emph{string} of $s_j=m-1-j$ vectors $\mathbf e_0,\dots,\mathbf e_{s_j-1}$, where
+$\mathbf e_i$ has grade $s_j-1-2i$ and pairs only with $\mathbf e_{s_j-1-i}$, to $1$, or to $-N$ for the middle
+vector when $s_j$ is odd. The last grading presents $Y_m$ as definite with empty string. The
+\emph{Bessel group} $R(Y_j)\subset G(Y_j)$ (\lean{New.Grading.besselGroup}; for $j=0$ the $R_0(\A)$ of
+\S\ref{ub-objects:sec:poincare}) is $\U(X_j)\ltimes U_j$,
+where $U_j$ consists of the elements that strictly raise grades. A function $\mathcal W$ on $R(Y_j)$ is
+\emph{equivariant} if $\mathcal W(ur)=\psi_U(u)\mathcal W(r)$ for the generic character $\psi_U$ and all $u\in U_j$
+that raise grades by at least $2$, and $\mathcal W$ is left invariant under $\Gamma_{R(Y_j)}=\Gamma_j\cap R(Y_j)$. The string map
+$\mathsf T_j\colon Y_j\to Y_{j+1}$ (\lean{New.Grading.stringMap}) kills $X_j$ and sends each string vector
+to a multiple of the string vector with the same number. It has degree $-1$.
+
+\emph{Objects from Section~\ref{sec:ub-objects}.} We write $\mathrm{lift}_j\colon Y_j\to Y_{j+1}$
+for lift $j+1$ of \S\ref{ub-objects:sec:lower}, with datum $\widehat\Upsilon_{j+1}$ (\lean{New.Data.datumY}): the
+chosen joint harmonic at infinity (\lean{New.Data.harmonicY}) times the finite datum $\Upsilon_{j+1}$
+of \S\ref{ub-objects:sec:lower} (\lean{New.Data.pointDatumY});
+$\mathfrak t$ is a linear form on the values of source forms and $g\in G_\infty(Y_0)$, so that
+$\Poin_{g,\mathfrak t}$ is the map of Definition~\ref{ub-objects:def:poincare}. We write $\mathrm{gV}(\mathbf x)$ (\lean{New.Data.gluedVacuum}) for
+the glued tensor of one translation and $\operatorname{res}_{Y_m}$ for the restriction
+(\S\ref{ub-objects:sec:composite}), so that
+$\phi^{\mathrm{ch}}_\Psi=\sum_{\mathbf x}\Psi(\mathbf x)\mathrm{gV}(\mathbf x)$, and
+$\Theta^X_\vartheta(\mathcal F)$ (\lean{New.Data.chainOfTensor}) for the chain of the $m$ definite
+lifts $X_j\to X_{j+1}$ with tensor of finite data $\mathcal F$; so
+$B_{\vartheta,\Psi}\varphi=\operatorname{res}_{Y_m}\Theta^X_\vartheta(\textstyle\sum_{\mathbf x}\Psi(\mathbf x)\,\mathrm{gV}(\mathbf x))\varphi$.
+
+\begin{definition}[Admissible combinations; \lean{New.Seesaw.integralAway}, \lean{New.Seesaw.IsAdmissibleCoeffs}, \lean{New.Seesaw.IsAdmissibleCombination}]\label{ub-seesaw:def:adm}
+For $n\in\N$, $\mathcal O_{(n)}\subset\C$ is the ring of $z$ with $\abs{\iota z}\le1$ for every prime
+$\ell\nmid n$ and every ring homomorphism $\iota\colon\C\to\C_\ell$. Let $v\colon A_0\to Z$ be a map
+to a complex vector space, $A\subset A_0$, $\delta\in\N$, $p$ a proposition and $B\in\R$. A vector $z\in Z$
+is an \emph{admissible combination} of the $v(\mathbf x)$, $\mathbf x\in A$, with denominator $\delta$ away from $n$ and
+size $B$ under $p$, if $z=\sum_{\mathbf x} \gamma(\mathbf x)v(\mathbf x)$ for a finitely supported $\gamma$ with support in $A$,
+$\delta\,\gamma(\mathbf x)\in\mathcal O_{(n)}$ for all $\mathbf x$, and, if $p$ holds,
+$\sum_{\mathbf x}\abs{\sigma(\gamma(\mathbf x))}\le B$ for all $\sigma\in\Aut(\C)$.
+\end{definition}
+
+Single terms, finite sums with suitable coefficients, images under linear and bilinear maps, pure
+tensors and multiples by roots of unity are combinations
+(\lean{New.Seesaw.IsAdmissibleCombination.single}, \lean{New.Seesaw.IsAdmissibleCombination.smul_single},
+\lean{New.Seesaw.IsAdmissibleCombination.of_sum}, \lean{New.Seesaw.IsAdmissibleCombination.pure}).
+Substituting combinations with denominator $\delta'$ and size $B'$ into one with $\delta$ and $B$ gives
+denominator $\delta\delta'$ and size $B\abs{B'}$ (\lean{New.Seesaw.IsAdmissibleCombination.bind}). If $z$ is a combination
+of the $C\,v(\mathbf x)$ with denominator $\delta\ne0$ and size $B$, then for every $\alpha\in\C$ the vector $\nu \alpha z$, with
+$\nu=\delta/(\alpha C)$ if $\alpha C\ne0$ and $\nu=1$ otherwise, is one of the $v(\mathbf x)$ with denominator $1$ and size
+$\delta B$ (\lean{New.Seesaw.IsAdmissibleCombination.normUnit_smul}).
+
+A \emph{chain datum} for a twist $\vartheta$ (\lean{New.Data.IsChainDatum}; \lean{New.Seesaw.translations},
+\lean{New.Data.admissibleTranslations}) is as in Definition~\ref{ub-objects:def:chaindatum}, with
+conditions (i)--(iv) there; (ii) says $\Psi(\mathbf x)\in\mathcal O_{(\Nm Q)}$.
+
+\subsection{The statement}
+
+\begin{theorem}[Seesaw identity; \lean{New.Data.seesaw_identity}]\label{ub-seesaw:thm:seesaw}
+Let $\mathfrak t$ be a linear form on the values of source forms and $g\in G_\infty(Y_0)$. There is
+$c\in\C^\times$ such that every twist $\vartheta$ has a chain datum $\Psi$ for $\vartheta$ with
+\[
+  \Theta_\vartheta(\Poin_{g,\mathfrak t}\varphi)=c\,B_{\vartheta,\Psi}\varphi
+  \qquad\text{for all ramified source forms }\varphi .
+\]
+\end{theorem}
+
+\begin{remark}\label{ub-seesaw:rem:weak}
+The theorem does not assert $B_{\vartheta,\Psi}\neq0$. If the
+constant $c_0C$ of the proof below is $0$, both sides vanish, with $c=1$ and a datum whose glued
+tensor is $0$. So $c\neq0$ is only a normalisation. The number $c_{\mathrm{ss}}$ (\lean{New.Data.seesawConst}) is the $c$
+of the theorem for $\mathfrak t=$\,\lean{New.Data.besselForm} and $g=$\,\lean{New.Data.besselPoint}, the choice for which
+$\Poin_{g,\mathfrak t}=$\,\lean{New.Data.poincare} is the Poincar\'e series of the Bessel function
+(Section~\ref{sec:sp-unfold}).
+\end{remark}
+
+\begin{corollary}[\lean{New.Data.exists_lowerChain_poincare_eq}]\label{ub-seesaw:cor:used}
+Identity~\eqref{main:eq:seesaw} holds, with $\Poin=$\,\lean{New.Data.poincare}.
+\end{corollary}
+
+\subsection{Unfolding one lift at a time}
+
+For a form $z$ of conjugate type on $Y_{j+1}$, the descent
+$\mathrm{lift}_j^{*}z(g)=[J^\circ:J_\vartheta(Y_j)]\int_{[G(Y_{j+1})]}\theta(\omega(g,h)\widehat\Upsilon_{j+1})z(h)\,dh$
+(\lean{New.Data.transposedLiftY}) satisfies
+$\int_{[G(Y_{j+1})]}z\cdot\mathrm{lift}_jy=\int_{[G(Y_j)]}\mathrm{lift}_j^*z\cdot y$
+(\lean{New.Data.integral_mul_liftY}), and it has level $J_\vartheta(Y_j)$.
+
+\begin{fact}[\lean{New.Grading.integral_besselGroup_unfold}, \leanfile{Lib/Weil/Periods/Unfolding}]\label{ub-seesaw:fact:unfold}
+Let $\mathcal G,\mathcal G'$ grade $V,V'$ with strings of lengths $s$ and $s-1$, let $\mathcal W$ be equivariant on the Bessel
+group $R$ of $\mathcal G$, $\mathcal F$ a datum on $\Hom(V,V')$, and $z$ automorphic and rapidly decreasing on
+$\U(V')$. Put $\mathcal U \mathcal W(h)=\int_{[R]}\mathcal W(r)\,\mathrm{CT}_{\mathsf T}(\omega(r,h)\mathcal F)\,dr$, where
+$\mathrm{CT}_{\mathsf T}$ is the constant term of the theta function at the string map $\mathsf T$ along the maps of
+positive degree (\lean{New.Grading.unfoldStep}). Then $\mathcal U\mathcal W\cdot z$ is integrable on
+$\Gamma_{R'}\backslash\U(V')(\A)$, where $R'$ is the Bessel group of $\mathcal G'$, and
+$\int_{[R]}\mathcal W(r)\int_{[\U(V')]}\theta(\omega(r,h)\mathcal F)z(h)\,dh\,dr
+=\int_{\Gamma_{R'}\backslash\U(V')(\A)}\mathcal U\mathcal W(h)z(h)\,dh$.
+Sources: Wang Peng Jun, Global theta lifting and automorphic periods associated to nilpotent orbits,
+2025 (Prop.~3.2, Thm.~4.5); Gomez--Zhu, Local theta lifting of generalized Whittaker models, 2014;
+Furusawa--Morimoto, 2025, \S3.
+\end{fact}
+
+Fix outer variables $g_j=(\xi_j,y_j)\in G_\infty(Y_j)\times G_{\mathrm f}(Y_j)$. Define $\mathcal W_{k+1}$ on
+$G(Y_{k+1})$ (\lean{New.Data.unfoldStage}) by
+$\mathcal W_{k+1}(h)=\int_{[R(Y_k)]}\mathcal W_k'(r)\,\mathrm{CT}_{\mathsf T_k}(\omega(rg_k,h)\widehat\Upsilon_{k+1})\,dr$,
+with $\mathcal W_0'=\mathcal W_\varphi$ and $\mathcal W_k'(r)=\mathcal W_k(rg_k)$ for $k\ge1$. Put
+$\Xi_{k+1}(z)=\int_{\Gamma_{R(Y_{k+1})}\backslash G(Y_{k+1})}\mathcal W_{k+1}z$
+(\lean{New.Data.unfoldedPeriod}). Fact~\ref{ub-seesaw:fact:unfold} gives
+\begin{equation}\label{ub-seesaw:eq:step}
+  \int_{[R(Y_k)]}\mathcal W_k'(r)\,(\mathrm{lift}_k^*z)(rg_k)\,dr=[J^\circ:J_\vartheta(Y_k)]\,\Xi_{k+1}(z)
+\end{equation}
+(\lean{New.Data.integral_unfoldStageOn_mul_transposedLiftY}). At stage $0$, unfolding $\Poin$ gives
+$\int_{[G(Y_1)]}z\cdot\mathrm{lift}_0\Poin\varphi=[J^\circ:J_M]\sum_{c\in\mathcal C_0}\Xi_1(z)|_{g_0=(g,c)}$,
+where $\mathcal C_0=J_M/J_\vartheta(Y_0)$ (\lean{New.Data.integral_mul_liftY_poincareAt}).
+
+For subgroups $S,A,J$ of $G_{\mathrm f}(Y_{k+1})$ and a finite set $\mathcal C$
+of cosets of $J$, the \emph{multiplicity} $\mu_{\mathcal C}(y)$ (\lean{New.Seesaw.coverMultiplicity}) is the
+number of classes $h\in S/(S\cap A)$ with $h^{-1}y\in \mathcal C$. A \emph{cut} for stage $j\ge1$
+(\lean{New.Data.IsStageCut}) is a finite set $\mathcal C_j$ of cosets of $J_\vartheta(Y_j)$ in
+$G_{\mathrm f}(Y_j)$ with four properties, where $S=R_{\mathrm f}(Y_j)$ and $A=J^\circ$. It is stable under
+$R_{\mathrm f}(Y_j)\cap J^\circ$. Its points are integral at the places not dividing $\Nm Q$. On it,
+$\mu_{\mathcal C_j}$ divides a power of $\Nm Q$. And $\mu_{\mathcal C_j}(y)\neq0$ at every $y$ whose
+$R_{\mathrm f}(Y_j)$-orbit contains a point with graded lattice $\Lambda'$ satisfying
+\begin{equation}\label{ub-seesaw:eq:bounds}
+  \bar{\mathfrak q}^{\,j}\Lambda^-\subseteq\Lambda'^-,\qquad \mathfrak q^{\,j}\Lambda'^-\subseteq\Lambda^- .
+\end{equation}
+Here $\Lambda^-,\Lambda'^-$ are the intersections of the lattices of $1$ and of that point with the
+span of the string, and $\mathfrak q$ is an idele generating $\prod_{w\in Q}w$
+(\lean{New.Data.twistIdele}).
+
+\begin{lemma}[Support; \lean{New.Data.hasLatticeBounds_of_unfoldStage_ne_zero}]\label{ub-seesaw:lem:support}
+Let $\varphi$ be ramified, $y_0\in J_M$ and $1\le j\le m-1$. If $\mathcal W_j(h_\infty,h_{\mathrm f})\neq0$, then every
+point $r'h_{\mathrm f}$ with $r'\in R_{\mathrm f}(Y_j)$ whose lattice is graded satisfies~\eqref{ub-seesaw:eq:bounds}.
+\end{lemma}
+
+\begin{proof}
+Induction on $j$; at stage $0$ the bounds hold with exponent $0$ because $y_0\in J_M$. A nonzero
+value of $\mathcal W_j$ forces a nonzero product of $\mathcal W'_{j-1}$ and a constant term at
+$\mathsf T_{j-1}$. The finite datum is fixed by the translations by a generator of $\pi_M\prod_{w\in Q}w$
+times integral vectors. So a nonzero constant term forces a multiple of $\mathsf T_{j-1}$ to map, modulo
+maps of degree $\ge0$, the lattice of the previous point into that of the next
+(\lean{New.Grading.smul_map_stringMapFin_latticePlus_le}). The standard lattices satisfy
+$\mathsf T_{j-1}\Lambda_{j-1}^+=\mathfrak a\Lambda_j^-$ for an idele $\mathfrak a$. With the upper bound at
+stage $j-1$ (induction hypothesis) this gives the lower bound at stage $j$
+(\lean{New.Grading.smul_latticeMinus_le_of_map_latticePlus}). Duality for the unimodular graded
+lattice turns the lower bound into both bounds, unless $s_j$ is odd and $\Lambda'$ splits along
+$X_j$ at a place $w\mid\pi_N$ (\lean{New.Grading.SpansLattice.hasLatticeBounds_or_latticeSplitsAt}).
+Then $j$ is even, and the integral scalings of $X_j$ at $w$ fix the lattice, hence the last datum
+of the chain of double lifts of which $\mathcal W_j$ is a coefficient
+(Lemma~\ref{ub-seesaw:lem:double}). Such a chain vanishes on ramified $\varphi$
+(\lean{New.Data.doubleLiftChain_eq_zero_of_ramified}, Section~\ref{sec:ub-objects}), so
+$\mathcal W_j(h_\infty,h_{\mathrm f})=0$ (\lean{New.Data.unfoldStage_eq_zero_of_latticeSplitsAt}), a contradiction.
+\end{proof}
+
+\begin{lemma}[\lean{New.Data.exists_isStageCut}]\label{ub-seesaw:lem:cut}
+For every tame character $\vartheta$ and $1\le j\le m-1$ a cut $\mathcal C_j$ exists. If
+$Q=\emptyset$, every set of cosets of $J_\vartheta(Y_j)$ whose points are integral has at
+most $\mathcal B$ elements (\lean{New.Data.card_le_residueMatrixCount}).
+\end{lemma}
+
+\begin{proof}
+This applies \lean{New.Seesaw.exists_finset_coverMultiplicity_dvd_pow}.
+The points satisfying~\eqref{ub-seesaw:eq:bounds} lie, up to $R_{\mathrm f}(Y_j)$, in finitely many cosets
+$cJ^\circ$ with $c$ supported on $Q\cup\bar Q$. Take $\mathcal C_j$ to be the
+$(R_{\mathrm f}(Y_j)\cap J^\circ)$-saturation of a set $C$ of orbit representatives. At $yJ\in C$, the
+multiplicity is the index of $Z\cap J^\circ$ in the stabiliser $Z=R_{\mathrm f}(Y_j)\cap yJy^{-1}$
+(\lean{New.Seesaw.coverMultiplicity_eq_index_stabilizer}). If $y$ is integral away from
+$Q\cup\bar Q$ and $u\in J_\vartheta(Y_j)$, then $(yuy^{-1})^{(\Nm Q)^n}\in J^\circ$
+for some $n$: at $w\in Q$ the element $u$ is $\equiv1$, and high powers of elements close to $1$ are
+close to $1$ (\lean{New.Data.exists_conj_pow_mem_stdLevel}). So the finite group $Z/\mathrm{core}$ has
+exponent dividing a power of $\Nm Q$, and so does its order
+(\lean{New.Seesaw.exists_index_dvd_pow_of_pow_mem}).
+\end{proof}
+
+The classes $\mathcal C_j$ (with $\mathcal C_0=J_M/J_\vartheta(Y_0)$, multiplicity $1$) are fixed in
+\lean{New.Data.cutPoints}, with multiplicities $\mu_j$ (\lean{New.Data.cutMultiplicity}). For a function
+$S$ of tuples of classes $c=(c_i)_i$, $c_i\in G_{\mathrm f}(Y_i)/J_\vartheta(Y_i)$, put
+\[
+  \operatorname{cutSum}_k S=\sum_{c_0\in\mathcal C_0}\cdots\sum_{c_{k-1}\in\mathcal C_{k-1}}
+  \Bigl(\prod_{i<k}\mu_i(c_i)\Bigr)^{-1}S(c_0,\dots,c_{k-1},1,1,\dots)
+\]
+(\lean{New.Data.cutSum}).
+
+\begin{proposition}[\lean{New.Data.exists_integral_mul_lowerChainUpTo_eq_cutSum}]\label{ub-seesaw:prop:outer}
+Let $\mathfrak t,g$ be as in Theorem~\ref{ub-seesaw:thm:seesaw}, $k\le m-1$, $\mathcal G$ a grading of $Y_{k+1}$ with
+string of length $\max(m-2-k,0)$, and $\eta$ a function of the archimedean outer variables
+$\xi=(\xi_i)$. There is $c\in\C$ such that the following holds for every tame character
+$\vartheta$, ramified $\varphi$, conjugate form $z$ on $Y_{k+1}$ and function $S$ of classes. If
+$\Xi_{k+1}(z)=\eta(\xi)\,S([y])$ whenever $y_0\in J_M$ and $y_m=1$, then
+$\int_{[G(Y_{k+1})]}z\cdot\mathrm{lift}_k\cdots\mathrm{lift}_0\Poin\varphi=c\cdot\operatorname{cutSum}_{k+1}S$.
+\end{proposition}
+
+\begin{proof}
+Induction on $k$, for all $\eta$ and $S$. For $k=0$ this is the unfolding of $\Poin$ above, with
+$c=[J^\circ:J_M]\,\eta(g,1,1,\dots)$. For the step, descend $z$ to $z'=\mathrm{lift}_{k+1}^*z$ and apply
+the induction hypothesis to $z'$ and $S'=\sum_{c_{k+1}\in\mathcal C_{k+1}}\mu_{k+1}(c_{k+1})^{-1}S$. It
+remains to show $\Xi_{k+1}(z')=\eta'(\xi)S'$. The integrand is left invariant under $\Gamma_{R(Y_{k+1})}$
+and, by Lemma~\ref{ub-seesaw:lem:support}, supported where $\mu_{k+1}\neq0$. So the integral over
+$\Gamma_{R(Y_{k+1})}\backslash G(Y_{k+1})$ is the integral of the periods over $[R(Y_{k+1})]$ against a weight
+$\beta(\tau_\infty)\,\mu_{k+1}(\tau_{\mathrm f})^{-1}\mathbf 1_{\mathcal C_{k+1}}(\tau_{\mathrm f})$ of mass $1$ on each orbit of
+the support (\lean{New.Seesaw.lintegral_indicator_inv_coverMultiplicity}). By~\eqref{ub-seesaw:eq:step}
+the period at $\tau$ is $[J^\circ:J_\vartheta(Y_{k+1})]\,\eta(\xi,\tau_\infty)\,S(\dots,\tau_{\mathrm f})$. The finite
+integral of the indicator of a coset of $J_\vartheta(Y_{k+1})$ is $[J^\circ:J_\vartheta(Y_{k+1})]^{-1}$
+(Haar measure with $\vol(J^\circ)=1$), so the level index cancels. The archimedean integral gives a number $\eta'(\xi)$ that depends only on $\eta$
+and the grading (\lean{New.Grading.exists_integral_eq_sum_over_cut}).
+\end{proof}
+
+\subsection{Pairs of lifts: the seesaw}
+
+Let $\mathrm{ev}_i(y)$ (\lean{New.Data.evaluatedDatum}) be the finite evaluation
+(\lean{New.Data.doubleLiftEvalY}) of the moved finite data
+$\omega(y_{2i},y_{2i+1})\Upsilon_{2i+1}$ and $\omega(y_{2i+1},y_{2i+2})\Upsilon_{2i+2}$. It joins
+them into one datum on $\Hom(Y_{2i+1},Y_{2i}^-\oplus Y_{2i+2})$ (\lean{New.Seesaw.arrowProduct}),
+translates it by $(\mathsf T_{2i}^*,\mathsf T_{2i+1})$, takes the finite constant term along the maps of nonzero
+degree and into the hyperbolic plane, and splits the result into a tensor of data on
+$\Hom(X_{2i},X_{2i+1})$ and $\Hom(X_{2i+1},X_{2i+2})$.
+
+\begin{lemma}[\lean{New.Data.exists_unfoldStage_eq_algFormCoeff}]\label{ub-seesaw:lem:double}
+Let $\mathfrak t$, the archimedean outer variables and $i\le\varrho$ be fixed, and let $\mathcal G$ be the grading of
+$Y_{2i+2}$ with definite part $X$. There is a linear form $l$, independent of $\vartheta$,
+$\varphi$ and $y$, such that
+$\mathcal W_{2i+2}(\mathrm{incl}_X(h)\,(\xi_{2i+2},y_{2i+2}))
+=l\bigl(\Theta^X_{\vartheta,i+1}(\mathrm{ev}(y))\varphi\,(\mathrm{emb}(h))\bigr)$ for $h\in\U(X)$.
+Here $\Theta^X_{\vartheta,i+1}(\mathrm{ev}(y))$ is the chain of the first $i+1$ double lifts
+$X_0\to\cdots\to X_{2i+2}$ with data $\mathrm{ev}_0(y),\dots,\mathrm{ev}_i(y)$. For $i<\varrho$,
+$X=X_{2i+2}$ and $\mathrm{emb}=\mathrm{id}$. For $i=\varrho$, $X$ is $Y_m$ with its basis and
+$\mathrm{emb}(h)=\operatorname{diag}(h,1)\in\U(X_m)$.
+\end{lemma}
+
+\begin{proof}
+By induction, $\mathcal W'_{2i}$ is the equivariant function attached to a coefficient of the form
+$\psi=\Theta^X_{\vartheta,i}(\mathrm{ev}(y))\varphi$ on $X_{2i}$
+(\lean{New.Data.exists_unfoldStageOn_even_eq_sourceFn}). The product of the two constant terms of
+stages $2i$ and $2i+1$ is a multiple of one zero term of the joined datum on
+$\Hom(Y_{2i+1},Y_{2i}^-\oplus Y_{2i+2})$, because the theta function of a joined datum is a
+multiple of the product of the two theta functions
+(\lean{New.Seesaw.DoubleLiftData.constTerm_mul_constTerm_eq_inv_mul_zeroTerm}). In the integral over the two Bessel groups, the unipotent parts are absorbed into the zero term: the
+stacked map $(\mathsf T_{2i}^*,\mathsf T_{2i+1})$ is isotropic, and a unipotent element changes it only by maps of
+positive degree and maps into an isotropic half of the plane below
+(\lean{New.Seesaw.DoubleLiftData.exists_integral_constTermAtStringMap_mul_eq}). The part of grade $0$ of $Y_{2i}^-\oplus Y_{2i+2}$ is
+$X_{2i}^-\oplus X_{2i+2}$ plus one hyperbolic plane spanned by the two middle vectors. In the last
+pair the middle vector $\mathbf e$ of $Y_{2\varrho}$ has norm $N$ in $Y_{2\varrho}^-$, and $\mathbf e/\pi_N$, of norm $1$, is
+adjoined to $Y_m$ to form $X_m$ (\lean{New.Seesaw.middleDoubleLift},
+\lean{New.Seesaw.lastDoubleLift}). The zero term intertwines the joint Weil action of
+$\U(X_{2i})\times\U(X_{2i+1})\times\U(X_{2i+2})$, embedded in the groups of the $Y$'s, with its Weil
+action on $\Hom(X_{2i+1},X_{2i}^-\oplus X_{2i+2})$
+(\lean{New.Seesaw.DoubleLiftData.zeroTerm_splitting_tripleWeil}). For the pair
+$\U(X_{2i}^-\oplus X_{2i+2})\supset\U(X_{2i})\times\U(X_{2i+2})$ against
+$\U(X_{2i+1})\subset\U(X_{2i+1})\times\U(X_{2i+1})$, a theta integral over $[\U(X_{2i})]\times[\U(X_{2i+1})]$ of
+a joined datum is a coefficient of the composite of two definite lifts
+(\lean{New.Seesaw.integral_theta_tripleWeil_eq_lift_comp}, which rests on the theta lift for a definite
+unitary pair as a class sum on algebraic modular forms, \lean{New.isThetaLift_thetaKernel}; the Lean
+file names Gross, Algebraic modular forms, 1999, among the sources of this known result). This is the
+seesaw. The datum
+obtained is the tensor of a real Fock vector, independent of $\vartheta$ and $y$, and of
+$\mathrm{ev}_i(y)$ (\lean{New.Data.exists_zeroTerm_eq_integrated}).
+\end{proof}
+
+At the top, for a linear form $l$ there is $C_l$ such that if $F(h)=l(\psi(\operatorname{diag}(h,1)))$
+on $\U(Y_m)$, then $\int_{[G(Y_m)]}F\bar v=C_l\langle v,\operatorname{res}_{Y_m}\psi\rangle$ for every
+form $v$ on $Y_m$ (\lean{New.Data.exists_integral_eq_mul_inner_restrictToFormY}, a direct computation
+with the highest vector of the type of $v$ and the branching map). Define the tensor
+\[
+  \varphi_\vartheta=\operatorname{cutSum}_m\bigl(c\mapsto\textstyle\bigotimes_{i=0}^{\varrho}\mathrm{ev}_i(c)\bigr)
+  \qquad(\text{\lean{New.Data.seesawDatum}}),
+\]
+the weighted sum over $\mathcal C_0\times\cdots\times\mathcal C_{m-1}$, with $c_m=1$.
+
+\begin{proposition}[\lean{New.Data.exists_lowerChainUpTo_poincareAt_eq}]\label{ub-seesaw:prop:chain}
+For $\mathfrak t,g$ fixed there is $c_0\in\C$ such that for every tame character $\vartheta$ and every ramified
+$\varphi$,
+$\mathrm{lift}_{m-1}\cdots\mathrm{lift}_0\Poin_{g,\mathfrak t}\varphi=c_0\operatorname{res}_{Y_m}\Theta^X_\vartheta(\varphi_\vartheta)\varphi$.
+The tensor $\varphi_\vartheta$ is fixed by the levels of $X_0,\dots,X_{m-1}$
+(\lean{New.Data.isInvariant_seesawDatum}).
+\end{proposition}
+
+\begin{proof}
+Pair both sides with a form $v$ on $Y_m$ and apply Proposition~\ref{ub-seesaw:prop:outer} with $k=m-1$, the last grading,
+$z=\bar v$, $\eta(\xi)=C_{l(\xi)}$ and
+$S(c)=\langle v,\operatorname{res}\Theta^X_\vartheta(\otimes_i\mathrm{ev}_i(c))\varphi\rangle$. The
+hypothesis holds by Lemma~\ref{ub-seesaw:lem:double} for $i=\varrho$ and the top-stage formula.
+Since $S$ is linear in the tensor, $\operatorname{cutSum}_mS=\langle v,\operatorname{res}\Theta^X_\vartheta(\varphi_\vartheta)\varphi\rangle$.
+For the invariance, translating the classes $c_j$ by the images of level elements of $X_j$ does not
+change the cut sum (\lean{New.Data.cutSum_comp_smul}). By equivariance of the evaluation
+(\lean{New.Seesaw.DoubleLiftData.finEval_arrowProduct_equivariant}), this translation is the
+joint Weil action on $\otimes_i\mathrm{ev}_i(c)$.
+\end{proof}
+
+\emph{Why $c_0$ does not depend on $\vartheta$.} A twist has weight $0$, so all archimedean
+components (Weil representations, real data, Fock vectors, the linear forms $l$, the weights $\beta$
+and the numbers $\eta'(\xi)$) are the same for all $\vartheta$. The twist enters only at the finite places:
+through the finite data, the levels $J_\vartheta(Y_j)$ and the cuts. All of these are collected in
+$\varphi_\vartheta$.
+
+\subsection{Denominators of the tensor, and the proof}
+
+\begin{lemma}[\lean{New.Data.exists_isAdmissibleCombination_seesawDatum}]\label{ub-seesaw:lem:seesawDatum}
+There is $C\in\C$ such that for every tame character $\vartheta$,
+$\varphi_\vartheta=\sum_{\mathbf x}\gamma_\vartheta(\mathbf x)\,C\,\mathrm{gV}(\mathbf x)$ with $\gamma_\vartheta$ finitely supported on
+translations with $\bar\pi_M\mathbf x_j$ integral away from $\Nm Q$,
+$\mathcal B^{2m}\gamma_\vartheta(\mathbf x)\in\mathcal O_{(\Nm Q)}$, and, if $Q=\emptyset$,
+$\sum_{\mathbf x}\abs{\sigma \gamma_\vartheta(\mathbf x)}\le\mathcal B^{m}$ for all $\sigma\in\Aut(\C)$.
+\end{lemma}
+
+\begin{proof}
+First, there is $C$ such that for every $\vartheta$ and every tuple $y$ with each $y_k$ integral at
+the places not dividing $\Nm Q$, $\bigotimes_{i\le\varrho}\mathrm{ev}_i(y)$ is an admissible
+combination of the $C\,\mathrm{gV}(\mathbf x)$, over the same translations, with denominator
+$\mathcal B^{2m}$ away from $\Nm Q$ and size $1$ under $Q=\emptyset$
+(\lean{New.Data.exists_isAdmissibleCombination_gluedVacuum}). Indeed, the finite datum of a lift,
+the indicator of the inclusion modulo $\pi_M$ and $Q$, is a combination of translates of
+the vacuum whose denominator is the number of matrices modulo $\pi_M$
+(\lean{New.Data.isAdmissibleCombination_pointDatumY}). An element integral away from
+$\Nm Q$ moves a translate of the vacuum to a combination of translates, of size $1$ if
+$Q=\emptyset$. The join of two translates is a root of unity times a translate. The
+evaluation of a translate is $0$ or a root of unity times a translate of the finite zero term of the
+vacuum (\lean{New.Seesaw.DoubleLiftData.exists_finEval_finHeisenbergOp_vacElem}). That zero term is a
+fixed nonzero multiple of the sum of the vacuum translates over representatives of a neighbour lattice
+above $N$, which is the gluing in $\mathrm{gV}$
+(\lean{New.Seesaw.DoubleLiftData.exists_zeroTermFin_splitting_vacElem_eq_sum}). So each
+$\mathrm{ev}_i$ has denominator dividing $\mathcal B^4$
+(\lean{New.Data.exists_isAdmissibleCombination_evaluatedDatum}), and the tensor of the
+$\varrho+1=m/2$ factors has denominator dividing $\mathcal B^{2m}$.
+
+Second, the points of the cuts are integral away from $\Nm Q$, and the weights
+$\prod_i\mu_i(c_i)^{-1}$ lie in $\mathcal O_{(\Nm Q)}$ because each $\mu_i$ divides a power of
+$\Nm Q$ (\lean{New.Seesaw.div_mem_integralAway}). If $Q=\emptyset$, the weights are
+$1$ and each $\mathcal C_i$ has at most $\mathcal B$ elements (Lemma~\ref{ub-seesaw:lem:cut}). So
+$\varphi_\vartheta$ is an admissible combination of the tensors of the first step, with denominator
+$1$ and size $\mathcal B^m$ (\lean{New.Data.isAdmissibleCombination_cutSum}). Substitution
+(\lean{New.Seesaw.IsAdmissibleCombination.bind}) gives the claim.
+\end{proof}
+
+\begin{proof}[Proof of Theorem~\ref{ub-seesaw:thm:seesaw}]
+Take $c_0$ from Proposition~\ref{ub-seesaw:prop:chain} and $C$ from
+Lemma~\ref{ub-seesaw:lem:seesawDatum}. Put $\nu=\mathcal B^{2m}/(c_0C)$ if $c_0C\neq0$ and $\nu=1$
+otherwise, and $c=\nu^{-1}$. These do not depend on $\vartheta$. By
+\lean{New.Seesaw.IsAdmissibleCombination.normUnit_smul}, $\nu c_0\varphi_\vartheta$ is an admissible
+combination of the $\mathrm{gV}(\mathbf x)$ with denominator $1$ and size
+$\mathcal B^{2m}\mathcal B^m=M^{3fmn_m^2}$. Each translation can be replaced by one with the same
+data that vanishes at the places prime to $M\Nm Q$
+(\lean{New.Data.exists_supported_translateDatum_eq}, Section~\ref{sec:ub-divis}). This gives
+$\Psi$ with $\sum_{\mathbf x}\Psi(\mathbf x)\mathrm{gV}(\mathbf x)=\nu c_0\varphi_\vartheta$ and (i)--(iii). Property (iv) is
+the invariance in Proposition~\ref{ub-seesaw:prop:chain}. Finally,
+Proposition~\ref{ub-seesaw:prop:chain} gives
+$\Theta_\vartheta(\nu\Poin\varphi)=\operatorname{res}_{Y_m}\Theta^X_\vartheta(\nu c_0\varphi_\vartheta)\varphi=B_{\vartheta,\Psi}\varphi$,
+read in algebraic forms (\lean{New.Data.lowerChain_eq_of_lowerChainUpTo_eq}). Dividing by $\nu$
+gives the identity with $c=\nu^{-1}$.
+\end{proof}
+
+\subsection{Further results used elsewhere}\label{ub-seesaw:sec:further}
+
+Other sections use from the Lean folder \texttt{New/UpperBound/Seesaw} of this section
+\lean{New.Seesaw.div_mem_integralAway}; for graded spaces
+\lean{New.gradedLatticeBasis}, \lean{New.Seesaw.isUnimodular_gradedLatticeBasis_gram} and
+\lean{New.Seesaw.exists_conjTranspose_mul_gradedGram_mul_eq_signMatrix}; the admissible
+combinations given by Schr\"odinger operators, \lean{New.Seesaw.isAdmissibleCombination_schrodingerOp}
+and \lean{New.Seesaw.isAdmissibleCombination_schrodingerOp_of_reduction}; the norms
+\lean{New.Parameters.norm_finMultiplier_eq_one} and \lean{New.AutChar.HasWeight.norm_apply_detFin_eq_one};
+the level inclusion \lean{New.Data.chosenLevel_inf_trivialOn_le}; and the predicate
+\lean{New.Seesaw.IsSplitSquarefree}.

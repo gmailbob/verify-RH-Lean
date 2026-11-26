@@ -1,0 +1,521 @@
+\section{Spanning: the second moment, multiplicities and Bessel functions}\label{sec:sp-moment}
+
+This section proves Theorem~B: a few translates $s\nPoin$ of the normalised Poincaré map,
+$s\in\Gbar$, span almost all of the target. First, linear algebra (\S\ref{sp-moment:ss:abstract}):
+if a map $B$ into a unitary representation of a finite group is almost an isometry onto a stable
+subspace $\mathcal H_0$, and the second moment $\sum_s\norm{B^*sB}^2$ is nearly as small as Cauchy--Schwarz
+allows, then for every subspace of $\mathcal H_0$ some translate of $B$ has a small preimage of it, and a
+greedy choice of about $\log(\cdot)\dim\mathcal H_0/\dim S$ translates spans almost all of $\mathcal H_0$. Second,
+the hypotheses for the Poincaré map (\S\ref{sp-moment:ss:B}): the moment bounds are proved by
+unfolding in Section~\ref{sec:sp-unfold}, and $\dT$ is bounded on a definite space by the
+equality of multiplicities (\S\ref{sp-moment:ss:mult}), a comparison of simple trace formulas.
+Last come the Bessel functions at the real places (\S\ref{sp-moment:ss:bessel}) and the lower
+bounds for periods of discrete series that make them large (\S\ref{sp-moment:ss:appendix}).
+Corollary~\ref{sp-moment:cor:mult} and Theorem~\ref{sp-moment:thm:restriction} also serve
+Sections~\ref{sec:det-chain}--\ref{sec:cg-selmer}; the Bessel systems and
+Lemmas~\ref{sp-moment:lem:isometry}, \ref{sp-moment:lem:positive} serve
+Sections~\ref{sec:sp-unfold}--\ref{sec:sp-remain}.
+
+\subsection{Notation}\label{sp-moment:ss:notation}
+$D$ is admissible data, with the notation of Sections~\ref{sec:setup} and~\ref{sec:main}, and
+$Y_0=X_0\oplus(\varrho\text{ hyperbolic planes})\oplus\langle z\rangle$ (Section~\ref{sec:ub-objects}).
+For a hermitian space $V$ of rank $r$ over
+$E$ with given signs at the real places, $\mathcal A(V)$ (\lean{New.Data.principalForms}) is the
+finite-dimensional space of forms on $\U(V)$ of the archimedean type of the doubled target parameters
+$2\lambda(v)$ (Definition~\ref{data:def:target}; \lean{New.Data.paramW}) and of principal level $J_M$ at the chosen places $w$ above $M$;
+$\Gbar=\prod_w\GL_r(\F_w)$ acts on it unitarily (\lean{New.Data.principalRep}). The central
+idempotent $e_0\in\C[\Gbar]$ is the sum of the idempotents of the good families of labels,
+$\mathcal G(V)=e_0\mathcal A(V)$ (\lean{New.Data.goodForms}), and $\mathcal T_D=\mathcal G(Y_0)$. The
+source $\mathcal S$ has dimension $D_X$. The Poincaré map $\Poin\colon\mathcal S\to\mathcal A(Y_0)$
+is defined in Section~\ref{sec:sp-unfold}; $\Poin_s=\#\Gbar\,e_0s\Poin\colon\mathcal S\to\mathcal T_D$
+(\lean{New.Data.goodPoincare}), so $s\nPoin=c_Bc_{\mathrm{ss}}^{-1}\Poin_s$ on $\mathcal S^{\mathrm{ram}}$
+(Definition~\ref{main:def:npoincare}) and $s\nPoin(\mathcal S^{\mathrm{ram}})=
+\Poin_s(\mathcal S^{\mathrm{ram}})$ (\lean{New.Data.range_normalizedPoincare}).
+
+For $A\colon S\to\mathcal H$ between finite-dimensional inner product spaces, $\norm A$ is the
+Hilbert--Schmidt norm, $\norm A^2=\tr(A^*A)=\sum_i\norm{Ab_i}^2$ for an orthonormal basis
+(\lean{New.hilbertSchmidtNorm}), with inner product $\pair{X,Y}=\tr(X^*Y)$; $\mathrm{pr}_U$ is the
+orthogonal projection onto $U$, and $\norm{\mathrm{pr}_U}^2=\dim U$.
+
+\subsection{The abstract spanning argument}\label{sp-moment:ss:abstract}
+
+\begin{definition}[\lean{New.IsNearIsometry}, \lean{New.IsSpread}]\label{sp-moment:def:spread}
+(a) A map $A\colon S\to\mathcal H$ is a \emph{near isometry with error $\eps$} if
+$\norm{A\,\mathrm{pr}_U}^2\ge\dim U-\eps\dim S$ for every subspace $U\subseteq S$.
+(b) A family of linear maps $B_s\colon V\to W$ ($s\in\Theta$) \emph{spreads with error $\eta$} if
+for every subspace $F\subseteq W$, with share $\alpha=\dim F/\dim W$ ($\alpha=0$ if $W=0$), some
+$s$ has $\dim B_s^{-1}(F)\le\bigl(\tfrac{1+\alpha}2+\eta\bigr)\dim V$, that is, $B_s(V)$ adds at
+least $(\frac{1-\alpha}2-\eta)\dim V$ dimensions to $F$.
+\end{definition}
+
+\begin{lemma}[(a) \lean{New.isNearIsometry_of_hilbertSchmidtNorm_le}, (b)
+\lean{New.IsNearIsometry.proj_comp}, (c) \lean{New.hilbertSchmidtNorm_one_sub_mul_comp_sq_le}]
+\label{sp-moment:lem:isometry}
+Let $A\colon S\to\mathcal H$ be linear and $p,q$ endomorphisms of $\mathcal H$, $p$ an orthogonal projection.
+(a) If $\norm{A^*A-1}^2\le\eps^2\dim S$ with $\eps\ge0$, then $A$ is a near isometry with error
+$\eps$. (b) If $A$ is a near isometry with error $\eps$ and $\norm{(1-p)A}^2\le\delta\dim S$, then
+$pA$ is a near isometry with error $\eps+\delta$. (c)
+$\norm{(1-pq)A}^2\le\norm{(1-p)A}^2+\norm{(1-q)A}^2$.
+\end{lemma}
+
+\begin{proof}
+(a) $\norm{A\,\mathrm{pr}_U}^2-\dim U=\tr(\mathrm{pr}_U(A^*A-1))=\pair{\mathrm{pr}_U,A^*A-1}$, of
+modulus at most $\norm{\mathrm{pr}_U}\norm{A^*A-1}\le\sqrt{\dim S}\cdot\eps\sqrt{\dim S}$.
+(b) $\norm{A\,\mathrm{pr}_U}^2=\norm{pA\,\mathrm{pr}_U}^2+\norm{(1-p)A\,\mathrm{pr}_U}^2$, and the
+last term is at most $\norm{(1-p)A}^2$. (c) For each vector $y$, $(1-pq)y=p(1-q)y+(1-p)y$ is an
+orthogonal sum, and $\norm{p(1-q)y}\le\norm{(1-q)y}$; sum over $y=Ab_i$.
+\end{proof}
+
+\begin{proposition}[One translate; \lean{New.isSpread_of_second_moment}]\label{sp-moment:prop:one}
+Let a finite group $\Gamma$ act unitarily on $\mathcal H$ by $\rho$, let $\mathrm{pr}_0$ be the orthogonal
+projection onto a subspace $\mathcal H_0$ with $\mathrm{pr}_0\rho(s)=\rho(s)\mathrm{pr}_0$ for all $s$, and
+let $B\colon S\to\mathcal H$ be linear and $\eps\ge0$. Suppose
+\begin{equation}\label{sp-moment:eq:hyp}
+\text{$\mathrm{pr}_0B$ is a near isometry with error $\eps$},\qquad
+\dim\mathcal H_0\cdot\sum_{s\in\Gamma}\norm{B^*\rho(s)B}^2\le\#\Gamma\,(1+\eps)(\dim S)^2.
+\end{equation}
+Then the maps $\mathrm{pr}_0\rho(s)B\colon S\to\mathcal H_0$, $s\in\Gamma$, spread with error $3\eps/2$.
+\end{proposition}
+
+\begin{proof}
+Let $\Xi_s=\rho(s)BB^*\rho(s)^{-1}$. By unitarity
+$\pair{\Xi_s,\Xi_t}=\tr\bigl(B^*\rho(s^{-1}t)BB^*\rho(t^{-1}s)B\bigr)=\norm{B^*\rho(s^{-1}t)B}^2$
+(\lean{New.inner_hilbertSchmidtVector_translate}), so $u\mapsto\norm{B^*\rho(u)B}^2$ is of
+positive type and $\norm{\sum_s\Xi_s}^2=\#\Gamma\sum_u\norm{B^*\rho(u)B}^2$. For a subspace
+$W\subseteq\mathcal H$, $\norm{\mathrm{pr}_W\rho(s)B}^2=\tr(\mathrm{pr}_W\Xi_s)$, and Cauchy--Schwarz gives
+(\lean{New.sq_sum_hilbertSchmidtNorm_orthoProj_comp_le})
+\begin{equation}\label{sp-moment:eq:cs}
+\Bigl(\sum_s\norm{\mathrm{pr}_W\rho(s)B}^2\Bigr)^2\le\norm{\mathrm{pr}_W}^2\Bigl\Vert\sum_s\Xi_s
+\Bigr\Vert^2=\dim W\cdot\#\Gamma\sum_u\norm{B^*\rho(u)B}^2.
+\end{equation}
+Now let $W\subseteq\mathcal H_0$ with $\dim W=\alpha\dim\mathcal H_0$. By \eqref{sp-moment:eq:hyp} the right side of
+\eqref{sp-moment:eq:cs} is at most $\alpha(1+\eps)(\#\Gamma\dim S)^2\le
+\bigl(\tfrac{\alpha+1+\eps}2\bigr)^2(\#\Gamma\dim S)^2$, so some $s$ has
+$\norm{\mathrm{pr}_W\rho(s)B}^2\le\frac{\alpha+1+\eps}2\dim S$. Let
+$U=\{x\in S:\mathrm{pr}_0\rho(s)Bx\in W\}$. For $x\in U$ the vector $\rho(s)Bx-\mathrm{pr}_0\rho(s)Bx$ is
+orthogonal to $\mathcal H_0\supseteq W$, so $\mathrm{pr}_W\rho(s)Bx=\mathrm{pr}_0\rho(s)Bx=\rho(s)\mathrm{pr}_0Bx$,
+and $\norm{\mathrm{pr}_0Bx}=\norm{\mathrm{pr}_W\rho(s)Bx}$. Hence, by the first hypothesis,
+\[
+\dim U-\eps\dim S\le\norm{\mathrm{pr}_0B\,\mathrm{pr}_U}^2\le\norm{\mathrm{pr}_W\rho(s)B\,
+\mathrm{pr}_U}^2\le\norm{\mathrm{pr}_W\rho(s)B}^2\le\tfrac{\alpha+1+\eps}2\dim S,
+\]
+that is, $\dim U\le(\frac{1+\alpha}2+\frac32\eps)\dim S$.
+\end{proof}
+
+\begin{proposition}[Few translates; \lean{New.IsSpread.exists_few_le_finrank_iSup_range}]
+\label{sp-moment:prop:few}
+Let $V\ne0$ and $W\ne0$ be finite-dimensional, $0<\eps<1/16$, and let the maps
+$B_s\colon V\to W$ ($s\in\Theta$) spread with error $3\eps/2$. Then there is a finite set
+$\mathfrak s\subseteq\Theta$ with
+\[
+\#\mathfrak s\cdot\dim V\le\tfrac52\bigl(1+\log\tfrac1{16\eps}\bigr)\dim W,\qquad
+\dim\textstyle\sum_{s\in \mathfrak s}B_s(V)\ge(1-16\eps)\dim W.
+\]
+\end{proposition}
+
+\begin{proof}
+\emph{One step} (\lean{New.IsSpread.exists_codim_le}). Let $F\subseteq W$ have codimension
+$c=(1-\alpha)\dim W>16\eps\dim W$, and take $s$ as in Definition~\ref{sp-moment:def:spread}. As
+$\dim(F+B_s(V))+\dim B_s^{-1}(F)=\dim F+\dim V$
+(\lean{New.finrank_sup_range_add_finrank_comap}), the codimension of $F+B_s(V)$ is at most
+$c-\bigl(\frac{1-\alpha}2-\frac32\eps\bigr)\dim V$. Since $\frac32\eps<\frac3{32}(1-\alpha)$, the
+bracket is at least $\frac25(1-\alpha)$, so the new codimension is at most $(1-\theta)c$ with
+$\theta=2\dim V/(5\dim W)$. Applied to $F=0$ this shows $\theta\le1$.
+\emph{Iteration} (\lean{New.IsSpread.exists_codim_le_max}). Starting from $F=0$ and stopping once
+the codimension is at most $16\eps\dim W$, after $l$ steps the span of at most $l$ images has
+codimension at most $\max(16\eps,e^{-l\theta})\dim W$, as $1-\theta\le e^{-\theta}$.
+\emph{Count.} Take $l=\lceil\log(1/16\eps)/\theta\rceil$. Then $e^{-l\theta}\le16\eps$, and
+$l\theta\le\theta+\log(1/16\eps)\le1+\log(1/16\eps)$, so
+$\#\mathfrak s\dim V\le l\dim V=\frac52\,l\theta\dim W$.
+\end{proof}
+
+\begin{lemma}[\lean{New.finrank_biSup_range_le}]\label{sp-moment:lem:restrict}
+For linear maps $B_s\colon V\to W$, a finite set $\mathfrak s$ and a subspace $U\subseteq V$,
+$\dim\sum_{s\in \mathfrak s}B_s(V)\le\dim\sum_{s\in \mathfrak s}B_s(U)+\#\mathfrak s\,(\dim V-\dim U)$. (Write $V=U\oplus C$;
+then $\sum_sB_s(V)=\sum_sB_s(U)+\sum_sB_s(C)$, and $\dim\sum_sB_s(C)\le\#\mathfrak s\dim C$.)
+\end{lemma}
+
+The following counting lemma is used in Section~\ref{sec:sp-unfold} to bound the mass of the
+translates at which a minor of the reduction degenerates.
+
+\begin{lemma}[\lean{New.card_mul_sum_det_eq_zero_le}]\label{sp-moment:lem:positive}
+Let $G$ be a finite group, $\mathbb F$ a field with $q$ elements, $\pi\colon G\to\GL_n(\mathbb F)$
+a homomorphism and $\pi'(s)=(\pi(s)^{\mathsf T})^{-1}$; let $A_0,A_1$ be $n\times l$ matrices and
+$\Theta\ge0$ a function of positive type on $G$ ($\Theta(g^{-1}g')=\pair{u_g,u_{g'}}$ for some vectors
+$u_g$). Suppose $Y\ge0$ bounds, for every $v\ne0$ in $\mathbb F^l$, both $\Theta$-masses
+$\Theta\{s:\pi(s)A_0v=A_0v\}$ and $\Theta\{s:\pi'(s)A_1v=A_1v\}$. Then
+\[
+q\cdot\Theta\{s:\det(A_1^{\mathsf T}\pi(s)A_0)=0\}\le2\,\Theta(G)+q^{l+n/2}\,Y.
+\]
+\end{lemma}
+
+\begin{proof}
+A singular $Z_s=A_1^{\mathsf T}\pi(s)A_0$ has at least $q$ vectors $y$ with $y^{\mathsf T}Z_s=0$;
+with a primitive additive character $\psi$ their number is $\sum_y\mathbb E_v\psi(y^{\mathsf T}
+Z_sv)$. Sum against $\Theta$: the terms with $y=0$ or $v=0$ give $2\Theta(G)$. For $y,v\ne0$ the
+sum $\sum_s\psi(\pair{A_1y,\pi(s)A_0v})\Theta(s)$ is $q^{n/2}/\#G$ times an inner product of
+$\sum_gc(\pi'(g)A_1y)\otimes u_g$ and $\sum_ge(\pi(g)A_0v)\otimes u_g$ ($c$ the normalised
+characters, $e$ the point masses), whose squared norms are $\#G$ times the two stabiliser masses;
+so its real part is at most $q^{n/2}Y$. Sum over $y$ and average over $v$.
+\end{proof}
+
+\subsection{Theorem B}\label{sp-moment:ss:B}
+
+\begin{fact}[dimension of algebraic forms; \lean{New.finrank_levelSpace_smoothFormRep},
+\lean{New.card_classes_eq_classSum}, \lean{New.classSum_stdRatPoints_eq_mass}]
+\label{sp-moment:fact:dim}
+Let $\Gamma\subseteq G$ be discrete, $\mathcal K\subseteq G$ compact open, $\Gamma\backslash G/\mathcal K$ finite
+and all $\Gamma\cap g\mathcal Kg^{-1}$ trivial, and $\rho$ a representation of $\Gamma$ on $W$,
+$\dim W<\infty$. The $\phi\colon G\to W$ with $\phi(\gamma gu)=\rho(\gamma)\phi(g)$ ($\gamma\in\Gamma$, $u\in\mathcal K$) form a space of
+dimension $\#(\Gamma\backslash G/\mathcal K)\dim W$, and $\#(\Gamma\backslash G/\mathcal K)$ is the class sum
+$\sum_c1/\#(\Gamma\cap g_c\mathcal Kg_c^{-1})$; for the definite unitary group of rank $l$ and the
+stabiliser of the standard lattice the class sum is the mass $\operatorname{mass}_l$ of the genus.
+(Known: abstract Hecke operators and algebraic modular forms; compare Gross, Algebraic modular
+forms, 1999.)
+\end{fact}
+
+\begin{proposition}[Dimension of the target;
+\lean{New.Data.targetDim_le_card_mul_besselDegree_mul_mass}]\label{sp-moment:prop:dim}
+$\dT\le\#\Gbar\cdot\deg\cdot\operatorname{mass}_r$, where $\deg=\prod_v\deg_v$ is the product over
+the infinite places of the degrees of the Bessel systems (\lean{New.Filling.besselDegree},
+\S\ref{sp-moment:ss:bessel}).
+\end{proposition}
+
+\begin{proof}
+By Corollary~\ref{sp-moment:cor:mult}, $\dT=\dim\mathcal G(W_m)\le\dim\mathcal A(W_m)$, where
+$W_m$ is definite and all $\Gamma\cap gJ_Mg^{-1}$ are trivial
+(\lean{New.Data.classAut_eq_bot_of_le_chosenLevel}). So the forms on $W_m$ are algebraic modular forms;
+the class sum of $J_M$ is $[J^\circ:J_M]\operatorname{mass}_r=\#\Gbar\operatorname{mass}_r$, with $J^\circ$ the
+stabiliser of the standard lattice (\S\ref{ub-objects:sec:spaces}), and the
+weight has dimension $\prod_v\deg^{\mathrm{def}}(2\lambda(v))$, the product of the compact formal
+degrees (\lean{New.Data.finrank_principalForms_spaceW}, by Fact~\ref{sp-moment:fact:dim}). By
+Harish-Chandra's formula (Harish-Chandra, Discrete series II, 1966, one of the sources that the Lean
+file names; \lean{New.Orbital.harish_chandra_degree_and_orbital}) the formal degree
+of $2\lambda(v)$ is Weyl's dimension polynomial for every choice of signs, so it equals $\deg_v$
+(\lean{New.Filling.IsDiscreteSeriesBessel.deg_eq}).
+\end{proof}
+
+From Section~\ref{sec:sp-unfold} we take the \emph{scaled Poincaré map}
+$P=(\vol(J)\,\nu)^{-1/2}\,\Poin$ (\lean{New.Data.scaledPoincare}), $J$ the principal level and
+$\nu$ the covolume, with the source read in the coordinates \lean{New.Data.sourceFormCoords}
+(classes times Bessel coordinates); its matrix coefficients are amplitude sums
+(Theorem~\ref{sp-unfold:thm:petersson}; \lean{New.Filling.Fits.petersson_poincare},
+\lean{New.Data.hasAmplitudeBlocks_scaledPoincare}), and Section~\ref{sec:sp-unfold} proves
+\begin{equation}\label{sp-moment:eq:moments}
+\sum_{s\in\Gbar}\norm{P^*sP}^2\le\Bigl(1+\frac9{b^4}\Bigr)\frac{D_X^2}{\deg\cdot
+\operatorname{mass}_r},\qquad\text{$e_0P$ is a near isometry with error $5b^{-4}$}
+\end{equation}
+(\lean{New.Filling.HasAmplitudeBlocks.sum_hilbertSchmidtNorm_sq_le} and
+\lean{New.Filling.HasAmplitudeBlocks.isNearIsometry_piTensorElem_comp}, applied in
+\lean{New.Data.sum_hilbertSchmidtNorm_scaledPoincare_sq_le} and
+\lean{New.Data.isNearIsometry_e₀_comp_scaledPoincare}). For the second, $e_0=e_{p_0}\otimes e_{p_1}$ with central
+idempotents $e_{p_i}$ of the factors of $\Gbar$ above $p_i$ whose complements have coefficient
+of real part at most $b^{-8}/2$ at $1$ (\lean{New.Data.bad_types_rare}, by the count
+\lean{New.re_coeff_one_sub_sum_tupleIdem_le} of Section~\ref{sec:sp-main});
+Lemma~\ref{sp-moment:lem:isometry} combines this with $\norm{P^*P-1}^2\le b^{-12}D_X$.
+
+\begin{theorem}[One translate of the Poincaré map; \lean{New.Data.isSpread_goodPoincare}]
+\label{sp-moment:thm:spread}
+The maps $\Poin_s\colon\mathcal S\to\mathcal T_D$, $s\in\Gbar$, spread with error
+$\frac32\eps_0$, $\eps_0=(8b^2)^{-1}$.
+\end{theorem}
+
+\begin{proof}
+Apply Proposition~\ref{sp-moment:prop:one} to $\Gamma=\Gbar$ acting on $\mathcal A(Y_0)$ (unitary,
+\lean{New.Space.inner_formRep}), $\mathrm{pr}_0=e_0$ (a central idempotent acts as an orthogonal
+projection commuting with $\Gbar$, \lean{New.IsCentralProj.isSymmetricProjection}), $\mathcal H_0=\mathcal T_D$, $B=P$
+and $\eps=\eps_0$. The near isometry holds as $5b^{-4}\le\eps_0$. By
+Proposition~\ref{sp-moment:prop:dim} and \eqref{sp-moment:eq:moments},
+$\dT\sum_s\norm{P^*sP}^2\le\#\Gbar(1+9b^{-4})D_X^2\le\#\Gbar(1+\eps_0)D_X^2$
+(\lean{New.Data.targetDim_mul_sum_hilbertSchmidtNorm_sq_le}): the factor $\deg\cdot
+\operatorname{mass}_r$ cancels. So the maps $e_0sP$ spread with error $\frac32\eps_0$. They
+differ from $\Poin_s$ by the coordinate isomorphism and nonzero scalars, which do not change the
+dimensions of preimages (\lean{New.Data.comap_scaledPoincare_eq_comap_goodPoincare}).
+\end{proof}
+
+\begin{theorem}[Theorem B; \lean{New.Data.enough_forms},
+\lean{New.Data.exists_le_finrank_iSup_range_normalizedPoincare}]\label{sp-moment:thm:B}
+The statements of Theorem~\ref{main:thm:B} hold.
+\end{theorem}
+
+\begin{proof}
+$\mathcal T_D\ne0$, as otherwise the near isometry $e_0P$ with $U=\mathcal S$ gives $(1-5b^{-4})D_X\le0$
+(\lean{New.Data.finrank_targetForms_ne_zero}). Proposition~\ref{sp-moment:prop:few} with
+Theorem~\ref{sp-moment:thm:spread}, $\eps=\eps_0<1/16$
+and $16\eps_0=2/b^2$, gives a set $\mathfrak s\subseteq\Gbar$ of translates (the set of
+Theorem~\ref{main:thm:B}) with $\#\mathfrak s\,D_X\le\frac52(1+\log\frac{b^2}2)\dT\le
+5\dT\log(1+2b^2)$ (\lean{New.Data.five_halves_mul_one_add_log_le}) and
+$\dim\sum_{s\in \mathfrak s}\Poin_s(\mathcal S)\ge(1-2b^{-2})\dT$. The first bound passes to
+$\mathcal S^{\mathrm{ram}}\subseteq\mathcal S$. The ramified forms have codimension at most
+$\frac f{N-1}D_X\le b^{-8}D_X$ (\lean{New.Data.le_finrank_ramifiedSourceForms},
+\lean{New.Data.f_div_N_sub_one_le}, Section~\ref{sec:ub-divis}), so by
+Lemma~\ref{sp-moment:lem:restrict} restricting to them loses at most
+$\#\mathfrak s\,b^{-8}D_X\le5b^{-8}\log(1+2b^2)\dT\le2b^{-2}\dT$ dimensions. Finally
+$s\nPoin(\mathcal S^{\mathrm{ram}})=\Poin_s(\mathcal S^{\mathrm{ram}})$.
+\end{proof}
+
+\subsection{Equality of multiplicities}\label{sp-moment:ss:mult}
+
+The spaces $Y_0,W_1,\dots,W_m$ share the rank, the finite adelic group and the level, and differ
+only in their signs at the real places ($W_m$ is definite); for each, $2\lambda(v)$ has gap $\Delta$
+for its signs (\lean{New.Data.hasGap_signsY_paramW}, \lean{New.Data.hasGap_paramW}).
+
+\begin{definition}[\lean{New.Data.heckeAlgebra}, \lean{New.Data.heckeOperator},
+\lean{New.Data.eigenPart}]
+Let $G^M$ be the finite adelic points that are $1$ at the chosen places. The \emph{Hecke algebra
+away from $M$} consists of the families $(\mathbf T_V)_V$ of operators on the spaces $\mathcal A(V)$, for
+all hermitian spaces $V$ of rank $r$, given by one element $a\in\C[G^M]$ that preserves
+$J_M$-invariants in every representation. It contains the operators $\mathbf T_{w,i}$ (the double coset of
+$\diag(\varpi1_i,1)$) at the split places $w$ that are neither chosen nor conjugate to a chosen
+place, and it commutes with $\C[\Gbar]$ (\lean{New.Data.commute_heckeAlgebra_principalRep}), so it
+acts on $\mathcal G(V)$ (\lean{New.Data.heckeOnGood}). For a function $q$ of $(w,i)$, the
+\emph{eigenpart} $\mathcal A(V)_q$ is the space where every $\mathbf T_{w,i}$ acts by $q(w,i)$.
+\end{definition}
+
+The eigenparts are independent and span $\mathcal A(V)$
+(\lean{New.Data.iSup_eigenPart_eq_top}), and they are stable under $\C[\Gbar]$. For finitely many
+eigensystems one element of the Hecke algebra is $1$ on one of them and $0$ on the others
+(\lean{New.Data.exists_hecke_proj_eigenPart}). The input from the trace formula is:
+
+\begin{fact}[Comparison of traces; \lean{New.trace_eq_of_isCuspidalAt},
+\lean{New.isCuspidalAt_convIndicator_tupleIdem}]\label{sp-moment:fact:trace}
+Let $E$ contain the $5040$-th roots of unity and have an even number of infinite places, let $V$,
+$V'$ be hermitian spaces of rank $n\ge2$ over $E$ with signs $s,s'$, and let $l$ be a doubled
+Harish-Chandra parameter whose gap is at least $500n^3+10n^5$ for both signs at every infinite
+place. Let $\mathcal K$ be a level and $a\in\C[G_{\mathrm f}]$ preserve $\mathcal K$-invariants in every representation, such
+that $a\star1_{\mathcal K}$ is cuspidal at a split place. Then $a$ has the same trace on the forms of type
+$l$ and level $\mathcal K$ on $V$ and on $V'$. Moreover, if a label $c_w$ of a family of labels at the
+chosen places is irreducible, then for every $a'\in\C[G_{\mathrm f}]$ the function
+$(a'\cdot e_c)\star1_{\mathcal K}$, with $e_c$ the lifted idempotent of the family and $\mathcal K$ the kernel of
+reduction, is cuspidal at the place $w$. (Simple trace formula without truncation; Labesse,
+Changement de base CM et séries discrètes, 2011; the Selberg principle after Harish-Chandra,
+Discrete series II, 1966; for the second part Green, The characters of the finite general linear
+groups, 1955.)
+\end{fact}
+
+\begin{theorem}[\lean{New.Data.trace_heckeOnGood_eq}]\label{sp-moment:thm:trace}
+Let $V,V'$ be hermitian spaces of rank $r$ for whose signs every $2\lambda(v)$ has gap $\Delta$ (for
+instance two of $Y_0,W_1,\dots,W_m$). Every $\mathbf T$ in the Hecke algebra away from $M$ has the same
+trace on $\mathcal G(V)$ and on $\mathcal G(V')$.
+\end{theorem}
+
+\begin{proof}
+Since $e_0=\sum_ce_c$ over the good families $c$ of labels, $\tr(\mathbf T|\mathcal G(V))=\sum_c
+\tr(\mathbf Te_c|\mathcal A(V))$ (\lean{New.Data.trace_heckeOnGood_eq_sum}). Fix a good family $c$. Above
+each level prime one of its labels $c_w$ is primitive, in particular irreducible
+(\lean{New.Data.exists_isPrimitivePolynomial}). The operator $\mathbf Te_c$ is given on every $V$ by one
+element $a\cdot\tilde e_c$ of $\C[G_{\mathrm f}]$ that preserves $J_M$-invariants, whose test function is
+cuspidal at $w$ (second part of Fact~\ref{sp-moment:fact:trace}), and the gap $\Delta=2r^8$ is
+above the threshold of the fact. The first part of the fact gives
+$\tr(\mathbf Te_c|\mathcal A(V))=\tr(\mathbf Te_c|\mathcal A(V'))$ (\lean{New.Data.trace_mul_tupleIdem_eq}).
+\end{proof}
+
+\begin{corollary}[Equal multiplicities; (a) \lean{New.Data.finrank_goodForms_inf_eigenPart_eq},
+\lean{New.Data.goodForms_inf_eigenPart_eq_bot_of_eq_bot}, (b)
+\lean{New.Data.targetDim_eq_finrank_goodForms_spaceW}, (c) \lean{New.Data.det_rallisOnGood_eq}]
+\label{sp-moment:cor:mult}
+Let $V,V'$ be as in Theorem~\ref{sp-moment:thm:trace}.
+(a) For every eigensystem $q$, $\dim(\mathcal G(V)\cap\mathcal A(V)_q)=\dim(\mathcal G(V')\cap
+\mathcal A(V')_q)$; so $q$ occurs in $\mathcal G(V)$ if and only if it occurs in $\mathcal G(V')$.
+(b) $\dT=\dim\mathcal G(W_j)$ for $1\le j\le m$.
+(c) Every $\mathbf T$ in the Hecke algebra has the same characteristic polynomial and determinant on
+$\mathcal G(V)$ and $\mathcal G(V')$. In particular the operator $R_{\vartheta,j}$ of Rallis'
+inner product formula for the $j$-th lift, which one element of the Hecke algebra gives on both
+$V$ and $V'$ (\lean{New.Data.exists_hecke_eq_rallisOperator}), has
+$\det(R_{\vartheta,j}|\mathcal G(Y_0))=\det(R_{\vartheta,j}|\mathcal G(W_j))$.
+\end{corollary}
+
+\begin{proof}
+(a) Take $\mathbf T$ equal to $1$ on $\mathcal A_q$ and $0$ on the finitely many other eigensystems that
+occur on $V$ or $V'$; its trace on $\mathcal G(V)$ is $\dim(\mathcal G(V)\cap\mathcal A(V)_q)$
+(\lean{New.Data.trace_heckeOnGood_eq_finrank}). (b) Take $\mathbf T=1$, $V=Y_0$, $V'=W_j$. (c) The traces of
+all powers agree (\lean{New.Data.charpoly_heckeOnGood_eq}). Each term of the Rallis series is a
+multiple of a matrix coefficient $\pair{z,\gamma y}$ of an element $\gamma$ that is $1$ at the
+chosen places, hence of a Hecke operator, the same for all $V$
+(\lean{New.Data.exists_rallisTerm_eq_inner}); as the pairs of such coefficients on $V$ and $V'$
+form a closed finite-dimensional space, so is the sum
+(\lean{New.Data.exists_heckeAlgebra_eq_mul_inner_of_hasSum_rallisTerm}).
+\end{proof}
+
+Section~\ref{sec:det-chain} uses (b), (c) for the determinant of the lift $W_j\to V_j$
+(\lean{New.Data.exists_normDet_goodLift_sq_eq}); Section~\ref{sec:cg-selmer} uses (a) to move an
+eigensystem from $W_j$ to $W_m$.
+
+\subsection{Bessel functions at a real place}\label{sp-moment:ss:bessel}
+
+Fix an infinite place. $G_1=\U(J_1)$ is the unitary group of the complex hermitian form of the
+shape of $Y_0$ (the space of the filling data of \S\ref{sp-unfold:ss:data} read at one infinite
+place; Section~\ref{sec:sp-frames} uses the same shape over every completion): basis $e_1,\dots,e_\varrho$, $\mathbf x_i$ ($i\in\mathfrak k$, $\#\mathfrak k=k$), $z$,
+$e_1^*,\dots,e_\varrho^*$ with $h(e_a,e_b^*)=\delta_{ab}$, the $\mathbf x_i$ orthonormal, $h(z,z)=-1$; the
+frame is $\mathbf f=(e_1,\dots,e_\varrho,z)$. Let $\mathsf U$ (\lean{New.Shape.Form.besselU}) be the
+block upper unitriangular subgroup, $H=\U(X_0)\cong\U(k)$, $R=\mathsf UH$ the Bessel
+subgroup, and $\psi(u)=\exp(\operatorname{sr}(u)-\overline{\operatorname{sr}(u)})$ on $\mathsf U$, $\operatorname{sr}(u)$ the
+sum of the entries of $u$ just above the diagonal on the frame. A \emph{Bessel function of type} $\rho_H$
+(\lean{New.IsBesselFunction}), a unitary representation of $H$ on $\C^I$, is a bounded measurable
+$W\colon G_1\to\C^I$ with $W(uy)=\psi(u)W(y)$, $W(hy)=\rho_H(h)W(y)$; norms are those of
+$L^2(\mathsf U\backslash G_1)$. The \emph{length} $\operatorname{len}(y)=\inf_{s\in R}\norm{sy}+1$
+(\lean{New.besselLength}) is left $R$-invariant; the \emph{cut} of $F$ is
+$F^\flat(y)=\chi(\operatorname{len}(y))F(y)$, $\chi$ piecewise linear, $1$ on $[0,b^{6\varrho+8}/2]$, $0$ on
+$[b^{6\varrho+8},\infty)$ (\lean{New.besselCut}).
+
+\begin{definition}[\lean{New.IsCutPair}, \lean{New.BesselSystem}]\label{sp-moment:def:system}
+A \emph{cut pair} $(W,W^\flat)$ for $b,f$ is a pair of Bessel functions of one type, $W$
+integrable, with $\norm W_2^2=\#I$, $\norm{W^\flat}_2^2\le\#I$,
+$\norm{W^\flat-W}_2^2\le b^{-2r^3f}\#I$, $W^\flat=0$ where $\operatorname{len}>b^{6\varrho+8}$, $W^\flat=W$ where
+$\operatorname{len}\le b^{6\varrho+8}/2$, and an $R$-invariant majorant $A\ge\max(\norm{W},\norm{W^\flat})
+\max(1,\operatorname{len}/b^{6\varrho+6})^{3r^3f}$ with $\sup A\cdot\int A\le b^{400r^2}\#I$
+(\lean{New.IsDecayMajorant}). A \emph{Bessel system} is a continuous cut pair with a degree
+$\deg>0$, an irreducible type, Schur's bound
+$\int_{\mathsf U\backslash G_1}\abs{\int\phi(y)V(\gamma y)dy}^2d\gamma\le C\int\abs\phi^2$ for $V=W$
+and its right derivatives of order $o\le2(\varrho+1)^2$, with $C=P^{2o}\#I/\deg$ for all $P\ge b^5$
+(\lean{New.RealPlace.HasSchurBound}), $b\ge8r$, and local bounds for $W^\flat$
+(\lean{New.HasLocalBounds}: band limits of its pairings, used in Sections~\ref{sec:sp-main},
+\ref{sec:sp-frames}).
+\end{definition}
+
+\begin{proposition}[Orthonormality; \lean{New.BesselSystem.orthonormal},
+\lean{New.IsCutPair.lintegral_sq_inner_cut_le}]\label{sp-moment:prop:orth}
+For a Bessel system and all $i,i'\in I$, $v\in\C^I$:
+$\int_{\mathsf U\backslash G_1}W_i\overline{W_{i'}}=\delta_{ii'}$ and
+$\int_{\mathsf U\backslash G_1}\abs{\pair{v,W^\flat}}^2\le\norm v^2$.
+\end{proposition}
+
+\begin{proof}
+The matrix $\mathsf G=(\int W_i\overline{W_{i'}})_{ii'}$ satisfies $\rho_H(h)\mathsf G\rho_H(h)^*=\mathsf G$, because
+$W(hy)=\rho_H(h)W(y)$ and the measure on $\mathsf U\backslash G_1$ is invariant under left
+translation by $H$ (\lean{New.IsBesselFunction.integral_mul_conj_embedH_mul}). By irreducibility $\mathsf G$
+is scalar, and its trace is $\norm W_2^2=\#I$; so $\mathsf G=1$. For $W^\flat$ the same argument gives a
+scalar $c=\norm{W^\flat}_2^2/\#I\in[0,1]$, and $\int\abs{\pair{v,W^\flat}}^2=c\norm v^2$.
+\end{proof}
+
+\emph{Construction.} Let $\mathsf l$ be the parameter at the place (a general one; in
+Theorem~\ref{sp-moment:thm:system} it is the doubled target parameter $2\lambda(v)$), $c_{\mathsf l}$ the coefficient of the
+lowest $K$-type of its discrete series (Flensted-Jensen's function, normalised by $c_{\mathsf l}(1)=1$),
+$\deg_{\mathsf l}$ its formal degree, and $\pi$ the representation of $R$ that is $\psi$ on $\mathsf U$
+and $\rho_H$ on $H$. The \emph{Bessel average} at a point $x$ and a unit vector $v$ is
+\[
+W_{x,v}(y)=\int_Rc_{\mathsf l}(x^{-1}sy)\,\pi(s)^{-1}v\,ds
+\quad(\text{\lean{New.DiscreteSeries.besselAverage}}).
+\]
+For a large gap it converges absolutely, is a Bessel function, and is reproduced by
+$\deg_{\mathsf l} c_{\mathsf l}$ (\lean{New.DiscreteSeries.isBesselFunction_besselAverage},
+\lean{New.DiscreteSeries.convolve_besselAverage}); its norm is a period,
+$\deg_{\mathsf l}\norm{W_{x,v}}_2^2=\pair{v,W_{x,v}(x)}=\int_Rc_{\mathsf l}(x^{-1}sx)\pair{v,\pi(s)^{-1}v}ds$
+(\lean{New.DiscreteSeries.formalDegree_mul_integral_norm_sq_besselAverage}).
+
+\begin{proposition}[Decay and cut; \lean{New.exists_isCutPair_besselAverage}]
+\label{sp-moment:prop:cut}
+Let $\mathsf l$ have gap $500r^3+A$ and entries at most $L$, with $b\ge2000$, $r+L+1\le b^4$,
+$r\ge100$, $f\ge1$, $3r^3f\le A$, $m'\le301r^2$. Let $\operatorname{len}(x)\le b^{5(\varrho+1)}$ and suppose the volume
+of $\{s\in R:\norm{x^{-1}sx-1}\le1\}$ is at most $b^{m'}\deg_{\mathsf l}\norm{W_{x,v}}_2^2$. Then a real
+multiple $F=cW_{x,v}$ is reproduced by $\deg_{\mathsf l} c_{\mathsf l}$ and $(F,F^\flat)$ is a cut pair.
+\end{proposition}
+
+\begin{proof}[Idea]
+The coefficient decays, $\abs{c_{\mathsf l}(g)}\le(2/\norm g)^{j+9r^2}$ for $j\le A$
+(\lean{New.DiscreteSeries.norm_dsCoeffInFrame_le}). Since $\norm{x^{-1}sy}\ge2\operatorname{len}(y)/b^{6\varrho+6}$
+for $\operatorname{len}(x)\le b^{5\varrho+5}$, this gives $\max(1,\operatorname{len}(y)/b^{6\varrho+6})^i\norm{W_{x,v}(y)}\le
+\int_R(2/\norm{x^{-1}sy})^{9r^2}ds$ for $i\le A$, and a covering argument bounds this integral by
+a multiple of the volume of the unit ball
+(\lean{New.DiscreteSeries.lintegral_decay_le_besselBallVolume}); the hypothesis on the period turns
+this into a bound for the normalised $F$, which is the majorant
+(\lean{New.exists_isDecayMajorant_besselAverage}). Where $F^\flat\ne F$ the scaled length is at
+least $b^2/2$, so the majorant bounds $\norm{F^\flat-F}_2^2$ by $b^{-2r^3f}\#I$
+(\lean{New.IsDecayMajorant.lintegral_sq_besselCut_sub_le}).
+\end{proof}
+
+\begin{theorem}[Bessel systems; \lean{New.Data.exists_besselSystem}]\label{sp-moment:thm:system}
+At every infinite place $v$ there is a Bessel system with parameters $b$ and $f$, of type
+$(2\lambda(v),\text{weight})$ (\lean{New.Filling.IsDiscreteSeriesBessel}): $\deg$ is Weyl's dimension
+polynomial at $2\lambda(v)$, the type is the irreducible Schur representation of $\U(k)$ of the weight
+fixed by $D$, the full function is reproduced by the discrete series kernel of $2\lambda(v)$ and is a
+multiple of a Bessel average.
+\end{theorem}
+
+\begin{proof}
+The point $x$ comes from the stationary point of the appendix
+(Theorem~\ref{sp-moment:thm:stationary}, applied to the steep parameter of
+\lean{New.Data.exists_isSteep}): it has $\operatorname{len}(x)\le b^{5(\varrho+1)}$, and the ball volume is at most
+$\beta^{20(r+k)^2}$ times the period, $\beta=b^3$, which by the period formula above is the hypothesis
+of Proposition~\ref{sp-moment:prop:cut} (\lean{New.DiscreteSeries.besselBallVolume_le_of_period}). Schur's
+bound follows from the reproducing property, as derivatives are convolutions with kernels of
+controlled norm (\lean{New.IsBesselFunction.hasSchurBound_of_convolve_eq}). The local bounds of the
+cut are \lean{New.Floors.exists_hasLocalBounds_of_isCutBessel} of Section~\ref{sec:sp-frames}, fed
+with the Schur orthogonality $\int_{G_1}\abs{\pair{F,F(\cdot\,g)}_{L^2(\mathsf U\backslash G_1)}}^2dg
+=(\#I)^2/\deg$ and with volumes of balls.
+\end{proof}
+
+\emph{The open cell.} For $\gamma$ (one at each real place) whose frame Gram matrix
+$Z=(h(\mathbf f_a,\gamma\mathbf f_b))$ lies in the open cell ($\mathsf g>0$, below), and $\phi$ with
+$\abs\phi\le1$, invariant under the fixers of the frames and such that the integrand vanishes off
+frame boxes of radii $\rho_v\ge b^{6\varrho+8}$ that contain some $y'$ and $\gamma^{-1}y'$, the
+pairing $\int\phi(y)W^\flat(y)\otimes W^\flat(\gamma^{-1}y)^*dy$ has Hilbert--Schmidt
+norm at most $(\prod_v\mathrm{pb}_v)^{1/2}$ plus the cut error $\int\abs\phi\,\norm{W\otimes
+W(\gamma^{-1}\cdot)^*-W^\flat\otimes W^\flat(\gamma^{-1}\cdot)^*}$
+(\lean{New.BesselSystem.enorm_integral_pairKernel_cut_le}, for Section~\ref{sec:sp-remain}), with
+$\mathrm{pb}_v=(\rho_v^{9(\varrho+1)}/\mathsf g)^{10^5(\varrho+1)^4}(\#I)^2/(\deg\,c_G\,
+(\mathsf g/2)^{k-1})$ (\lean{New.pairingBoundSq}) and $\mathsf g=\abs{\det Z}^2-\abs{D_\varrho}^2$
+(\lean{New.frameDisc}). The proof uses an explicit section $Z\mapsto\gamma_Z$ on the open cell
+(\leanfile{New/Spanning/Bessel/GramSection}), the lower bound $c_G\mathsf g^{k-1}dZ$ for Haar
+measure (\leanfile{New/Spanning/Bessel/MeanValue}), and Sobolev's inequality with Schur's bound
+(\leanfile{New/Spanning/Bessel/SobolevBound}, \leanfile{New/Spanning/Bessel/OpenCellBound}).
+
+\subsection{Appendix: periods of discrete series}\label{sp-moment:ss:appendix}
+
+The files \leanfile{New/Appendix/DiscreteSeries} make periods of discrete series coefficients
+explicitly large. Let $c_l$ be the coefficient of a doubled parameter $l$ of $\U(\eps)=\U(\diag\eps)$,
+$d_\eps$ the number of coordinates, $\mu$ the weight of the lowest $K$-type. A parameter is
+\emph{steep} for $B\ge1$ and a splitting $X\sqcup\{1,\dots,n'\}$ of the coordinates
+(\lean{New.DiscreteSeries.IsSteep}) if on $X$ the signs are $+$ and $\mu=0$, and on the other $n'$
+coordinates the signs alternate, starting with $+$, and $\mu$ decreases strictly in $[-3B,-B]$. For
+$j\colon S\to\U(\eps)\times\U(\eta)$, a parameter $u$ of $\U(\eta)$ with weight $\mu'$, and
+$\varphi(s)=\tr(\mu(g-1))-\tr(\mu'(g'-1))$, $(g,g')=j(s)$, put
+$\theta(s)=c_l(g)\overline{c_u(g')}e^{-\varphi(s)}$ (\lean{New.HCParam.laplaceIntegrand}).
+
+\begin{theorem}[Laplace's method; \lean{New.DiscreteSeries.IsLaplaceDatum.laplace_method}]
+\label{sp-moment:thm:laplace}
+Let $(j,\varphi)$ satisfy \lean{New.DiscreteSeries.IsLaplaceDatum} ($l$ steep, $\varphi$ additive
+and imaginary, $\tr(g-1)=\tr(g'-1)$, $\mu'\ge0$, $\mu'\le3B$ if $\eta$ takes both signs, sign $+$
+and $\mu'=0$ on $X$, $j(S)$ contains a diagonal $\U(X)$), $s\mapsto g$ proper, $s\mapsto g'$
+continuous, $\nu$ right invariant and Radon; let $\beta\ge10^{12}$ bound
+$d_\eps+d_\eta$ plus the entries, and both gaps be $\ge500(\dim)^3+h$ with
+$h\ge10^{30}((d_\eps+d_\eta)^2\log\beta)^3$. Then $\theta$ is integrable and
+$\nu\{s:\norm g,\norm{g'}\le\beta+1\}\le\beta^{20(d_\eps+d_\eta)^2}\abs{\int\theta\,d\nu}$.
+\end{theorem}
+
+The proof localises $\theta$ near $j(s)=(1,1)$, as $\abs{c_l(g)}^4\le(1+\norm{y}^2)^{-h}$ for the
+noncompact part $y$ of $g$ (\lean{New.DiscreteSeries.norm_dsCoeff_pow_four_le}). Near $1$,
+$c_l(g)e^{-\tr(\mu\log g)}$ is within $\alpha/10+e^{-100\Lambda}$ of some $\alpha\in[0,1]$, $\Lambda\ge1$ a size parameter
+(\lean{New.DiscreteSeries.exists_norm_dsCoeff_div_cexp_sub_le}, from expansions of minors to
+second order in \leanfile{New/Appendix/DiscreteSeries/OneMinor},
+\leanfile{New/Appendix/DiscreteSeries/MinorSecondOrder}); so $\theta$ lies in a cone about the
+positive axis up to an exponentially small error, and its integral cannot cancel.
+
+\begin{theorem}[Stationary point; \lean{New.DiscreteSeries.IsSteep.exists_stationary_point}]
+\label{sp-moment:thm:stationary}
+In the setting of \S\ref{sp-moment:ss:bessel}, let $l$ be steep for $B\ge1$ and a splitting
+$X\sqcup\{1,\dots,2\varrho+2\}$ of the coordinates of $G_1$, let those of $H$ be $X\sqcup\{*\}$, and
+let the weight of the parameter $u$ of $H$ be $a$ at $*$ and $0$ on $X$, $3B+a\le b^2$, $8(\varrho+1)r\le b$,
+and let the gaps and $\beta$ be as in Theorem~\ref{sp-moment:thm:laplace} with $r+k+L\le\beta$. Then
+some $x\in G_1$ has $\operatorname{len}(x)\le b^{5(\varrho+1)}$ and $\vol\{s\in R:\norm{x^{-1}sx-1}\le1\}\le
+\beta^{20(r+k)^2}\bigl|\int_Rc_l(x^{-1}sx)\overline{c_u(h_s)}\,\overline{\psi(s)}\,ds\bigr|$.
+\end{theorem}
+
+Here $x$ carries a \emph{stationary position} (vectors $v_1,\dots,v_{j_0}$ with $\mu v_j=v_{j+1}$
+and an isometry $i_0$ compressing $\mu$ to $\mu'$, built from residues of nodal polynomials,
+\lean{New.DiscreteSeries.IsSteep.exists_isStationary}) to the standard frame; on the group of a
+position the phases cancel and Theorem~\ref{sp-moment:thm:laplace} applies
+(\leanfile{New/Appendix/DiscreteSeries/PositionGroup}).
+
+\begin{theorem}[Restriction; \lean{New.DiscreteSeries.IsSteep.exists_volume_le_mul_norm_integral_dsCoeff}]
+\label{sp-moment:thm:restriction}
+Let $l$ on $\U(\eps)$ be steep for $(X,n',B)$ with $n'$ even, $l'$ on $\U(\eps\oplus1)$ with $-l'$
+steep for $(X,n'+1,B)$, both of gap $500(\dim)^3+h$ and entries at most $L$; let $\beta\ge10^{12}$,
+$2d_\eps+1+L$, $(d_\eps+1)^4(6B)^{2n'+2}$ and $h\ge10^{30}((2d_\eps+1)^2\log\beta)^3$. Then some
+$y\in\U(\eps\oplus1)$ with $\norm y^2\le\beta$ satisfies $\vol\{g:\norm{g-1}\le1\}\le
+\beta^{20(2d_\eps+1)^2}\bigl|\int_{\U(\eps)}c_l(g)\overline{c_{l'}(y^{-1}(g\oplus1)y)}\,dg\bigr|$.
+\end{theorem}
+
+\emph{Dependence.} The main line uses the appendix twice: Theorem~\ref{sp-moment:thm:stationary}
+gives the point of the Bessel systems, hence Theorem~B; Theorem~\ref{sp-moment:thm:restriction}
+gives \lean{New.Data.exists_eq_zero_of_orthogonal_gridLevelForms} in Section~\ref{sec:det-chain}.

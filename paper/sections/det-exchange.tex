@@ -1,0 +1,417 @@
+\section{The exchange identity}\label{sec:det-exchange}
+
+This section proves the exchange identity, Theorem~\ref{det-exchange:thm:exchange}
+(\lean{New.Exchange.exchange_identity}), and the two forms in which it is used: the one-square
+identity, Theorem~\ref{det-exchange:thm:square}
+(\lean{New.Exchange.one_square_identity_of_isEdgeFamily}), which moves a lift past a transposed
+lift in the squares of Section~\ref{sec:det-chain}, and a variant with explicit real data on a
+definite space, Theorem~\ref{det-exchange:thm:explicit}, used three times in
+Section~\ref{sec:ol-compare}. The proof does not pass through an Eisenstein series: it compares the
+two theta integrals directly, by their Fourier coefficients at the top of a tower of spaces, and
+descends the tower by constant terms.
+
+\subsection{Set-up}\label{det-exchange:sec:setup}
+
+Here $E$ is a CM field with Weil data (\lean{New.WeilData}): $E$ contains a primitive root of
+unity of order $5040$, $\jmath\in E$ is purely imaginary, and $\upsilon$ is a splitting Hecke
+character of $E$, also written $\upsilon$ on the norm-one ideles. The data of
+Section~\ref{sec:setup} do not occur; the letters $W,\widetilde W,V,V',U,A,A',U_1,U_2,X$ denote arbitrary
+hermitian spaces. A \emph{space} (\lean{New.Space}, Section~\ref{sec:ub-objects}) has a vector
+$\epsilon$ of signs at the infinite places. Let $\operatorname{neg}(W)$ be the number of
+signs $-1$, $H$ a hyperbolic plane, $W^-$ the space with opposite signs, and
+$[\U(W)]=\U(W)(E)\backslash\U(W)(\A)$. For a character $\rho$ of $[\U(1)]$ and $n\in\N$ let
+$\tilde\rho(z)=\rho(z/\bar z)$ and $\rho_{[n]}=\tilde\rho\,\upsilon^{-n}$
+(\lean{New.AutChar.spaceChar}).
+
+\emph{Theta integrals.} For spaces $Z_1,Z_2$ and characters $\alpha,\beta$ of $[\U(1)]$,
+$\omega_{\alpha,\beta}$ is the Weil representation of $\U(Z_1)(\A)\times\U(Z_2)(\A)$ on data on
+$\Hom(Z_1,Z_2)(\A)$ ($\rk Z_2\times\rk Z_1$ matrices) in which $\U(Z_2)$ acts through
+$\alpha_{[\rk Z_1]}$ and $\U(Z_1)$ through $\beta_{[\rk Z_2]}$. The theta kernel is
+$\theta^{Z_1,Z_2}_{\alpha,\beta}(\Upsilon)(g,h)=\sum_{y\in\Hom(Z_1,Z_2)(E)}(\omega_{\alpha,\beta}(g,h)
+\Upsilon)(y)$ (\lean{New.pairTheta}), and the theta integral is
+$\mathcal I^{Z_1,Z_2}_{\alpha,\beta}(\Upsilon)(g)=\int_{[\U(Z_2)]}\theta^{Z_1,Z_2}_{\alpha,\beta}
+(\Upsilon)(g,h)\,dh$ (\lean{New.Exchange.thetaIntegral}). A datum $\Upsilon=v\otimes\phi$ has real
+part $v$ in the Fock model $\mathcal F(Z_1,Z_2)$ of the real Weil representation
+(\lean{New.PairFock}), a \emph{Schwartz vector} if all moments $\int(1+\abs y)^i\abs{v(y)}\,dy$ are
+finite (\lean{New.Exchange.IsSchwartzVector}); its finite part is a function $\phi$ of matrices
+modulo an ideal $\fm$ at the primes of $\fm$, and the vacuum elsewhere (\lean{New.modDatum}).
+
+\emph{Tame characters.} A \emph{modulus} is a nonzero ideal $\fm\subset\cO_E$ that no prime divides
+together with its conjugate (\lean{New.Modulus}); $S=S(\fm)$ is its set of primes, $q_w$ the residue
+cardinalities, $R=\cO_E/\fm$. A character $\nu$ of $[\U(1)]$ is \emph{tame of weight $\mu$ for
+$(\fm,\chi)$} (\lean{New.Exchange.IsTameFor}) if $\fm\ne\cO_E$, $\nu$ has weight $\mu(\tau)$ at each
+infinite place $\tau$, its tame part consists of characters $\psi_w$ of the residue fields,
+nontrivial exactly for $w\in S$, and $\chi=\prod_w\psi_w$ on $R$. With $L^S(z,\nu)$ the Euler
+product of $\tilde\nu$ outside $S\cup\bar S$, put (\lean{New.Exchange.lValueProd},
+\lean{New.Exchange.lValueProdInt})
+\begin{equation}\label{det-exchange:eq:Lstar}
+  L_*^{\fm}(e;\nu)=\Bigl(\prod_{w\in S}q_w\Bigr)^{e^2}\prod_{z=1}^{e}\abs{L^{S}(z,\nu)}^2
+  \quad(e\ge0),\qquad L_*(-e)=L_*(e)^{-1}.
+\end{equation}
+At $z=1$, $L^S$ is by definition the limit of the Euler product from the right
+(\lean{New.eulerProd}); by Fact~\ref{det-exchange:fact:lib}(a), $L_*^{\fm}(e;\nu)>0$ if
+$\mu(\tau)>0$ for all $\tau$ (\lean{New.Exchange.lValueProd_pos}).
+
+\begin{definition}[Matched functions; \lean{New.AreMatched}]\label{det-exchange:def:matched}
+Let $O\subset R$ be rings, $\chi$ a character of $R$ (zero off the units), and split $n$ indices
+into a first block of $n'$ and a last block of $n''$. For $u\in\GL_n(O)$ let $y_u$ be the first $n'$
+columns of $u$ and $z_u$ the last $n''$ rows of $u^{-1}$. Functions $\phi$ on $n''\times n$ and
+$\phi'$ on $n\times n'$ matrices are \emph{matched for $\chi$ over $O$} if $\phi$ vanishes off the
+$z_u$, $\phi'$ off the $y_u$, and $\phi(z_u)=\chi(\det u)\phi'(y_u)$ for all $u\in\GL_n(O)$. Over
+$R=\cO_E/\fm$ we take $O=R$.
+\end{definition}
+
+\begin{lemma}[\lean{New.Rows.areMatched_block}, \lean{New.Rows.areMatched_det_one}]
+\label{det-exchange:lem:block}
+For any $G$ on $n''\times n'$ matrices, $\phi(z_1\;z_2)=\chi^{-1}(\det z_2)G(z_2^{-1}z_1)$ and
+$\phi'\bigl(\begin{smallmatrix}y_1\\y_2\end{smallmatrix}\bigr)=\chi^{-1}(\det y_1)G(-y_2y_1^{-1})$,
+zero if the square block is singular (\lean{New.Rows.blockRowDatum},
+\lean{New.Rows.blockColDatum}), are matched for $\chi$. If $n'=0$, then $\chi\circ\det$ and $1$ are
+matched for $\chi^{-1}$.
+\end{lemma}
+
+\begin{proof}
+From $u^{-1}u=1$, $z_1y_1+z_2y_2=0$, and Jacobi's identity for complementary minors gives
+$\det z_2=\det y_1/\det u$.
+\end{proof}
+
+\subsection{The theorem}
+
+\begin{theorem}[Exchange identity; \lean{New.Exchange.exchange_identity}]
+\label{det-exchange:thm:exchange}
+Let $W,V,V'$ be spaces with $\rk W=\rk V+\rk V'$ and $\rk V=\rk V'+2e$, $e\ge0$; order the
+coordinates of $W$ as those of $V'$ followed by those of $V$. Let
+\[
+  \operatorname{neg}(W)=\operatorname{neg}(V)+\operatorname{neg}(V'),\qquad
+  1\le \tfrac12\rk W-\operatorname{neg}(W)\le\mu(\tau)\ \text{ for all infinite places }\tau,
+\]
+and let $v'\in\mathcal F(V',W)$ be a Schwartz vector. There are $C>0$ and a Schwartz vector
+$v\in\mathcal F(W,V)$ such that for every modulus $\fm$ and every $\nu$ tame of weight $\mu$ for
+$(\fm,\chi)$ some $c=c_{\fm,\nu}$ has $\abs{c}^2=C\,L_*^{\fm}(e;\nu)\ne0$ and the following holds.
+Put $\gamma=\nu^{-1}\upsilon^{\rk W/2}$. For all $g\in\U(W)(\A)$, all characters $\alpha,\alpha'$ with
+$\alpha_{[\rk V]}\,\alpha'_{[\rk V']}=\tilde\nu^{-1}$ and all $\phi,\phi'$ matched for $\chi$ over
+$\cO_E/\fm$,
+\begin{equation}\label{det-exchange:eq:exchange}
+  \mathcal I^{W,V}_{\gamma,\alpha}(v\otimes\phi)(g)
+  = c\int_{[\U(V')]}\theta^{V',W}_{\alpha',\gamma}(v'\otimes\phi')(h,g)\,dh .
+\end{equation}
+\end{theorem}
+
+Only $\abs c$ is described. The number $C$ is
+not computed: it is $C_0/C_1$, with $C_0\ne0$ an equal-rank ratio
+(Proposition~\ref{det-exchange:prop:equalrank}) and $C_1$ from the descent, neither evaluated. If
+no tame $\nu$ of weight $\mu$ exists, the statement is vacuous (Lean then takes $C=1$); otherwise
+$c\ne0$ and $L_*>0$ force $C>0$. The case $\alpha=1$ is
+\lean{New.Exchange.exchange_theorem}; other $\alpha$ multiply both sides by $\alpha(\det g)^{-1}$.
+
+\subsection{Standard data and background facts}
+
+Fix $\nu$, let $F_S=\prod_{w\in S}E_w$ with integers $O_S$, and $\chi_S(z)=\nu(z/\bar z)$ on $F_S$
+(\lean{New.Exchange.SplitTameChar.semilocalChar}). As $w\ne\bar w$ for $w\in S$, the unitary group
+of a space at the place below $w$ is $\GL(E_w)$. The \emph{standard data} of an integral
+$p\times\rk W$ matrix $z$ are $\mathrm{row}_z(y)=\chi_S^{-1}\det\bigl(\begin{smallmatrix}z\\y
+\end{smallmatrix}\bigr)$ if this matrix is in $\GL(O_S)$, and $\mathrm{col}_z(y)=\chi_S^{-1}(\det zy)$
+if $y$ is integral and $\det zy\in O_S^\times$, and $0$ otherwise (\lean{New.stdRowDatum},
+\lean{New.stdColDatum}); they are matched. For $\rk W=\rk V+\rk V'$, $p=\rk V'$, let
+$\mathcal I_{\mathrm{L}}(v\otimes\phi)$ be the theta integral of $(W,V)$ over $[\U(V)]$ with both
+characters $\gamma$, and $\mathcal I_{\mathrm S}(v'\otimes\phi')$ that of $(W,V')$ over $[\U(V')]$
+with characters $\nu\upsilon^{\rk W/2}$, $\upsilon^{p}$ and $\phi'$ read on transposes at $\bar S$
+(\lean{New.Exchange.thetaLarge}, \lean{New.Exchange.thetaSmall}).
+
+\begin{definition}[\lean{New.Exchange.RowColExchangeIdentity}]\label{det-exchange:def:rowcol}
+Let $\lambda$ be a function of the tame characters of weight $\mu$. Schwartz vectors
+$v\in\mathcal F(W,V)$, $v'\in\mathcal F(W,V')$ satisfy the \emph{identity on standard data for
+$(W,V,V')$ with factor $\lambda$} if for some $C\in\R$ every such $\nu$ has $c$ with
+$C\abs c^2=L_*(\rk V-\tfrac12\rk W)\,\lambda(\nu)$ and
+$\mathcal I_{\mathrm L}(v\otimes\mathrm{row}_z)=c\,\mathcal I_{\mathrm S}(v'\otimes\mathrm{col}_z)$
+for all integral $z$.
+\end{definition}
+
+\begin{fact}[Tower property; \lean{New.Exchange.exists_planeConstantTerm_eq_thetaLarge_cone},
+\lean{New.Exchange.exists_planeConstantTerm_eq_thetaLarge_dualCone}]\label{det-exchange:fact:tower}
+Let $W'=W\oplus H$, $V^+=V\oplus H$ with adapted splittings (frames orthonormal at infinity and
+integral at the finite places), $\rk W$ even, $e'=\rk V-\frac12\rk W$, and $j=e'$ if $e'\ge0$,
+$j=-e'-1$ if $e'<0$. There is $C_A>0$ such that every $\nu$ has $\delta_\nu$ with
+$\abs{\delta_\nu}=C_A\abs{L^S(j+1,\nu)}\prod_{w\in S}q_w^{j+1/2}$ and: for Schwartz
+$v^+\in\mathcal F(W',V^+)$ and integral $z$, the constant term along the isotropic line of $W'$, at
+$(1,g)$, of the theta integral of $(W',V^+)$ on $v^+\otimes\mathrm{row}_{z\circ\mathrm{pr}_W}$ is
+$\delta_\nu\,\mathcal I_{\mathrm L}(\mathrm{cone}(v^+)\otimes\mathrm{row}_{z})(g)$ for $(W,V)$,
+where $\mathrm{cone}(v^+)$ is a real Tate integral of $v^+$ over the isotropic cone, with exponent
+$j+1$, on the other side of Poisson's formula if $e'<0$.
+(\leanfile{Lib/SiegelWeil/Tower/LargeSideConstantTerm}; Rallis, On the Howe duality conjecture,
+1984; C.~Wu, Irreducibility of theta lifting for unitary groups, 2013.)
+\end{fact}
+
+In both cases \eqref{det-exchange:eq:Lstar} gives $\abs{\delta_\nu}^2L_*(e')=C_A^2L_*(e'+1)$.
+
+\begin{fact}[Constancy in equal rank; \lean{New.Exchange.IsAutFunction.apply_eq_apply_one}]
+\label{det-exchange:fact:const}
+Let $\widetilde W$ split off a hyperbolic plane and $\varphi$ be continuous on $\U(\widetilde W)(\A)$, left invariant
+under $\U(\widetilde W)(E)$, right invariant under the points supported on $S\cup\bar S$ ($S\ne\emptyset$) and
+under the integral points trivial on $S$, and such that if $\varphi$ is invariant under the unipotent
+radical of the parabolic of the line, its values on the Levi subgroup do not depend on the
+$\GL_1$-part. Then $\varphi$ is constant. (\leanfile{Lib/SiegelWeil/Formula/StrongApproximation}, a weak
+substitute for strong approximation; no source is given.)
+\end{fact}
+
+Hence if $\rk \widetilde W$ is even and $\widetilde W$ splits off a plane, the \emph{equal-rank period}
+$I_0(\nu)=\mathcal I^{\widetilde W,\widetilde W}(u_1\otimes\chi_S^{-1}\circ\det)$ is constant on $\U(\widetilde W)(\A)$
+(\lean{New.Exchange.thetaLarge_eq_apply_one_of_even_rank}); the torus condition comes from
+Fact~\ref{det-exchange:fact:tower}. Put
+$\lambda_{\widetilde W}(u_1;\nu)=\abs{I_0(\nu)}^2/L_*(\tfrac12\rk \widetilde W)$
+(\lean{New.Exchange.equalRankThetaRatio}).
+
+\begin{fact}[Three further inputs]\label{det-exchange:fact:lib}
+(a) (\lean{New.AutChar.HasWeight.L_ne_zero}, \lean{New.IsHeckeOfType.continuousOn_eulerProd}) For
+$\nu$ of weight $\mu\ne0$ and finite $S$, $L^S(z,\nu)$ is continuous and nonzero on real
+$z\ge1$ (only real $z$ and characters of nontrivial square are treated; Tate, 1950; Lang, Algebraic
+Number Theory). (b) (\lean{New.Exchange.centreCoeff_eq_zero_of_unimodular}) Let $\varphi$ be automorphic
+on $\U(X)$, right invariant under integral points on $S'\cup\bar S'$, with shear invariant partial
+means along an extra isotropic line. If its coefficient at invertible $\Xi$ vanishes at the points
+moving the frame by $\gamma$ on $S'\cup\bar S'$ (trivially elsewhere) with $\gamma^*\Xi\gamma$
+(normalised) unimodular there, it vanishes where the frame is fixed off $S'\cup\bar S'$ (Freitag, 1991). (c) (\lean{New.Space.exists_x_eq_and_ratEmbed_conj_eq}) Two spaces
+with the same signs are isometric over $E$ (Landherr, 1936; Kneser, 1969).
+\end{fact}
+
+\subsection{The top of the tower}
+
+\begin{proposition}[\lean{New.Exchange.exists_rowColExchangeIdentity_sum}]\label{det-exchange:prop:top}
+Let $\widetilde W$ have even rank and split off a hyperbolic plane, $\rk V'=p$, and $X=\widetilde W\oplus H^p$ an
+adapted splitting. For Schwartz $u\in\mathcal F(\widetilde W,V')$, $u_1\in\mathcal F(\widetilde W,\widetilde W)$ there are
+Schwartz $v\in\mathcal F(X,V'\oplus \widetilde W)$ and $v'\in\mathcal F(X,V')$ such that $v'$ has zero term
+$u$ (for the splitting with the two frames exchanged) and $v,v'$ satisfy the identity on standard
+data for $(X,V'\oplus \widetilde W,V')$ with factor $\lambda_{\widetilde W}(u_1;\cdot)$.
+\end{proposition}
+
+\begin{proof}
+\emph{(i) Equivariant difference.} As $\mathcal I_{\mathrm L}$ integrates over $[\U(V)]$ and
+$\U(V)(F_S)=\GL(F_S)$, the map $\phi\mapsto\mathcal I_{\mathrm L}(v\otimes\phi)$ is invariant under
+$\phi\mapsto\chi'(\det g)\phi(g\,\cdot)$, $\chi'=\chi_S\abs\cdot^{\rk X/2}$; so it depends only on the
+sums of $\chi'(\det g)\phi(\cdot\,g)$ over $\GL(F_S)/\GL(O_S)$, which for matched $(\phi,\phi')$ are fixed by
+$\phi'$ (\lean{New.sameSectionPairs.exists_linear_factor}). Thus for each $C'$ there is a linear map
+$\mathcal D$ with $\mathcal D\phi'=\mathcal I_{\mathrm L}(v\otimes\phi)-C'\mathcal I_{\mathrm
+S}(v'\otimes\phi')$ on matched pairs, and as both terms transform alike under $\U(X)(F_S)$, which
+preserves matched pairs (\lean{New.sameSectionPairs.translate_mem}), $\mathcal D$ is an
+\emph{equivariant lift} (\lean{New.Exchange.exists_isEquivariantLift_eq_thetaLarge_sub_smul}).
+
+\emph{(ii) One datum suffices} (\lean{New.Exchange.IsEquivariantLift.apply_eq_zero_of_areMatched}).
+For $\varphi$ automorphic on $\U(X)$ let $\varphi_\Xi$ be its Fourier coefficient at the $p\times p$
+matrix $\Xi$ along the centre of the unipotent radical of the parabolic of the $p$-frame
+(\lean{New.Space.Splitting.centreCoeff}), and let $\phi'_0$ be the standard column datum of the
+frame. Call $(\Xi,L_0)$ a \emph{test pair} (\lean{New.Exchange.IsSelfDualTestPair}) if (a) $\Xi$ is
+the form of $V'$ and the Levi component $L_0$ is a basis of a lattice self-dual for $\Xi$, or (b)
+$\Xi$ is invertible and not of the form $g^*\diag(\epsilon')g$ at some infinite place, $\epsilon'$
+the signs of $V'$. If $(\mathcal D\phi'_0)_{\jmath\Xi}$ vanishes at all test pairs, then $\mathcal
+D\phi'=0$ for every locally constant $\phi'$ with a matched function. For the kernel of $\mathcal D$
+is $\GL(F_S)$-stable. A shear of $\phi'_0$ along the frame is a translation by the centre at $S$, so
+it multiplies the coefficient at $\Xi$ by $\psi(\tr\Xi y)$, $\psi$ the additive character. Hence a Gauss sum of shears of $\phi'_0$
+has coefficient $0$ at every $\Xi$ that is not unimodular at $S$; if the coefficients of $\mathcal
+D\phi'_0$ at the unimodular $\Xi$ vanish, this Gauss sum lies in the kernel. It is a multiple of a
+standard datum, and averages of its translates over $\GL(O_S)$ give every matched datum
+(\lean{New.Exchange.IntegralFrame.match_mem_of_isPrimitiveMatrix_vanishing},
+\lean{New.Exchange.match_mem_of_stdColDatum}). The partial means along the extra plane of $\widetilde W$ are
+shear invariant (\lean{New.Exchange.IsEquivariantLift.shearInvariant_stdColDatum}), so
+Fact~\ref{det-exchange:fact:lib}(b), with $S'$ the places off $S\cup\bar S$, reduces to points where
+$L_0^*\Xi L_0$ is unimodular everywhere; there case (b) holds, or $\Xi$ has the signs $\epsilon'$ and
+Fact~\ref{det-exchange:fact:lib}(c) gives case (a) after a rational change of $L_0$.
+
+\emph{(iii) Comparison of coefficients}
+(\lean{New.Exchange.exists_centreCoeff_eq_mul_of_isPeriodIdentity}). Unfolded along the frame, the
+coefficient at $\jmath\Xi$ is an integral of terms indexed by rational frames $y$ in $V$ with Gram
+matrix $\Xi$, each an explicit factor times the theta functional of $(\widetilde W,V)$ at the slice of the
+real vector at $y$ (\lean{New.Exchange.thetaTerm_eq_and_centreCoeff_eq_zero}). In case (b) the small
+side has no term, as Gram matrices of frames in $V'$ are represented by $\epsilon'$, and the slices
+of $v$ vanish at frames whose Gram matrix is not (by (iv)). In case (a) the frames form one orbit,
+that of the inclusion of $V'$ in $V'\oplus \widetilde W$, with stabiliser $\U(\widetilde W)$; unfolding leaves an
+integral over $\U(V')(\A)\times[\U(\widetilde W)]$. On the product of the vacuum and $\chi_S^{-1}\circ\det$
+the theta functional of $(\widetilde W,V'\oplus \widetilde W)$ is that of $(\widetilde W,V')$ times the theta kernel of
+$(\widetilde W,\widetilde W)$ (\lean{New.Exchange.thetaOnRealData_boxProd_eq_mul}), whose integral over $[\U(\widetilde W)]$ is
+the constant $I_0(\nu)$. For the vectors of (iv) this is the \emph{period identity}
+(\lean{New.Exchange.IsPeriodIdentity}), and it gives $(\mathcal I_{\mathrm L})_{\jmath\Xi}=C_\nu
+(\mathcal I_{\mathrm S})_{\jmath\Xi}$ with $\abs{C_\nu}=C_2\abs{I_0(\nu)}$, $C_2>0$ independent of
+$\nu$.
+
+\emph{(iv) Real vectors} (\leanfile{New/Determinant/Exchange/RealVectors}). A smooth local Witt
+theorem (\lean{New.Exchange.exists_contDiff_witt}) gives unitary $g(y)$, smooth in the real frame
+$y$, with $y$ in the span of $g(y)$ applied to the inclusion frame when $y$ is near it. Let $v$ have
+slice at $y$ a bump function times $\omega(g(y))(u\boxtimes u_1)$
+(\lean{New.Exchange.exchangeSection}), and $v'$ slice a bump function times
+$\abs{\prod_\tau\det y_\tau^{\rk \widetilde W/2+\mu(\tau)}}^2u$; then the period identity holds
+(\lean{New.Exchange.IsWittBump.isPeriodIdentity}).
+
+With $C'=C_\nu$, (iii) and (ii) give $\mathcal D=0$. As $\rk(V'\oplus \widetilde W)-\frac12\rk X=\frac12\rk
+\widetilde W$, $\abs{C_\nu}^2=C_2^2L_*(\frac12\rk \widetilde W)\lambda_{\widetilde W}(u_1;\nu)$.
+\end{proof}
+
+\subsection{Descent and the proof of the theorem}
+
+\begin{proposition}[\lean{New.Exchange.exists_rowColExchangeIdentity_removing_planes}]
+\label{det-exchange:prop:descent}
+Let $\rk W$ be even, $W'=W\oplus H^j$ adapted ($j\ge1$), $\rk V^+=\rk V+2j$,
+$\operatorname{neg}(V^+)=j+\operatorname{neg}(V)$. If $v,v'$ satisfy the identity on standard data
+for $(W',V^+,U)$ with factor $\lambda$, then some $v_0$ and the zero term $v'_0$ of $v'$ satisfy it
+for $(W,V,U)$, with the same $\lambda$.
+\end{proposition}
+
+\begin{proof}
+One plane at a time; as the identity depends on $V$ only through its signs
+(\lean{New.Exchange.RowColExchangeIdentity.congr_second_space}), let $V^+=V\oplus H$. Take constant
+terms along the new line at $(1,g)$ on the standard data of $z\circ\mathrm{pr}_W$. The large side
+gives $\delta_\nu\mathcal I_{\mathrm L}(\mathrm{cone}(v)\otimes\mathrm{row}_z)$
+(Fact~\ref{det-exchange:fact:tower}); on the small side, of the sum over rational vectors of $U$
+only $0$ survives, as $\mathrm{col}_z$ lives on matrices of full rank; this gives a constant
+$c_0\ne0$ times $\mathcal I_{\mathrm S}(v'_0\otimes\mathrm{col}_z)$
+(\lean{New.Exchange.integral_thetaSmall_lineRadical_eq_mul_thetaSmall}). The new factor
+$cc_0/\delta_\nu$ has
+$\abs{cc_0/\delta_\nu}^2=\abs{c_0}^2C^{-1}C_A^{-2}L_*(e')\lambda(\nu)$, by
+$C\abs c^2=L_*(e'+1)\lambda(\nu)$ (\lean{New.Exchange.RowColExchangeIdentity.cone},
+\lean{New.Exchange.RowColExchangeIdentity.dualCone}).
+\end{proof}
+
+\begin{proposition}[\lean{New.Exchange.exists_equalRankThetaRatio_eq_const}]
+\label{det-exchange:prop:equalrank}
+Let $\rk W=2e_1+2\operatorname{neg}(W)$ with $e_1\le\mu(\tau)$ for all $\tau$. There are a Schwartz
+$u_0\in\mathcal F(H\oplus W,H\oplus W)$ and $C_0\ne0$ with $\lambda_{H\oplus W}(u_0;\nu)=C_0$ for
+every tame $\nu$ of weight $\mu$.
+\end{proposition}
+
+\begin{proof}
+Let $J$ be positive definite of rank $2e_1$ and $Y=H\oplus J$. \emph{Non-vanishing}
+(\lean{New.Exchange.exists_equalRankThetaRatio_ne_zero}): if all periods of $Y$ vanish for some
+$\nu$, step (iii) with $I_0=0$ makes the theta integral of $(H^{2e_1}\oplus Y,J^-\oplus Y)$ vanish
+on standard data. In case (b) for $V'=J^-$ the large side is handled for any vector
+(\leanfile{New/Determinant/Exchange/NegativeIndices}): its mean over a compact stabiliser at a real
+place is an invariant functional on Fock space, and, as $\mu>0$ and at most half the signs of $Y$
+are negative, a polynomial fixed by the rotations of a line in the negative signs is $0$. Vanishing
+descends along $2e_1+1$ planes to $(J,0)$ (\lean{New.Exchange.ThetaLargeVanishes.of_add_planes}):
+the constant term is a Tate integral, analytic in the exponent $y$; for $v'$ with slices a bump times
+smooth unitary translates of $v$ it is, for $y\ge1$, nonvanishing factors times $L^S(y,\nu)$
+times a positive analytic $B(y)$ times the theta integral of $v$
+(\leanfile{New/Determinant/Exchange/ConeImage}), and $L^S$ continues to $y>-e_1$ without zeros at
+integers (\texttt{Lib},
+\lean{New.Exchange.exists_analytic_extension_ne_zero}; via
+Fact~\ref{det-exchange:fact:lib}(a)). But on $(J,0)$ the integral of the vacuum is a volume. \emph{Independence}
+(\lean{New.Exchange.exists_equalRankThetaRatio_sq_eq}): the identity for $(J,J,0)$ and $(J,0,J)$
+gives $B\abs{c_1}^2=L_*(e_1)\lambda_Y$ and $B'\abs{c_2}^2=L_*(-e_1)\lambda_Y$, and integrating the
+kernel of $(J,J)$ over both groups in both orders gives $c_1c_2=\varpi$, the value of the real datum
+in $\mathcal F(J,0)=\C$, chosen before $\nu$. So $\lambda_Y^2=BB'\abs\varpi^2$; as $\lambda_Y\ge0$,
+the vector found for one $\nu_0$ has $\lambda_Y$ one nonzero constant for all $\nu$
+(\lean{New.Exchange.exists_equalRankThetaRatio_const_ne_zero}).
+\emph{Planes} (\lean{New.Exchange.exists_equalRankThetaRatio_add_plane}): for $u$ on $Y$ and $v'$
+whose cone integral has the theta integrals of $u$, the constant period of $v'$ on $Y\oplus H$ equals
+its constant term, by
+Fact~\ref{det-exchange:fact:tower} a multiple of the period of $u$ on $Y$ of
+square a constant times $L_*(\frac12\rk Y+1)/L_*(\frac12\rk Y)$; and the ratio depends only on the
+signs (\lean{New.Exchange.equalRankThetaRatio_eq_of_signs_eq}).
+\end{proof}
+
+\begin{proof}[Proof of Theorem~\ref{det-exchange:thm:exchange}]
+Let $\widetilde W=H\oplus W$, $X=\widetilde W\oplus H^{\rk V'}$, and $v'^{\mathrm{ad}}\in\mathcal F(W,V'^-)$ the image
+of $v'$ under passage to adjoint maps (\lean{New.Exchange.adjointDatum}). Choose
+$u\in\mathcal F(\widetilde W,V'^-)$ with zero term $v'^{\mathrm{ad}}$, and $u_0$ by
+Proposition~\ref{det-exchange:prop:equalrank}. Proposition~\ref{det-exchange:prop:top} for
+$(X,V'^-\oplus \widetilde W,V'^-)$, $u$ and $u_1=u_0$, gives the identity on standard data with factor
+$C_0$. As $\operatorname{neg}(V'^-\oplus \widetilde W)=\rk V'+1+\operatorname{neg}(V)$,
+Proposition~\ref{det-exchange:prop:descent} removes $\rk V'+1$ planes and gives it for
+$(W,V,V'^-)$ at some $v$ and $v'^{\mathrm{ad}}$, with $C_1\abs c^2=L_*(e)C_0$
+(\lean{New.Exchange.exists_rowColExchangeIdentity_of_even_rank}). The kernel of the equivariant
+lift of (i) is $\GL(F_S)$-stable and contains the standard data, so it contains every matched datum
+(\lean{New.Exchange.thetaLarge_eq_smul_of_areMatched}). Returning from $(W,V'^-)$ to $(V',W)$ costs
+a factor of modulus one (\lean{New.Exchange.exchange_of_matches}), and data modulo $\fm$ are data
+over $O_S$ (\lean{New.Exchange.exists_areMatched_modDatum_eq}). As $L_*(e)>0$ and $C_0\ne0$, also
+$C_1\ne0$, $c\ne0$ (\lean{New.Exchange.exchange_theorem}); put $C=C_0/C_1$ (or $1$, as said after
+the theorem).
+\end{proof}
+
+\subsection{One square}
+
+\begin{theorem}[One square; \lean{New.Exchange.one_square_identity_of_isEdgeFamily}]
+\label{det-exchange:thm:square}
+Let $A',A,U_1,U_2$ be spaces, $W=U_1\oplus U_2$, with $\rk A=\rk A'+2e$,
+$\operatorname{neg}(W)=\operatorname{neg}(A)+\operatorname{neg}(A')$,
+$1\le\frac12\rk W-\operatorname{neg}(W)\le\mu(\tau)$; order the coordinates of $W$ as those of $A'$,
+then $A$. Let $\nu_i$ be tame of weight $\mu$ for $(\fm_i,\chi_i)$, for $i$ in an index set, and let
+$(U_1,A)$, $(U_2,A)$, $(A',U_1)$, $(A',U_2)$ carry edge families (\lean{New.Exchange.IsEdgeFamily}):
+fixed polynomial real data; characters of fixed weights with a common tame part for each $i$, from
+families $\alpha_i$ on $(U_1,A)$, $(A',U_2)$ and $\beta_i$ on $(U_2,A)$, $(A',U_1)$ with
+$\alpha_i(p)\beta_i(q)=\nu_i^{-1}\upsilon^{\rk W/2}$ when $p+q=\rk W$; and conjugate pairs of cuspidal types,
+the theta lift carrying forms of one type at infinity to forms of the other. Let $\Theta_i(z)$ be the lift from $U_1$ to $A$ followed by the transposed lift to
+$U_2$, with data the indicators of the column blocks of $z\in\mathrm{Mat}_{\rk A\times\rk W}(R_i)$,
+and $\Theta'_i(y)$ the transposed lift from $U_1$ to $A'$ followed by the lift to $U_2$, with the
+indicators of the row blocks of $y\in\mathrm{Mat}_{\rk W\times\rk A'}(R_i)$. There are $C$ and
+$\eta$, independent of $i$, and $c_i\ne0$ with $\abs{c_i}^2=C\,L_*^{\fm_i}(e;\nu_i)$, such that
+(a) $\Theta_i(gz)=\chi_i(\det g)\Theta_i(z)$ and $\Theta'_i(yg)=\chi_i(\det g)\Theta'_i(y)$, and
+(b) $\sum_y\phi'(y)\Theta'_i(y)=(\eta/c_i)\sum_z\phi(z)\Theta_i(z)$ for all $\phi,\phi'$ matched for
+$\chi_i$ over $R_i$. In Lean, (a) and (b) are the square law \lean{New.Exchange.SquareLaw} for
+$l(\Theta_i(z)F)$ and $l(\Theta'_i(y)F)$, for all forms $F$ and functionals $l$.
+\end{theorem}
+
+\emph{The number $\eta$ (called $\kappa$ in the Lean text) does not depend on $i$, the modulus, the
+character or the forms; it is not computed and is not shown to be nonzero.}
+
+\begin{proof}
+(a) is the twist law of the Weil representation for point data and tameness. For (b) apply
+Theorem~\ref{det-exchange:thm:exchange} to $(W,A,A')$ with $v'$ the Fock vector of the product of
+the polynomials of $(A',U_1)$, $(A',U_2)$; this gives $v\in\mathcal F(W,A)$
+(\lean{New.Exchange.exists_sum_pairLift_comp_pairTransposedLift_eq_smul}). Sum against $\phi$,
+$\phi'$, multiply by $F_1(g_1)F_2(g_2)\nu_0(\det g_2)$ for forms $F_j$ on $U_j$ ($\nu_0$ a fixed
+character reconciling the characters on $U_2$), and integrate over $[\U(U_1)]\times[\U(U_2)]$. On
+the $A'$-side the kernel of a point datum and a product polynomial factors
+(\lean{New.Exchange.modKernel_single_sum_right}); Fubini and adjointness of lift and transposed lift
+give $\sum_y\phi'(y)\pair{F_2,\Theta'_i(y)F_1}$
+(\lean{New.Exchange.integral_integral_sum_downIntegrand}). On
+the $A$-side $v$ is not a product; but every polynomial is a sum of products
+$P_1P_2$ on $(U_1,A)$, $(U_2,A)$, the lift with $P_j$ is the edge lift convolved by a compactly
+supported function on $\U(A)(\R)$, and on forms of conjugate cuspidal types such convolutions
+multiply the pairing on $[\U(A)]$ by one number (\texttt{Lib},
+\lean{New.Exchange.IsPairEdge.exists_lift_eq_realConv},
+\lean{New.Exchange.exists_integral_realConv_mul_realConv}). With moment bounds, the integral with $v$
+is one multiple $\eta$ of that with the product of the edge polynomials
+(\lean{New.Exchange.exists_integral_upIntegrand_eq_mul_integral_lift}). Hence
+$\eta\sum_z\phi(z)\pair{F_2,\Theta_i(z)F_1}=c_i\sum_y\phi'(y)\pair{F_2,\Theta'_i(y)F_1}$.
+\end{proof}
+
+\subsection{Explicit real data}
+
+Section~\ref{sec:ol-compare} needs the definite space on the side of the vector that is only shown to
+exist, with explicit determinant data there.
+
+\begin{theorem}[\lean{New.Rows.exists_mul_stdClassSum_eq_integral_modKernel}]
+\label{det-exchange:thm:explicit}
+Let $W$, $V'$ both have $l$ negative signs, $2l+2\le\rk W$, and let $I$ be the standard positive
+definite space of rank $\rk W-\rk V'=\rk V'+2e$. For each infinite place $\tau$ let
+$(\mathsf C_{\tau,i})_{i\in\mathcal J(\tau)}$ be complex $(\rk V'-l)\times(\rk W-l)$ matrices. Let
+$P(\mathsf C)$ on $\Hom(W,I)$ be the product of the determinants of the $\mathsf C_{\tau,i}$ stacked over the
+variable matrix of the positive block at $\tau$ (\lean{New.Rows.stackedDetProd}), and $P^\natural(\mathsf C)$ on
+$\Hom(V',W)$ the product of $\det(Y_\tau^-)^{\#\mathcal J(\tau)+\rk W-2l}$ and the
+$\det(\mathsf C_{\tau,i}Y_\tau)$, with $Y_\tau$, $Y_\tau^-$ the blocks of variables of signs $+1$, $-1$
+(\lean{New.Rows.matchedPoly}). There is $C\in\R$, possibly $0$, such that every $\alpha$ tame of
+weight $l-\#\mathcal J(\tau)$ for $(\fm,\chi)$ has $c$ with
+$\abs c^2=C/L_*^{\fm}(e;\alpha^{-1}\upsilon^{\rk V'+e})$ and
+\[
+  c\sum_{[h]}\frac{\theta^{W,I}_{\alpha,\beta}(P(\mathsf C)\otimes\phi)(g,h)}{\#\operatorname{Aut}[h]}
+  =\int_{[\U(V')]}\theta^{V',W}_{\alpha/\beta,\alpha}(P^\natural(\mathsf C)\otimes\phi')(y,g)\,dy
+\]
+for all $\mathsf C$, $\beta$, $g$ and $\phi,\phi'$ matched for $\chi^{-1}$; the sum is over the classes of
+$\U(I)$ at the standard level (\lean{New.stdClassSum}).
+\end{theorem}
+
+\begin{proof}
+On a definite group the theta integral is a class sum. The archimedean step
+(\lean{New.Rows.exists_mul_apply_eq_apply_matchedPoly}): on functionals invariant under
+$\U(I)(\R)$, a circle mean in a torus and the average over $\U(I)(\R)$ turn the vector given by
+Theorem~\ref{det-exchange:thm:exchange} into a multiple of $P$ for the standard frame
+(\lean{New.exists_forall_eq_mul_map_det_pow}), and polarisation passes to all $\mathsf C$, as the products
+of determinants span an irreducible module for the unitary group
+(\lean{New.exists_pairedDetProd_eq_sum_unitary}; Goodman--Wallach, 2009, ch.~5). So the theorem with $P^\natural$ of
+the standard frame on the side of $V'$ becomes $c'\cdot(\text{class sum for }P(\mathsf C))=c_{\fm,\alpha}
+\cdot(\text{integral for }P^\natural(\mathsf C))$, $c'$ possibly $0$
+(\lean{New.Rows.exists_stdClassSum_eq_mul_integral_modKernel}); divide by $c_{\fm,\alpha}$.
+\end{proof}
+
+The case $V'=0$ (\lean{New.Rows.integral_modKernel_matchedPoly_of_isEmpty}) is
+Proposition~\ref{ol-compare:prop:rallis}. \emph{Other exports:}
+\lean{New.Exchange.isForm_neg_iff_and_integral_neg}, \lean{New.Exchange.neg_mem_neg_Gamma_iff}
+(passing to opposite signs preserves forms and quotient integrals; Section~\ref{sec:det-chain}), and
+\lean{New.Rows.realPairWeil_stackedDetProd}, \lean{New.Rows.blockSigns}
+(Section~\ref{sec:ol-compare}).

@@ -1,0 +1,345 @@
+\section{Existence of the data, twists, and colength}\label{sec:data}
+
+This supplement to Section~\ref{sec:setup}, in its notation, proves the facts on $E$ used
+elsewhere and Theorem~\ref{setup:thm:existence}, and defines twists, the characters of the lifts
+and colengths (\leanfile{New/Reduction/Data},
+\leanfile{New/Reduction/Lattices/Colength}). We write $h_K$ for the class number of $K$, $\F_w$ for
+the residue field of a finite place $w$ of $E$, $\Nm w = \#\F_w$; a bar is complex conjugation; the
+\emph{class modulo $q \mid q_1$} of a place is its image in $(\Z/q)^\times$.
+
+\subsection{The field}
+
+\begin{fact}[Background, standard]\label{data:fact:ant}
+In \leanfile{Lib/General/NumberTheory}: (i) A number field with primitive roots of unity of
+coprime orders $n, n'$ has degree $\ge \varphi(n)\varphi(n')$
+(\lean{New.totient_mul_totient_le_finrank}). For a prime $d \equiv 3 \bmod 4$,
+$K \subset \Q(\zeta_d)$ (\lean{New.QuadField.embOfPrimitiveRoot}). (ii) For a prime $p$, $(p)$ is
+a place of $K$ of norm $p^2$, or $(p) = \fp\fp'$, $\fp, \fp'$ of norm $p$
+(\lean{New.QuadField.prime_inert_or_eq_mul}); for $d \equiv 7 \bmod 8$, the latter iff
+$\chiK(p) \ne -1$ (\lean{New.QuadField.q_eq_iff_chiK_ne_neg_one}); $(y)$ has norm $y\bar y$
+(\lean{New.QuadField.absNorm_span_eq_mul_star}). (iii) A CM field with integers $i$, $\beta$,
+$i^2 = -1$, $\bar i = -i$, $\beta + \bar\beta = 1$, is unramified over its real subfield at finite
+places (\lean{New.differentIdeal_eq_top_of_add_star_eq_one}). (iv) If $q \in \Z$, $\abs q > 1$,
+$q^o \equiv 1 \bmod 2^{s+1}$, $o \ge 1$: $2^s \le (\abs q + 1)o$
+(\lean{New.two_pow_le_of_pow_eq_one}).
+\end{fact}
+
+\begin{proposition}[The field $E$]\label{data:prop:field}
+(a) $d \equiv 7 \bmod 8$, $d > 64$, and $d^n \not\equiv -1 \bmod q_0$ for all $n \ge 0$. Every
+prime $p \mid q_1$ divides $(d+1)/4$ and splits in $K$. So $\gcd(q_1,d) = 1$, and primes that do
+not split in $K$ are $\ge 13$. (b) The cyclotomic polynomial of order $q_1$ is irreducible over
+$K$, so $\Gal(E/K) \cong (\Z/q_1)^\times$ by $\sigma\zeta = \zeta^\nu$, $\nu \in (\Z/q_1)^\times$;
+and $E \subset \Q(\zeta_{q_1d})$. (c) For a fixed $K$-embedding $\Phi_1 \colon E \to \C$,
+$\sigma \mapsto$ (place of $\Phi_1\sigma$) is a bijection $\Gal(E/K) \to \Phi$; so
+$\Phi \cong (\Z/q_1)^\times$, $v \mapsto \sigma_v$, with $\sigma_1 = \id$. The CM type
+$\Phi_v = \Phi_1\sigma_v$ consists of all $K$-embeddings, one at each place;
+$\Phi_{vv'} = \Phi_v\sigma_{v'}$ and $\prod_v \Phi_v(y) = \Nm_{E/K}(y)$. Further
+$f = T\varphi(q_0)$, and exactly $T$ places have class $1$ modulo $q_0$. (d) The roots of unity
+of $E$ are the powers of $\zeta$, and $\Nm_{E/K}(\zeta) = 1$. (e) $5040 = 7! \mid q_1$, so $E$
+contains a primitive $5040$-th root of unity (\lean{New.HasPrimitiveRoot5040});
+$\cO_E \ni i$ with $i^2 = -1$, $\bar i = -i$ (namely $i = \pm\zeta^{q_1/4}$); and $E$ is
+unramified over its maximal real subfield at all finite places (``stably unramified'').
+\end{proposition}
+
+\begin{proof}
+(a) (\lean{New.Parameters.chiK_eq_one_of_dvd}, \lean{New.Parameters.d_pow_ne_neg_one}) As
+$q_0 \mid 2(d+1)$, $q_0 \nmid d+1$, $d+1$ is an odd multiple of $q_0/2$, so of $8$; and
+$2(d+1) \ge 18480$. Modulo $q_0$, $d^2 - 1 = \frac{d-1}2\cdot2(d+1) \equiv 0$, so the powers of
+$d$ are $1$ and $d$, neither $\equiv -1$ ($q_0 \nmid 2, d+1$). The primes of $T$
+are $2, 3$, which divide $q_0$; so a prime $p \mid q_1$ divides
+$2(d+1) = 8\cdot\frac{d+1}4$, hence $\frac{d+1}4$ (for $p = 2$ as $8 \mid d+1$). So
+$d \equiv -1 \bmod 4p$ and, as the Jacobi symbol $(\frac p\cdot)$ depends only on residues modulo
+$4p$, $\chiK(p) = (\frac p{4p-1}) = (\frac{4p}{4p-1}) = 1$; $\chiK(d) = 0$ gives $d \nmid q_1$.
+Primes below $13$ divide $18480$.
+(b) (\lean{New.Parameters.irreducible_cyclotomic}) View $K \subset \Q(\zeta_d)$. As
+$\gcd(q_1,d) = 1$, Fact~\ref{data:fact:ant}(i) gives $[\Q(\zeta_d,\zeta_{q_1}):\Q(\zeta_d)] =
+\varphi(q_1)$; so the cyclotomic polynomial is irreducible over $\Q(\zeta_d) \supset K$.
+
+(c) (\lean{New.Parameters.placeMulEquiv},
+\lean{New.Parameters.card_placeClass_eq_one_eq_towerDeg}) $\Gal(E/K)$ is transitive on the
+places, all above that of $K$; two $K$-embeddings with the same place are equal or conjugate,
+and conjugate ones differ on $K$. As the primes of $T$
+divide $q_0$, the cyclotomic polynomial of order $q_1$ is that of order $q_0$ at $X^T$, so
+$f = \varphi(q_1) = T\varphi(q_0)$; and $(\Z/q_1)^\times \surj (\Z/q_0)^\times$.
+(d) (\lean{New.Parameters.exists_zeta_pow_eq}) A root of unity $y \in E \subset \Q(\zeta_{q_1d})$
+has order dividing $q_1d$. If $y^{q_1} \ne 1$, $y^{q_1}$ is a primitive $d$-th root of unity, and
+Fact~\ref{data:fact:ant}(i) gives $2\varphi(q_1) = [E:\Q] \ge (d-1)\varphi(q_1)$, against $d > 64$.
+The norm of $\zeta$ is the constant term $1$ of the cyclotomic polynomial of order $q_1 > 2$.
+
+(e) (\lean{New.differentIdeal_eq_top}) $5040 \mid 3\cdot18480 \mid q_0T$; take $\zeta^{q_1/5040}$.
+Fact~\ref{data:fact:ant}(iii) applies to $i$ and $\beta = -(\eta+\eta^2+\eta^4)$, $\eta$ of order
+$7$, powers of a primitive $5040$-th root: $\beta + \bar\beta = 1$, $\beta\bar\beta = 2$
+(\lean{New.HasPrimitiveRoot5040.exists_add_star_eq_one_mul_star_eq_two}).
+\end{proof}
+
+\begin{remark}[The constants]\label{data:rem:constants}
+Primes $p \equiv 1 \bmod q_1d$ ($p_0, p_1, N$) split completely in $E$; no $v \in \Phi$ maps a
+place above $p$ to its conjugate (\lean{New.Parameters.smul_ne_star}). The factor $16$ of $18480$
+gives $d \equiv 7 \bmod 8$, used in Section~\ref{sec:der}; $3l_0$, $2^s$ serve
+Proposition~\ref{data:prop:sparse}.
+\end{remark}
+
+\subsection{Existence of the data}
+
+\begin{lemma}[Behrend-type sets; \lean{New.exists_three_term_free}]\label{data:lem:behrend}
+Let $n, H, c, o \ge 1$ be integers, $(cH)^n \le o$. Some $S \subset \{0, \dots, o-1\}$ with
+$\#S \ge H^n/(nH^2)$ has: if $e_1, e_2, e_3 \in S$ and integers $\alpha, \alpha' > 0$,
+$\alpha + \alpha' \le c$, satisfy $(\alpha+\alpha')e_2 \equiv \alpha e_1 + \alpha' e_3 \bmod o$, then
+$e_1 = e_2 = e_3$.
+\end{lemma}
+
+\begin{proof}
+The sums $\sum_l v_l^2$ over $v \in \{0,\dots,H-1\}^n$ take at most $nH^2$ values, so some sphere
+$\sum_l v_l^2 = C$ holds $\ge H^n/(nH^2)$ of these $v$; let $S$ be the numbers
+$\sum_l v_l(cH)^l$ for them. If $e_1, e_2, e_3$ have digits $u, v, w$, then $(\alpha+\alpha')v$ and
+$\alpha u + \alpha' w$ have digits below $cH$, so both sides are numbers below $(cH)^n \le o$ in
+base $cH$, and $(\alpha+\alpha')v = \alpha u + \alpha' w$. Then
+$\alpha\alpha'\abs{u-w}^2 = (\alpha+\alpha')(\alpha\abs u^2 + \alpha'\abs w^2)
+- \abs{\alpha u+\alpha'w}^2 = 0$, so $u = w = v$.
+\end{proof}
+
+\begin{proposition}[A sparse set of $b$-places; \lean{New.Parameters.exists_large_isSparse},
+\lean{New.Parameters.exists_isSparse}]\label{data:prop:sparse}
+Let $n, H, B \ge 1$ with $(2l_0H)^n \le 2^s$ and $2l_0(B+1) < 2^s$. Some set of $\ge H^n/(nH^2)$
+places of class $-1$ modulo $q_0$ is sparse for the primes $\ell \le B$ (as in
+Definition~\ref{setup:def:data}(c), where $B = kt$). If $1 \le W \le 2^s \le W^n$,
+$(2l_0)^n \le W$ and $3l_0n2^n \le W^3$, such a set $\Phi_b$ exists with $T \le \#\Phi_b\, W^6$.
+\end{proposition}
+
+\begin{proof}
+Write $q_0 = 2^hu$, $u$ odd, $h \ge 4$. As $3l_0u$ is odd, $g = 1 + 3l_0q_0$ has order $2^s$
+modulo $2^{s+h}$, a divisor of $q_1$ (\lean{New.Parameters.exists_orderOf_placeClass_eq}). Take
+$S$ from Lemma~\ref{data:lem:behrend} with $c = 2l_0$, $o = 2^s$, and let $\Phi_b$ be the places
+$-g^e$, $e \in S$, distinct and $\equiv -1 \bmod 3l_0q_0$.
+
+Let $\sigma, \tau, \rho \in \Phi_b$, named by $-g^{e_1}, -g^{e_2}, -g^{e_3}$, have
+$\tau/\sigma \equiv \pm\ell^i$, $\rho/\sigma \equiv \pm\ell^j$ modulo the part of $q_1$ prime to
+$\ell$, with $\ell \le B$ prime and $0 < i < j < l_0$; squaring removes the signs. If $\ell = 2$,
+then modulo $3l_0 = 3^{c'}$ we have $\tau/\sigma = g^{e_2-e_1} \equiv 1$, so $4^i \equiv 1$; but
+$4 = 1+3$ has order $3^{c'-1} = l_0 > i$. If $\ell$ is odd, then modulo $2^{s+h}$,
+$g^{2(e_2-e_1)} \equiv \ell^{2i}$ and $g^{2(e_3-e_1)} \equiv \ell^{2j}$ give
+$g^{2j(e_2-e_1)} \equiv g^{2i(e_3-e_1)}$, that is
+$(\alpha+\alpha')e_2 \equiv \alpha e_1 + \alpha'e_3 \bmod 2^s$ with $\alpha = 2(j-i)$,
+$\alpha' = 2i$, $\alpha + \alpha' < 2l_0$. So $e_1 = e_2$, $\tau = \sigma$, and
+$\ell^{2i} \equiv 1 \bmod 2^{s+1}$; Fact~\ref{data:fact:ant}(iv) gives
+$2^s \le (\ell+1)2i < 2l_0(B+1) < 2^s$. For the count take $H$ a power of $2$ with
+$H^n \le 2^s/W < (2H)^n$. Then $(2l_0H)^n \le 2^s$, $H \le W$, and
+$T = 3l_02^s < \frac{H^n}{nH^2}\cdot3l_0n2^nWH^2 \le \#\Phi_bW^6$.
+\end{proof}
+
+\begin{fact}[Primes in windows; \lean{New.exists_prime_modEq_one_log_mem}]\label{data:fact:primes}
+Let $u, A \ge 1$ be integers, $4 \mid u$. For all large real $W$, all $e > 1$ with
+$u^e \le W^A$ and all $U \in [W, W^A]$, some prime $p \equiv 1 \bmod u^e$ has
+$\log p \in [U, U + W]$. (\leanfile{Lib/Analytic/Primes}, by Newman's method; cf.\
+Siegel--Walfisz, Montgomery and Vaughan, Multiplicative number theory I, 2007, Cor.~11.19.)
+\end{fact}
+
+\begin{lemma}[$p_0, p_1, \pi_M$; \lean{New.Parameters.exists_prime_pair_norm}]\label{data:lem:pair}
+Let $L, W > 0$, $(2h_K+2)W \le L$, and let each window $[U, U+W]$ with $10L \le U \le 11L$
+contain $\log p$ for a prime $p \equiv 1 \bmod q_2^2$. Then two distinct such primes
+$p_0, p_1 \in [e^{10L}, e^{11L}]$ have $p_0p_1 = \alpha\bar\alpha$, $\alpha \in \cO_K$.
+\end{lemma}
+
+\begin{proof}
+The disjoint windows at $10L + 2iW$, $0 \le i \le h_K$, give primes
+$p^{(i)} \equiv 1 \bmod d$; by Fact~\ref{data:fact:ant}(ii), $(p^{(i)}) = \fp_i\fp'_i$, both of norm
+$p^{(i)}$. Two classes agree, $[\fp_i] = [\fp_j]$,
+$i \ne j$; then $[\fp_i\fp'_j] = [\fp_j\fp'_j] = 1$, so $\fp_i\fp'_j = (\alpha)$ and
+$\alpha\bar\alpha = p^{(i)}p^{(j)}$ (\lean{New.exists_ne_isPrincipal_mul}).
+\end{proof}
+
+\begin{lemma}[$N, \pi_N$; \lean{New.Parameters.exists_prime_log_mem_Icc_mul_star_eq}]
+\label{data:lem:level}
+(a) A prime $N \equiv 1 \bmod 4$ is $\pi\bar\pi$: $N = c^2 + c'^2$, $c, c' \in \N$ (Fermat), and
+$\pi = c + c'i$ for any $i \in \cO_E$ with $i^2 = -1$, $\bar i = -i$
+(Proposition~\ref{data:prop:field}(e)); the code does not fix the sign of $i$
+(\lean{New.Parameters.exists_mul_star_eq_prime},
+\lean{New.HasPrimitiveRoot5040.exists_mul_self_eq_neg_one}). (b) Let $L \ge 7$, $W^2 \le L$,
+$m \ge 2$, integers $\kappa(\tau) \in [1, e^L]$, $M \in [e^{20L}, e^{22L}]$, $q_1d \le e^L$, and $N_-$ as in
+Definition~\ref{setup:def:data}(e) with $b = e^L$. Then $mL \le \log N_- \le 24mL$
+(\lean{New.Parameters.logLevelMin_mem_Icc}); and if the window at $U = \log N_-$ contains $\log N$
+for a prime $N \equiv 1 \bmod q_2^2$, then $\log N \le \log N_- + \sqrt L$ and $N = \pi_N\bar\pi_N$.
+\end{lemma}
+
+\begin{proof}
+(a) $\bar\pi = c - c'i$. (b) The mean of $\log\kappa$ is in $[0, L]$; $q_1d$ lies in the different
+of $E$ (\lean{New.Parameters.conductor_mem_differentIdeal}), so $1 \le \rdE \le q_1d$
+(\lean{New.rootDiscr_mem_Icc}) and $\log(M\rdE/2\pi) \in [19L, 23L]$; so
+$\log N_- \in [19(m-1)L - \frac{15}2L, 24mL] \subset [mL, 24mL]$. As
+$4 \mid q_2^2$, (a) applies; so $\pi_N \in \Z[i]$, and nothing more is asked of it.
+\end{proof}
+
+\begin{proof}[Proof of Theorem~\ref{setup:thm:existence}, \lean{New.eventually_exists_data}]
+Fix $n$ with $n\eps/6 > 99q_0d$; let $y = \log x$, $W = x^{\eps/6}$. For large $x$
+(\lean{New.Parameters.exists_eventually_isLargeScale}): $100(6\log W + 1) \le y$, as
+$6\log W = \eps y$ and $\eps < 1/100$; $\log W \ge 10^{12}c_P$; $W$ exceeds $2\cdot10^6y$,
+$2h_K+2$, $n+1$, $(5184y)^n$, $7776yn2^n$; $99q_0dy \le n\log W$; and, by
+Fact~\ref{data:fact:primes} with $u = q_0d$, $A = n+7$, each window $[U, U+W]$ with
+$U \in [W, W^{n+7}]$ contains $\log p$ for a prime $p \equiv 1 \bmod (q_0d)^e$, for each $e > 1$
+with $(q_0d)^e \le W^{n+7}$. Then
+(\lean{New.Parameters.IsLargeScale.exists_isAdmissibleData}):
+\emph{Ranks, field.} Let $m$, $r$ be the least powers of $2$, $3$ with $m \ge \sqrt x$,
+$r \ge x^5$, and $s = 22\log_2m \le 32y$. As $2^s \mid q_1d \mid q_2^2$ and
+$\log q_2^2 \le 2(32y+6)q_0d \le n\log W$: $W \le m \le 2^s \le q_1d \le q_2^2 \le W^n$.
+\emph{$b$-places.} Proposition~\ref{data:prop:sparse} with $B = kt$ applies: $l_0 \le 81s \le 2592y$
+gives $(2l_0)^n \le W$, $3l_0n2^n \le W^3$, and $2l_0(kt+1) \le 5184y\cdot46x^{10} < x^{11} \le 2^s$
+(\lean{New.mul_rank_lt_two_pow}).
+\emph{Scales.} $x_1 = \floor{e^W}$ has $\log x_1 \in [W-1, W]$; as $q_1x_1 \le W^ne^W \le e^{W^6}$,
+the least multiple $b$ of $q_1x_1$ above $e^{W^6}$ has $\log b \in [W^6, W^6+1]$ and
+$\log\log b \in [6\log W, 6\log W+1]$; $W^6 = x^\eps$. So $T \le \#\Phi_b\log b$, and the list
+above gives the inequalities of Definition~\ref{setup:def:data}(a).
+\emph{Primes.} Let $L = \log b$. The windows at $L \le U \le 24mL$ lie in $[W, W^{n+7}]$ (as
+$24L \le W^7$, $m \le W^n$), $q_2^2 = (q_0d)^{2(s+6)} \le W^n$, and $(2h_K+2)W \le W^2 \le L$.
+Lemma~\ref{data:lem:pair} gives $p_0, p_1$ and $\pi_M = \bar\alpha$, so $M \in [b^{20}, b^{22}]$;
+as $\kappa \in [1, b]$ and $q_1d \le W^n < b$, Lemma~\ref{data:lem:level} gives $N$, $\pi_N$
+(\lean{New.Parameters.IsAdmissibleData.exists_hasFields} bundles all into data $D$).
+\end{proof}
+
+\subsection{Weights, level, target parameter, twists}
+
+\begin{lemma}[\lean{New.Data.shiftedWeight_mem_Icc}, \lean{New.Data.log_N_mem_Icc}]
+\label{data:lem:N}
+For each place $\sigma$, $a/x_1 \le \kappa(\sigma) \le b$, $\kappa(\sigma) + x^{42} \le 2b$, and for
+$0 \le i \le 4m$, $\kappa(\sigma) + (i+1)\Delta/2$ ($= \kappa_j$ if $i = 2j$) lies in
+$[\kappa(\sigma), \kappa(\sigma)+x^{42}]$ and has logarithm $\le \log\kappa(\sigma) + 1/x$. Further
+$\log N_-, \log N \ge m\log b$, $\log N_- \le 24m\log b$, $\log N \le 30m\log b$,
+$N \equiv 1 \bmod q_1d$, $b^2 < p_0, p_1 < N$ and $b^{101} \le N$ (\lean{New.Data.weight_mem_Icc},
+\lean{New.Data.logLevelTarget_mem_Icc}, \lean{New.Data.N_modEq_one}).
+\end{lemma}
+
+\begin{proof}
+$(4m+1)\Delta/2 \le (8\sqrt x+1)(3x^5)^8 \le x^{42}$, $x^{42}/\kappa \le 1/x$, and
+Lemma~\ref{data:lem:level}(b); the rest compares sizes (\lean{New.Data.le_of_hasLogBound}).
+\end{proof}
+
+\begin{definition}[\lean{New.Data.targetParameter}, \lean{New.Data.targetParameter_eq}]
+\label{data:def:target}
+The \emph{target parameter} at $v \in \Phi$ is the integer sequence $(\lambda_i(v))_{i\ge0}$,
+\[
+  \lambda_i(v) = \tfrac k2 - 1 - i \ \ (i \le k-2), \qquad
+  \lambda_i(v) = \tfrac\Delta2 - \kappa_{i+2-k}(v) = -\kappa(v) - (i+2-k)\Delta \ \ (i \ge k-1),
+\]
+with $k$ even (\lean{New.Data.k_even}); it gives the Harish-Chandra parameters
+(Section~\ref{sec:ub-objects}).
+\end{definition}
+
+For $u \in \U(1)(\A) = \set{u \in \A_E^\times : u\bar u = 1}$ let $u_v \in \C$ be its component at
+$v \in \Phi$, read through $\Phi_v$, and, if its finite part is integral, $u \bmod w \in \F_w^\times$
+its reduction. An \emph{automorphic character} is a continuous unitary character of $\U(1)(\A)$
+trivial on $\U(1)(E)$ (\lean{New.AutChar}).
+
+\begin{definition}[\lean{New.AutChar.HasWeight}]\label{data:def:hasweight}
+An automorphic character $\mu$ has \emph{weight} $e \colon \Phi \to \Z$ and \emph{tame part}
+$\psi = (\psi_w)_w$, $\psi_w$ a character of $\F_w^\times$, if $\psi_w = 1$ for almost all $w$ and
+$\mu(u) = \prod_{v} u_v^{e(v)} \prod_w \psi_w(u \bmod w)$ for all $u$ with integral finite part.
+Then, if $\mu'$ has weight $e'$ and tame part $\psi'$, $\mu\mu'$ has weight $e + e'$ and tame part
+$\psi\psi'$, and $\mu^n$ weight $ne$ and tame part $\psi^n$ (\lean{New.AutChar.HasWeight.mul},
+\lean{New.AutChar.HasWeight.zpow}).
+\end{definition}
+
+\begin{definition}[Twists; \lean{New.Data.TameChar}, \lean{New.Data.Twist},
+\lean{New.Data.MFoldTwist}, \lean{New.Data.MFoldTwist.powTwist}]\label{data:def:twist}
+A \emph{tame character} $(\vartheta, Q, \psi)$ is an automorphic character $\vartheta$ of weight $0$
+and tame part $\psi$ with a finite set $Q$ of finite places, $\psi_w = 1$ for $w \notin Q$,
+$Q \cap \bar Q = \emptyset$ and $\prod_{w\in Q}\Nm w$ is prime to $MN$. It is a \emph{twist}, of
+\emph{modulus} $Q$, if $\psi_w \ne 1$ for $w \in Q$, and an \emph{$m$-fold twist} if
+$\psi_w^n \ne 1$ for $w \in Q$ and $1 \le n \le m$ (\lean{New.Data.LiftIndex}). Its power
+$(\vartheta^n, Q, \psi^n)$ is a tame character, a twist if $\vartheta$ is $m$-fold and
+$1 \le n \le m$. The trivial twist is
+$(1, \emptyset, 1)$. A twist has root-of-unity values
+(\lean{New.AutChar.HasWeight.isOfFinOrder_apply}).
+\end{definition}
+
+\begin{definition}[\lean{New.Data.untwistedLiftChar}, \lean{New.Data.liftChar},
+\lean{New.Data.chainChar}]\label{data:def:liftchar}
+Let $\mu^\flat$ (\lean{New.Data.chiZero}) have weight $-\kappa_0$ and trivial tame part, $\chi$
+(\lean{New.Data.chiM}) weight $0$ and tame part $\omega$ (\lean{New.Data.chiMLocal}), where
+$\omega_w$ is the $q_2$-th power of a character of order $q_2^2$ of $\F_w^\times$ if $w \mid \pi_M$,
+and $1$ otherwise (Section~\ref{sec:der}), and $\upsilon$ the splitting character of the Weil data
+on $\U(1)(\A)$, of weight $1$ and trivial tame part (\lean{New.WeilData.upsilonU1_hasWeight}). For
+a tame character $\vartheta$ and $j \ge 0$ the characters of the lifts are
+$\mu_j^0 = \mu^\flat(\upsilon^{-\Delta}\chi)^j$, $\mu_j^0\vartheta$ and $\mu_j^0\vartheta^j$ (lift
+$j$ of a chain). As $\kappa_j = \kappa_0 + j\Delta$, all three have weight $-\kappa_j$; their
+tame parts are $\omega^j$, $\omega^j\psi$, $\omega^j\psi^j$
+(\lean{New.Data.untwistedLiftChar_hasWeight}, \lean{New.Data.hasWeight_liftChar}).
+\end{definition}
+
+$\mu^\flat$ and $\chi$ exist (\lean{New.Data.exists_char_hasWeight},
+\lean{New.AutChar.exists_hasWeight_of_prod_eq_one}) as the formula of
+Definition~\ref{data:def:hasweight} is $1$ on the integers $u$ with $u\bar u = 1$, the powers of
+$\zeta$: $q_1 \mid \kappa$ (as $q_1x_1 \mid b$), so
+$\prod_v\Phi_v(\zeta)^{\kappa_0(v)} = \Nm_{E/K}(\zeta)^{\Delta/2} = 1$, and $\omega_w(\zeta \bmod w) = 1$ as $q_1 \mid q_2$.
+
+\subsection{Colength}
+
+Let $O$ be a commutative ring and $\mathcal{H}$, $\mathcal{H}'$ modules over $O$. In this
+subsection $\mathcal{A}, \mathcal{B}, \mathcal{C}$ are submodules of $\mathcal{H}$,
+$\mathcal{A}', \mathcal{B}'$ submodules of $\mathcal{H}'$, and $z, z', \gamma, \varpi \in O$.
+
+\begin{definition}[\lean{New.ColengthDvd}, \lean{New.IsOntoUpToColength}]\label{data:def:colength}
+Write $\mathcal{A} \to_z \mathcal{B}$, \emph{the colength of $\mathcal{B}$ in $\mathcal{A}$ divides
+$z$}, if every finite family $(\varphi_j)_{j\in J}$ in $\mathcal{A}$ is carried into $\mathcal{B}$
+by a $J\times J$ matrix $u$ over $O$ with $\det u \mid z$: $\sum_{j'} u_{jj'}\varphi_{j'} \in
+\mathcal{B}$ for all $j$. ($\mathcal{B} \subset \mathcal{A}$ is not required. A family in some
+$\mathcal{A} \to_{\ell^e} \mathcal{B}$, $\mathcal{B}$ the vectors integral at $\iota \mid \ell$, may
+take $\delta_\ell = e$ in Definition~\ref{setup:def:index},
+\lean{New.TwistedLattice.indexLe_of_colengthDvd}.) An endomorphism $F$ of $\mathcal{H}$ is
+\emph{onto $\mathcal{A}$ modulo $\varpi^n$ up to colength $c \in \R$} if
+$F(\mathcal{A}) \subset \mathcal{A}$ and $\mathcal{A} \to_{\varpi^\nu} F(\mathcal{A}) +
+\varpi^n\mathcal{A}$ for an integer $0 \le \nu \le c$.
+\end{definition}
+
+\begin{lemma}[\lean{New.ColengthDvd.trans}, \lean{New.ColengthDvd.comap},
+\lean{New.ColengthDvd.map}, \lean{New.ColengthDvd.comp}, \lean{New.IsOntoUpToColength.prod}]
+\label{data:lem:calculus}
+(a) If $\mathcal{A} \subset \mathcal{B}$ then $\mathcal{A} \to_z \mathcal{B}$; if
+$\mathcal{A} \to_z \mathcal{B}$, $z \mid z'$ then $\mathcal{A} \to_{z'} \mathcal{B}$; if
+$\mathcal{A} \to_z \mathcal{B} \to_{z'} \mathcal{C}$ then $\mathcal{A} \to_{zz'} \mathcal{C}$.
+(b) Let $\mathcal{A} \to_z \mathcal{B}$. If $F \colon \mathcal{H}' \to \mathcal{H}$ is linear,
+$F(\mathcal{A}') \subset \mathcal{A}$, and $h \in \mathcal{A}'$, $F(h) \in \mathcal{B}$ imply
+$h \in \mathcal{B}'$, then $\mathcal{A}' \to_z \mathcal{B}'$; if
+$F \colon \mathcal{H} \to \mathcal{H}'$ is linear, $\mathcal{A}' \subset F(\mathcal{A}) +
+\mathcal{B}'$ and $F(\mathcal{B}) \subset \mathcal{B}'$, then $\mathcal{A}' \to_z \mathcal{B}'$.
+(c) If $F$ is an endomorphism of $\mathcal{H}$, $F(\mathcal{A}) \subset \mathcal{A}$,
+$\mathcal{A} \to_z F(\mathcal{A}) + \gamma\mathcal{A}$ and
+$\mathcal{A} \to_{z'} \mathcal{B} + \gamma\mathcal{A}$, then
+$\mathcal{A} \to_{zz'} F(\mathcal{B}) + \gamma\mathcal{A}$. (d) If finitely many endomorphisms
+$F_1, F_2, \dots$ are onto $\mathcal{A}$ modulo $\varpi^n$ up to colengths $c_1, c_2, \dots$, then
+$F_1F_2\cdots$ is so up to colength $c_1 + c_2 + \cdots$.
+\end{lemma}
+
+\begin{proof}
+(a) Take $u = 1$; for the chain apply the second hypothesis to $u\varphi$. (b) Apply the hypothesis
+to $(F\varphi_j)_j$, resp.\ to $(h_j)_j$ where $\varphi_j = F(h_j) + h'_j$, $h_j \in \mathcal{A}$,
+$h'_j \in \mathcal{B}'$. (c) Carry $\varphi$ to $F(h) + \gamma h'$ with $h, h' \in \mathcal{A}$,
+then $h$ into $\mathcal{B} + \gamma\mathcal{A}$; as $F(\gamma\mathcal{A}) \subset
+\gamma\mathcal{A}$, the product matrix carries $\varphi$ into $F(\mathcal{B}) + \gamma\mathcal{A}$.
+(d) Induction with (c), $F = F_1$, $\mathcal{B} = F_2F_3\cdots(\mathcal{A})$, $\gamma = \varpi^n$.
+\end{proof}
+
+\begin{lemma}[\lean{New.ColengthDvd.of_det_dvd}, \lean{New.IsOntoUpToColength.exists_relLength_le}]
+\label{data:lem:valuation}
+Let $O$ be a valuation domain. (a) If a square matrix $A$ over $O$, indexed by a finite set $I$,
+has $\det A \mid z$ and image in a submodule $\mathcal{B}$ of $O^I$, then $O^I \to_z \mathcal{B}$;
+so $O^I \to_{\gamma^{\#I}} \gamma O^I$ (\lean{New.colengthDvd_top_smul_top}); and
+$\mathcal{B} + \Span(\Gamma) \to_{z^{\#\Gamma}} \mathcal{B} + z\mathcal{H}$ for a finite set
+$\Gamma \subset \mathcal{H}$ (\lean{New.colengthDvd_sup_span}). (b) Let $O$ be a discrete
+valuation ring, $\ord$ its normalised valuation, $\mathcal{A}$ finitely generated. If
+$\mathcal{A} \to_z \mathcal{B}$, $\mathcal{A}/(\mathcal{A}\cap\mathcal{B})$ has length
+$\le \ord z$; so if $F$ is onto $\mathcal{A}$ modulo $\varpi^n$ up to colength $c$,
+$\mathcal{A}/(F(\mathcal{A})+\varpi^n\mathcal{A})$ has length $\le \nu\ord\varpi$ for an integer
+$\nu \le c$.
+\end{lemma}
+
+\begin{proof}
+(a) Write $A = g\,\diag(\eta_i)\,g'$, $g, g'$ invertible (Smith normal form): $A(O^I)$ is the set
+of $h$ with $\eta_i \mid (g^{-1}h)_i$ for all $i$, and $\prod_i\eta_i \mid z$. Impose these
+conditions one by one, each at cost $\eta_i$: subtract from each member a multiple of a member
+$h_0$ at which $(g^{-1}\cdot)_i$ has least valuation, and replace $h_0$ by $\eta_ih_0$
+(\lean{New.colengthDvd_inf_comap_span}). Then take $A = \gamma\cdot1$, and push forward along
+$O^\Gamma \to \mathcal{H}$, $\lambda \mapsto \sum_{h\in\Gamma}\lambda_hh$, by
+Lemma~\ref{data:lem:calculus}(b). (b) For a finite family $\varphi$ generating
+$\mathcal{A}$ and $u$ as in Definition~\ref{data:def:colength}, $\mathcal{A}/(\mathcal{A}\cap
+\mathcal{B})$ is a quotient of $O^J/u^{\mathsf T}O^J$, of length $\ord\det u \le \ord z$
+(\lean{New.ColengthDvd.relLength_le}).
+\end{proof}

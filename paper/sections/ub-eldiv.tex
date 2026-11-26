@@ -1,0 +1,375 @@
+\section{Elementary divisors of a Hecke operator}\label{sec:ub-eldiv}
+
+At an inert prime $\ell$ that pairs two a-places, Section~\ref{sec:ub-divis} needs that a scaled
+Hecke operator $y$ above $\ell$ (the $\mathcal Y_{\mathfrak l}$ of Section~\ref{sec:ub-divis}) loses little:
+the image of the lattice $\mathcal L$ of integral source forms (written $\mathcal M_\iota$ there),
+enlarged by $\ell^{j_0}\mathcal L$, has small colength in $\mathcal L$
+(\lean{New.Data.IsMarked.isOntoUpToColength_scaledHeckeOperator}). Theorem~\ref{ub-eldiv:thm:main}
+proves this for an abstract \emph{edge Hecke operator}; only the theorem and
+Definitions~\ref{ub-eldiv:def:cycle} to~\ref{ub-eldiv:def:large} are used elsewhere, and only colength
+(Definition~\ref{data:def:colength}, \leanfile{New/Reduction/Lattices/Colength}) is taken from other parts.
+
+\subsection{Set-up}\label{ub-eldiv:sec:setup}
+
+The rank $k$, the degree $a$, the block size $e$ and the exponent $j_0$ are parameters, and the
+letters defined below are local to this section. In Section~\ref{sec:ub-divis}, $k$ and $a$ are
+those of Definition~\ref{setup:def:data}, $e=\mathfrak r_\ell=\lceil\log_\ell m\rceil$, $R$ is the valuation ring of a prime of $E$ above
+$\ell$, and the letters are the a-places that induce it or its conjugate (composed with complex
+conjugation at the odd letters).
+
+\begin{definition}[\lean{New.FrobeniusCycle}]\label{ub-eldiv:def:cycle}
+A \emph{Frobenius cycle} consists of a prime $\ell$, a power $P\ge5$ of $\ell$, a local ring $R$ whose
+residue field has $q=P^\nu$ elements, a ring $\cO$ with an element $w$, $w^2=\ell$, and ring maps
+$\varphi_i\colon R\to\cO$ for $i\in\Z/\nu$ (the \emph{letters}), alternately \emph{even} and
+\emph{odd}, with $\varphi_{i+1}(\xi)\equiv\varphi_i(\xi)^P\bmod \ell$. Half of the letters are even
+(\lean{New.FrobeniusCycle.card_isEven_add_self}). Put $c_0=k^2\log_\ell q$. From now on $\cO$ is a
+valuation domain of characteristic $0$ in which $\ell$ is not a unit; $\fm$ is its maximal ideal.
+\end{definition}
+
+Take variables $z_{u,i}$, $0\le u<k$, $i\in\Z/\nu$. Let $\mathcal B$ (\lean{New.Exponents}) be the
+families $\beta=(\beta_i)_i$ of exponent vectors of degree $a$ in $k$ variables; $h\in\cO^{\mathcal B}$
+is the form $\sum_\beta h_\beta z^\beta$. An element $g\in\GL_k(R)$ acts on the letter $i$ by
+$g_i=\varphi_i(g)$ for even and $g_i=\varphi_i({}^tg^{-1})$ for odd $i$
+(\lean{New.FrobeniusCycle.letterMatrix}), so on coefficients by $\rho(g)=\bigotimes_i\Sym^a(g_i)$
+(\lean{New.FrobeniusCycle.letterRep}). Fix $0<e\le k/2$. The parahoric subgroup $\mathcal P_e$ has
+its entries $(u,u')$ with $u<e\le u'$ in the maximal ideal of $R$, and $\mathcal G_e$ is the block
+diagonal subgroup for the blocks $\{u<e\}$, $\{u\ge e\}$ (\lean{New.parahoric}, \lean{New.levi},
+\lean{New.twoBlock}). The cosets $\GL_k(R)/\mathcal P_e$ (\lean{New.ParahoricCosets}) index the
+\emph{edges} from a lattice, the pairs $L'\subseteq L$ with $\ell L\subseteq L'$ and $\dim L/L'=e$. A
+variable $z_{u,i}$ is \emph{deep} if $i$ is even and $u\ge e$, or $i$ is odd and $u<e$
+(\lean{New.FrobeniusCycle.deepIndicator}); the \emph{depth} $\operatorname{dp}\beta$ is the degree in
+the deep variables. Let $\mathsf D_\lambda=\diag(\lambda^{\operatorname{dp}\beta})$; it is $\bigotimes_i\Sym^a$
+of the diagonal matrix with $\lambda$ at the deep variables of the letter $i$
+(\lean{New.FrobeniusCycle.diagonal_pow_depth}), and $\mathsf D_\ell=\mathsf D_w^2$
+(\lean{New.FrobeniusCycle.depthPower}). In a basis of $L'$ adapted to an edge, the forms integral for
+$L'+wL$, times $w^{-a\nu/2}$, have the basis $w^{-\operatorname{dp}\beta}z^\beta$ (the \emph{halfway
+lattice}); so $\mathsf D_wh$ are the \emph{normalized coefficients} of $h$.
+
+\begin{definition}\label{ub-eldiv:def:defect}
+(a) $\mathcal A$ (\lean{New.FrobeniusCycle.allEdgesForms}), the forms in the halfway lattices of all
+edges from a lattice, is the module of the $v$ with $w^n v=\mathsf D_wh$, where $w^n$ divides
+$\mathsf D_w\rho(g)h$ for all $g\in\GL_k(R)$.
+(b) Let $u\ne u'$. In the letter $j$ let $z^+_j=z_{u',j}$, $z^-_j=z_{u,j}$ if $j$ is even, and the
+reverse if $j$ is odd. The \emph{defect} of $\beta$ at the letter $i$ along $(u,u')$
+(\lean{New.FrobeniusCycle.defectWeight}) is, with $[j-i]\in\{0,\dots,\nu-1\}$,
+\[
+  \operatorname{def}_i(\beta)=\beta(z^+_i)+\frac1{q-1}\sum_{j}P^{[j-i]}\bigl(\beta(z^+_j)-\beta(z^-_j)\bigr).
+\]
+\end{definition}
+
+\begin{definition}[\lean{New.EdgeCoordinates}, \lean{New.FrobeniusCycle.edgeHeckeOperator}]
+\label{ub-eldiv:def:operator}
+\emph{Edge coordinates} are finite sets $\mathcal V$, $H$ and, for $v\in\mathcal V$ and each coset
+$\mathfrak e\in\GL_k(R)/\mathcal P_e$ (the edge $\mathfrak e$ into $v$), an origin
+$o(v,\mathfrak e)\in\mathcal V$, basis changes $\gamma(v,\mathfrak e),\tau(\mathfrak e)\in\GL_k(R)$
+with $\tau(\mathfrak e)^{-1}\in\mathfrak e$, and $\Gamma(v,\mathfrak e)\in\GL_H(\cO)$, such that two
+edges $\epsilon,\epsilon'$ with the same origin and ${}^t\gamma(\epsilon)\,{}^t\gamma(\epsilon')^{-1}
+\in\mathcal P_e$ are equal. (Model: a group acts freely on pairs of a lattice and a module with basis
+$H$; $\mathcal V$ represents the orbits; the edge goes from $g_0\,o(v,\mathfrak e)$ to $v$, with
+$g_0^{-1}=\gamma(v,\mathfrak e)\diag(\ell^{-1},\dots,\ell^{-1},1,\dots,1)\tau(\mathfrak e)$, $e$ entries
+$\ell^{-1}$.) The \emph{edge Hecke operator} on $F\colon\mathcal V\to\cO^{\mathcal B}\otimes\cO^H$ is
+\[
+  (AF)(v)=\sum\nolimits_{\mathfrak e}\bigl({}^t(\rho(\gamma(v,\mathfrak e))\,\mathsf D_\ell\,
+  \rho(\tau(\mathfrak e)))\otimes\Gamma(v,\mathfrak e)\bigr)F(o(v,\mathfrak e))
+\]
+(\lean{New.FrobeniusCycle.edgeHeckeOperator_apply}): on forms written in the basis
+$(a!)^\nu z^\beta/\beta!$, $\ell^{a\nu/2}$ times the sum over the edges into $v$ of the values at their
+origins, carried to $v$ by $g_0$.
+\end{definition}
+
+Colength and ``onto up to colength'' are those of Definition~\ref{data:def:colength}
+(\lean{New.ColengthDvd}, \lean{New.IsOntoUpToColength}): $y$ is onto $\mathcal L$ modulo $\ell^{j_0}$
+up to colength $\bar c$ if $y(\mathcal L)\subseteq\mathcal L$ and the colength of
+$y(\mathcal L)+\ell^{j_0}\mathcal L$ in $\mathcal L$ divides $\ell^l$ for an integer $0\le l\le\bar c$.
+
+Over a discrete valuation ring this bounds $\length\mathcal L/(y(\mathcal L)+\ell^{j_0}\mathcal L)$ by
+$l\length(\cO/\ell)$ (\lean{New.FrobeniusCycle.elementary_divisors_length}); this length is
+$\sum_{l'}\min(\eta_{l'},j_0)\length(\cO/\ell)$ if $y$ has elementary divisors
+$\ell^{\eta_1},\dots,\ell^{\eta_n}$ on $\mathcal L\cong\cO^n$.
+
+\begin{definition}[\lean{New.FrobeniusCycle.IsLargeDegree}]\label{ub-eldiv:def:large}
+The \emph{size conditions} for $(k,a,e,\theta)$ are
+\begin{equation}\label{ub-eldiv:eq:large}
+  0<e,\quad 2e\le k,\quad 0<\theta\le1,\quad a^4\le q,\quad
+  (\nu k\log q/\theta)^5P^{3e}\le a .
+\end{equation}
+The \emph{divisor constant} is $c_{\mathrm{div}}=\nu a\,(P^{-2e}+e^2/(kP))$
+\leanref{New.FrobeniusCycle.divisorConstant}.
+\end{definition}
+
+\begin{theorem}[\lean{New.FrobeniusCycle.elementary_divisors}]\label{ub-eldiv:thm:main}
+Let $A$ be the edge Hecke operator of edge coordinates for a Frobenius cycle, $I\cong\mathcal
+B\times H$, $\pi\colon\cO^{\mathcal V\times I}\to\mathcal M$ an $\cO$-linear map and
+$y\in\End_\cO(\mathcal M)$ with $y\circ\pi=\pi\circ A$. Assume~\eqref{ub-eldiv:eq:large}. Then for
+every $j_0\ge0$, $y$ is onto on $\mathcal L=\pi(\cO^{\mathcal V\times I})$ modulo $\ell^{j_0}$ up to
+colength $(3c_{\mathrm{div}}+\theta j_0)\abs{\mathcal V}\abs I$.
+\end{theorem}
+
+Section~\ref{sec:ub-divis} takes $\theta=1/(m^2f)$ and shows
+$3c_{\mathrm{div}}\le6a\nu/(m\ell)$ (\lean{New.Data.three_mul_divisorConstant_le}).
+
+\subsection{Proof of the theorem}\label{ub-eldiv:sec:proof}
+
+For $a<q$ there are weights with $\omega_\beta\omega'_\beta=\ell^{\nu c_0}$ for which $\rho(g)$ and
+$\rho({}^tg)$ are adjoint for $\pair{h,h'}=\sum_\beta h'_\beta\omega_\beta h_\beta$, namely
+$\omega_\beta=\prod_i\ell^{c_0}/\binom a{\beta_i}$ (multinomial coefficients;
+\lean{New.FrobeniusCycle.exists_isEdgePairing}). Let $\mathcal V_H=H\times\mathcal V$, read
+$\cO^{\mathcal V_H\times\mathcal B}$ as $\cO^{\mathcal V\times I}$ (\lean{New.regroup}), and let
+$\operatorname{Res}$ give an edge the normalized coefficients $\mathsf D_w\rho(g)h$ of the value $h$ at its
+origin, in an adapted basis (\lean{New.FrobeniusCycle.edgeRestriction}); $\operatorname{Res}'$ does
+the same for the dual edges, whose origins are the termini. As ${}^t(\mathsf D_w\rho(g'))\,\omega\,
+\mathsf D_w\rho({}^tg)={}^t(\rho(g)\mathsf D_\ell\rho(g'))\,\omega$,
+\begin{equation}\label{ub-eldiv:eq:factor}
+  A\circ\diag(\omega)={}^t\operatorname{Res}'\circ(\Gamma\otimes\omega)\circ\operatorname{Res}
+\end{equation}
+(\lean{New.FrobeniusCycle.IsEdgePairing.edgeHeckeOperator_regroup}). It suffices to bound the
+colength of the image of the right side plus $\ell^{j_0}\cO^{\mathcal V_H\times\mathcal B}$, and to push it
+forward by $\pi$ (\lean{New.ColengthDvd.map}).
+
+\begin{fact}[Hermite and Smith forms, standard; \lean{New.IsValuationPair.hermite},
+\lean{New.IsValuationPair.smith_normal_form}]\label{ub-eldiv:fact:smith}
+Over a valuation domain a matrix with at least as many rows as columns is $U'\Xi$, with $U'$ some
+columns of an invertible matrix and $\Xi$ square; a square matrix is $U_1\diag(\epsilon)U_2$ with
+$U_1,U_2$ invertible.
+\end{fact}
+
+\begin{proposition}[\lean{New.FrobeniusCycle.IsLargeDegree.exists_basis_det_dvd}]
+\label{ub-eldiv:prop:ends}
+Under~\eqref{ub-eldiv:eq:large}, $\operatorname{Res}=\mathcal Q\Xi$ with $\mathcal R\mathcal Q=1$ for some $\mathcal R$, the
+image of $\mathcal Q$ the functions on edges that depend only on the origin
+(\lean{New.FrobeniusCycle.originFunctions}), and $\det\Xi\mid w^{\abs{\mathcal V_H}\lfloor
+c_{\mathrm{div}}\abs{\mathcal B}\rfloor}$. Likewise $\operatorname{Res}'=\mathcal Q'\Xi'$.
+\end{proposition}
+
+\begin{proof}
+By Fact~\ref{ub-eldiv:fact:smith}, $\operatorname{Res}=\mathcal Q\diag(\epsilon)U$ with $U$ invertible
+(\lean{New.exists_mul_inv_eq_mul_diagonal}). If $\epsilon_l\nmid w^\delta$, then
+$\phi=U^{-1}\mathbf 1_l$ has all coefficients of $\operatorname{Res}\phi$ in $w^\delta\fm$. Every edge
+from every origin occurs and the stabilizer of an edge keeps its halfway lattice, so all
+coefficients of all $\mathsf D_w\rho(g)\phi(v)$ lie in $w^\delta\fm$, and $\phi(v)\bmod\fm$ is a form all of
+whose translates have only monomials of depth $\ge\delta+1$ (\lean{New.FrobeniusCycle.deepForms}).
+These $\phi$ are independent modulo $\fm$; so $\det\Xi=\prod_l\epsilon_l$ divides $w^{l_0}$
+with $l_0\le\abs{\mathcal V_H}\sum_{\delta\ge1}\dim\operatorname{deepForms}(\delta)$
+(\lean{New.FrobeniusCycle.exists_originFunctions_factorization_det_dvd}), and
+Proposition~\ref{ub-eldiv:prop:deep} bounds the sum by $c_{\mathrm{div}}\abs{\mathcal B}$.
+\end{proof}
+
+Between the two ends, conditions at single edges are used. Let $c=5\nu c_0$
+(\lean{New.FrobeniusCycle.congruencePrecision}), $c^*=3kc$ (\lean{New.defectThreshold}), and take
+defects along the root $(e-1,e)$. Let $C$ be the vectors whose $\mathcal G_e$-translates have
+coefficients in $w^c\cO$ at all $\beta$ with $\operatorname{def}_i(\beta)>3c^*$ for some $i$, and $S$
+the forms over $\cO/\fm$ whose $\mathcal G_e$-translates vanish there
+(\lean{New.FrobeniusCycle.defectConditions}). Then (\lean{New.FrobeniusCycle.exists_isEdgeCondition}):
+(i) $\mathcal A\subseteq C$ (Corollary~\ref{ub-eldiv:cor:halfway}), $w^c\cO^{\mathcal B}\subseteq C$,
+and $w^{c-1}h\in C$ implies $h\bmod\fm\in S$; (ii) there is $\operatorname{Av}$ with values in $C$
+and $\pair{\operatorname{Av}h,h'}\equiv \ell^{\nu c_0}\pair{h,h'}\bmod w^c$ for $h'\in\mathcal A$
+(Theorem~\ref{ub-eldiv:thm:average}); (iii) $[\GL_k(R):\mathcal P_e]\dim S\le(1+\theta)\abs{\mathcal
+B}$ (Proposition~\ref{ub-eldiv:prop:count} with $c'=c^*$).
+
+\begin{proposition}[\lean{New.FrobeniusCycle.IsEdgeCondition.exists_finset_smul_top_le_range_sup_span}]
+\label{ub-eldiv:prop:middle}
+Let $\operatorname{Add}={}^t\mathcal Q'(\Gamma\otimes\omega)$. Then $\ell^{2\nu c_0}\cO^{\mathcal V_H\times\mathcal B}$ lies
+in the span of $\image(\operatorname{Add}\mathcal Q)$ and of at most $\theta\abs{\mathcal V_H}\abs{\mathcal B}$ further
+vectors.
+\end{proposition}
+
+\begin{proof}
+Let $\mathcal R'\mathcal Q'=1$ and $\operatorname{Inv}=(\Gamma^{-1}\otimes\operatorname{Av}\diag(\omega'))
+\,{}^t\mathcal R'$. As the values of $\mathcal Q'$ lie in $\mathcal A$
+(\lean{New.FrobeniusCycle.apply_mem_allEdgesForms}), (ii) gives
+$\operatorname{Add}\operatorname{Inv}\equiv \ell^{2\nu c_0}\bmod w^c$. By
+\lean{New.exists_elementary_divisors_mod_summand}, $\image \mathcal Q+\image\operatorname{Inv}=\image
+\mathcal Q+\Span(\epsilon_lU_l)$ with $U$ invertible and $\mathcal RU_l=0$ for $\epsilon_l\ne0$. For the $l$ with
+$w^{c-1}\nmid\epsilon_l$, $w^{c-1}U_l$ is a multiple of $\epsilon_lU_l$, so by (i) the values of
+$U_l$ at the edges reduce into $S$, as do those of the columns of $\mathcal Q$. These vectors are independent
+modulo $\fm$, so there are at most $\#\{\text{edges}\}\dim S-\abs{\mathcal V_H}\abs{\mathcal
+B}\le\theta\abs{\mathcal V_H}\abs{\mathcal B}$ such $l$, by (iii). Then $\ell^{2\nu c_0}\cO^{\mathcal V_H\times\mathcal
+B}\subseteq\image(\operatorname{Add}\mathcal Q)+\Span(\operatorname{Add}\epsilon_lU_l)+w^{c-1}\cO^{\mathcal V_H\times
+\mathcal B}$, and Nakayama's lemma removes the last term since $\ell^{2\nu c_0}w\mid w^{c-1}$
+(\lean{New.exists_finset_card_le_smul_top_le_sup_span}).
+\end{proof}
+
+\begin{proof}[Proof of Theorem~\ref{ub-eldiv:thm:main}]
+By~\eqref{ub-eldiv:eq:factor} the operator is ${}^t\Xi'(\operatorname{Add}\mathcal Q)\Xi$. If
+$z\cO^{\mathcal I}\subseteq\image B+\Span\mathcal W$, the colength of
+$\image({}^t\Xi'B\Xi)+\ell^{j_0}\cO^{\mathcal I}$ divides $\det\Xi'\cdot
+z^{\abs{\mathcal I}}\det\Xi\cdot \ell^{j_0\#\mathcal W}$
+(\lean{New.colengthDvd_mul_mul_of_smul_top_le}). By
+Propositions~\ref{ub-eldiv:prop:ends} and~\ref{ub-eldiv:prop:middle} the exponent of $\ell$ is at most
+$\abs{\mathcal V_H}\abs{\mathcal B}(c_{\mathrm{div}}+2\nu c_0+\theta j_0)$, and $\nu c_0\le c_{\mathrm{div}}$
+by~\eqref{ub-eldiv:eq:large} (\lean{New.FrobeniusCycle.IsLargeDegree.mul_multinomialExponent_le_divisorConstant};
+\lean{New.FrobeniusCycle.exists_colengthDvd_range_pairingMap_mul_edgeRestriction}).
+\end{proof}
+
+\subsection{The root lemma}\label{ub-eldiv:sec:root}
+
+Fix $u\ne u'$, a letter $i$, and $z^\pm_j$ as in Definition~\ref{ub-eldiv:def:defect}; let
+$\SL_2(R)$ sit in the rows and columns $u,u'$ (\lean{New.rootSL}). For real weights $\lambda$ of
+the variables, the term $\mu z^\alpha$ has \emph{order plus weight} $v_w(\mu)+\lambda\cdot\alpha$
+(the Gauss filtration, \lean{New.gaussFiltration}).
+
+\begin{theorem}[Root lemma; \lean{New.FrobeniusCycle.defect_nonpos_of_extreme_term}]
+\label{ub-eldiv:thm:root}
+Let $\lambda(z^+_j)-\lambda(z^-_j)\in[\frac12,1]$ for all $j$. If all terms of all
+$\SL_2(R)$-translates of a polynomial $F$ over $\cO$ have order plus weight at least
+$l+\lambda\cdot\alpha$, and $w^{l+1}\nmid F_\alpha$, then $\operatorname{def}_i(\alpha)\le0$.
+\end{theorem}
+
+\begin{proof}
+Let $P_j=P^{[j-i]}$, $\mathfrak z=q\alpha(z^+_i)+\sum_{j\ne i}P_j\alpha(z^+_j)$ and
+$\mathfrak d=q\sum_jP_j\alpha(z^-_j)$; then $\operatorname{def}_i(\alpha)=(\mathfrak z-\mathfrak
+d/q)/(q-1)$. With a new variable $\varsigma$, substitute in $F$: $z^+_i\mapsto z^-_i$,
+$z^-_i\mapsto\varsigma^qz^-_i$, and for $j\ne i$, $z^-_j\mapsto\varsigma^{qP_j}z^-_j\mp\varsigma^{P_j}z^+_j$, $z^+_j\mapsto z^+_j\mp z^-_j$
+(\lean{New.FrobeniusCycle.RootAt.mainSubst}, \lean{New.FrobeniusCycle.RootAt.crossSubst}): a
+Frobenius-twisted line on which the letter $j$ is the $P_j$-th twist of the letter $i$. Let
+$\Upsilon\in(\cO/w^{l+1})[\varsigma]$ be the coefficient of the monomial obtained from $z^\alpha$ by
+writing $z^-_i$ for $z^+_i$. Filtering with a suitable weight of $\varsigma$: the coefficient of
+$\varsigma^{\mathfrak d}$ is $\equiv F_\alpha\not\equiv0$; $\deg\Upsilon\le\mathfrak d$; and
+$\varsigma^{\mathfrak z}$ divides $\Upsilon(\varsigma+\varphi_i(\xi))$ for all $\xi\in R$, since
+translating by $\begin{psmallmatrix}0&1\\-1&\pm\xi\end{psmallmatrix}\in\SL_2(R)$ and shifting
+$\varsigma$ by $\varphi_i(\xi)$ reproduces the substitution up to the errors
+$(\varsigma+\varphi_i(\xi))^{P^n}-\varsigma^{P^n}-\varphi_{i+n}(\xi)\in \ell\,\cO[\varsigma]$
+(\lean{New.FrobeniusCycle.RootAt.HasBoundedIncrements.shiftCoeff_aeval_mem}). The $\varphi_i(\xi)$ for
+the $q$ residue classes have unit differences, so the coprime $(\varsigma-\varphi_i(\xi))^{\mathfrak
+z}$ all divide $\Upsilon$ (Stepanov's count, \lean{New.stepanov_count}):
+$q\mathfrak z\le\deg\Upsilon\le\mathfrak d$.
+\end{proof}
+
+Zeros against degree is Stepanov's method (Bombieri, Counting points on curves over finite fields,
+1973); weight inequalities of this kind, via the Lang map, are also known (related work:
+Ghate--Jana, 2025; Imai--Koskivirta, 2021).
+
+
+\begin{corollary}[\lean{New.FrobeniusCycle.pow_dvd_letterRep_mulVec_of_mem_allEdgesForms}]
+\label{ub-eldiv:cor:halfway}
+Let $u<e$, $v\in\mathcal A$, $g\in\mathcal G_e$ and $\operatorname{def}_i(\beta)\ge3j$ along
+$(u,e)$. Then $w^j\mid(\rho(g)v)_\beta$. So $\mathcal A\subseteq C$
+(\lean{New.FrobeniusCycle.allEdgesForms_le_defectConditions}).
+\end{corollary}
+
+\begin{proof}
+Let $w^n v=\mathsf D_wh$. All terms of all translates of $h$ have order plus depth $\ge n$. The
+depth rises by $1$ from $z^-_j$ to $z^+_j$, and the defect weight by an amount in $[0,\frac32]$; so
+Theorem~\ref{ub-eldiv:thm:root} for the weights depth minus a third of the defect weight shows that
+the terms of $\rho(g)h$ have order plus depth $\ge n+\operatorname{def}_i/3$
+(\lean{New.FrobeniusCycle.mem_gaussFiltration_sub_defect_div_three}). As $g\in\mathcal G_e$ commutes
+with $\mathsf D_w$, this is the claim.
+\end{proof}
+
+\subsection{The averaging map}\label{ub-eldiv:sec:average}
+
+\begin{theorem}[\lean{New.FrobeniusCycle.exists_average_mem_defectConditions_and_dvd_sub}]
+\label{ub-eldiv:thm:average}
+Let $\nu k(\nu/2+2)a+a+k<P^{\nu/2}$ and $c\in\N$. There is $\operatorname{Av}$ such that for all
+$h$, $g\in\mathcal G_e$ and $\beta$ with defect $>3c^*$ along $(e-1,e)$ at some letter,
+$w^c\mid(\rho(g)\operatorname{Av}h)_\beta$; and $\pair{\operatorname{Av}h,h'}\equiv \ell^{\nu
+c_0}\pair{h,h'}\bmod w^c$ for $h'\in\mathcal A$.
+\end{theorem}
+
+\begin{proof}[Idea of the proof]
+$\rho$ is not polynomial in $g$, but modulo $\ell$ the letter $i$ sees the $P^\delta$-th power of the
+letter $i-\delta$. So take a generic matrix $\mathbf X_j$ (a \emph{copy}) for each letter and act on
+the letter $i$ by the product of the entrywise powers $\mathbf X_{i-\delta}^{(P^\delta)}$,
+$\delta<\nu/2$ (one more in the deep rows), or its cofactor matrix for odd $i$
+(\lean{New.FrobeniusCycle.substitutionOperator}). Let $\operatorname{Av}_J$ apply the form $I$ of
+Proposition~\ref{ub-eldiv:prop:schur} in the copies $j\in J$ and $\ell^{c_0}$ times evaluation at $1$
+in the others (\lean{New.FrobeniusCycle.partialAverage}); so $\operatorname{Av}_\emptyset=\ell^{\nu
+c_0}$, and $\operatorname{Av}=\operatorname{Av}_{\Z/\nu}$. Telescoping filtration levels along the
+products (\lean{New.FrobeniusCycle.abs_defect_sub_copyWeight_le}) shows: once $\mathcal
+G_e$-invariant forms are applied in all copies but $j$, if a monomial in the copy $j$ has a
+coefficient $\not\equiv0\bmod w^c$ in the row $\beta$, its row weight for $\mathbf 1_e-\mathbf
+1_{e-1}$, over $P^{\nu/2}$, is within $c^*$ of the defect of $\beta$ at the letter $j+\nu/2$
+(\lean{New.FrobeniusCycle.abs_weight_div_sub_defect_le}).
+Call it \emph{bad} if this weight exceeds $2c^*P^{\nu/2}$. A defect above $3c^*$ leaves only bad
+monomials, which $I$ kills: the first claim. A bad monomial forces a defect above $c^*$, at which
+$h'\in\mathcal A$ pairs to $0\bmod w^c$ (\lean{New.FrobeniusCycle.IsEdgePairing.pow_dvd_pairing_letterRep});
+so on the copy $j$ the form $I$ agrees with $\ell^{c_0}$ times evaluation at $1$ modulo $w^c$, and
+$J\to J\cup\{j\}$ keeps the pairing (\lean{New.FrobeniusCycle.pow_dvd_pairing_partialAverage_insert_sub}).
+\end{proof}
+
+\begin{proposition}[\lean{New.Average.exists_isAverage}]\label{ub-eldiv:prop:schur}
+Let $\varphi\colon R\to\cO$ be a ring map, $\mathcal G$ a block diagonal subgroup of $\GL_k$,
+$\varpi\in\Z^k$, $\mathfrak w\in\Z$ and $\mathfrak D<\ell^{\mathfrak f}$ with $\mathfrak D+k\le q$. There is a linear form $I$
+on $\cO[\mathbf X_{uu'}]$, invariant under $\mathbf X\mapsto\varphi(g)^{-1}\mathbf X\varphi(g)$ for
+$g\in\mathcal G(R)$, zero on the monomials of row weight $\sum\alpha_{uu'}\varpi_u>\mathfrak w$, with
+$I(\psi)\equiv \ell^{k^2\mathfrak f}\psi(1)\bmod J$ for every ideal $J$ and every $\psi$ of degree $\le \mathfrak D$
+whose conjugates have their coefficients at such monomials in $J$.
+\end{proposition}
+
+\begin{proof}
+With $\eta_\alpha=\ell^{k^2\mathfrak f}/\binom{\abs\alpha}\alpha$, $\psi$ gives elements
+$\psi^\sharp_\delta$ of the Schur algebra of $\mathcal G$ on $U=(\cO^k)^{\otimes\delta}$, and
+$I=\sum_{\delta\le \mathfrak D}(\tr_U-\tr_{U_+})\psi^\sharp_\delta$, $U_+$ generated by the basis tensors of
+weight $>\mathfrak w$ (\lean{New.Average.averagePart}). Then $\sum_\delta\tr_U\psi^\sharp_\delta=
+\ell^{k^2\mathfrak f}\psi(1)$, bad monomials map $U$ into $U_+$, and conjugation of $\psi$ is
+conjugation of $\psi^\sharp$ by $\varphi(g)^{\otimes\delta}$. The $\varphi(g)^{\otimes\delta}$ span the
+Schur algebra for $\delta+k\le q$ (\lean{New.Average.eq_top_of_schurMap_eq_leviMonomialValues}; this
+is known, Green, Polynomial representations of $\GL_n$, 1980, and Benson--Doty, Schur--Weyl duality
+over finite fields, 2009, and is proved here for Levi subgroups over local rings); so
+$\psi^\sharp U_+\subseteq JU_+$.
+\end{proof}
+
+\subsection{Forms of bounded defect}\label{ub-eldiv:sec:count}
+
+\begin{proposition}[\lean{New.FrobeniusCycle.index_mul_finrank_defectConditions_le}]
+\label{ub-eldiv:prop:count}
+Let the $\varphi_i$ take values in a field $\Bbbk$ of characteristic $\ell$, $c'\ge2(k+1)$, $\theta\le1$,
+$a>0$ and $8\nu kc'P^{2e}\le\theta a$. Let $S$ be the forms over $\Bbbk$ whose $\mathcal G_e$-translates
+vanish at all $\beta$ of defect $>3c'$ along $(e-1,e)$ at some letter. Then
+$[\GL_k(R):\mathcal P_e]\dim S\le(1+\theta)\abs{\mathcal B}$.
+\end{proposition}
+
+\begin{proof}[Idea of the proof]
+For $\mathfrak q=q^j$ pack $\mathfrak q^{k\nu}$ forms $F_\varkappa\in S$, one for each class
+$\varkappa$ of exponents modulo $\mathfrak q$, into $G=\sum_\varkappa F_\varkappa(z^{\mathfrak
+q})z^{\gamma_\varkappa}$ (\lean{New.powerPacking}); translation commutes with $z\mapsto z^{\mathfrak
+q}$. Let $z_{u,i}$ have height $\pm u$ ($+$ for even $i$). Among the terms of the translates of $G$ by
+representatives of the flags of $\mathcal G_e$, one of least height has defect $\le0$ along the simple
+roots in the blocks (Theorem~\ref{ub-eldiv:thm:root} over $\Bbbk$,
+\lean{New.FrobeniusCycle.weight_defectWeight_nonpos_of_least}) and $\le\mathfrak q(3c'+2k+2)$ along
+$(e-1,e)$. An integral shift moves its exponent over $\mathfrak q$ into the cone of Pieri's
+inequalities ($\operatorname{def}\le0$ along all simple roots), in a slab of vectors $\ge0$ with
+degrees in $[\mathfrak D-1,\mathfrak D]$, $\mathfrak D\le a+4c'P^{2e}$
+(\lean{New.FrobeniusCycle.div_mem_defectCone_inter_degreeSlab}). This is injective; as $j\to\infty$,
+$\dim S$ is at most the number of flags of $\mathcal G_e$ times the volume of cone $\cap$ slab
+(\lean{New.FrobeniusCycle.exists_finrank_defectConditions_le_volume}). The cone fills the part
+$\prod_{l<k}(q-1)/(q^{l+1}-1)$, one over the number of flags of $\GL_k(\F_q)$, of every slab
+(\lean{New.prod_mul_volume_real_inter_degreeSlab}, by a change of variables to interlacing sequences,
+whose indicator is a determinant; such volumes are known: Forrester--Zhang, Corank-1 projections and
+the randomised Horn problem, 2021, after Dixon, 1905, and Anderson, 1991). The index times the flags
+of $\mathcal G_e$ is at most the flags of $\GL_k$, and the slab exceeds $\abs{\mathcal B}$ by a factor
+$\le1+\theta$.
+\end{proof}
+
+\subsection{Forms with only deep translates}\label{ub-eldiv:sec:depth}
+
+\begin{fact}[\lean{New.exists_le_weight_of_mem_vanishingIdeal_pow}]\label{ub-eldiv:fact:cn}
+Let $\Bbbk$ be a field and give each variable $\xi$ the cost $1/\mathfrak n(\xi)$, $\mathfrak n(\xi)\in\Z_{\ge1}$.
+Let $\mathcal Z$ have at least $\prod_\xi\mathfrak n(\xi)$ points, on which each $\xi^{\mathfrak n(\xi)}$
+agrees with a polynomial whose monomials cost $<1$. A nonzero polynomial vanishing to order
+$\delta$ on $\mathcal Z$ has a monomial of cost $\ge\delta$. (Combinatorial Nullstellensatz with
+multiplicity: Alon, 1999; Ball--Serra, Punctured combinatorial Nullstellens\"atze, 2009.)
+\end{fact}
+
+\begin{proposition}[\lean{New.FrobeniusCycle.sum_finrank_deepForms_le}]\label{ub-eldiv:prop:deep}
+Over a field of characteristic $\ell$, with $0<2e\le k$, the dimensions of the spaces of forms all of
+whose translates have only monomials of depth $\ge\delta$, $\delta=1,\dots,\delta_0$, add up to at
+most $c_{\mathrm{div}}\abs{\mathcal B}$.
+\end{proposition}
+
+\begin{proof}
+A nonzero such $F$ has a monomial $\beta$ with $F_\beta\ne0$ of cost $\ge\delta$, where a deep
+$z_{u,i}$ costs $P^{-2e}$ if $u\ge2e$ and $P^{-1}$ otherwise, and the others cost $0$
+(\lean{New.FrobeniusCycle.exists_le_weight_of_mem_deepForms}). Indeed, for each family $\mathfrak y$ of
+$e(k-2e+1)$ residues, placed in the rows $<e$ and columns $\ge e$, there is a unipotent
+$g_{\mathfrak y}$ such that, with the shallow variables specialized generically, the deep variables
+of the translate become $\xi-z_\xi(\mathfrak y)$; so $F$ vanishes to order $\delta$ at the
+$q^{e(k-2e+1)}$ distinct points $z(\mathfrak y)$. Their coordinates are linear forms in the
+$\varphi_i(\mathfrak y)$, and $\varphi_{i+j}=\varphi_i^{P^j}$ on residues, so each
+$z_\xi^{\mathfrak n(\xi)}$ ($\mathfrak n=P^{2e}$ or $P$ for deep $\xi$ as above, $1$ for shallow $\xi$;
+$\prod\mathfrak n\le q^{e(k-2e+1)}$, \lean{New.FrobeniusCycle.prod_deepOrder_le}) is a polynomial of cost
+$<1$ in $z$. Fact~\ref{ub-eldiv:fact:cn} applies; the specialized form involves only deep variables.
+Hence the $\delta$-th dimension is at most the number of $\beta$ of cost $\ge\delta$, and the sum is
+at most the total cost of all $\beta$, which is $\abs{\mathcal B}\frac ak$ times the total cost
+$\le\nu(kP^{-2e}+e^2/P)$ of the variables.
+\end{proof}

@@ -1,0 +1,84 @@
+\section{Background results admitted}\label{sec:app-facts}
+
+This appendix lists what the paper takes from the folder \texttt{Lib} of the Lean text,
+the part classed there as known in the literature. The first list contains the results
+that the text states as Facts, without proof. A few of them are proved in the folder
+\texttt{New} but are known results; the text says so where it states them. The second
+list contains every other declaration of \texttt{Lib} that the text cites, in the
+course of a proof or of an explanation, without stating it as a Fact. Both lists are
+generated from the source of the paper, so together they are complete. The statements
+are those of the Lean text, which are often weaker than the theorems of the
+literature; the paper has not compared them with their sources.
+
+\subsection*{Results stated as Facts}
+
+\begin{itemize}[leftmargin=2em,itemsep=1pt]
+\item Fact~\ref{zeros:fact:landau}, Section~\ref{sec:zeros}. Landau's lemma. \lean{New.IsPolar.landau}.
+\item Fact~\ref{zeros:fact:prime}, Section~\ref{sec:zeros}. Choice of the prime. \lean{New.exists_entireL_quadTwist_ne_zero}.
+\item Fact~\ref{data:fact:ant}, Section~\ref{sec:data}. Background, standard. \lean{New.totient_mul_totient_le_finrank}, \lean{New.QuadField.embOfPrimitiveRoot}, \lean{New.QuadField.prime_inert_or_eq_mul}, \lean{New.QuadField.q_eq_iff_chiK_ne_neg_one}, \lean{New.QuadField.absNorm_span_eq_mul_star}, \lean{New.differentIdeal_eq_top_of_add_star_eq_one}, \lean{New.two_pow_le_of_pow_eq_one}.
+\item Fact~\ref{data:fact:primes}, Section~\ref{sec:data}. Primes in windows. \lean{New.exists_prime_modEq_one_log_mem}.
+\item Fact~\ref{ub-objects:fact:minkowski}, Section~\ref{sec:ub-objects}. \lean{New.Variety.classAut_eq_bot}.
+\item Fact~\ref{ub-objects:fact:green}, Section~\ref{sec:ub-objects}. \lean{New.labelIdem_orthogonal}, \lean{New.isCentralProj_tupleIdem}, \lean{New.hyperplaneSum_mul_labelIdem}, \lean{New.labelIdem}, \lean{New.tupleIdem}.
+\item Fact~\ref{ub-objects:fact:cusp}, Section~\ref{sec:ub-objects}. \lean{New.isCuspKernel_typeKernel}, \lean{New.Space.finite_levelSpace}.
+\item Fact~\ref{der:fact:formal}, Section~\ref{sec:der}. Formal group. \lean{New.CMLattice.taylorVia_translatedX_mem_integralSeriesRing}, \lean{New.CMLattice.derivative_mem_integralSeriesRing}, \lean{New.CMLattice.mem_integralSeriesRing_iff_exists_subst_formalParam}, \lean{New.CMLattice.exists_scaled_formalParam}.
+\item Fact~\ref{der:fact:bg}, Section~\ref{sec:der}. \lean{New.CMLattice.chowla_selberg}, \lean{New.Space.exists_entireTheta_eq_of_isThetaFunction}, \lean{New.CMLattice.exists_rescale_twistedTranslate_eq_theta_pow_mul}.
+\item Fact~\ref{der:fact:cm}, Section~\ref{sec:der}. Complex multiplication for theta functions. \lean{New.CMLattice.complex_multiplication_theta}.
+\item Fact~\ref{ub-seesaw:fact:unfold}, Section~\ref{sec:ub-seesaw}. \lean{New.Grading.integral_besselGroup_unfold}, \lean{New.Grading.unfoldStep}.
+\item Fact~\ref{ub-divis:fact:hecke}, Section~\ref{sec:ub-divis}. Hecke transfer. \lean{New.SiegelWeil.hecke_transfer_of_pairing}.
+\item Fact~\ref{ub-divis:fact:short}, Section~\ref{sec:ub-divis}. Short bases. \lean{New.Space.exists_short_basis_stdSpace}.
+\item Fact~\ref{ub-eldiv:fact:smith}, Section~\ref{sec:ub-eldiv}. Hermite and Smith forms, standard. \lean{New.IsValuationPair.hermite}, \lean{New.IsValuationPair.smith_normal_form}.
+\item Fact~\ref{ub-eldiv:fact:cn}, Section~\ref{sec:ub-eldiv}. \lean{New.exists_le_weight_of_mem_vanishingIdeal_pow}.
+\item Fact~\ref{sp-moment:fact:dim}, Section~\ref{sec:sp-moment}. Dimension of algebraic forms. \lean{New.finrank_levelSpace_smoothFormRep}, \lean{New.card_classes_eq_classSum}, \lean{New.classSum_stdRatPoints_eq_mass}.
+\item Fact~\ref{sp-moment:fact:trace}, Section~\ref{sec:sp-moment}. Comparison of traces. \lean{New.trace_eq_of_isCuspidalAt}, \lean{New.isCuspidalAt_convIndicator_tupleIdem}.
+\item Fact~\ref{sp-unfold:fact:unfold}, Section~\ref{sec:sp-unfold}. Unfolding. \lean{New.integral_quotMeasure_tsum}, \lean{New.integral_quotMeasure_eq_zero_of_twist}, \lean{New.eq_of_forall_ψf_mul_eq}, \lean{New.denseRange_algebraMap_finAdele}.
+\item Fact~\ref{sp-main:fact:poisson}, Section~\ref{sec:sp-main}. One-sided Poisson summation. \lean{New.IsDualFamily.sum_le_of_fourier}.
+\item Fact~\ref{sp-main:fact:cell}, Section~\ref{sec:sp-main}. Big cell. \lean{New.Filling.exists_big_cell_decomp}, \lean{New.Filling.big_cell_factors_unique}.
+\item Fact~\ref{sp-main:fact:siegel}, Section~\ref{sec:sp-main}. \lean{New.classSum_eq_mul_normDensity}, \lean{New.lintegral_gauss_sum_le_idealZeta}, \lean{New.idealZeta_intAdeles_pow_le}, \lean{New.Floors.IntegralPlace.enorm_localDensity_le}.
+\item Fact~\ref{sp-main:fact:green}, Section~\ref{sec:sp-main}. \lean{New.labelChar_degree_bounds}, \lean{New.le_totient_mul_log}.
+\item Fact~\ref{sp-frames:fact:pl}, Section~\ref{sec:sp-frames}. Plancherel. \lean{New.Floors.Place.lintegral_lintegral_fourier_le}.
+\item Fact~\ref{sp-remain:fact:siegel}, Section~\ref{sec:sp-remain}. Siegel's lemma. \lean{New.Core.minkowski_second_theorem}.
+\item Fact~\ref{det-chain:fact:rallis}, Section~\ref{sec:det-chain}. Rallis' inner product formula for sharp data, as a sum over cosets. \lean{New.SiegelWeil.rallis_inner_product_cosetTerm}, \lean{New.SiegelWeil.IsSharp}.
+\item Fact~\ref{det-exchange:fact:tower}, Section~\ref{sec:det-exchange}. Tower property. \lean{New.Exchange.exists_planeConstantTerm_eq_thetaLarge_cone}, \lean{New.Exchange.exists_planeConstantTerm_eq_thetaLarge_dualCone}.
+\item Fact~\ref{det-exchange:fact:const}, Section~\ref{sec:det-exchange}. Constancy in equal rank. \lean{New.Exchange.IsAutFunction.apply_eq_apply_one}.
+\item Fact~\ref{det-exchange:fact:lib}, Section~\ref{sec:det-exchange}. Three further inputs. \lean{New.AutChar.HasWeight.L_ne_zero}, \lean{New.IsHeckeOfType.continuousOn_eulerProd}, \lean{New.Exchange.centreCoeff_eq_zero_of_unimodular}, \lean{New.Space.exists_x_eq_and_ratEmbed_conj_eq}.
+\item Fact~\ref{ol-values:fact:tower}, Section~\ref{sec:ol-values}. Descents, periods and Hecke operators. \lean{New.SiegelWeil.integral_blockEmb_eq_zero_of_descentsVanish}, \lean{New.SiegelWeil.lift_swap_heckePolyOp}, \lean{New.SiegelWeil.maximum_principle}.
+\item Fact~\ref{ol-values:fact:rallis}, Section~\ref{sec:ol-values}. Rallis' inner product formula for sharp data, as a real integral; vacuum sums in rank one. \lean{New.SiegelWeil.IsSharp.petersson_lift_eq_integral}, \lean{New.vacuumSum_eq_L_div_eulerProd}, \lean{New.eulerProd_ne_zero_and_abs_log_norm_le}.
+\item Fact~\ref{ol-compare:fact:rallis}, Section~\ref{sec:ol-compare}. A vanishing lift kills the real convolution, from Rallis' inner product formula. \lean{New.SiegelWeil.realConv_eq_zero_of_lift_eq_zero}.
+\item Fact~\ref{ol-compare:fact:peaks}, Section~\ref{sec:ol-compare}. \lean{New.Rows.IsPeak.le_firstMinimum}.
+\item Fact~\ref{ol-compare:fact:repro}, Section~\ref{sec:ol-compare}. \lean{New.Rows.reproducing_formula_modKernel}, \lean{New.holMinorsPi}.
+\item Fact~\ref{cg-selmer:fact:galois}, Section~\ref{sec:cg-selmer}. Galois representations of eigenforms; a weak
+analogue of the Galois representations of Shin, of Chenevier--Harris, 2013, and of
+Barnet-Lamb--Gee--Geraghty--Taylor, 2014. \lean{New.GaloisRep.sphericalCompat_std}, \lean{New.GaloisRep.Attached}, \lean{New.mostFrobenii}, \lean{New.GaloisRep.Attached.isLabelledAt}.
+\item Fact~\ref{cg-selmer:fact:cheb}, Section~\ref{sec:cg-selmer}. Milne, Class Field Theory, 2020, VIII 7.4. \lean{New.chebotarev}.
+\item Fact~\ref{cg-selmer:fact:gw}, Section~\ref{sec:cg-selmer}. Greenberg--Wiles, lower bound;
+Darmon--Diamond--Taylor, 1995, Thm.~2.19. \lean{New.RelationSetting.exists_card_cocycles_le}, \lean{New.RelationSetting}, \lean{New.RelationSetting.Avoids}.
+\item Fact~\ref{cg-first:fact:odd}, Section~\ref{sec:cg-first}. Odd classes. \lean{New.exists_length_shaOdd_le}, \lean{New.Selmer.shaOdd}.
+\item Fact~\ref{cg-first:fact:chain}, Section~\ref{sec:cg-first}. Spherical chain lemma. \lean{New.Patching.isRoot_chain_of_norm}, \lean{New.Patching.pairing_aeval_heckeCoset_eq_zero}.
+\item Fact~\ref{cg-first:fact:tw}, Section~\ref{sec:cg-first}. Taylor--Wiles freeness. \lean{New.Patching.BaseLevel.exists_higman_operator}.
+\item Fact~\ref{cg-first:fact:fitting}, Section~\ref{sec:cg-first}. \lean{New.Selmer.exists_rows_addVal_det_le_of_divisible}, \lean{New.IsTraceNondeg.exists_conj_of_trace_eq}.
+\item Fact~\ref{cg-lifting:fact:duality}, Section~\ref{sec:cg-lifting}. Local duality. \lean{New.Period.IsPotentiallyCrystalline.relIndex_dvd_of_orthogonal}.
+\item Fact~\ref{cg-lifting:fact:frame}, Section~\ref{sec:cg-lifting}. \lean{New.Lift.exists_kummerChart}, \lean{New.Lift.KummerChart.JumpLattice.frame_theorem}.
+\end{itemize}
+
+\subsection*{Other declarations of \texttt{Lib} cited in the text}
+
+\begin{itemize}[leftmargin=2em,itemsep=1pt]
+\item Section~\ref{sec:zeros}: \lean{New.entireL}, \lean{New.quadTwist}, \lean{New.exists_measure_laplace_eq}, \lean{New.zero_density_quadTwist}, \lean{New.gammaFactor_eq_zero_or_LFunction_one_sub_eq_zero}.
+\item Section~\ref{sec:setup}: \lean{New.isAlgebraic_of_norm_complexToCp_le}.
+\item Section~\ref{sec:data}: \lean{New.HasPrimitiveRoot5040}, \lean{New.differentIdeal_eq_top}, \lean{New.HasPrimitiveRoot5040.exists_add_star_eq_one_mul_star_eq_two}, \lean{New.HasPrimitiveRoot5040.exists_mul_self_eq_neg_one}, \lean{New.AutChar}, \lean{New.AutChar.HasWeight}, \lean{New.AutChar.HasWeight.mul}, \lean{New.AutChar.HasWeight.zpow}, \lean{New.AutChar.HasWeight.isOfFinOrder_apply}, \lean{New.WeilData.upsilonU1_hasWeight}, \lean{New.AutChar.exists_hasWeight_of_prod_eq_one}.
+\item Section~\ref{sec:ub-objects}: \lean{New.stdSpace}, \lean{New.stdRatPoints}, \lean{New.stdLevel}, \lean{New.classAut}, \lean{New.Space}, \lean{New.levelOf}, \lean{New.gradedGram}, \lean{New.WeylIndex}, \lean{New.weylNormSq}, \lean{New.AlgForm}, \lean{New.weylGauge}, \lean{New.GaugeLe}, \lean{New.LevelPlaces.LevelForm.normSqAt}, \lean{New.weylGauge_mul_of_mem_integralAbove}, \lean{New.LevelPlaces.LevelForm}, \lean{New.LevelPlaces.LevelForm.inner_eq_stdClassSum}, \lean{New.IsLabel}, \lean{New.typeKernel}, \lean{New.Kernel}, \lean{New.Kernel.lift}, \lean{New.thetaKernel}, \lean{New.Kernel.lift_equivariant}, \lean{New.pairWeilFinite}, \lean{New.jet}, \lean{New.boxes}, \lean{New.rankTwist}, \lean{New.TensorChain.lift}, \lean{New.exists_branching_matrix}, \lean{New.Grading.besselGroup}, \lean{New.Grading.sourceFn}, \lean{New.diagramWeight}.
+\item Section~\ref{sec:der}: \lean{New.mem_normPairClosure_of_pow_eq}, \lean{New.CMLattice.expSubst_rescale_sub_mem_of_pow_eq_one}, \lean{New.IsTightFrame}, \lean{New.Space.finHeisenbergOp}, \lean{New.Space.jetSeries}.
+\item Section~\ref{sec:ub-seesaw}: \lean{New.Grading.besselGroup}, \lean{New.Grading.stringMap}, \lean{New.Seesaw.arrowProduct}, \lean{New.isThetaLift_thetaKernel}.
+\item Section~\ref{sec:ub-divis}: \lean{New.embValRing}, \lean{New.weylGauge}, \lean{New.GaugeLe}, \lean{New.weylNormSq}.
+\item Section~\ref{sec:ub-eldiv}: \lean{New.parahoric}, \lean{New.levi}.
+\item Section~\ref{sec:sp-moment}: \lean{New.Orbital.harish_chandra_degree_and_orbital}, \lean{New.Space.inner_formRep}, \lean{New.Shape.Form.besselU}, \lean{New.IsBesselFunction}.
+\item Section~\ref{sec:sp-main}: \lean{New.labelIdem}, \lean{New.tupleIdem}.
+\item Section~\ref{sec:sp-frames}: \lean{New.Floors.Place}, \lean{New.Floors.IntegralPlace}.
+\item Section~\ref{sec:det-chain}: \lean{New.exists_extend_basis_of_span_eq_top}.
+\item Section~\ref{sec:det-exchange}: \lean{New.WeilData}, \lean{New.Space}, \lean{New.AutChar.spaceChar}, \lean{New.pairTheta}, \lean{New.Exchange.thetaIntegral}, \lean{New.PairFock}, \lean{New.Exchange.IsSchwartzVector}, \lean{New.modDatum}, \lean{New.Modulus}, \lean{New.Exchange.IsTameFor}, \lean{New.Exchange.lValueProd}, \lean{New.Exchange.lValueProdInt}, \lean{New.eulerProd}, \lean{New.Exchange.lValueProd_pos}, \lean{New.AreMatched}, \lean{New.Exchange.SplitTameChar.semilocalChar}, \lean{New.stdRowDatum}, \lean{New.stdColDatum}, \lean{New.Exchange.thetaLarge}, \lean{New.Space.Splitting.centreCoeff}, \lean{New.Exchange.exists_analytic_extension_ne_zero}, \lean{New.Exchange.IsEdgeFamily}, \lean{New.Exchange.IsPairEdge.exists_lift_eq_realConv}, \lean{New.Exchange.exists_integral_realConv_mul_realConv}, \lean{New.stdClassSum}, \lean{New.exists_forall_eq_mul_map_det_pow}, \lean{New.exists_pairedDetProd_eq_sum_unitary}.
+\item Section~\ref{sec:ol-values}: \lean{New.LevelPlaces.LevelForm.innerAt}, \lean{New.LevelPlaces.LevelForm.normSqAt}, \lean{New.LevelPlaces.LevelForm.integralForms}, \lean{New.«GL».exists_tightFrame}.
+\item Section~\ref{sec:ol-compare}: \lean{New.WeilData.upsilonU1}, \lean{New.Exchange.IsTameFor}, \lean{New.Exchange.lValueProd}, \lean{New.modKernel}, \lean{New.pairWeil}, \lean{New.stdClassSum}.
+\item Section~\ref{sec:cg-selmer}: \lean{New.GaloisRep.sphericalCompat_of_odd}, \lean{New.Selmer.IsLatticeIn}, \lean{New.StdClasses}, \lean{New.IsFromU1}.
+\item Section~\ref{sec:cg-first}: \lean{New.ellVal}, \lean{New.CoeffRing}, \lean{New.mostFrobenii}, \lean{New.Patching.Isotypic.attached_galRep}, \lean{New.GaloisRep.sphericalCompat_std}, \lean{New.IsFromU1}, \lean{New.Patching.TaylorWilesPlaces}, \lean{New.Patching.BaseLevel.heckeAlgebra}, \lean{New.Patching.HasRootChain}, \lean{New.Patching.hecke_eq_frob_on_parahoricEigenspace}, \lean{New.OddPart.exists_detecting_points_mem_ker}, \lean{New.RelationSetting.relations}.
+\item Section~\ref{sec:cg-lifting}: \lean{New.Period.crysCocycles}, \lean{New.Lift.InClass}, \lean{New.Lift.Pairing}, \lean{New.Lift.cupOrthogonal}, \lean{New.Lift.dualDefect}, \lean{New.Lift.HasCupExponent}, \lean{New.Lift.KummerChart.Letter}.
+\end{itemize}

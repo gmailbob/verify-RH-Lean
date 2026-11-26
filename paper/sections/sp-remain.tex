@@ -1,0 +1,331 @@
+\section{The remaining terms of the second moment}\label{sec:sp-remain}
+
+Section~\ref{sec:sp-unfold} unfolds the second moment $\sum_s\norm{P^*sP}^2$ of the scaled
+Poincaré map (\S\ref{sp-moment:ss:B}) into \emph{blocks}, sums of amplitudes of rational elements
+$\gamma$ of a unitary group over pairs of classes and reductions $s$. The Bessel subgroup gives the
+identity term $r_\psi(s)$; off the scalar cosets of its reduction the other terms are the
+\emph{remaining terms} $\Gamma^*$ (Definition~\ref{sp-remain:def:frame}). This section bounds their
+second moment (Theorem~\ref{sp-remain:thm:main}): pairs of terms with different links, or with
+vanishing frame discriminant, contribute at most $b^{-kf}\mathcal D_{\mathrm{id}}$; pairs with a
+common link form a \emph{link sum}, which is at most $(b^{2f}/\mathfrak z)^k\mathcal D_{\mathrm{main}}$ when
+every reduction meets the frame at places of total norm at least $\mathfrak z$. The proof is \emph{size times count}:
+a bound for one orbit (\S\ref{sp-remain:ss:size}), a gain for two terms over one block
+(\S\ref{sp-remain:ss:gain}), and a count of pairs through their common lattice by Siegel's lemma
+(\S\ref{sp-remain:ss:count}).
+
+Theorem~\ref{sp-remain:thm:main} and Lemma~\ref{sp-remain:lem:cut} serve Section~\ref{sec:sp-unfold}
+(Remark~\ref{sp-remain:rem:use}); the section also exports the boxed points of \S\ref{sp-remain:ss:size}
+(\leanfile{New/Spanning/RemainingTerms/Box}), \lean{New.Filling.encard_le_of_isIntegral_norm_le} (a count
+of integral vectors, also used in Sections~\ref{sec:sp-main}, \ref{sec:ub-divis}) and
+\lean{New.Filling.det_paddedLeading}. It uses the open-cell pairing bound of \S\ref{sp-moment:ss:bessel}
+and Section~\ref{sec:sp-unfold}.
+
+\subsection{Terms, blocks and second moments}\label{sp-remain:ss:setup}
+
+Let $S$ be admissible filling data (\lean{New.Filling}; $D$ gives them by \lean{New.Data.filling}) over
+$E$ containing a primitive $5040$-th root of unity, with the notation of Section~\ref{sec:sp-unfold}:
+$V$ ($=Y_0$ for $D$) with frame $\mathbf f=(e_1,\dots,e_\varrho,z)$, $h(z,z)=-N$, $n=\varrho+1$,
+$A=\langle e_1,\dots,e_\varrho\rangle$, $M=p_0p_1$, $\Gbar$, $\bar R_0$, the classes $c\in\mathcal C$ with
+representatives $h_c$, $\mathsf U$, $\mathsf U_c$ and the Bessel systems $W$, $W^\flat$. The lattice of
+$c$ is $\Lambda_c$, $\mathsf U^0\subseteq\mathsf U$ is the fixer of $\mathbf f$, and $\mathsf U^0_c$ are its rational
+points of level $M$ at $c$.
+
+\begin{definition}[\lean{New.Filling.termsOver}, \lean{New.Filling.amplitudeSum},
+\lean{New.Filling.secondMoment}]\label{sp-remain:def:block}
+For a set $\mathcal F$ of rational elements, $A_{\mathcal F}(c,s,c')$ and $A^\flat_{\mathcal F}(c,s,c')$
+are the blocks of Definition~\ref{sp-unfold:def:amp}, the sums of the amplitudes, or cut amplitudes,
+of the terms of $\mathcal F$ over $(c,s,c')$. For $\Sigma\subseteq\Gbar$ the \emph{second moment} of a family of blocks is
+$\mathsf E(\mathsf A,\Sigma)=\nu^{-2}\sum_{c,c'}\sum_{s\in\Sigma}\norm{\mathsf A(c,s,c')}^2$, $\nu$ the
+covolume of $\mathsf U_c$ (\lean{New.Filling.unipotentCovolume}).
+\end{definition}
+
+\begin{definition}[\lean{New.Filling.termDisc}, \lean{New.Filling.HasCellRank}, \lean{New.link},
+\lean{New.Filling.remainingTerms}, \lean{New.Filling.meetNorm}]\label{sp-remain:def:frame}
+Let $Z(\gamma)$, $D_l$ and $\mathsf g(\gamma)$ (totally positive or $0$) be as in
+\S\ref{sp-unfold:ss:terms}. (a) $\gamma$ has
+\emph{cell rank} $j\le n$ if from the index $j$ on (indices counted from $0$, as for the $\mathbf f_j$ of
+Section~\ref{sec:sp-unfold}: index $j<\varrho$ is $e_{j+1}$, index $\varrho$ is $z$; Section~\ref{sec:sp-frames}
+writes $\mathsf e_j$ for this $e_{j+1}$) the flags of $\mathbf f$ and $\gamma\mathbf f$
+share vectors with leading coefficients $\epsilon,1$ for one $\epsilon\bar\epsilon=1$, $D_j\ne0$, and $j=n$
+exactly when $\mathsf g(\gamma)\ne0$. (b) The \emph{link} of $\gamma$ is the space of pairs
+$([t],[\gamma^{-1}t])$ in $(A^\perp/A)^2=(X_0\oplus Ez)^2$, $t\perp A,\gamma A$; it has dimension
+$k+1$ and is the graph of an isometry $\Upsilon_\gamma$ of $X_0\perp Ez^+$, $h(z^+,z^+)=N$. (c) $\Gamma^*$ consists of the
+$\gamma$ with $\mathsf g(\gamma)\ne0$, and of those with $\mathsf g(\gamma)=0$, $\gamma A\ne A$ and
+the unipotent characters agreeing on $\mathsf U\cap\gamma\mathsf U\gamma^{-1}$. (d) $\operatorname{mn}(s)$ is the meet norm of
+\S\ref{sp-unfold:ss:terms}, the norm of the product of the places above $M$ at which $s$ meets $\mathbf f$.
+\end{definition}
+
+Every $\gamma\in\Gamma^*$ has a unique cell rank $j\ge1$. A set of terms is \emph{stable} if it is
+invariant under $\gamma\mapsto u^{-1}\gamma u'$, $u,u'\in\mathsf U(E)$; so are $\Gamma^*$ and
+$\Gamma_\Lambda=\{\gamma:\mathsf g(\gamma)\ne0,\ \operatorname{link}\gamma=\Lambda\}$. Besides $D_X=\#\mathcal C\cdot\#(\text{Bessel coordinates})$, $\mathcal D_{\mathrm{id}}$ and
+$\mathcal D_{\mathrm{main}}$ of Section~\ref{sec:sp-unfold}, the constants are $\tau=b^{kf/4}$ and
+$n_p=\#\bar R_0\,\#\mathcal C\,N^{-kf}$ (\lean{New.Filling.tailScale}, \lean{New.Filling.pairCountScale}).
+Of the admissibility hypotheses the decisive ones are
+\begin{equation}\label{sp-remain:eq:ratio}
+b^{11kf}\mathcal D_{\mathrm{id}}\le\mathcal D_{\mathrm{main}}\le(M/b^6)^{kf}\mathcal D_{\mathrm{id}},
+\qquad b^{19}\le M,\qquad b^{10^5n^9f}\le\tau,
+\end{equation}
+the last from $k\ge1000(2\varrho+2)^9$ (\lean{New.Filling.pow_le_tailScale}).
+
+\subsection{The bound}
+
+\begin{theorem}[Remaining terms; (a) \lean{New.Filling.secondMoment_remainingTerms_le},
+(b) \lean{New.Filling.linkSecondMoment_le_of_le_meetNorm}]\label{sp-remain:thm:main}
+Let $\Sigma\subseteq\Gbar$, and let $\mathcal L(\Sigma)=\sum_{c,c'}\sum_{s\in\Sigma}\sum_\Lambda
+\norm{A^\flat_{\Gamma_\Lambda}(c,s,c')}^2$ be the \emph{link sum} (\lean{New.Filling.linkSecondMoment}).
+\begin{enumerate}[label=(\alph*)]
+\item If $w\ge0$ and $\mathcal L(\Sigma)\le w\nu^2$, then
+$\mathsf E(A^\flat_{\Gamma^*},\Sigma)\le w+b^{-kf}\mathcal D_{\mathrm{id}}$.
+\item If $\mathfrak z\ge1$ is an integer with $\mathfrak z\le\operatorname{mn}(s)$ for all $s\in\Sigma$, then
+$\mathcal L(\Sigma)\le(b^{2f}/\mathfrak z)^k\,\mathcal D_{\mathrm{main}}\,\nu^2$.
+\end{enumerate}
+\end{theorem}
+
+\begin{lemma}[(a) \lean{New.Filling.sqrt_secondMoment_add_le}, (b)
+\lean{New.Filling.secondMoment_sub_cut_le}]\label{sp-remain:lem:cut}
+(a) $\sqrt{\mathsf E(\mathsf A+\mathsf B,\Sigma)}\le\sqrt{\mathsf E(\mathsf A,\Sigma)}+
+\sqrt{\mathsf E(\mathsf B,\Sigma)}$. (b) For every $\mathcal F$,
+$\mathsf E(A_{\mathcal F}-A^\flat_{\mathcal F},\Sigma)\le b^{-40}\mathcal D_{\mathrm{id}}$.
+\end{lemma}
+
+\begin{proof}
+(a) is Minkowski's inequality. (b) For fixed $c,s$, $\sum_{c'}\norm{A_{\mathcal F}-
+A^\flat_{\mathcal F}}\le\nu b^{-k^3f}/2$ by the bound for $\norm{W^\flat-W}_2$ of a cut pair
+(Definition~\ref{sp-moment:def:system}; \lean{New.Filling.sum_norm_amplitudeSum_sub_cut_le}); square, sum over $c,s$ and use
+$\#\Gbar\,b^{40}\le(2b^{k^3f})^2$ and $\#\mathcal C\le\mathcal D_{\mathrm{id}}$.
+\end{proof}
+
+\begin{remark}[Use]\label{sp-remain:rem:use}
+If $\Sigma$ avoids the cosets $\epsilon\bar R_0$, $\epsilon\ne1$, the full blocks off the Bessel subgroup
+are those of $\Gamma^*$, and Lemma~\ref{sp-remain:lem:cut} with Theorem~\ref{sp-remain:thm:main}(a)
+bounds their $\sqrt{\mathsf E}$ by $\sqrt w+b^{-15}\sqrt{\mathcal D_{\mathrm{id}}}$. Part (b) gives $w$: for the $s$ that coincide with an element of $\bar R_0$ above $p_i$, $\mathfrak z=p_i^{2f}\ge(M/b)^f$ and
+\eqref{sp-remain:eq:ratio} give $w\le b^{-3kf}\mathcal D_{\mathrm{id}}$; for $s$ fixing frame vectors
+above $p_0$, $\mathfrak z=p_0^f$ gives $w\le b^{-8kf}\mathcal D_{\mathrm{main}}$. For open $s$ the link sum is
+the main term of Section~\ref{sec:sp-main} (\lean{New.Filling.linkSecondMoment_isOpenElement_le}).
+\end{remark}
+
+\subsection{The size of one orbit}\label{sp-remain:ss:size}
+
+Let $\gamma$ have cell rank $j$ over $(c,s,c')$, $i=\min(\varrho,j)$, $i_\gamma,i'_\gamma$ the indices
+(\lean{New.Filling.isotropicRowsIndex}) of the rows from $e_1,\dots,e_i$ among the products of
+$\Lambda_c\cap A$ with the frame of $h_c^{-1}\gamma h_{c'}$ and of its inverse ($1$ if $j=n$),
+$\mu_j(\gamma)=\abs{\Nm D_j(\gamma)}N^{-2\max(j-\varrho,0)f}$,
+$\mathsf g^\sharp(\gamma)=N^f\mu_j(\gamma)/(i_\gamma i'_\gamma)$ (\lean{New.Filling.minorGauge}, by
+\lean{New.Filling.HasCellRank.minorGauge_eq}) and $\abs{\mathsf g(\gamma)}_\infty=\prod_v\abs{\Phi_v\mathsf
+g(\gamma)}$, a product of plain complex absolute values (\lean{New.Filling.termDiscNorm}). The \emph{gauge} and the \emph{size} are
+(\lean{New.Filling.levelGauge}, \lean{New.Filling.termSize})
+\[
+G^*(\gamma)=M^{2if}\max\bigl(\mathsf g^\sharp(\gamma),\abs{\mathsf g(\gamma)}_\infty\bigr),\qquad \theta(\gamma)=\tau^2\Bigl(\frac{\mathcal D_j}{n_pG^*(\gamma)^k}\Bigr)^{1/2},
+\]
+with the constants $\mathcal D_n=\mathcal D_{\mathrm{main}}$ and $\mathcal D_j=\tau^{-16}\mathcal D_{\mathrm{id}}$ for
+$j\le\varrho$ (\lean{New.Filling.cellRankSecondMoment}; not the minors $D_j$).
+A point is \emph{boxed} (\lean{New.Filling.boxedPoints}) if its Gram--Schmidt entries lie in a
+fixed fundamental domain modulo $M\cO_E$ and its Bessel length is at most $b^{6n+2}$ at every place;
+boxed points form a $\mathsf U^0$-invariant set on which frame vectors have length at most $b^{37n}$; $\gamma$ is \emph{near} if
+$y$ and $\gamma^{-1}y$ are boxed for some $y$. A \emph{near representative} over $(c,s,c')$ is a near
+term with a cell rank, chosen in its orbit $\mathsf U^0_c\gamma\mathsf U^0_{c'}$, with $s$
+\emph{agreeing}: integral $u,u'\in\mathsf U$ with $\bar us=s\bar u'$ have equal character values.
+
+\begin{proposition}[Size; \lean{New.Filling.enorm_amplitudeSum_le_tsum_termSize}]
+\label{sp-remain:prop:size}
+For a stable $\mathcal F\subseteq\Gamma^*$, $\norm{A^\flat_{\mathcal F}(c,s,c')}\le\nu\sum_\gamma
+\theta(\gamma)$, the sum over the near representatives of $\mathcal F$ over $(c,s,c')$.
+\end{proposition}
+
+\begin{proof}
+If $s$ does not agree the block is $0$. Sort by cell rank $j$ and split by whether $\abs{\mathsf g(\gamma)}_\infty>N^f\mu_j(\gamma)$.
+
+\emph{Open cell} (\lean{New.Filling.enorm_amplitudeSum_le_orbitBound_top}). Then $\mathsf
+g(\gamma)\ne0$, $j=n$, and the stabiliser in $\mathsf U^0_c$ of $\gamma\mathsf U_{c'}$ is trivial
+(\lean{New.Filling.eq_one_of_mul_eq_mul_of_termDisc_ne_zero}). So the block unfolds to a sum over
+the double cosets $\mathsf U^0_c\gamma\mathsf U_{c'}$ of $\int\omega(y)W^\flat(y)\otimes
+W^\flat(\gamma^{-1}y)^*dy$, $\omega$ the indicator of reduced points, and a nonzero integrand gives
+a near representative. By the open-cell bound (\lean{New.Filling.enorm_integral_besselKernel_le},
+from \lean{New.BesselSystem.enorm_integral_pairKernel_cut_le}) each integral is at most
+$(\prod_v\mathrm{pb}_v)^{1/2}$ plus the cut error. This is the decay of the Bessel kernel that is
+used: $\prod_v\mathrm{pb}_v=C\,\abs{\mathsf g(\gamma)}_\infty^{-10^5n^4-k+1}$
+(\lean{New.Filling.prod_pairingBoundSq_eq}). As $\mathsf g(\gamma)$ is a nonzero totally positive
+algebraic integer, $\abs{\mathsf g(\gamma)}_\infty\ge1$, and $C\le(\nu\tau^2/2)^2\mathcal D_{\mathrm{main}}/(n_p
+M^{2\varrho fk})$ (\lean{New.Filling.pairingBoundConst_le}, by the admissible bound for the Siegel
+constant) gives $(\prod_v\mathrm{pb}_v)^{1/2}\le\nu\theta(\gamma)/2$. The cut errors add up to at most
+$\nu b^{-k^3f}/2\le\nu\theta(\gamma)/2$ for near $\gamma$
+(\lean{New.Filling.IsNear.inv_pow_le_orbitBound}; $\abs{\mathsf g(\gamma)}_\infty\le b^{270n^2f}$).
+
+\emph{Schur's test} (\lean{New.Filling.sq_tsum_amplitudeMajorant_doubleCoset_le},
+\lean{New.Filling.tsum_amplitudeMajorant_orbit_le}). Otherwise $G^*(\gamma)=M^{2if}\mathsf g^\sharp(\gamma)$ by
+\lean{New.Filling.HasCellRank.maxGauge_eq}; sum the absolute amplitudes over the orbit. Cauchy--Schwarz with the weight $\prod_v\nu_v(y)^{-(k+i)}$, $\nu_v(y)$ the ratio of the volumes
+of the projections of $\gamma\mathbf f$ and $\mathbf f$ to the negative space of $y$ (inverted when
+the frames are exchanged), gives two integrals of $\beta_c\abs{W^\flat}^2$ times the weight; of
+$W^\flat$ only $\int\beta_c\abs{W^\flat}^2\le\nu\,\#(\text{coordinates})$ enters. The orbit falls into
+at most $i_\gamma^k$ families of lattice translates, whose frames differ in $X_0$ by $Ml\,\Xi_0$,
+$l\in(\Lambda_c\cap X_0)^i$, $\Xi_0$ the first $i$ rows of $Z(\gamma)$; the isotropic parts are
+packed at a cost $\tau$. The sum over $l$ becomes a sum of a majorant $\varphi$ over a translate of
+the \emph{column lattice} $(\Lambda_c\cap X_0)^i\subset\prod_v(\C^k)^i$, with mean
+$\int\varphi/\operatorname{covol}\le\int\varphi$: real inner products of its points are half traces of
+algebraic integers, so the covolume is at least $1$
+(\lean{New.Filling.exists_isAddFundamentalDomain_columnLattice}). The local integrals give
+$\int\varphi\le\tau(b^{13}/M^2)^{ikf}\mu_j^{-k/2}$ (\lean{New.Filling.prod_kernelBound_le}). So the
+orbit sum is at most $\nu\#(\text{coordinates})\tau^2(b^{13}/M^2)^{ikf}(N^f/\mathsf
+g^\sharp(\gamma))^{k/2}$, which is at most $\nu\theta(\gamma)$ as $\#(\text{coordinates})\le\tau^8$, $b^{19}\le M$ and
+$\mathcal D_j\ge\tau^{8-32i}\mathcal D_{\mathrm{id}}$ ($i\ge1$).
+\end{proof}
+
+\subsection{The gain of a pair}\label{sp-remain:ss:gain}
+
+The lattice $L_\gamma$ of a term (\lean{New.Filling.termLattice}) consists of the $v\in\Lambda_c\cap
+X_0$ such that some vector of $v+M(\Lambda_c\cap A)$ is orthogonal to the frame of $h_c^{-1}\gamma
+h_{c'}$. For two terms let $\operatorname{cl}(\gamma,\gamma')\subseteq X_0$ (\lean{New.commonLink}) be
+the first entries of pairs orthogonal to $z$ in both links, $L_{12}$ the part of $L_\gamma\cap
+L_{\gamma'}$ in it (\lean{New.Filling.pairLattice}), $\delta(\gamma,\gamma')$ its discriminant,
+$l=k-\dim\operatorname{cl}(\gamma,\gamma')$ its corank, and
+$c^+=k+1-\dim(\operatorname{link}\gamma\cap\operatorname{link}\gamma')$.
+
+\begin{proposition}[Gain; \lean{New.Filling.pairDiscriminant_sq_le},
+\lean{New.Filling.le_finrank_commonLink_add}]\label{sp-remain:prop:gain}
+Let $\gamma,\gamma'$ have cell ranks $j,j'$ and lie over one block $(c,s,c')$ with $s$ agreeing, and
+let $1\le\mathfrak z\le\operatorname{mn}(s)$ be an integer; put $\tilde{\mathfrak z}=\mathfrak z$ if $j=n$ and $c^+=0$, and
+$\tilde{\mathfrak z}=1$ otherwise. Then $l\le c^++\max(j-\varrho,0)$, $\delta(\gamma,\gamma')\ge1$, and
+\[
+\bigl(\delta(\gamma,\gamma')\,\tilde{\mathfrak z}\bigr)^2\le(2/M)^{2c^+f}\,G^*(\gamma)\,G^*(\gamma').
+\]
+If both are near representatives, then $l\le n^3$ and $\delta\le H:=b^{n^3f}$
+(\lean{New.Filling.IsNearPairOverAgreeingBlock.corank_le_and_pairDiscriminant_le}).
+\end{proposition}
+
+\begin{proof}[Idea]
+The vectors of $\Lambda_c$ orthogonal to $A$ and $\gamma A$ with $A$-part divisible by $M$ give a
+lattice $L^+_\gamma$ in the link whose discriminant times the torsion index of $\gamma$ is at most
+$M^{2if}\mathsf g^\sharp(\gamma)/N^f$ (\lean{New.Filling.exists_hasLevelLifts_linkDiscSq_le}): it is the orthogonal complement, in a
+unimodular lattice with two vectors of norm $N$ adjoined, of two isotropic lists whose discriminant
+is the squared norm of the minor of $Z(\gamma)$ on the first $j$ indices and the last. Three steps lead to $L_{12}$. \emph{Congruence}
+(\lean{New.Filling.LinkSplitting.one_le_mul_linkDiscSq}): the difference of the forms on the two
+entries of a pair vanishes on each link, and is $M$-integral on lifts as $\gamma,\gamma'$ have the
+same reduction; it pairs complements of rank $c^+$ of the intersection in the two links
+nondegenerately, so their squared discriminants have product at least $(M/2)^{4c^+f}$, a saving that
+the intersection keeps. \emph{Cut} (\lean{New.Filling.nonempty_linkSplitting}): passing to
+$\operatorname{cl}$, orthogonal to $z^+$ and $\Upsilon_\gamma^{-1}z^+$, costs a principal minor of
+their Gram matrix; at the top rank with equal links the minor of the two $z$-forms has index at least
+$\operatorname{mn}(s)$ (\lean{New.Filling.HasIntegralLifts.le_genIndex_det_zRowBlockDiagonal}).
+\emph{Index}: $L_{12}$ has index dividing the torsion index of $\gamma'$, which was saved.
+\end{proof}
+
+\subsection{The count}\label{sp-remain:ss:count}
+
+For $u\in\U(X_0)(\Af)$ and a subspace $F\subseteq E^k$ let $d_u(F)$ be the discriminant of $F\cap
+u\hat\cO^k$ (\lean{New.Filling.sublatticeDiscriminant}).
+
+\begin{fact}[Siegel's lemma; \lean{New.Filling.siegel_lemma}]\label{sp-remain:fact:siegel}
+Let $F\subseteq E^k$ have codimension $l$. There are nonzero $y_1,\dots,y_l\in E^k\cap u\hat\cO^k$
+with hermitian orthogonal $F$ and $(\prod_i\norm{y_i})^{2f}\le(8fl\,\rdE)^{fl}d_u(F)$, the length
+taken over all infinite places together. Hence $\sum_F d_u(F)^{-(k+1)}\le(200fk\,\rdE)^{f(k+1)l}$
+over all $F$ of codimension $l$ (\lean{New.Filling.tsum_sublatticeDiscriminant_inv_le}). (Bombieri--Vaaler, On Siegel's lemma, 1983. The Lean file derives
+it from Minkowski's second theorem, \lean{New.Core.minkowski_second_theorem}, and sums by packing.)
+\end{fact}
+
+\begin{proposition}[Lattices of given corank; \lean{New.Filling.sum_discriminant_inv_le}]
+\label{sp-remain:prop:lattices}
+For $l\le k$, the sum of $(\operatorname{disc}L)^{-k}$ over all $c\in\mathcal C$ and all lattices
+$L\subseteq\Lambda_c\cap X_0$ of rank $k-l$ with $\operatorname{disc}L\le H$ is at most $\#\mathcal
+C\,N^{-kf}\tau^{l+1}$.
+\end{proposition}
+
+\begin{proof}[Idea]
+$\Lambda_c\cap X_0$ is $\eta$ times the vectors of $u\hat\cO^k$ on which a linear form $\lambda$
+vanishes modulo $\bar\pi_N$, $\eta$ rational. Average over the classes along at least $(N^k/b)^f$ cosets that move $\lambda$
+(\lean{New.Filling.sum_classes_le_of_sum_translates_le}): a lattice of index $i$ in $F\cap u\hat\cO^k$,
+$\operatorname{codim}F=l$, lies in the kernel of at most $i(N^f)^l$ of the forms. Sum over sublattices
+of finite index (a zeta function, at most $2^k$) and over $F$ by
+Fact~\ref{sp-remain:fact:siegel}; passing from the exponent $k$ to $k+1$ costs $H^{2\varrho+6}$, as
+$d_u(F)\,i\le H$. The constants are at most $\tau^{l+1}/b^f$ by the admissible bounds $N\le b^{60n}$,
+$(200fk\,\rdE)^{1000}\le b$, $k\le f$ and the last one in \eqref{sp-remain:eq:ratio}; the factor $b^{-f}$
+is absorbed by the number $(N^k/b)^f$ of cosets.
+\end{proof}
+
+\begin{proposition}[Frames over a lattice;
+\lean{New.Filling.encard_setOf_isNearTermAt_and_le_termLattice_le}]\label{sp-remain:prop:frames}
+Fix $c$, a label $t\in\bar R_0$ (of the block: $s=s_0t$, $s_0$ the chosen representative of $s\bar R_0$) and $L\subseteq\Lambda_c\cap X_0$
+of corank $l$ with $\operatorname{disc}L\le H$. At most $b^{2000n^6(l+1)f}$ pairs $(c',\gamma)$,
+$\gamma$ a near representative with label $t$, have $L\subseteq L_\gamma$.
+\end{proposition}
+
+\begin{proof}[Idea]
+Near representatives are determined by their frames modulo $\mathsf U^0_c$
+(\lean{New.Filling.IsNearTermAt.eq_of_frameImage_eq}), and $Z(\gamma)$ is integral with entries
+bounded by powers of $b$. With $Z$ fixed, frames are sorted in three rounds
+(\leanfile{New/Spanning/RemainingTerms/FramesOverLattice}): by the lift of $L$ orthogonal to the frame;
+by the part in $X_0$, whose differences lie in the complement $\Lambda_c\cap X_0\cap L^\perp$ of rank
+$l$ and are removed by a move once they are divisible by $MD_j$; and by the isotropic part, where the
+vectors shared by the two frames are short at boxed points. $Z$ and the shared vectors are integral
+points in a box; otherwise frames are counted modulo sublattices of index at most
+$\operatorname{disc}(L)^{2\varrho}$, $\abs{\Nm(MD_j)}^{ln}$ and $\abs{\Nm(M\det YY^*)}^{n\varrho}$, $Y$ the
+first $j$ rows of $Z$ completed by unit rows.
+\end{proof}
+
+\begin{theorem}[Count; \lean{New.Filling.sum_pairDiscriminant_inv_le}]\label{sp-remain:thm:count}
+For $l\le n^3$, the sum of $\delta(\gamma,\gamma')^{-k}$ over all $c,c'$ and all pairs of near
+representatives over a common agreeing block with corank $l$ and $\delta\le H$ is at most
+$\tau^{l+2}n_p$.
+\end{theorem}
+
+\begin{proof}
+A pair has a common label $t$, and $L_{12}\subseteq L_\gamma\cap L_{\gamma'}$ has rank $k-l$. Map the
+pair to $(t,L_{12})$; by Proposition~\ref{sp-remain:prop:frames} a fibre has at most
+$b^{4000n^6(l+1)f}\le\tau$ elements. So for fixed $c$ the sum is at most $\#\bar R_0\,\tau\sum_L
+(\operatorname{disc}L)^{-k}$; sum over $c$ by Proposition~\ref{sp-remain:prop:lattices}.
+\end{proof}
+
+\subsection{Size times count}\label{sp-remain:ss:sum}
+
+\begin{lemma}[\lean{New.Filling.sum_termSize_mul_le}]\label{sp-remain:lem:sum}
+For each $c,c'$ let $P_{cc'}$ be a set of pairs of near representatives over common agreeing
+blocks, and $B\ge0$. If every pair admits $\eta>0$ and $\mathcal D'\ge\mathcal D_j,\mathcal D_{j'}$ with $(\delta\eta)^2\le
+G^*(\gamma)G^*(\gamma')$ and $\tau^{l+6}\mathcal D'\eta^{-k}\le B$, then $\sum_{c,c'}\sum_{P_{cc'}}
+\theta(\gamma)\theta(\gamma')\le\tau B$.
+\end{lemma}
+
+\begin{proof}
+$\theta(\gamma)\theta(\gamma')\le\tau^4\mathcal D'(n_p\sqrt{G^*(\gamma)G^*(\gamma')}^{\,k})^{-1}\le
+B\,\delta^{-k}/(\tau^{l+2}n_p)$. By Proposition~\ref{sp-remain:prop:gain} every pair has $l\le n^3$ and
+$\delta\le H$, so by Theorem~\ref{sp-remain:thm:count} each corank $l\le n^3$ contributes at most $B$, and
+$n^3+1\le\tau$.
+\end{proof}
+
+\begin{corollary}[\lean{New.Filling.sum_termSize_mul_not_inSameLinkClass_le},
+\lean{New.Filling.sum_termSize_mul_inSameLinkClass_le}]\label{sp-remain:cor:pairs}
+Call $\gamma,\gamma'$ \emph{linked} if $\mathsf g\ne0$ for both and their links are equal. Over pairs
+of near representatives over common agreeing blocks: (a) the pairs that are not linked have
+$\sum\theta(\gamma)\theta(\gamma')\le b^{-kf}\mathcal D_{\mathrm{id}}$; (b) the linked pairs over
+reductions with $\operatorname{mn}(s)\ge\mathfrak z\ge1$ have $\sum\theta(\gamma)\theta(\gamma')\le
+(b^{2f}/\mathfrak z)^k\mathcal D_{\mathrm{main}}$.
+\end{corollary}
+
+\begin{proof}
+Lemma~\ref{sp-remain:lem:sum} with Proposition~\ref{sp-remain:prop:gain}. (a) If $c^+=0$ the links are
+equal, so $\mathsf g=0$ for both terms, both lie below the top rank, and $l=0$: take $\eta=1$,
+$\mathcal D'=\tau^{-16}\mathcal D_{\mathrm{id}}$, $B=\tau^{-10}\mathcal D_{\mathrm{id}}$. If $c^+=i\ge1$ take
+$\eta=(M/2)^{if}$ and $\mathcal D'=\mathcal D_{\mathrm{main}}$; then $l\le i+1$, and \emph{the decisive
+inequality} (\lean{New.Filling.pow_mul_mainSecondMoment_div_le}) is
+\[
+\tau^{l+6}\mathcal D_{\mathrm{main}}(2/M)^{ikf}\le\tau^7\bigl(\tau(2/M)^{kf}\bigr)^i(M/b^6)^{kf}
+\mathcal D_{\mathrm{id}}\le\tau^8(2/b^6)^{kf}\mathcal D_{\mathrm{id}}\le\tau^{-10}\mathcal D_{\mathrm{id}},
+\]
+by \eqref{sp-remain:eq:ratio} and $\tau(2/M)^{kf}\le(2b/M)^{kf}\le1$: the congruence gain $(M/2)^{kf}$
+of one unit of link corank beats the ratio $\mathcal D_{\mathrm{main}}/\mathcal D_{\mathrm{id}}$. The
+total is $\tau^{-9}\mathcal D_{\mathrm{id}}\le\tau^{-4}\mathcal D_{\mathrm{id}}=b^{-kf}\mathcal
+D_{\mathrm{id}}$. (b) Here $c^+=0$, $j=n$, $l\le1$: take $\eta=\mathfrak z$, $\mathcal D'=\mathcal D_{\mathrm{main}}$,
+$B=\tau^7\mathcal D_{\mathrm{main}}\mathfrak z^{-k}$, and note $\tau^8=b^{2kf}$.
+\end{proof}
+
+\begin{proof}[Proof of Theorem~\ref{sp-remain:thm:main}]
+(a) Split $\Gamma^*$ into stable pieces: $\Gamma_\Lambda$ for each link $\Lambda$, and the terms with
+$\mathsf g=0$ (\lean{New.Filling.enorm_amplitudeSum_sq_le}). Then
+$\norm{A^\flat_{\Gamma^*}}^2\le\sum_{\mathcal F,\mathcal F'}\norm{A^\flat_{\mathcal F}}\norm{A^\flat_{\mathcal F'}}$. The
+diagonal pairs $\mathcal F=\mathcal F'=\Gamma_\Lambda$ give the link sum; every other product is at most
+$\nu^2\sum\theta(\gamma)\theta(\gamma')$ over near representatives of the two pieces
+(Proposition~\ref{sp-remain:prop:size}, \lean{New.Filling.enorm_amplitudeSum_mul_le}), which are not
+linked. A pair determines its pieces and its $s$, so summing over $c,c'$, $s\in\Sigma$ and dividing
+by $\nu^2$, Corollary~\ref{sp-remain:cor:pairs}(a) gives (a). (b) In the same way
+$\norm{A^\flat_{\Gamma_\Lambda}}^2\le\nu^2\sum\theta(\gamma)\theta(\gamma')$ over linked pairs with
+$\operatorname{mn}(s)\ge\mathfrak z$, a pair determines $s$ and $\Lambda$, and
+Corollary~\ref{sp-remain:cor:pairs}(b) applies.
+\end{proof}

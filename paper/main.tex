@@ -1,0 +1,85 @@
+\input{preamble}
+
+% Lean declarations are cited by short markers (L12) when the index is loaded, and by their
+% full names when it is not. Comment out the next line to print the names in full.
+\IfFileExists{leanindex.tex}{\input{leanindex}}{}
+
+\title[A reading of a formal proof of GRH for Dirichlet L-functions]{A reading of the Lean proof
+of the Generalized Riemann Hypothesis for Dirichlet $L$-functions}
+\input{author}
+\date{Draft of \today}
+
+% \sectioninput{id} includes sections/id.tex if it exists, and a placeholder otherwise.
+\newcommand{\sectioninput}[1]{%
+  \IfFileExists{sections/#1.tex}{\input{sections/#1}}{%
+    \section{[Section \texttt{#1}: not yet written]}\label{sec:#1}}}
+
+\begin{document}
+
+\begin{abstract}
+A Lean~4 proof of the Riemann Hypothesis and of the Generalized Riemann Hypothesis for Dirichlet
+$L$-functions has been published as machine-checked code without an accompanying paper. This
+document reads that code and writes its argument in ordinary mathematical language. It states
+the main definitions and the main steps, gives the proofs of the steps that carry the argument,
+and refers to the Lean declaration for each step that it does not explain. Background results
+that the code proves but that are known in the literature are stated without proof, with the
+sources that the code names. The text is an exposition and not a second verification: the
+correctness of the theorems rests on the Lean kernel alone.
+\end{abstract}
+
+\maketitle
+\tableofcontents
+
+\sectioninput{s01-intro}
+
+\part{The reduction}
+\sectioninput{s02-zeros}
+\sectioninput{s03-setup}
+\sectioninput{data}
+\sectioninput{s04-main}
+
+\part{The upper bound: Theorem A}
+\input{sections/fig-part2}
+\sectioninput{ub-objects}
+\sectioninput{der}
+\sectioninput{ub-seesaw}
+\sectioninput{ub-divis}
+\sectioninput{ub-eldiv}
+
+\part{Spanning: Theorem B}
+\input{sections/fig-part3}
+\sectioninput{sp-moment}
+\sectioninput{sp-unfold}
+\sectioninput{sp-main}
+\sectioninput{sp-frames}
+\sectioninput{sp-remain}
+
+\part{The lower bound: Theorem C}
+\input{sections/fig-part4a}
+\sectioninput{det-chain}
+\sectioninput{det-exchange}
+\sectioninput{ol-values}
+\sectioninput{ol-compare}
+\input{sections/fig-part4b}
+\sectioninput{cg-selmer}
+\sectioninput{cg-first}
+\sectioninput{cg-lifting}
+
+\appendix
+\sectioninput{zz-notation}
+\sectioninput{zz-facts}
+\sectioninput{zz-open}
+
+\section{Index of Lean declarations}\label{sec:app-leanindex}
+
+A marker such as \leanmark{12} in the text stands for the Lean declaration with that number in
+the list below. The numbers follow the order of first citation. In the PDF the marker and the
+name both link to the declaration in the repository \texttt{lsernau/grh-lean}, folder
+\texttt{grh/src}, at the commit \texttt{72fead1} that the code was checked at; the link gives
+the file and the line.
+
+\printleanindex
+
+\sectioninput{zz-bibliography}
+
+\end{document}

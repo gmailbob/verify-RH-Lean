@@ -1,0 +1,506 @@
+\section{Congruences to first order: Ribet's method and the bound for denominators}\label{sec:cg-first}
+
+This section proves the bound for denominators, Theorem~\ref{cg-first:thm:main}
+(\lean{New.Selmer.denominatorLe_clearingBound}, \leanfile{New/Congruences/FirstOrder/DenominatorBound}):
+for a prime $\ell$, a descent pair $W\subset V$ and a space $Z$ of forms on $V$ spanned by lifts from
+$W$, if the twist $\vartheta$ is auxiliary and the main summands of the lifts, twisted by
+$\vartheta^{-1}$, have short Selmer groups, an operator on $Z$ of large determinant clears the
+$\ell$-adic denominator of the projection to $Z$ of integral forms orthogonal to the false lifts. The loss per unit of rank is the \emph{clearing bound} $\beta_\ell$: local defects above $\ell$,
+class number, odd classes and congruences between characters, but not the orders of the even classes.
+Section~\ref{sec:cg-selmer} applies it in \lean{New.Selmer.denominatorLe_range_goodLift} and
+\lean{New.Selmer.denominatorLe_span_trivialLift}; of the declarations that the proof needs, the share
+needed only through this one, Theorem~\ref{cg-first:thm:main}, is $6.5\%$ (Section~\ref{sec:intro} says
+where the figure comes from). The constants
+of Definition~\ref{cg-first:def:constants} and Definition~\ref{cg-first:def:aux} are exported too. We
+import Galois representations and the base data \lean{New.Selmer.exists_baseLevel} from
+Section~\ref{sec:cg-selmer}, the local defects and
+\lean{New.Selmer.relLength_ribetCocycles_le} from Section~\ref{sec:cg-lifting}, and
+\lean{New.Selmer.DenominatorLe} from Section~\ref{sec:ol-values}.
+
+The method is Ribet's method, as the Lean files call it, in a Fitting-ideal form and with
+auxiliary places. The Lean files on it name no source for the method; they list as related work
+Urban (2001), Bella\"iche--Chenevier (2009) and Dasgupta--Kakde--Silliman--Wang (2023) for the
+Fitting-ideal form, which they say is known for distinct summands in any rank and for congruent
+characters in rank~2, and Wiles (1990), Taylor--Wiles (1995) and Dotto--Thorne (2026) for the
+auxiliary places; Ribet (1976) is named only as related work, in
+\leanfile{New/Congruences/FitTwistsExist}. In outline: only congruences with systems that are not
+weak lifts matter (\S\ref{cg-first:ss:reduction}), auxiliary places make Ribet's element an integral
+operator (\S\ref{cg-first:ss:aux}), and its top coefficient is bounded by Selmer groups and local
+defects (\S\ref{cg-first:ss:ribet}).
+
+\subsection{Notation and the statement}\label{cg-first:ss:statement}
+
+$D$ are admissible data with field $E$, $f$ infinite places, ranks $r$, $t=5r$, and $\Delta/2=r^8$
+(\lean{New.Data.halfGap}; Sections~\ref{sec:cg-selmer} and~\ref{sec:cg-lifting} write it $h$, a letter
+that this section uses for exponent bounds). Fix a prime $\ell$ and $\iota\colon\C\simeq\Qlbar$; $v$ is the valuation of
+$\Qlbar$ with $v(\ell)=1$, negative values replaced by $0$ (\lean{New.ellVal}), and $v_\ell$ the
+$\ell$-adic valuation of integers. $\chi_{\mathrm{cyc}}$ is the $\ell$-adic cyclotomic character of
+$G_E=\Gal(\Qbar/E)$, $g^c$ the conjugate by complex conjugation. A coefficient ring $\cO$ is
+the ring of integers of a finite Galois extension of $\Ql$ in $\Qlbar$ (\lean{New.CoeffRing}), with
+lengths normalised by $\length(\cO/\ell)=1$; $\cO(-e)$ is $\cO$ with $G_E$ acting by
+$\chi_{\mathrm{cyc}}^{-e}$. $n_{\mathrm{Aut}}=\prod_w\#\GL_{rt}(\F_w)$ over the chosen places $w$
+(\lean{New.Data.chosenGroupOrder}; Section~\ref{sec:cg-selmer}). The bad places divide $\ell MN$
+(\lean{New.Selmer.badPlaces}).
+
+A descent pair $O$ (\lean{New.DescentPair}) has a space $W$ of rank $r'$ and a definite $V$ of rank
+$n'>r'$; $t'=n'-r'$ (\lean{New.DescentPair.rankDiff}); $\mathcal F_O$ are its forms on $V$
+(\lean{New.DescentPair.FormV}). For split $w$ off the level, $H_w(X)=\sum_i(-X)^iq_w^{i(i-1)/2}T_{w,i}$,
+and $X^*_w$ (\lean{New.DescentPair.liftHeckeRoot}) is the inverse of the top root of the chain in the
+Hecke polynomial of a lift from $W$. For $\epsilon$ in the group algebra of $\prod_w\GL_{r'}(\F_w)$
+the \emph{false lifts} at $w$ are those of Definition~\ref{ol-values:def:false}(a) for $\epsilon$ and
+$Z^\perp$, the forms of $\epsilon\mathcal F_O\cap Z^\perp$ killed by
+$H_w(X^*_w)$ (\lean{New.DescentPair.falseLiftsAt}). A system $\pi$ (isotypic space of forms on $V$) has a
+Galois representation $r_\pi$: for a non-zero system $\pi$ of forms on the standard definite space of
+rank $n$, $r_\pi\colon G_E\to\GL_n(\Qlbar)$ is attached to the Hecke polynomials of $\pi$ (continuous,
+with non-degenerate trace form, and close to them at most Frobenius elements, \lean{New.mostFrobenii};
+Fact~\ref{cg-selmer:fact:galois}), and at split places of maximal level the Hecke polynomial kills
+geometric Frobenius (\lean{New.Patching.Isotypic.attached_galRep}, \lean{New.GaloisRep.sphericalCompat_std}). The
+\emph{normalised representation} of $\pi$ is
+$\tilde r_\pi=\chi_O\otimes r_\pi$, $\chi_O$ the avatar of the inverse character of $W$
+(\lean{New.Selmer.normalisedRep}). A twist $\vartheta$ has modulus $Q_\vartheta$; $\psi_\vartheta$ is
+the $\ell$-adic avatar of $\vartheta^{-1}$ (\lean{New.Data.TameChar.invAvatar}).
+
+The statement $\mathrm{DenominatorLe}(\iota,O,\epsilon,Z,\beta)$ (\lean{New.Selmer.DenominatorLe})
+says that the projection to $Z$ has denominator at most $e^\beta$ at $\iota$ in the sense of
+Definition~\ref{ol-values:def:false}(b), for the false lifts of $\epsilon$ and $Z^\perp$: some
+$\Lambda\in\End(Z)$ with $\abs{\iota\det\Lambda}\ge e^{-\dim Z\cdot r'\beta}$ makes
+$\Lambda(\mathrm{pr}_Zy)$ integral at $\iota$, with integral pairings against forms integral at all
+$\ell$-adic places, for every $y$ integral at $\iota$ and orthogonal to the false lifts.
+
+\begin{definition}[\lean{New.Selmer.IsAuxTwist}]\label{cg-first:def:aux}
+$(S,Q,\psi)$ is \emph{auxiliary with ramification at most $c$} if $Q$ is auxiliary for $S$
+(\lean{New.IsAuxiliary}, Section~\ref{sec:cg-selmer}: the places of $Q$ have prime norm, and $Q$,
+$\bar Q$, $S$ are pairwise disjoint) and its places lie off $\ell$; $\psi\colon G_E\to\Qlbar^\times$
+comes from $\U(1)$ with modulus $Q$ (\lean{New.IsFromU1}, Section~\ref{sec:cg-selmer}); and
+$\sum_{P\in Q}v(\psi(\sigma_P)-1)\le c$ for some tame generators $\sigma_P$ over the $P$.
+\end{definition}
+
+\begin{definition}[\lean{New.Selmer.IsLiftGenerator}]\label{cg-first:def:liftgen}
+A \emph{lift generator} for $\mathrm{sel}\in[0,\infty]$ is a $y\in Z$ that (i) lies in $e_c\mathcal F_O
+\subseteq\epsilon\mathcal F_O$ for the idempotent $e_c$ (\lean{New.Selmer.typeProjection}) of a tuple
+$c$ of labels that is a lift setting for $\vartheta$ (\lean{New.Selmer.IsLiftSetting}); (ii) lifts a
+system $\pi'$ with a main summand $R\colon G_E\to\GL_{r'}(\Qlbar)$ for a pair whose character times
+$\vartheta$ is that of $O$ (\lean{New.Selmer.IsMainSummand}: the normalised representations of the lifts
+of $\pi'$ have the trace of $\psi_\vartheta R\oplus\bigoplus_{e<t'}\cO(-e)$) such that, for one inertial $\gamma$ and one $\zeta_\gamma$, over
+all large $\cO$ some lattice of $\psi_\vartheta R$, on which $\gamma$ acts by $\zeta_\gamma$ with $\zeta_\gamma-1$ a unit,
+has Selmer group over $\mathrm{Frac}(\cO)/\cO$ (unramified off $\ell p_0p_1Q_\vartheta\bar Q_\vartheta$,
+crystalline above $\ell$, cocycles zero at $\gamma$) of length at most $\mathrm{sel}$
+(\lean{New.Selmer.HasDivisibleSelmerLengthLe}).
+\end{definition}
+
+\begin{fact}[Odd classes; \lean{New.exists_length_shaOdd_le}]\label{cg-first:fact:odd}
+Let $E\subseteq\Q(\mu_{q_E})$ be CM and $t\ge0$. Some integer $0<n_{\mathrm{odd}}\le2^{4(q_E+t+3)^{27}}h_E$ ($h_E$ the
+class number) has: for all $\ell$, all $\cO$ that contain the roots of unity of order the exponent of
+$(\Z/q_E)^\times$, all $\nu$ and $0<e<t$, the continuous cocycles
+$G_E\to(\cO/\ell^\nu)(-e)$ that are unramified off $\ell$, zero on the elements of trivial
+$\chi_{\mathrm{cyc}}$ in decomposition groups above $\ell$ and odd under $g\mapsto g^c$
+(\lean{New.Selmer.shaOdd}) have length at most $v_\cO(n_{\mathrm{odd}})$; likewise for $e=0$ and the unramified
+homomorphisms. (Mazur--Wiles, 1984; Greither, 1992; proved here through Stickelberger sums.)
+\end{fact}
+
+\begin{definition}[\leanfile{New/Congruences/FirstOrder/TraceRelations}]\label{cg-first:def:constants}
+Let $n_{\mathrm{odd}}$ be the integer of Fact~\ref{cg-first:fact:odd} for $E$, its cyclotomic conductor and $t$
+(\lean{New.Selmer.oddClassBound}, bounded by \lean{New.Selmer.oddClassBound_le}). With
+$\mathrm{defect}_\ell=10^6\frac mk(b\,v_\ell(M)+\lambda_\ell)$ of Section~\ref{sec:cg-lifting}
+(\lean{New.Selmer.defectBound}, $\lambda_\ell$ the crystalline loss) and $e'_\ell=(4f+3)r\,v_\ell(n_{\mathrm{Aut}})+2^{-\ell}$
+(\lean{New.Selmer.twistError}) put
+\begin{align*}
+  \mathrm{loc}_\ell&=4f\,\mathrm{defect}_\ell,\qquad
+  \beta_\ell=\mathrm{loc}_\ell+(1+2t)e'_\ell+e_\ell+v_\ell(n_{\mathrm{Aut}}),\\
+  e_\ell&=t\,v_\ell(n_{\mathrm{odd}})+8ft\,v_\ell(n_{\mathrm{Aut}})+2v_\ell(n_{\mathrm{Aut}})+\bigl((4t+1)(\Delta/2)^{22}+\Delta/2\bigr)
+  v_\ell(n_{\mathrm{Aut}})
+\end{align*}
+(\lean{New.Selmer.localDefectBound}, \lean{New.Selmer.clearingBound}, \lean{New.Selmer.denominatorError};
+$e_\ell\in\N$ by \lean{New.Selmer.denominatorError_eq_natCast}).
+\end{definition}
+
+$e_\ell$ pays for the class group and odd classes, the tame places above $p_0p_1$, the idempotent and
+automorphisms ($n_{\mathrm{Aut}}^2$) and congruences between the $\cO(-e)$; $\beta_\ell=\mathrm{loc}_\ell+
+(1+2t)2^{-\ell}$ if $\ell\nmid n_{\mathrm{Aut}}n_{\mathrm{odd}}$.
+
+\begin{theorem}[Bound for denominators; \lean{New.Selmer.denominatorLe_clearingBound}]
+\label{cg-first:thm:main}
+Let $(\text{bad places},Q_\vartheta,\psi_\vartheta)$ be auxiliary with ramification at most $e'_\ell$,
+and let $Z\subseteq\mathcal F_O$ lie in the span of the lift generators for $\vartheta,O,\epsilon,Z$
+and $\mathrm{sel}=e'_\ell$. Then $\mathrm{DenominatorLe}(\iota,O,\epsilon,Z,\beta_\ell\log\ell)$.
+\end{theorem}
+
+\subsection{From one system to the operator}\label{cg-first:ss:operator}
+
+Put $B(\mathrm{ram},\mathrm{sel})=\mathrm{sel}+2t'\mathrm{ram}+r'\mathrm{loc}_\ell+e_\ell$
+(\lean{New.Selmer.liftValuationBound}).
+
+\begin{proposition}[\lean{New.Selmer.exists_operator_ellVal_le_liftValuationBound}]
+\label{cg-first:prop:operator}
+Let the twist be auxiliary with ramification at most $\mathrm{ram}$, $\mathrm{sel}<\infty$, and $Z$ in
+the span of the lift generators for $\mathrm{sel}$. Some $\Lambda\in\End(Z)$ preserves the eigenspaces
+of all $H_w(\lambda)$, has eigenvalues with $v(\iota\mu)\le B(\mathrm{ram},\mathrm{sel})$, and makes
+$\Lambda(\mathrm{pr}_Zy)$ integral at $\iota$ for $y$ integral at $\iota$ and orthogonal to the false
+lifts.
+\end{proposition}
+
+\begin{proof}[Proof of Theorem~\ref{cg-first:thm:main}]
+If $Z=0$ take $\Lambda=1$. Otherwise a lift setting gives $1\le r'\le r$, $t'\le t$, and
+$B(e'_\ell,e'_\ell)+v_\ell(n_{\mathrm{Aut}})\le r'\beta_\ell$
+(\lean{New.Selmer.add_denominatorError_le_mul_clearingBound}). So the eigenvalues of $n_{\mathrm{Aut}}\Lambda$,
+with $\Lambda$ of Proposition~\ref{cg-first:prop:operator}, have valuation at most $r'\beta_\ell$, and $\abs{\iota\det(n_{\mathrm{Aut}}\Lambda)}\ge\ell^{-\dim Z\cdot
+r'\beta_\ell}$ (\lean{New.Selmer.exists_operator_det_clearingBound}). A pairing of forms integral at
+$\iota$ and at all $\ell$-adic places is a class sum with weights inverse to stabiliser orders, which
+divide $n_{\mathrm{Aut}}$ (\lean{New.Data.card_classAut_dvd_chosenGroupOrder}); the factor $n_{\mathrm{Aut}}$ makes it
+integral.
+\end{proof}
+
+\begin{proof}[Proof of Proposition~\ref{cg-first:prop:operator}]
+Take a basis $\omega_1,\dots,\omega_{\dim Z}$ of $Z$ of lift generators and, for each $k$, the map $G_k$ of
+Lemma~\ref{cg-first:lem:one} for $v_0=\omega_k$; on $Z$ it is diagonal in $\omega$ with eigenvalues $l_k(p)$ and
+$v(\iota l_k(k))\le B$. Combinations $\sum_pd_pG_p$ with $\abs{d_p}\le1$ keep integrality, and since
+finitely many hyperplanes do not cover a vector space over the infinite residue field of $\Qlbar$,
+some combination has $\abs{\iota\sum_pd_pl_p(k)}\ge\abs{\iota l_k(k)}$ for all $k$
+(\lean{New.Selmer.exists_diagonal_mem_norm_ge}). It is diagonal in a basis of Hecke eigenforms.
+\end{proof}
+
+\subsection{Weak lifts and the reduction to one congruence}\label{cg-first:ss:reduction}
+
+A system $\pi$ is a \emph{weak lift} if $\det(1-\tilde r_\pi(g))=0$ for all $g$ (\lean{New.Selmer.IsWeakLift});
+lifts are, as $\tilde r_\pi$ contains $\cO(0)$.
+
+\begin{fact}[Spherical chain lemma; \lean{New.Patching.isRoot_chain_of_norm},
+\lean{New.Patching.pairing_aeval_heckeCoset_eq_zero}]\label{cg-first:fact:chain}
+Let $y\neq0$ be a $\GL_n(\cO_w)$-fixed Hecke eigenvector in a smooth unitary representation of
+$\GL_n(E_w)$, with Hecke polynomial $P$. (i) If $P(c)=0$ and $\abs c^2q_w^e=q_w^n$, then
+$P(cq_w^i)=0$ for $i<e$. (ii) If $\delta\neq0$, $P(X/\delta)=\prod_{i\le e}(X-q_w^i)S$ and $S\mid R$, then $y$ is
+orthogonal to $((\delta X-q_w^e)R(\delta X))(U)y'$ for all pro-$p$-Iwahori-fixed $y'$, $U$ the Hecke operator of
+$\diag(\varpi,1,\dots,1)$. (Tadi\'c, 1986; Bernstein, 1984.)
+\end{fact}
+
+\begin{lemma}[\lean{New.Selmer.isRoot_hecke_chain}, \lean{New.Selmer.exists_heckePolyOnForms_eq_zero}]
+\label{cg-first:lem:chain}
+The Hecke polynomial of a weak lift at a split $w\nmid\ell$ off the level has the roots $X^\circ_wq_w^i$,
+$i<t'$, with $\iota X^\circ_w=\chi_O(\mathrm{Frob}_w)^{-1}$, $\mathrm{Frob}_w$ geometric. So for base data some split $w$ has
+$H_w(X^*_w)$ killing all forms of base level in weak lifts.
+\end{lemma}
+
+\begin{proof}
+$\tilde r_\pi$ has eigenvalue $1$ at Frobenius, so $X^\circ_w$ is a root (Fact~\ref{cg-selmer:fact:galois});
+$\abs{X^\circ_w}^2=q_w^{r'}$ and Fact~\ref{cg-first:fact:chain}(i) give the chain; its top is $(X^*_w)^{-1}$.
+\end{proof}
+
+\begin{lemma}\label{cg-first:lem:weak}
+Let the twist be auxiliary, $Z$ stable under the $H_w(\lambda)$ and $e_c$, $c$ a lift setting with $e_c\mathcal F_O\subseteq
+\epsilon\mathcal F_O$, and $y$ orthogonal to the false lifts. Then $e_cy$ and $e_c\,\mathrm{pr}_Zy$
+have the same components at all weak lifts.
+\end{lemma}
+
+\begin{proof}\sloppy
+This is \lean{New.Selmer.typeProjection_sub_starProjection_mem_of_isOrthogonalToFalseLifts}. The form
+$y-\mathrm{pr}_Zy$ lies in the Hecke-stable $Z^\perp$ and is orthogonal to the false lifts; at the $w$
+of Lemma~\ref{cg-first:lem:chain} its components at weak lifts are false lifts, so they are orthogonal
+to themselves.
+\end{proof}
+
+\begin{proposition}[\lean{New.Selmer.exists_ellVal_le_and_diagOp_mem_ellIntegralForms}]
+\label{cg-first:prop:one}
+Let $c$ be a lift setting, the twist auxiliary with ramification at most $\mathrm{ram}$, $\mathcal X$
+a set of systems whose $\tilde r_\pi$ have the trace of $\psi_\vartheta R_\pi\oplus\bigoplus_{e<t'}\cO(-e)$ with
+main summands $R_\pi$ with twisted lattices, the Selmer length at $\pi_0\in\mathcal X$ at most
+$\mathrm{sel}<\infty$, and $\mathcal B$ base data containing $\pi_0$ whose systems at all levels off the bad
+places have $\tilde r_\pi$ of the type of $c$ (\lean{New.Selmer.IsRepOfType}) with
+$(\tilde r_\pi(g)-\psi_\vartheta(g))(\tilde r_\pi(g)-1)=0$ on inertia above $Q_\vartheta\cup\bar Q_\vartheta$. There are a level $L$ and a function $\mathsf s$ on systems of level $L$ with
+(a) $v(n_{\mathrm{Aut}}^2\mathsf s(\pi_0))\le B(\mathrm{ram},\mathrm{sel})$; (b) $n_{\mathrm{Aut}}^2\,\mathsf s\cdot y$ is integral for
+forms $l,y$ of base level with $n_{\mathrm{Aut}}l$ integral, $y$ supported on $\mathcal X$ and $l,y$ equal at
+weak lifts. Here $\mathsf s\cdot$ scales the system $\pi$ by $\iota^{-1}\mathsf s(\pi)$.
+\end{proposition}
+
+\begin{lemma}[\lean{New.Selmer.exists_linearMap_eq_smul_mem_integralForms}]\label{cg-first:lem:one}
+Let the twist be auxiliary with ramification at most $\mathrm{ram}$.
+If $Z$ is spanned by lift generators for $\mathrm{sel}=\infty$ and $v_0\neq0$ is one for
+$\mathrm{sel}<\infty$, a linear $G$ has the lift generators as eigenvectors, at $v_0$ of eigenvalue of
+valuation at most $B(\mathrm{ram},\mathrm{sel})$, and $G(\mathrm{pr}_Zy)$ integral for $y$ integral and
+orthogonal to the false lifts.
+\end{lemma}
+
+\begin{proof}
+Take the type $c$ and system $\pi_0$ of $v_0$, the base data of \lean{New.Selmer.exists_baseLevel}
+($e_c\mathcal F_O$ has base level, $n_{\mathrm{Aut}}e_c$ keeps integral forms, the systems have the type of
+$c$), $\mathcal X$ the systems with a nonzero lift generator, and $G=n_{\mathrm{Aut}}^2\mathsf s\cdot e_c$ with $\mathsf s$ of
+Proposition~\ref{cg-first:prop:one}. Apply (b) to $l=e_cy$ and $e_c\mathrm{pr}_Zy$
+(Lemma~\ref{cg-first:lem:weak}).
+\end{proof}
+
+\begin{proof}[Proof of Proposition~\ref{cg-first:prop:one}]
+\emph{The crude congruence.} Some $g_k\in G_E$ and $\ell$-adic integers $a_k\neq0$ make
+$\delta_0=\prod_k(a_k-\det(1-\tilde r_\pi(g_k)))$ vanish at all base systems that are not weak lifts
+(\lean{New.Selmer.exists_prod_sub_det_one_sub_eq_zero}); at weak lifts $\delta_0=n_0:=\prod_ka_k$, which
+is not controlled.
+\emph{The places.} Let $\gamma_1$ generate $G_E$ modulo $\ker\chi_{\mathrm{cyc}}$ with
+$\chi_{\mathrm{cyc}}(\gamma_1)^e-1\mid\ell^h$ for $0<e<t$, $h\le v_\ell(n_{\mathrm{Aut}})$, $h=0$ unless
+$\ell\le(\Delta/2)^2$ (\lean{New.Selmer.exists_cyclotomicChar_pow_sub_one_dvd}). Proposition~\ref{cg-first:prop:places}
+gives an index set $J$; choose $\nu$ with $2n'!(n_0n_{\mathrm{Aut}}^2)^{\#J+1}\mid\ell^{\nu+1}$, and the places
+of level $\ell^{\nu+1}$. \emph{Ribet's element}: for every trace ideal of the $\tilde r_\pi$ at them,
+Theorem~\ref{cg-first:thm:ribet} (via \lean{New.Selmer.exists_isCommonRibetElement_ellVal_le}) gives a
+common Ribet element with top coefficient $c_{\mathrm{top}}$ at $\pi_0$, $v(n_{\mathrm{Aut}}^2c_{\mathrm{top}})\le B$.
+\emph{The operator}: Theorem~\ref{cg-first:thm:top}, with $\mathsf s=A\mathcal D_J$ as explained after it; its
+root chains, where $A\delta_0\neq0$, are those of Proposition~\ref{cg-first:prop:places}.
+\end{proof}
+
+\subsection{The auxiliary places: the tie and the integral operators}\label{cg-first:ss:aux}
+
+Taylor--Wiles places of level $\mathsf m$ (\lean{New.Patching.TaylorWilesPlaces}) are Frobenius data
+$(w_j,\varphi_j)_{j\in J}$, no two places equal or conjugate, $\mathsf m\mid q_{w_j}-1$; $\tau_j$ is the tame
+generator at $w_j$. Forms are taken at principal level at the $w_j$, where $\prod_j\GL_{n'}(\F_{w_j})$
+acts, with norm $\mathrm{Nm}=\sum_gg$. The Hecke algebra $\mathbb T$
+(\lean{New.Patching.BaseLevel.heckeAlgebra}) consists of the functions $\mathsf t$ on systems such that scaling
+each $\pi$ by $\iota^{-1}\mathsf t(\pi)$ keeps integral forms. Let $\tilde r_\pi=\theta\otimes r_\pi$ with $\theta(\tau_j)=1$, and let
+$c$ be the common multiple of stabiliser orders of the base data ($c=n_{\mathrm{Aut}}$ here).
+
+\begin{fact}[Taylor--Wiles freeness; \lean{New.Patching.BaseLevel.exists_higman_operator}]
+\label{cg-first:fact:tw}
+If the $w_j$ are off the base level and $\phi\colon\Gamma\to\prod_j\GL_{n'}(\F_{w_j})$ is an injective
+homomorphism of a finite group, some integral operator $\Xi$ has
+$\sum_{g\in\Gamma}\phi(g)^{-1}\Xi\phi(g)=c$. (Taylor--Wiles, 1995; Clozel--Harris--Taylor, 2008.)
+\end{fact}
+
+The coefficients of the characteristic polynomials of the $\tilde r_\pi(g)$, the traces
+$\mathrm{tr}[P(h)g]\colon\pi\mapsto\tr(P(\tilde r_\pi(h))\tilde r_\pi(g))$, and the indicator $A$ of a congruence class lie in
+$\mathbb T$ (\lean{New.Patching.BaseLevel.charpoly_coeff_mem_heckeAlgebra},
+\lean{New.Patching.BaseLevel.exists_indicator_isCongruent}). The \emph{tied ideal}
+$\mathfrak a\subseteq\mathbb T[\alpha_j]$ (\lean{New.Patching.BaseLevel.tiedIdeal}) is generated by the
+$\ell^\nu\mathrm{tr}[g]$ and the $\mathrm{tr}[(\tau_j-1)g]-\alpha_j\mathrm{tr}[(\varphi_j-1)H_j(\varphi_j)g]$;
+only square-free monomials $\alpha^S=\prod_{j\in S}\alpha_j$ are read. A ring map $\mathrm{red}$ on the integral
+endomorphisms is a reduction modulo $\ell^\nu/(2n'!)$ if it kills every integral endomorphism whose
+product with $2n'!$ lies in $\ell^\nu\End$ (\lean{New.Patching.IsReductionMod}).
+
+\begin{theorem}[The tie; \lean{New.Patching.BaseLevel.exists_deformed_norm_family}]\label{cg-first:thm:tie}
+Let the $w_j$ be off the base level, $t'\ge1$, $\delta'\in\mathbb T$, and let every base system with
+$\delta'\neq0$ have at each $w_j$ a Hecke polynomial that, rescaled by $\theta(\varphi_j)^{-1}$, is
+$\prod_{i<t'}(X-q_{w_j}^i)$ times a divisor of $H_j$ (\lean{New.Patching.HasRootChain}). For a reduction
+$\mathrm{red}$ modulo $\ell^\nu/(2n'!)$ there are integral $\mathcal N_S$ commuting with $\mathbb T$ and
+integral $Y_S$ ($S\subseteq J$), $\mathcal N_\emptyset=\mathrm{Nm}$, $Y_\emptyset=(c^2\delta')^{\#J}$, with
+$\mathrm{red}(\sum_S\mathcal N_{J\setminus S}G_S)=0$ for all $G=\sum_SG_S\alpha^S\in\mathfrak a$ and
+$\mathrm{red}((c^2\delta')^{\#J}\mathcal N_S)=\mathrm{red}(Y_S\mathrm{Nm})$.
+\end{theorem}
+
+\begin{proof}[Idea of proof]
+$\mathcal N=\prod_j(\mathrm{Nm}_j+\alpha_j\partial_j)$, $\mathrm{Nm}_j$ the norm at $w_j$, with an integral
+$\partial_j$ made of translates at $w_j$ such that $\mathrm{Nm}_j\mathrm{tr}[(\tau_j-1)g]=0$ and
+$\mathrm{red}(\partial_j\mathrm{tr}[(\tau_j-1)g])=\mathrm{red}(\mathrm{Nm}_j\mathrm{tr}[(\varphi_j-1)H_j(\varphi_j)g])$
+(\lean{New.Patching.BaseLevel.exists_mul_traceElement_tameGenerator_eq_frob}); so
+$\mathrm{Nm}_j+\alpha_j\partial_j$ kills the $j$-th tied relation modulo $\alpha_j^2$: inertia is tied to
+Frobenius. Here $\partial_j=-\mathrm{Tr}\,p(\tilde U)L\,\mathrm{Tr}'$, $p=(X-q_{w_j}^{t'-1})H_j$,
+$\tilde U=\theta(\varphi_j)U$, $L$ the norm over the stabiliser $\Pi$ of a line weighted by a logarithm
+$\lambda$ of the first entry, $\mathrm{Tr},\mathrm{Tr}'$ sums over coset representatives and inverses. Iwahori-level compatibility
+(\lean{New.Patching.hecke_eq_frob_on_parahoricEigenspace}) lets $\varphi_j$ act as $\tilde U$ where $\Pi$
+acts through a character $\psi$ of $\lambda$ with $\psi(n'!)\ne1$; with the test weight $y(y+n'!)$
+(\lean{New.Patching.map_valMinAbs_eq_zero_of_shift}) this gives $p(\tilde U)L\,\mathrm{tr}[(\tau_j-1)g]
+\equiv L\,\mathrm{tr}[p(\varphi_j)(\tau_j-1)g]$ modulo $\ell^\nu/(2n'!)$. $\mathrm{Tr},\mathrm{Tr}'$ transfer
+$\lambda$ to $\lambda\circ\det$, where $\tau_j$ is a diamond operator and $(\langle\tau_j\rangle-1)
+L_{\det}\equiv-\mathrm{Nm}_j$; and $q_{w_j}\equiv1$.
+Systems with a full chain do not move: $U$ sees only the top root (Fact~\ref{cg-first:fact:chain}(ii)),
+so $\delta'\mathrm{Nm}\,p(\tilde U)\mathrm{Nm}_\Pi=0$; with Fact~\ref{cg-first:fact:tw} for $\Pi$ this gives
+$\mathrm{red}(c\,\partial_j(g-1))=\mathrm{red}(\mathrm{Nm}_jZ_g)$ with $\delta'\mathrm{Nm}\,Z_g=0$ for
+$g\in\GL_{n'}(\F_{w_j})$, the source of the last two properties.
+\end{proof}
+
+\begin{theorem}[\lean{New.Patching.BaseLevel.smul_top_coeff_mem_ellIntegralForms}]\label{cg-first:thm:top}
+In Theorem~\ref{cg-first:thm:tie} let $\delta'=A\delta_0$, $n_0$ an $\ell$-adic integer with
+$2n'!(n_0c^2)^{\#J+1}\mid\ell^\nu$, and $\mathcal D\in\mathbb T[\alpha]$ with
+$(\delta_0-n_0)\mathcal D\in\mathfrak a$. If $l$ has base level, $n_ll$ is integral for an $n_l\in\N$, $A\delta_0l=n_0Ay$,
+$\delta_0y=n_0y$ and $\mathcal D_Sy=0$ for $S\neq J$, then $n_lcA^{\#J+1}\mathcal D_Jy$ is integral.
+\end{theorem}
+
+\begin{proof}
+Put $\delta=c^2A\delta_0$, $n_1=n_0c^2$, $i_0=\#J+1$, $G=\sum_S\mathcal N_{J\setminus S}\mathcal D_S$. As
+$\delta^{i_0}-n_1^{i_0}A^{i_0}$ is a multiple of $\delta_0-n_0$, Theorem~\ref{cg-first:thm:tie} gives
+$\mathrm{red}(n_1^{i_0}A^{i_0}G)=\mathrm{red}(\delta^{i_0}G)=\mathrm{red}(G')$, $G'=\sum_SY_{J\setminus S}\mathrm{Nm}\,\delta\mathcal D_S$.
+Choose $\mathrm{red}$ with kernel in $(\ell^\nu/2n'!)\End\subseteq n_1^{i_0}\End$
+(\lean{New.Patching.exists_isReductionMod}): $n_1^{i_0}A^{i_0}G-G'=n_1^{i_0}\mu'\Upsilon$, $\Upsilon$ integral. By
+Fact~\ref{cg-first:fact:tw}, $u=\Xi(n_ll)$ is integral with $\mathrm{Nm}\,u=n_lcl$, and only $S=J$
+survives: $G'u=n_1^{i_0}n_lcA^{i_0}\mathcal D_Jy$. Cancel $n_1^{i_0}$:
+$n_lcA^{i_0}\mathcal D_Jy=(A^{i_0}G-\mu'\Upsilon)u$.
+\end{proof}
+
+So $n_0$ enters only the depth $\nu$ of the auxiliary level, never the bound. In the application
+(\lean{New.Patching.BaseLevel.exists_diagOp_mem_ellIntegralForms}) $\delta_0=\prod_k(a_k-\delta_{i_k})$
+with $\delta_i(\pi)=\det(1-\tilde r_\pi(g_i))$, $n_0=\prod_ka_k$, $A$ is the indicator of the congruence class of
+$\pi_0$, and $\mathcal D$ is a common Ribet element for the $\delta_i$ (Definition~\ref{cg-first:def:trace}),
+read as a polynomial over $\mathbb T$ (\lean{New.Patching.BaseLevel.exists_heckeAlgebra_ribetElement});
+$(\delta_0-n_0)\mathcal D\in\mathfrak a$ as $\delta_0-n_0$ lies in the ideal of the $\delta_i$. The
+operator is $\mathsf s=A\mathcal D_J$.
+
+\paragraph{The triangle.} An \emph{even class} of exponent $e$ for places $S$
+(\lean{New.Selmer.evenClasses}) is a locally constant cocycle $z\colon G_E\to(\cO/\ell^\nu)(-e)$,
+unramified off $\ell,S,\bar S$, with $z(g^c)=z(g)$, zero on the elements of trivial
+$\chi_{\mathrm{cyc}}$ in decomposition groups above $\ell$. A \emph{triangle} for $g_\circ\in G_E$ with bounds
+$h,h'$ (\lean{New.Selmer.IsPrimeTriangle}) is an ordered $J$, a monotone exponent
+$\mathrm{ty}\colon J\to\{0<e<t'\}$ and $w_j\nmid\ell$, $\tau_j$, $\varphi_j$ fixing $\mu_{\ell^\nu}$, with:
+(i) an even class $z$ of exponent $\mathrm{ty}(j)$ for the $w$'s that vanishes at the $\tau_i$, $i<j$,
+and at the $\varphi_i$, $i<j$ of the same exponent, has $\ell^hz(\tau_j)=0$; (ii) test points
+$\Sigma\subseteq\ker\chi_{\mathrm{cyc}}$, $(\#J+\#\Sigma+1)h\le h'$, such that cocycles unramified off
+$\ell$ that vanish at $g_\circ$ and on $\Sigma$ are zero, and for each $e$ and $g\in\Sigma$ some $j$ of exponent $e$ has
+$z(\varphi_j)=2z(g)$ for even classes unramified off $\ell$; (iii) with $u=\chi_{\mathrm{cyc}}(g_\circ^{-1})$,
+$\prod_{e'\neq e}(u^e-u^{e'})$ and $4(u^e-1)^2$ divide $\ell^h$.
+
+\begin{proposition}[Taylor--Wiles places in a triangle]\label{cg-first:prop:places}
+Let $c$ be a lift setting, the twist auxiliary, $\mathcal B$ base data with integral characteristic
+polynomials of the $\tilde r_\pi$ at base level, and $\pi_0$ with $\tilde r_{\pi_0}$ of the trace of $\psi_\vartheta R\oplus
+\bigoplus_{e<t'}\cO(-e)$, $R$ a main summand. Let $\gamma_1$ generate $G_E$
+modulo $\ker\chi_{\mathrm{cyc}}$ with $\chi_{\mathrm{cyc}}(\gamma_1)^e-1\mid\ell^h$ for $0<e<t$, and
+$h=0$ or $\ell\le(\Delta/2)^2$. There are a finite ordered $J$ and a monotone $\mathrm{ty}$ such that for
+every $\nu>0$ some Taylor--Wiles places of level $\ell^\nu$ indexed by $J$ form a triangle for
+$\gamma_1^{-1}$ with bounds $(\Delta/2)h$, $(\Delta/2)^{22}h$ and avoid the bad places and the base
+level, and integral $e_j$ with $e_j(1)=1$ have: every weak lift $\pi$ of base level whose $\tilde r_\pi$ has
+characteristic polynomials congruent modulo the maximal ideal to those of $\tilde r_{\pi_0}$ has at $w_j$ a Hecke
+polynomial that, rescaled by $\chi_O(\varphi_j)^{-1}$, is $\prod_{i<t'}(X-q_{w_j}^i)$ times a divisor
+of $e_j$. \leanref{New.Selmer.exists_taylorWilesPlaces_hasRootChain}
+\end{proposition}
+
+\begin{proof}[Idea of proof]
+\emph{Chains} (\lean{New.Selmer.exists_eventually_hasRootChain_mostFrobeniiAt}): an inertial $\gamma$
+above $p_0p_1$ acts on $\psi_\vartheta R$ by a residually large scalar, so for any $g_*$, near some
+$\gamma^{i\ell^\nu}g_*$ no eigenvalue of $\psi_\vartheta R(\varphi)$ is $\equiv1$; for $\pi$ as stated,
+cancelling the chain (Lemma~\ref{cg-first:lem:chain}) from $\det(X-\tilde r_\pi(\varphi))$, congruent to
+$\det(X-\psi_\vartheta R(\varphi))$ times the chain, leaves an integral cofactor $F$ of the
+rescaled Hecke polynomial with $\abs{F(1)}\ge1$, and $e=F/F(1)$
+(\lean{New.Selmer.eventually_exists_hasRootChain}).
+\emph{Triangle} (\lean{New.Selmer.exists_isPrimeTriangle}): $J$ is the set of pairs $(e,g)$, $0<e<t'$,
+$g\in\Sigma$, ordered by $e$ first; the test points $\Sigma\subseteq\ker\chi_{\mathrm{cyc}}$ detect with
+$\gamma_1^{-1}$ the cocycles unramified off $\ell$, and $\#\Sigma\le(\Delta/2)^{20}$
+(\lean{New.OddPart.exists_detecting_points_mem_ker}, class field theory); so $(\#J+\#\Sigma+1)(\Delta/2)h\le
+(\Delta/2)^{22}h$. Kummer maps (\lean{New.Selmer.IsKummerMap}), odd under $c$ and additive on
+$\ker(\chi_{\mathrm{cyc}}\bmod\ell^\nu)$, restrict relations over the real subfield, substitutes for dual
+Selmer classes with reciprocity at split primes built in (\lean{New.RelationSetting.relations}); an even
+class $z$ of exponent $e$ vanishing at the Frobenii of the earlier places of exponent $e$ becomes, doubled,
+a cocycle there, so $\sum_j\psi(\varphi_j)2z(\tau_j)=0$ (\lean{New.Selmer.IsKummerMap.sum_eq_zero}). For $j=(e,g)$ take a
+Kummer map $\psi_j$ independent modulo $\ell$ of the earlier ones
+(\lean{New.Selmer.exists_card_lt_finrank_kummerReductions}), $g'$ with
+$\psi_j(g')=\prod_{e'\ne e}(u^e-u^{e'})$, $u=\chi_{\mathrm{cyc}}(\gamma_1)$, at which the earlier maps vanish
+(\lean{New.Selmer.exists_separating_element}), and by Chebotarev $\varphi_j$ near
+$\gamma^{i\ell^\nu}gg^cg'(g'^c)^{-1}$, where Kummer maps take $2\psi(g')$ and even classes unramified off
+$\ell$ take $2z(g)$. This gives (ii) and $2\psi_j(\varphi_j)\mid\ell^{(\Delta/2)h}$; reciprocity with one
+term left gives (i); (iii) follows from $u^e-1\mid\ell^h$ and $4\mid u-1$.
+\end{proof}
+
+\subsection{Ribet's element}\label{cg-first:ss:ribet}
+
+For representations $u_\pi\colon G\to\mathrm M_{n_u}(\cO)$, $\pi\in\mathcal Y$ finite, and $\rho\colon G\to\mathrm M_{n_\rho}(\cO)$,
+\emph{Ribet's cocycles} (\lean{New.Selmer.ribetCocyclesIn}, Section~\ref{sec:cg-lifting}) are the
+cocycles $z\colon G\to B^{n_\rho}$ of $\rho$ with $\sum_g\theta_gz(g)=0$ whenever $\sum_g\theta_g(u_\pi(g)-1)=0$ for
+all $\pi$: those that factor through the image of the augmentation ideal in $\prod_\pi\mathrm M_{n_u}(\cO)$.
+
+\begin{definition}[\lean{New.Selmer.IsTraceIdeal}, \lean{New.Selmer.IsCommonRibetElement}]
+\label{cg-first:def:trace}
+Let $S$ be an algebra of families $\mathcal Y\to L[\alpha_j]$ and $\mathcal J$ an $S$-module. $\mathcal J$ is a
+\emph{trace ideal} if $S$ contains the $\alpha_j$ and the coefficients of the characteristic polynomials of
+the $u_\pi(g)$, and $\mathcal J$ contains $p\tr u_\pi(g)$ and
+$\tr((u_\pi(\tau_j)-1)u_\pi(g))-\alpha_j\tr(((X-1)H_j)(u_\pi(\varphi_j))u_\pi(g))$. For constant families $\beta_i\in S$ vanishing on
+$\mathcal X$, a \emph{common Ribet element} at $\pi_0\in\mathcal X$ is a $\mathcal D\in S$ with $\mathcal D\beta_i\in\mathcal J$,
+no monomial of $\mathcal D(\pi)$, $\pi\in\mathcal X$, properly dividing $\prod_j\alpha_j$; its top coefficient is that of
+$\prod_j\alpha_j$ in $\mathcal D(\pi_0)$.
+\end{definition}
+
+\begin{proposition}[Ribet's method; \lean{New.Selmer.exists_ribet_polynomial}]\label{cg-first:prop:method}
+Let $\rho\colon\mathcal A\to\mathrm M_{n_\rho}(L)$ be an $R$-algebra map with characteristic polynomials of a spanning
+set over $R$, $\mathfrak a\supseteq\ker\rho$ a two-sided ideal, $I$ the left ideal spanned by
+$y_1,\dots,y_n$, and $B\in\mathrm M_n(\mathcal A)$ with $By\in(\mathfrak a+I\rho_0)^n$. Then some $P\in R[X]$ has
+$P(0)=\det\rho(B)$ and $IP(\rho_0)\subseteq\mathfrak a$.
+\end{proposition}
+
+\begin{proof}
+Write $By\equiv B_1y\rho_0$ modulo $\mathfrak a$: $B-XB_1$ kills $y$ in $\mathcal A/\mathfrak a$, $X$ acting
+by right multiplication with $\rho_0$. Amitsur's formula for block matrices
+(\lean{New.amitsur_charpoly_comp_coeff_mem_range}) and Cayley--Hamilton give $B'$ with
+$\rho(B'(B-XB_1))=P$ scalar (\lean{New.Selmer.exists_adjugate_polynomial}), so $P$ kills $y$.
+\end{proof}
+
+\begin{fact}[\lean{New.Selmer.exists_rows_addVal_det_le_of_divisible},
+\lean{New.IsTraceNondeg.exists_conj_of_trace_eq}]\label{cg-first:fact:fitting}
+(i) Let $\cO$ be a discrete valuation ring, $\psi\colon A\to\mathrm M_n(\cO)$ a
+surjective algebra map, $\mathcal M\subseteq A^{\mathcal U}$ a submodule. If the $w\in((\mathrm{Frac}(\cO)/\cO)^n)^{\mathcal U}$ with
+$\sum_j\psi(y_j)w_j=0$ for all $y\in\mathcal M$ lie in a module of length at most $\beta$, some square matrix $B$
+with rows in $\mathcal M$ has $v(\det\psi(B))\le\beta$ (elementary divisors). (ii) (Brauer--Nesbitt; Taylor, 1991;
+Rouquier, 1996) Over an algebraically closed field of
+characteristic $0$, a representation with non-degenerate trace form and an algebra representation
+with semiprime span and the same traces are conjugate.
+\end{fact}
+
+\paragraph{Tied rows.} Let $\mathcal A=\cO[\alpha_j][G]$, let $\mathrm{gen}_i$, $i\in\mathcal U$, be finitely many elements with
+$u_\pi(g)-1=\sum_iz_g(i)(u_\pi(\mathrm{gen}_i)-1)$ for all $g,\pi$
+(\lean{New.Selmer.exists_areCoordinates_ribetGenerators}), and let $\rho_0=e_\gamma+(1-e_\gamma)(g_\circ-1)$ with
+$e_\gamma=(\zeta_\gamma-1)^{-1}(\gamma-1)$ (\lean{New.Selmer.tiedNormaliser}): it is $1$ on a block on which $\gamma$
+is the scalar $\zeta_\gamma$ and $0$ on the trivial character. A row $o\in\mathcal A^{\mathcal U}$ is \emph{tied}
+(\lean{New.Selmer.tiedRows}) if $\sum_io_i(\mathrm{gen}_i-1)$ lies in the left ideal spanned by what all
+$u_\pi$ kill, by $p$ times the augmentation ideal $I$, by the ties
+$\tau_k-1-\alpha_jH_j(\varphi_k)(\varphi_k-1)$, and by $I\rho_0$. The rows built from the $z_g$ encode the
+cocycle rule and the linear relations among the $u_\pi(g)-1$, and at $\alpha=0$ the ties and $\rho_0$ impose
+$z(\tau_k)=0$ and $z(\gamma)=0$. So at $\alpha=0$ and through a block $\rho_{\pi_0}$, the solutions in
+$(\mathrm{Frac}(\cO)/\cO)^{n_\rho}$ of the tied rows give, injectively, Ribet cocycles of $\rho_{\pi_0}$ vanishing at the $\tau_k$
+and at $\gamma$ (and a coboundary vanishing at $\gamma$ is $0$, as $\zeta_\gamma-1$ is a unit). By
+Fact~\ref{cg-first:fact:fitting}(i), if they have length at most $b_0$, some square matrix of tied rows
+has block determinant of valuation at most $b_0$ (\lean{New.Selmer.exists_tiedRows_addVal_det_le}).
+The trace-ideal axioms put what all $u_\pi$ kill, $p I$ and the ties into the two-sided ideal $\mathfrak a$
+of the elements whose traces against $\mathcal A$ lie in $\mathcal J$ (\lean{New.Selmer.traceIdeal},
+\lean{New.Selmer.tieIdeal_le}), so a matrix $B$ of tied rows has $By\in(\mathfrak a+I\rho_0)^n$ for
+$y=(\mathrm{gen}_i-1)_i$, and Proposition~\ref{cg-first:prop:method} gives $P$. Let $u_\pi=\rho_\pi\oplus
+\bigoplus_e\eta_e$ on $\mathcal X$ and $\rho_1$ be $\mu_0$ on $\eta_0=\cO(0)$ and $0$ on the other summands.
+Then $\mathcal D=\tr\rho_1P(\rho_0)$ has $\mathcal D\det u_\pi(w)\in\mathcal J$ for $w\in I$ (by Cayley--Hamilton $\det u_\pi(w)$
+is $u_\pi$ of a left multiple of $w$), hence for $\det(\sum_g\omega_g(u_\pi(g)-1))$, and, as
+$\rho_1\rho_0=0$ on $\mathcal X$, $\mathcal D(\pi)=P(0)\tr\rho_1=\mu_0\det\rho_\pi(B)\prod_e\det\eta_e(B)$
+(\lean{New.Selmer.exists_ribet_element_of_tied_rows}). This runs one way only: a length bound becomes a
+bound on the top coefficient, and no extension class is built from a congruence.
+
+\begin{theorem}[Ribet's element for conjugate self-dual representations; \lean{New.Selmer.ribet_columns}]
+\label{cg-first:thm:ribet}
+Let $c$ be a lift setting, $\psi$ auxiliary with modulus $Q$ and ramification at most $\mathrm{ram}$,
+the $(w_j,\tau_j,\varphi_j)$ a triangle for $g_0$ with bounds $(\Delta/2)h$, $(\Delta/2)^{22}h$,
+$h\le v_\ell(n_{\mathrm{Aut}})$. Let $u_\pi$, $\pi\in\mathcal Y$ finite, be conjugate self-dual of the type of $c$, of level
+$Q$, the $w_j$ and conjugates, with $(u_\pi(g)-\psi(g))(u_\pi(g)-1)=0$ on inertia above $Q\cup\bar Q$; for
+$\pi\in\mathcal X$ let $u_\pi$ have the trace of $\psi R_\pi\oplus\bigoplus_{e<t'}\cO(-e)$, $R_\pi$ main summands
+with twisted lattices. Let $\mathcal J$ be a trace ideal for $\ell^\nu$, the $\tau_j,\varphi_j$ and $H_j$
+with $H_j(1)=1$, and the Selmer length of $\psi R_{\pi_0}$ at most $\mathrm{sel}<\infty$. Then the
+$\det(1-u_\pi(g))$ have a common Ribet element whose top coefficient $c_{\mathrm{top}}$ at $\pi_0$ has
+$v(c_{\mathrm{top}})+2v_\ell(n_{\mathrm{Aut}})\le B(\mathrm{ram},\mathrm{sel})$.
+\end{theorem}
+
+\begin{proof}
+Over a large $\cO$, Fact~\ref{cg-first:fact:fitting}(ii) gives lattices, block diagonal
+$T_\pi\oplus\bigoplus_e\cO(-e)$ for $\pi\in\mathcal X$, with $T_\pi$ a twisted lattice of $\psi R_\pi$ spanning
+all matrices (\lean{New.Selmer.exists_blockDiagonal_lattice}). Conjugate self-duality,
+$\tr u(g^c)=\chi_{\mathrm{cyc}}^{1-t'}(g)\tr u(g^{-1})$, makes $\mathcal J$ a trace ideal also for
+$(\tau_j^c)^{-1},(\varphi_j^c)^{-1}$ with the same $\alpha_j$ (\lean{New.Selmer.isTraceIdeal_withConjInv}).
+Ribet's lemma to first order (\lean{New.Selmer.exists_isCommonRibetElement_addVal_le}) glues: with
+$C=\ell^{(\Delta/2)h}$ (clause (iii), $g_\circ=g_0$) some $\mathsf q_e$ is $C$ on $\cO(-e)$ and $0$ on the other
+characters, some $\mathsf k$ is $1$ on the characters and $0$ on the blocks, and the paragraph above applies to
+$(1-\mathsf k)B_0+\mathsf kB_\chi$, $\rho_1=\mathsf k\mathsf q_0$, $\mu_0=C$, for tied rows $B_0$ for the block and $B_\chi$ for the characters. On $\cO(-e)$, after eliminating the coordinates of the generators by unit rows
+(the cocycles being detected by $\Sigma'=\{g_0\}\cup\Sigma\cup\{\tau_j,(\tau_j^c)^{-1}\}$), the tied rows
+have $\Gamma_e\prod_{\mathrm{ty}(j)=e}\alpha_j$ in their Fitting ideal over $\cO[\alpha_j]$, up to an error that
+$\prod_{\mathrm{ty}(j)<e}\alpha_j$ pushes into monomials not dividing $\prod_j\alpha_j$, with
+$v(\Gamma_e(0))\le b_e+(\#\mathrm{ty}^{-1}(e)+\#\Sigma')v(C)$
+(\lean{New.Selmer.exists_mul_prod_X_mem_fittingIdeal}: for the $j$ of exponent $e$ in turn, the tie and
+clause (i) make $C\alpha_j$ times the rows of $\varphi_j$ minus those of $(\varphi_j^c)^{-1}$ relations). The $\mathsf q_e$ combine these matrices, at a factor $C^{\#\Sigma'}$ for
+each $e$, and rows $o_v(\delta_v)$ complete them (\lean{New.Selmer.nonempty_characterRows}). As
+$\mathrm{ty}$ is monotone, $\mathcal D$ has no monomial properly dividing $\prod_j\alpha_j$; its top coefficient
+$C\det T_{\pi_0}(B_0)|_{\alpha=0}(C^{\#\Sigma'}\prod_vo_v(1))^{t'}\prod_e\Gamma_e(0)$ has valuation at most
+$b_0+\sum_eb_e+t'(\sum_vv(o_v(1))+2\#\Sigma'\,v(C))+(\#J+1)v(C)$, which, with
+$\#\Sigma'\le2(\#J+\#\Sigma+1)$, clause (ii) and the inputs below, gives the bound
+(\lean{New.Selmer.ellVal_add_le_of_addVal_le}).
+\emph{Block}: Ribet's cocycles of $T_{\pi_0}$ modulo $\ell^n$ vanishing at $\gamma$, $\tau_j$,
+$(\tau_j^c)^{-1}$ are unramified at the $w_j$ and off $\ell p_0p_1Q\bar Q$, and crystalline above $\ell$ up
+to the dual defects (\lean{New.Selmer.crystallineColength_le_sum_dualDefect}, by local Tate duality,
+\lean{New.Selmer.relLength_ribetCocycles_le}); so, for all $n$ and with coefficients $\mathrm{Frac}(\cO)/\cO$,
+$b_0\le\mathrm{loss}+\mathrm{sel}$ (\lean{New.Selmer.exists_length_le_loss_add_crystallineSelmerLength}).
+The losses of the $t'+1$ summands add up to at most $r'\mathrm{loc}_\ell$
+(\lean{New.Selmer.eventually_exists_inClass_sum_dualDefect_le}): at $v\mid\ell$ a summand costs the
+local degree times its rank times $\mathrm{defect}_\ell$, over $t$ for a character
+(\lean{New.Selmer.summand_defect_le_at_place}), and the local degrees add up to at most $2f$.
+\emph{Characters}: $b_e=\mathrm{loss}_e+\length\mathrm{Sha}^{\mathrm{odd}}_e$
+(\lean{New.Selmer.hasTriangleCost_of_isCharacterCocycle}). Vanishing where crystalline cocycles vanish costs
+$\mathrm{loss}_e$; then $z+z\circ(\cdot)^c$ is an even class and clause (i) applies. Cocycles that also
+vanish at the $\tau$'s and agree at $\varphi_j,(\varphi_j^c)^{-1}$ are unramified off $\ell$;
+$z\mapsto z\circ(\cdot)^c-z$ maps them to $\mathrm{Sha}^{\mathrm{odd}}_e$ (length at most
+$v(n_{\mathrm{odd}})$, Fact~\ref{cg-first:fact:odd}) with kernel killed by $C$: for an even one, $4z(g)=(z+z\circ(\cdot)^c)(\varphi_j)=0$
+for $g\in\Sigma$ by (ii) and $(\chi_{\mathrm{cyc}}^{-e}(g_0)-1)z(g_0)=0$ by the rows of $I\rho_0$, so
+$4(\chi_{\mathrm{cyc}}^{-e}(g_0)-1)z=0$, and (iii)
+(\lean{New.Selmer.relLength_torsionBy_le_length_shaOdd}).
+\emph{Old places}: tame generators $\delta_v$ covering $Q$ and the places above $p_0p_1$ off $\ell$ have
+$o_v(\delta_v)(\delta_v-1)=0$ with $\sum_vv(o_v(1))\le2\mathrm{ram}+8fv_\ell(n_{\mathrm{Aut}})$ (\lean{New.Selmer.exists_tame_relations}).
+\end{proof}

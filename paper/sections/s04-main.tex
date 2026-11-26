@@ -1,0 +1,322 @@
+\section{Three theorems, the main inequality and the proof of the theorem}\label{sec:main}
+
+This section states the three theorems on which the proof rests, assembles Theorem~A from the
+results of Sections~\ref{sec:ub-seesaw} and~\ref{sec:ub-divis}, and derives from the three
+theorems first the main inequality, then the one-sided bound, then the theorem. The Lean files are
+\leanfile{New/Reduction/ShortAndEnough}, \leanfile{New/Reduction/MainInequality} and
+\leanfile{New/Reduction/OneSidedBound}. Throughout, $D$ are admissible data
+(Definition~\ref{setup:def:data}), and all notation is that of Section~\ref{sec:setup}.
+
+\subsection{The source, the target and the map between them}
+
+The following objects are defined in Section~\ref{sec:ub-objects}; here we only name them.
+\begin{itemize}
+\item $\mathcal{S}$, the \emph{source forms} (\lean{New.Data.SourceForm}): algebraic modular forms
+  on the definite unitary group of a hermitian space $X_0$ of rank $k$ over $E$, of weight
+  $(a, 0, \dots, 0)$ at the $a$-places and $0$ at the other places. They are functions on a finite
+  set with values in a representation that has a $\Z$-structure. So a source form can be integral
+  at $\iota$, and its values have conjugates under $\Aut(\C)$ and squared norms.
+  $\mathcal{S}^{\mathrm{ram}} \subset \mathcal{S}$ is the subspace of \emph{ramified} source forms
+  (\lean{New.Data.ramifiedSourceForms}); $\dim\mathcal{S} \le 2\dim\mathcal{S}^{\mathrm{ram}}$
+  (\lean{New.Data.finrank_sourceForm_le_two_mul}).
+\item $\Poin$, the \emph{Poincar\'e map} (\lean{New.Data.poincare}), from $\mathcal{S}$ to the
+  automorphic forms of principal level on the unitary group of $Y_0$; the finite group
+  $\Gbar = \prod_w \GL_r(\F_w)$ (\lean{New.Data.chosenGL}), the product over the chosen places
+  above $p_0$ and $p_1$, which acts on these forms; and the central idempotent $e_0$ of
+  $\C[\Gbar]$ that projects them to the target forms $\mathcal{T}_D$.
+\item For a twist $\vartheta$ and a \emph{chain datum} $\Psi$ of $\vartheta$
+  (\lean{New.Data.IsChainDatum}), the \emph{composite lift}
+  $B_{\vartheta,\Psi}$ (\lean{New.Data.compositeLift}), a map from $\mathcal{S}$ to algebraic
+  modular forms on $Y_m$. It is a finite combination of chains of $m$ theta lifts between definite
+  spaces $X_0, \dots, X_m$, restricted to $Y_m \subset X_m$.
+\end{itemize}
+
+Three results about these objects enter. The first is the seesaw identity of
+Section~\ref{sec:ub-seesaw}: there is a number $c_{\mathrm{ss}} \ne 0$ such that every twist
+$\vartheta$ has a chain datum $\Psi$ with
+\begin{equation}\label{main:eq:seesaw}
+  \Theta_\vartheta\bigl( c_{\mathrm{ss}}^{-1}\,\Poin\varphi \bigr) = B_{\vartheta,\Psi}\,\varphi
+  \qquad \text{for all } \varphi \in \mathcal{S}^{\mathrm{ram}}
+\end{equation}
+(\lean{New.Data.exists_lowerChain_poincare_eq}); here $\Theta_\vartheta$ is the chain of lifts on
+all forms of principal level on $Y_0$ (\lean{New.Data.lowerChain}), and $\vartheta$ need not be
+$m$-fold. The second is the divisibility of the composite
+lift, proved in Section~\ref{sec:ub-divis} (Theorem~\ref{ub-divis:thm:divis}, which states it with
+valuations; the text after it says how the two statements differ). For each prime $\ell$ there is a number
+$\mathrm{gain}_\ell \ge 0$ (\lean{New.Data.gain}), the power of $\ell$ that the $m$ lifts are
+expected to gain; it vanishes unless $\ell$ does not split in $K$ and $\ell < x_1$
+(\lean{New.Data.gain_eq_zero}). In particular $\mathrm{gain}_N = 0$, as $N \ge x_1$: at the level
+$N$ nothing is gained, and the composite lift may have a bounded denominator there.
+Let $\mathcal{N}$ be the set of primes below $x_1$ that do not split in $K$
+(\lean{New.Data.smallNonsplitPrimes}).
+
+\begin{theorem}[Divisibility of the composite lift;
+\lean{New.Data.exists_colengthDvd_gaugeLe_divisibilityError}]\label{main:thm:divis}
+There are numbers $\mathrm{err}_\ell \ge 0$ (\lean{New.Data.divisibilityError}), one for each
+prime $\ell$, with $\mathrm{err}_\ell = 0$ if $\ell \ne N$ and either $\ell$ splits in $K$ or
+$\ell \ge x_1$ (\lean{New.Data.divisibilityError_eq_zero}), and with
+$\sum_\ell \mathrm{err}_\ell \log\ell \le f a \log^3 b$
+(\lean{New.Data.sum_divisibilityError_mul_log_le}), such that the following holds for each
+$\iota \mid \ell$. There are an integer $0 \le j \le \mathrm{err}_\ell\,\dim\mathcal{S}$ and an
+$\cO_\iota$-module $\mathfrak V$ of source forms such that
+\begin{enumerate}[label=(\roman*)]
+\item every finite family of ramified source forms integral at $\iota$ is carried into $\mathfrak V$ by a
+  square matrix over $\cO_\iota$ whose determinant divides $\ell^j$;
+\item for every $\varphi \in\mathfrak V$, every twist $\vartheta$ whose modulus has norm prime to $\ell$
+  and every chain datum $\Psi$ of $\vartheta$, the form $\ell^{-g}B_{\vartheta,\Psi}\varphi$ is
+  integral at $\iota$ for every integer $g \le \mathrm{gain}_\ell - \mathrm{err}_\ell$.
+\end{enumerate}
+\end{theorem}
+
+The third is the archimedean size of the composite lift, also from Section~\ref{sec:ub-divis},
+where it is restated and proved as Theorem~\ref{ub-divis:thm:size}.
+
+\begin{theorem}[Size of the composite lift; \lean{New.Data.weylNormSq_compositeLift_le}]
+\label{main:thm:size}
+Let $\Psi$ be a chain datum of the trivial twist, $\sigma \in \Aut(\C)$ and
+$\varphi \in \mathcal{S}$. If all values of the conjugate $\sigma\varphi$ have squared norm at most
+$e^{\beta_0}$, then all values of the conjugate of $B_{1,\Psi}\varphi$ have squared norm at most
+$e^{\beta_0+\beta}$, where
+\[
+  \beta = \hmain - m\,\rem + 2\sum_{\ell\in\mathcal{N}} \mathrm{gain}_\ell\log\ell + f a\log^3 b .
+\]
+\end{theorem}
+
+Theorem~\ref{main:thm:size} is where the prime sums meet the archimedean sizes: the size of the
+composite lift exceeds the main amount by twice the logarithm of the power of the primes that
+Theorem~\ref{main:thm:divis} says divides it, less $m\,\rem$. Dividing by that power leaves
+$\hmain - m\,\rem$. This is done by a rational number.
+
+\begin{definition}[\lean{New.Data.gainExponent}, \lean{New.Data.invGainFactor}]
+\label{main:def:npoincare}
+Put $g_\ell = \floor{\mathrm{gain}_\ell - \mathrm{err}_\ell}$ and
+$c_B = \prod_{\ell \in \mathcal{N}\cup\{N\}} \ell^{-g_\ell} \in \Q_{>0}$. For $s \in \Gbar$ the
+\emph{normalised Poincar\'e map} (\lean{New.Data.normalizedPoincare}) is
+\[
+  s\nPoin = c_B\, c_{\mathrm{ss}}^{-1}\, \#\Gbar \cdot e_0\, s\, \Poin
+  \colon\ \mathcal{S}^{\mathrm{ram}} \longrightarrow \mathcal{T}_D .
+\]
+\end{definition}
+
+It is the translate by $s$ of $\nPoin = 1\nPoin$ (\lean{New.Data.coe_normalizedPoincare}), and
+\begin{equation}\label{main:eq:cB}
+  \log c_B \le -\sum_{\ell\in\mathcal{N}} \mathrm{gain}_\ell\log\ell + f a\log^3 b + b
+\end{equation}
+(\lean{New.Data.log_invGainFactor_le}); the term $b$ bounds the loss from rounding the exponents.
+
+\subsection{Theorem A: short forms of small index}
+
+\begin{theorem}[Theorem A; \lean{New.Data.span_short_integralRamified_eq_top},
+\lean{New.Data.indexLe_normalizedPoincare}]\label{main:thm:A}
+\leavevmode
+\begin{enumerate}[label=(\alph*)]
+\item The space $\mathcal{S}^{\mathrm{ram}}$ is spanned by the forms $\varphi$ that are integral
+  at every $\iota$ and satisfy, for all $s \in \Gbar$ and all $\sigma \in \Aut(\C)$,
+  \[
+    \norm{\Theta_1\, s\nPoin\,\varphi}_\sigma^2 \le \exp\bigl( \hmain - m\,\rem + f a \log^4 b \bigr).
+  \]
+\item Let $\mathfrak{s} \subset \Gbar$ be a finite set. Every finite family of target forms of the shape
+  $s\nPoin\varphi$, with $s \in \mathfrak{s}$ and $\varphi \in \mathcal{S}^{\mathrm{ram}}$ integral at every
+  $\iota$, has index at most $\#\mathfrak{s}\cdot\dim\mathcal{S}^{\mathrm{ram}}\cdot 2 f a\log^3 b$ in the
+  lattice of target forms.
+\end{enumerate}
+\end{theorem}
+
+\begin{proof}
+(a) The ramified source forms are spanned by \emph{short} forms: forms integral at every $\iota$
+all of whose conjugate values have squared norm at most $\exp(f a\log^3 b)$
+(\lean{New.Data.span_isShort_ramifiedSourceForms_eq_top}, Section~\ref{sec:ub-divis}). Let
+$\varphi$ be short. By \eqref{main:eq:seesaw} for the trivial twist and
+Theorem~\ref{main:thm:size}, the conjugate values of
+$\Theta_1(c_{\mathrm{ss}}^{-1}\Poin\varphi)$ have squared norm at most
+$\exp(f a\log^3 b + \beta)$. The operator $\#\Gbar\cdot e_0 s$ replaces a form by a combination of
+its translates, and the squared norm $\norm{\cdot}_\sigma^2$ sums over classes; together they cost
+a factor at most $\exp(x^{99})$ (\lean{New.Data.normSqAt_goodProjTranslate_le}). The factor $c_B$
+multiplies the squared norm by $c_B^2$. By \eqref{main:eq:cB} the gains cancel:
+\[
+  \log\norm{\Theta_1\,s\nPoin\,\varphi}_\sigma^2
+  \le \hmain - m\,\rem + x^{99} + 4 f a\log^3 b + 2b
+  \le \hmain - m\,\rem + f a\log^4 b ,
+\]
+the last step by the sizes of the data.
+
+(b) Fix $s$ and $\iota \mid \ell$, and let $j$ and $\mathfrak V$ be as in Theorem~\ref{main:thm:divis}. Let
+$\varphi \in\mathfrak V$ be ramified and let $\vartheta$ be an $m$-fold twist whose modulus has norm prime
+to $\ell$. The $\ell$-adic valuation of $c_B$ is $-g_\ell$ (for $\ell \notin \mathcal{N}\cup\{N\}$
+both $\mathrm{gain}_\ell$ and $\mathrm{err}_\ell$ vanish, so $g_\ell = 0$;
+\lean{New.Data.norm_invGainFactor}), and $g_\ell \le \mathrm{gain}_\ell - \mathrm{err}_\ell$, so
+$c_B B_{\vartheta,\Psi}\varphi$ is integral at $\iota$ for every chain datum $\Psi$. By
+\eqref{main:eq:seesaw}, $\Theta_\vartheta(c_B c_{\mathrm{ss}}^{-1}\Poin\varphi)$ is integral at $\iota$. The operator $\#\Gbar\cdot e_0 s$ has coefficients that are algebraic
+integers and commutes with $\Theta_\vartheta$ up to translation, so it keeps integrality
+(\lean{New.Data.goodProjTranslate_mem_integralForms}). Hence $s\nPoin\varphi$ is integral at
+$\iota$ in the sense of Definition~\ref{setup:def:lattice}
+(\lean{New.Data.normalizedPoincare_mem_integralVectors}). By (i) of
+Theorem~\ref{main:thm:divis}, a matrix whose determinant divides $\ell^j$ carries a family
+$\varphi_i$ of integral ramified forms to combinations that lie in $\mathfrak V$ and are ramified; so it
+carries the family $s\nPoin\varphi_i$ into the integral vectors, and this family has index at
+most $\sum_\ell \dim\mathcal{S}\cdot\mathrm{err}_\ell\log\ell \le
+2\dim\mathcal{S}^{\mathrm{ram}}\cdot f a\log^3 b$
+(\lean{New.Data.indexLe_of_mem_image_normalizedPoincare}). For a family with $s$ ranging over $\mathfrak{s}$,
+group the members by $s$; indices add over a union of families
+(\lean{New.TwistedLattice.indexLe_card_mul}).
+\end{proof}
+
+\subsection{Theorems B and C}
+
+\begin{theorem}[Theorem B; \lean{New.Data.enough_forms}]\label{main:thm:B}
+We have $\dT \ge 1$, and there is a set $\mathfrak{s} \subset \Gbar$ with
+\[
+  \#\mathfrak{s}\cdot\dim\mathcal{S}^{\mathrm{ram}} \le 5\,\dT\,\log(1 + 2b^2)
+  \qquad\text{and}\qquad
+  \dim \sum_{s\in \mathfrak{s}} s\nPoin\bigl(\mathcal{S}^{\mathrm{ram}}\bigr) \ge \Bigl(1 - \frac{4}{b^2}\Bigr)\dT .
+\]
+\end{theorem}
+
+The proof is the subject of Sections~\ref{sec:sp-moment} to~\ref{sec:sp-remain}; the theorem is
+restated as Theorem~\ref{sp-moment:thm:B}, whose proof assembles them. It says that the
+target is not much larger than what the source can reach: a number of translates that is
+logarithmic in $b$, measured in units of $\dT/\dim\mathcal{S}^{\mathrm{ram}}$, already spans
+almost everything.
+
+\begin{theorem}[Theorem C; \lean{New.Data.integral_forms_long}]\label{main:thm:C}
+Let $y_1, \dots, y_n$ be linearly independent target forms with $n \ge (1 - 4/b^2)\,\dT$. If the
+family has covolume at most $c$ and index at most $\delta$ in the lattice of target forms, then
+\[
+  c + 2\delta \ \ge\ \dT\,\bigl( \hmain - 3 f a\log^4 b \bigr).
+\]
+\end{theorem}
+
+The proof is the subject of Sections~\ref{sec:det-chain} to~\ref{sec:cg-lifting}; it is completed
+in \S\ref{det-chain:sec:proofC}. It applies
+Theorem~\ref{setup:thm:twist} to the lattice of Proposition~\ref{setup:prop:targetlattice}. The
+family $y$ is completed to a basis by at most $4\dT/b^2$ \emph{auxiliary forms}, whose lifts have
+squared norms at most $\exp(2x_1^2b^2)$ and become integral after multiplication by numbers
+$\gamma(\vartheta)$ (\lean{New.Data.exists_span_isAuxiliaryForm_eq_top}). The twists $\xi_\iota$
+are taken from a \emph{regular family} (\lean{New.exists_isRegularFamily}), for which
+$\abs{\gamma(\xi_\iota)}^{-2}$ has height at most $b$; and the decisive input is that the family
+$\iota \mapsto Z(1)/Z(\xi_\iota)$ of ratios of chain determinants has height at most
+$\dT\,(b + f a\log^4 b - \hmain)$ (\lean{New.Data.heightLe_chainDeterminant_one_div}). Thus the main amount appears a second time,
+now as the height of a ratio of determinants of theta lifts, bounded through ratios of special
+values of Hecke $L$-functions.
+
+\subsection{The main inequality}
+
+\begin{theorem}[Main inequality; \lean{New.star_inequality}]\label{main:thm:star}
+For admissible data,
+\[
+  m\,\rem \ \le\ f a\log^5 b .
+\]
+\end{theorem}
+
+\begin{proof}
+Put $L = f a\log^4 b$ and $\nu = \hmain - m\,\rem + L$. Let $\mathfrak{s}$ be the set of Theorem~B. Let
+$\mathcal{S}^{\mathrm{short}}$ be the set of ramified source forms that are integral at every
+$\iota$ and have $\norm{\Theta_1 s\nPoin\varphi}_\sigma^2 \le e^\nu$ for all $s$ and $\sigma$. By
+Theorem~A\,(a) it spans $\mathcal{S}^{\mathrm{ram}}$, so the target forms $s\nPoin\varphi$ with
+$s \in \mathfrak{s}$ and $\varphi \in \mathcal{S}^{\mathrm{short}}$ span
+$\sum_{s\in \mathfrak{s}} s\nPoin(\mathcal{S}^{\mathrm{ram}})$. Choose among them a basis $y_1, \dots, y_n$ of
+this space. Then
+\[
+  \Bigl(1 - \frac{4}{b^2}\Bigr)\dT \le n \le \dT .
+\]
+By Hadamard's inequality the family $y$ has covolume at most $n\nu$. By Theorem~A\,(b) and the
+bound for $\#\mathfrak{s}$ it has index at most
+\[
+  \#\mathfrak{s}\cdot\dim\mathcal{S}^{\mathrm{ram}}\cdot 2 f a\log^3 b \ \le\ \dT\cdot I,
+  \qquad I = 10\log(1+2b^2)\, f a\log^3 b .
+\]
+Theorem~C gives
+\[
+  \dT\,(\hmain - 3L) \ \le\ n\nu + 2\,\dT\, I \ =\ n\,(\hmain + L) - n\,m\,\rem + 2\,\dT\, I .
+\]
+Since $\hmain + L \ge 0$ (\lean{New.Data.mainAmount_nonneg}) and $n \le \dT$, we have
+$n(\hmain + L) \le \dT(\hmain + L)$. The main amount cancels and
+\[
+  n\,m\,\rem \ \le\ \dT\,(4L + 2I).
+\]
+As $n \ge \dT/2 > 0$, this gives $m\,\rem \le 2\,\abs{4L + 2I} \le f a\log^5 b$, the last step by
+the sizes of the data.
+\end{proof}
+
+Table~\ref{main:tab:errors} lists the errors per dimension of the target. The index enters twice.
+
+\begin{table}[ht]
+\centering
+\begin{tabular}{lll}
+\toprule
+source & where & amount \\
+\midrule
+size & Theorem A (a) & $f a\log^4 b$ \\
+index & Theorems A (b) and B & $20\log(1+2b^2)\cdot f a\log^3 b$ \\
+covolume & Theorem C & $3 f a\log^4 b$ \\
+\bottomrule
+\end{tabular}
+\caption{The errors in the main inequality, per dimension of the target.}
+\label{main:tab:errors}
+\end{table}
+
+\subsection{The one-sided bound}
+
+\begin{proposition}[\lean{New.Data.primeRemainder_le}]\label{main:prop:atx}
+For admissible data,
+\[
+  R_{q_0}(x) \ \le\ \frac{\varphi(q_0)\log^6 b}{m} + \abs{R_{q_0}(x_1)} + \log b\cdot\abs{R_1(x_1)} .
+\]
+\end{proposition}
+
+\begin{proof}
+By Proposition~\ref{setup:prop:rem},
+\[
+  R_{q_0}(x) = \frac{\rem}{a\,\#\Phi_b} + R_{q_0}(x_1) - \frac{\#\Phi_a}{\#\Phi_b}\,R_1(x_1).
+\]
+Insert $\rem \le f a\log^5 b/m$ from Theorem~\ref{main:thm:star}, and use
+$f = \varphi(q_0)\,\#\Phi_a$ and $\#\Phi_a = T \le \#\Phi_b\log b$.
+\end{proof}
+
+\begin{theorem}[One-sided bound; \lean{New.eventually_primeRemainder_le_rpow}]
+\label{main:thm:onesided}
+Let $q_0$ be a positive multiple of $18480$, let $d \equiv q_0/2 - 1 \bmod q_0$ be a prime, and
+let $\eps > 0$. Then $R_{d,q_0}(y) \le y^{-1/2+\eps}$ for all large real $y$.
+\end{theorem}
+
+\begin{proof}
+Choose $0 < \delta < 1/100$ with $7\delta \le \eps$. Let $x$ be a large integer. By
+Theorem~\ref{setup:thm:existence} there are admissible data with first scale $x$,
+$\log b \le 2x^\delta$, $m \ge \sqrt{x}$ and $\log x_1 \ge x^{\delta/12}$
+(\lean{New.eventually_exists_data_scales}). By the prime number
+theorem, Theorem~\ref{zeros:thm:pnt} with $B \ge 24/\delta$, both $\abs{R_{q_0}(x_1)}$ and
+$\abs{R_1(x_1)}$ are at most $(\log x_1)^{-B} \le x^{-2}$ once $x$ is large
+(\lean{New.eventually_abs_primeRemainder_exp_le}). Proposition~\ref{main:prop:atx} gives
+\[
+  R_{q_0}(x) \ \le\ \frac{\varphi(q_0)\,(2x^\delta)^6}{\sqrt{x}} + x^{-2} + 2x^{\delta-2}
+  \ \le\ \bigl(64\varphi(q_0) + 3\bigr)\,x^{-1/2+6\delta}
+\]
+(\lean{New.eventually_primeRemainder_natCast_le}). For real $y \ge 2$,
+Lemma~\ref{zeros:lem:slow} gives $R_{q_0}(y) \le R_{q_0}(\floor{y}) + 26/y$; as
+$\floor{y}^{-1/2+6\delta} \le 2y^{-1/2+6\delta}$, we get $R_{q_0}(y) \le C' y^{-1/2+6\delta}
+\le y^{-1/2+7\delta} \le y^{-1/2+\eps}$ for large $y$, with $C' = 2(64\varphi(q_0)+3) + 26$.
+\end{proof}
+
+The exponent $-1/2$ comes from the number of lifts: the remainder is bounded by $1/m$ times a
+power of $\log b$, and $m \ge \sqrt{x}$. The second cut-off $x_1$ is so large that there the
+classical prime number theorem is strong enough.
+
+\subsection{Proof of the theorem}
+
+\begin{theorem}[\lean{New.grh}]\label{main:thm:grh}
+Let $q \ge 1$, let $\chi$ be a Dirichlet character modulo $q$ and let $\rho \in \C$ with
+$\Re\rho > 1/2$. If $\chi$ is not principal or $\rho \ne 1$, then $L(\rho,\chi) \ne 0$.
+\end{theorem}
+
+\begin{proof}
+If $\rho = 1$ then $\chi$ is not principal and $L(1,\chi) \ne 0$ by Dirichlet's theorem. Let
+$\rho \ne 1$ and choose $\beta$ with $1/2 < \beta < \Re\rho$. Put $q_0 = 18480\,q$ and
+$d_0 = q_0/2 - 1 = 9240\,q - 1$. Then $8 \mid q_0$, $d_0 \equiv 7 \bmod 8$, and $d_0$ is prime to
+$q_0 = 2(d_0+1)$. Every prime $d \equiv d_0 \bmod q_0$ forms parameters with $q_0$, so
+Theorem~\ref{main:thm:onesided} with $\eps = \beta - 1/2$ gives $R_{d,q_0}(x) \le x^{\beta-1}$ for
+all large $x$. By the one-sided criterion, Theorem~\ref{zeros:thm:criterion}, the $L$-function of
+the character $\chi'$ modulo $q_0$ induced by $\chi$ does not vanish at $\rho$. Since
+$L(s,\chi') = L(s,\chi)\prod_{p\mid q_0}(1 - \chi(p)p^{-s})$, neither does $L(\rho,\chi)$.
+\end{proof}
+
+With Proposition~\ref{zeros:prop:line} this gives the five statements of \leanfile{Main}.

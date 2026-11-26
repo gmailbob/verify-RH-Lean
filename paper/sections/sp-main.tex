@@ -1,0 +1,345 @@
+\section{The main term of the second moment}\label{sec:sp-main}
+
+This section bounds the main term of the second moment of the Poincaré series, the big-cell part of
+the unfolded moment of Section~\ref{sec:sp-unfold} (\leanfile{New/Spanning/MainTerm}), for
+Theorem~\ref{sp-unfold:thm:moment}, and counts the bad labels that $e_0$ discards, for
+Section~\ref{sec:sp-moment}.
+
+\subsection{The main term}\label{sp-main:ss:main}
+
+We use admissible filling data $S$ with Weil data and the notation of
+Section~\ref{sec:sp-unfold} (the frame $\mathbf f$, $Z(\gamma)$, $D_l$, $\mathsf g(\gamma)$, $\mathcal K$,
+$\mathcal K(M)$, the classes $c\in\mathcal C$ with representatives $h_c$, terms over $(c,s,c')$, cut
+amplitudes $a^\flat_{cc'}(\gamma)$ and blocks $A^\flat$, $M_v$, open elements,
+$\operatorname{Fix}(\Pi,\mathbf d)$ for a set $\Pi$ of chosen places above $p_0$, $\mathcal D_{\mathrm{id}}$,
+$\mathcal D_{\mathrm{main}}$, $\nu$), with $D_X=\#\mathcal C\,\#I$. $\mathsf U$ is the unipotent radical of the flag of the $e_a$, with
+character $\psi_{\mathsf U}$; $G^{(\varrho)}$ fixes all $e_a,e_a^*$; the Weyl element $w_\alpha$ of
+units $\alpha_0,\dots,\alpha_{\varrho-1}$ sends $e_{a+1}\mapsto\alpha_ae_{a+1}^*$,
+$e_{a+1}^*\mapsto e_{a+1}/\bar\alpha_a$ for $0\le a<\varrho$ and fixes the other basis vectors (the
+frame is numbered from $1$, as in Section~\ref{sec:sp-unfold}; the $\alpha_a$ are numbered from $0$,
+as the head entries below and as in Lean, \lean{New.Filling.exists_big_cell_decomp}). The \emph{link} of
+$\gamma$ (\lean{New.link}, Definition~\ref{sp-remain:def:frame}) satisfies
+$\operatorname{link}(uw_\alpha\lambda u')=\operatorname{link}(w_1\lambda)$ for $u,u'\in\mathsf U$,
+$\lambda\in G^{(\varrho)}$, and the latter determines $\lambda$. The \emph{main term} is the link sum
+$\mathcal L(\Sigma)$ of Theorem~\ref{sp-remain:thm:main} (\lean{New.Filling.linkSecondMoment}), the
+sum over $c,c'$, $s\in\Sigma\subseteq\Gbar$ and links $\Lambda$ of $\norm{A^\flat_{\Gamma_\Lambda}(c,s,c')}^2$,
+$\Gamma_\Lambda$ the terms with $\mathsf g\ne0$ and link $\Lambda$.
+
+\begin{theorem}[Main term; \lean{New.Filling.linkSecondMoment_isOpenElement_le}]
+\label{sp-main:thm:main}
+For $\Sigma=\set{s\in\operatorname{Fix}(\Pi,\mathbf d): s\text{ open}}$,\quad
+$\mathcal L(\Sigma)\le(1+b^{-4})\,b^{-6k\,\#\Pi}\,\mathcal D_{\mathrm{main}}\,\nu^2$.
+\end{theorem}
+
+Here $\mathcal D_{\mathrm{main}}$ is the moment of perfectly spread translates
+(Proposition~\ref{sp-moment:prop:dim}). Nothing is evaluated and no Kloosterman sum is estimated.
+
+\subsection{Sieve systems and one-sided Poisson summation}\label{sp-main:ss:sieve}
+
+\begin{definition}[Sieve system; \lean{New.SieveSystem}]\label{sp-main:def:sieve}
+A \emph{head} is a sequence $\mathbf p=(\mathbf p_0,\mathbf p_1,\dots)$, with partial products
+$\delta_l=\mathbf p_0\cdots\mathbf p_l$; $\mathbf p[i\leftarrow x]$ replaces $\mathbf p_i$ by $x$. Let $C$ be a commutative ring with a measure, $u\colon C\to U$, $\mathsf j\colon U\to C$, $\psi\colon
+C\to\C$ with $\psi(0)=1$, $E_0\ge0$, weights $\Lambda_i(\mathbf p)$ and a decay $\beta\colon C\to\R$.
+Forms $J_i(\mathbf p,\mathbf q)$ ($i\le n+1$) on pairs of heads are a \emph{sieve system} of length $n$
+if: (S1) for $i\le n$, $c\mapsto\psi(\xi c)J_{i+1}(\mathbf p[i\leftarrow u(c)],\mathbf q[i\leftarrow
+u(c)])$ is integrable, with integral $J_i(\mathbf p,\mathbf q)$ if $\xi=0$ and of modulus
+$\le\beta(\xi)\Lambda_i(\mathbf p)\Lambda_i(\mathbf q)$ if $\xi$ is a unit; (S2) $J_{n+1}$ is continuous
+and positive semidefinite on heads with a common entry at $n$; (S3) $\abs{J_0}\le E_0$; (S4) for $i<n$,
+if $\xi=\mathsf j(\mathbf p_i)-\mathsf j(\mathbf q_i)$ is a unit then $\abs{J_{i+1}(\mathbf p,\mathbf q)}\le
+\beta(\xi)\Lambda_{i+1}(\mathbf p)\Lambda_{i+1}(\mathbf q)$.
+\end{definition}
+
+A Bessel system at $v$ carries such a system $J^{(v)}$ of length $\varrho$ over $\C$
+(\lean{New.HasLocalBounds}; Theorem~\ref{sp-frames:thm:real} gives its data), with
+$E_0=(1+b^{-10})/\deg_v$, a decay with a constant $\Theta$, and top form
+$\pair{O_v(\mathbf p),O_v(\mathbf q)}$ if $\mathbf p_\varrho=\mathbf q_\varrho=h(z,\lambda z)$,
+$O_v(\mathbf p)$ a multiple of the orbital integral of $W_v^\flat$ at $w_{\mathbf p}\lambda$. Products of systems are systems
+(\lean{New.SieveSystem.pi}; (S2) is Schur's product theorem).
+
+\begin{fact}[One-sided Poisson summation; \lean{New.IsDualFamily.sum_le_of_fourier}]
+\label{sp-main:fact:poisson}
+Let $E$ be totally complex, $F\ge0$ integrable on $\A_E$ and lower semicontinuous at a
+finite $V\subset E$, $\hat F(\xi)=\int\psi(-\xi x)F(x)dx$ ($\vol(\A_E/E)=1$). If
+$\sum_{\xi\in Y}\abs{\hat F(\xi)}\le B$ for finite $Y\subset E$, then $\sum_{t\in V}F(t)\le B$.
+(Tate, Fourier analysis in number fields and Hecke's zeta-functions, 1950.)
+\end{fact}
+
+Let $\mathcal P$ be a finite conjugation-stable set of finite places, $E_{\mathcal P}=\prod_{w\in\mathcal P}E_w$ with
+integers $\cO_{\mathcal P}$, $\psi_{\mathcal P}(x)=\psi_{\mathrm f}(-x/\delta_E)$ at $\mathcal P$, with $\delta_E$ the generator of
+the different of the filling data (Definition~\ref{sp-unfold:def:filling})
+(\lean{New.Filling.charOnPlaces}), $\psi_{\mathrm{gl}}=\prod_ve^{x_v-\bar x_v}\cdot\psi_{\mathcal P}$ on
+$\C^f\times E_{\mathcal P}$; a \emph{$\mathcal P$-integer} is an element of $E$ integral off $\mathcal P$, and
+$t^\rho=((\rho_v\Phi_vt)_v,t)$.
+
+\begin{proposition}[\lean{New.Filling.sum_ratPoint_le_mul_add_integral_of_fourier_le}]
+\label{sp-main:prop:poisson}
+Let $\rho_v>0$, $V$ a finite set of nonzero $\mathcal P$-integers, $F\ge0$ integrable on $\C^f\times E_{\mathcal P}$,
+lower semicontinuous at the $t^\rho$, with $\abs{\int\psi_{\mathrm{gl}}(\xi x)F(x)dx}\le\beta(\xi)B$, $B\ge0$, for
+units $\xi$ and $\sum_{y\in X}\beta(y^{\rho'})\le\varepsilon$ for finite sets $X$ of nonzero $\mathcal P$-integers,
+$\rho'_v=2\pi i/\Phi_v(\delta_E)\rho_v$. Then $\sum_{t\in V}F(t^\rho)\le\vol(\hat\cO)\prod_v\rho_v^{-2}
+(\varepsilon B+\int F)$.
+\end{proposition}
+
+\begin{proof}
+Extend $F$ to $\A_E$ by the indicator of the elements integral off $\mathcal P$. Its transform at
+$y/\delta_E$ vanishes unless $y$ is a $\mathcal P$-integer, and is then $\vol(\hat\cO)\prod\rho_v^{-2}$ times
+that of $F$ at $y^{\rho'}$ (\lean{New.Filling.integral_stdAddChar_mul_extendToAdeles}); $y=0$ gives
+$\int F$. Apply Fact~\ref{sp-main:fact:poisson}.
+\end{proof}
+
+For $\alpha\in(E^\times)^\varrho$ and $\eta\in E^\times$ let $(\alpha,\eta)$ be the head
+$(\alpha_0,\dots,\alpha_{\varrho-1},\eta,1,\dots)$, read at $v$ as the head $\mathbf p_v(\alpha,\eta)$ with entries
+$\Phi_v((\alpha,\eta)_i)M_v^{2(\varrho-i)}/N$ (\lean{New.Filling.frameScaleSq}) and at $\mathcal P$ as
+$\mathbf p_{\mathcal P}(\alpha,\eta)$. For forms $J^{\mathcal P}$ on heads in $E_{\mathcal P}^\times$ let $\mathbf J(\alpha,\alpha';\eta)$ be
+the product of $\prod_vJ^{(v)}_{\varrho+1}(\mathbf p_v(\alpha,\eta),\mathbf p_v(\alpha',\eta))$ and
+$J^{\mathcal P}_{\varrho+1}(\mathbf p_{\mathcal P}(\alpha,\eta),\mathbf p_{\mathcal P}(\alpha',\eta))$. The constants of Poisson summation are
+$P_i=\vol(\hat\cO)\prod_v(M_v^{2(\varrho-i)}/N)^{-2}$ (\lean{New.Filling.poissonConst}), and
+$\mathfrak d=\prod_v\Theta(\abs{M_v}^{2\varrho+1}/MN)^{k-(\varrho+1)^7}$
+(\lean{New.Filling.decayConst}).
+
+\begin{theorem}[The sieve; \lean{New.Filling.sieve}]\label{sp-main:thm:sieve}
+Let $A\subset E^\times$ be finite with $A$, $A^{-1}$, $M^{-1}$ $\mathcal P$-integral, $U\subseteq A$, and
+$J^{\mathcal P}$ a sieve system of length $\varrho$ on $E_{\mathcal P}$ with $\mathsf j(w)=M^{-1}w^{-1}$, $\psi_{\mathcal P}$,
+mass $E^{\mathcal P}_0$, weights $\prod_{l<i}[\cO_{\mathcal P}:\delta_l\cO_{\mathcal P}]^{(\varrho+1)^6/2}$, or $0$ if some
+$\delta_l\notin\cO_{\mathcal P}$ (\lean{New.finHeadWeight}), and decay $[\cO_{\mathcal P}:\xi\cO_{\mathcal P}]^{(k-
+(\varrho+1)^7)/2}[\cO_{\mathcal P}:\cO_{\mathcal P}\cap\xi^{-1}\cO_{\mathcal P}]^{-3}b^{(\varrho+1)^9f}$
+(\lean{New.Filling.frequencyDecay}). Then
+\[
+\Re\sum_{\eta\in U}\sum_{\alpha,\alpha'\in A^\varrho}\mathbf J(\alpha,\alpha';\eta)\le
+\prod_{i\le\varrho}P_i\Bigl(\prod_v\frac{1+b^{-10}}{\deg_v}E^{\mathcal P}_0+b^{2403(\varrho+1)^9f}\mathfrak d\Bigr).
+\]
+\end{theorem}
+
+\begin{proof}
+The products $J_i$ form a system. Let $\mathsf S_0=\Re J_0$ and $\mathsf S_{i+1}$ the real part of the sum of
+$J_{i+1}$ over the pairs of heads with entries in $A$ and a common entry at $i$
+(\lean{New.Filling.densitySum}); the left side is at most $\mathsf S_{\varrho+1}$, since such sums are $\ge0$
+(\lean{New.SieveSystem.sum_nonneg}). For the sum $F(x)$ of $J_{i+1}$ over the pairs with common entry
+$x$ at $i$, (S1) gives $\int F$ and $\hat F$, $F$ is lower semicontinuous
+(\lean{New.SieveSystem.lowerSemicontinuousAt_sum}), and the decay sums over nonzero frequencies to at
+most $\varepsilon=\mathfrak d\,b^{2002(\varrho+1)^9f}$ (\lean{New.Filling.boundsDecay_prod}), by the
+product formula and the count $\sum_{\nu\in X}\prod_v\max(1,\abs{\Phi_v\nu})^{-6}
+\Nm(\mathfrak n_\nu)^{-3}\le(64\cdot38\,e^4)^f$, $\mathfrak n_\nu$ the denominator ideal
+(\lean{New.sum_height_inv_cube_le}). In $\int F=\Re\sum J_i$ the pairs with entries $t\ne t'$ at
+$i-1$ are bounded by (S4), as $(t^{-1}-t'^{-1})/M$ is a nonzero $\mathcal P$-integer. So
+Proposition~\ref{sp-main:prop:poisson} gives $\mathsf S_{i+1}\le P_i(\mathsf S_i+2\varepsilon(\sum\Lambda_i)^2)$
+(\lean{New.Filling.densitySum_succ_le_mul_densitySum_add}). Nonzero weights force integral
+$\delta_l$ of size $\le b^{120(\varrho+1)^2}$, so $(\sum\Lambda_i)^2\le b^{400(\varrho+1)^9f}\prod_{a<i}P_a$
+(\lean{New.Filling.sq_sum_globalWeight_le}); induct from $\mathsf S_0\le E^{\mathcal P}_0\prod_v(1+b^{-10})/\deg_v$.
+\end{proof}
+
+\subsection{From global sums to local integrals}\label{sp-main:ss:local}
+
+Let $\mathcal E$ be the set of quotients of nonzero integers $\delta$ of $E$ with
+$\abs{\Phi_v\delta}^2\le b^{270(\varrho+1)^2}$ (\lean{New.Filling.entrySet}), and fix $\mathcal P$ such
+that $\mathcal E$ consists of $\mathcal P$-units and $M^{-1}$, $N^{-1}$ and the lattice basis are integral
+off $\mathcal P$ (\lean{New.Filling.exists_places_integralOff}). Let $x\mapsto x_{\mathcal P}$ be the projection
+to $\U(V)(E_{\mathcal P})$ (\lean{New.Filling.toPlaces},
+\lean{New.Filling.IsIntegralOff}). $E_{\mathcal P}$ is a finite place in the sense of
+Section~\ref{sec:sp-frames} with a large lattice datum of modulus $M$
+(\lean{New.Filling.exists_isFillingData}, \lean{New.Filling.IsFillingData}): a Haar measure $\mu$ and
+groups $\mathcal K_{\mathcal P}(M)\le\mathcal K_{\mathcal P}$. Then $x\in\mathcal K$ iff $x$ is integral off $\mathcal P$
+and $x_{\mathcal P}\in\mathcal K_{\mathcal P}$ (\lean{New.Filling.mem_latticeStabilizer_iff}); points of $\mathcal K$
+have equal reductions iff their $\mathcal P$-parts lie in one coset of $\mathcal K_{\mathcal P}(M)$; points at
+$\mathcal P$ lift (\lean{New.Filling.exists_isIntegralOff_toPlaces_eq}); and $\psi_{\mathcal P}(M^{-1}\operatorname{sr}(x_{\mathcal P}))
+=\psi_{\mathsf U}(x)$ for $x$ integral off $\mathcal P$, $\operatorname{sr}$ the sum of the simple root entries
+(\lean{New.Filling.IsFillingData.psi_simpleRootSum_eq_unipotentChar}).
+
+\begin{fact}[Big cell; \lean{New.Filling.exists_big_cell_decomp},
+\lean{New.Filling.big_cell_factors_unique}]\label{sp-main:fact:cell}
+Over a field with an element $\tau$, $\tau+\bar\tau=1$, if $D_1,\dots,D_\varrho$ of $Z(\gamma)$ are nonzero,
+then $\gamma=u^{-1}w_\alpha\lambda u'$ with $u,u'\in\mathsf U$, $\lambda\in G^{(\varrho)}$, and
+$u,u',\lambda,\alpha_0,\dots,\alpha_{\varrho-1}$ are unique. (Bruhat decomposition on the big cell; no source is given.)
+\end{fact}
+
+\begin{lemma}[Big cell; \lean{New.Filling.exists_amplitudeSum_eq_sum_cosetAmplitude}]
+\label{sp-main:lem:cell}
+Let $s$ be open and $A^\flat_{\Gamma_\Lambda}(c,s,c')\ne0$. There are $\eta\in\mathcal E$ and $\lambda\in
+G^{(\varrho)}(E)$ with $h(z,\lambda z)=\eta$, $\abs{\Phi_v\eta}>N$, $\Lambda=\operatorname{link}(w_1\lambda)$,
+$h_c^{-1}\lambda h_{c'}$ integral off $\mathcal P$, such that $A^\flat_{\Gamma_\Lambda}(c,s,c')=\sum_{\alpha\in
+\mathcal E^\varrho}\mathcal B(c,s,c';w_{(\alpha,\eta)}\lambda)$, where the orbit sum
+$\mathcal B(c,s,c';\gamma)$ (\lean{New.Filling.cosetAmplitude}) is the sum of $a^\flat_{cc'}(u\gamma u'^{-1})$
+over the $u,u'\in\mathsf U(E)$ for which $u\gamma u'^{-1}$ lies over $(c,s,c')$.
+\end{lemma}
+
+\begin{proof}
+For $\gamma$ over $(c,s,c')$ the integral minors $D_l$ reduce at $w$ to those of $s_w$, so
+$D_1,\dots,D_\varrho\ne0$, and Fact~\ref{sp-main:fact:cell} applies; the link fixes $\lambda$. If $a^\flat_{cc'}(\gamma)\ne0$, the cut has bounded support, so the nonzero
+$D_l$ are integers with $\abs{\Phi_vD_l}^2\le b^{270(\varrho+1)^2}$ and $\alpha_a,\eta\in\mathcal E$. For the
+$X_0$-part $\omega$ of $\lambda z$, $N\omega^*\omega=\eta\bar\eta-N^2$, a nonzero factor of
+$\mathsf g(\gamma)$, so $\abs{\Phi_v\eta}>N$.
+\end{proof}
+
+For $\mathcal K_{\mathcal P}(M)\le Z\le\mathcal K_{\mathcal P}$ let $\chi_M(ug)=\psi_{\mathcal P}(\operatorname{sr}(u)/M)$ on
+$\mathsf U\mathcal K_{\mathcal P}(M)$ and $0$ elsewhere (\lean{New.Floors.IntegralPlace.extendedBesselChar}),
+and $W_Z(y)=(\chi_M(ya^{-1}))_a$, $a\in\mathcal K_{\mathcal P}(M)\backslash Z$, the finite Bessel vector
+(\lean{New.Floors.PlaceData.IntermediateGroup.besselVector}). For
+integral $s$, the \emph{Kloosterman sum} (\lean{New.Floors.PlaceData.kloostermanSum}) is
+$\operatorname{Kl}(g,s)=\sum\chi_M(u)\overline{\chi_M(u')}$ over $u,u'\in\mathsf U/\mathsf U\cap\mathcal
+K_{\mathcal P}(M)$ with $u^{-1}gu'\in s\mathcal K_{\mathcal P}(M)$.
+
+\begin{proposition}[Unfolding]\label{sp-main:prop:kloosterman}
+Let $\gamma=w_\alpha\lambda$ with $\lambda\in G^{(\varrho)}(E)$ and $\alpha_a^{-1}$ $\mathcal P$-integral,
+let $h_c^{-1}\gamma h_{c'}$ be integral off $\mathcal P$, with $\mathcal P$-part $g$, let $n\in\mathcal K$ have
+reduction $\bar n$, and $J_\infty(\gamma)=\int W^\flat(y)\otimes W^\flat(\gamma^{-1}y)^*dy$. Then
+$\mathcal B(c,\bar n,c';\gamma)=\operatorname{Kl}(g,n_{\mathcal P})J_\infty(\gamma)$. Moreover
+$\int W_Z(y)_a\overline{W_Z(g^{-1}y)_{a'}}d\mu=\mu(\mathcal K_{\mathcal P}(M))\operatorname{Kl}(g,n_{\mathcal P})$ if
+$n_{\mathcal P}^{-1}aa'^{-1}\in\mathcal K_{\mathcal P}(M)$, so the entry $(a,a')$ of the scaled orbital integral $\hat J_{\mathcal P}(\alpha)$ of $W_Z$ at $g$
+(\lean{New.Floors.PlaceData.scaledOrbitalIntegral}; Section~\ref{sec:sp-frames} writes it
+$\hat J_{\mathbf p}(\lambda)$) times $J_\infty(\gamma)$ is $\mathsf h_\varrho(\alpha,1)\mu(\mathcal K_{\mathcal P}(M))
+\mathcal B(c,\bar n,c';\gamma)$, with $\mathsf h_\varrho(\alpha,1)$ a product of powers of the moduli of the
+$\alpha_a$ (\lean{New.Floors.PlaceData.headDensity}, Section~\ref{sec:sp-frames}).
+\end{proposition}
+
+\begin{proof}
+For the second claim write the integral as a sum over the cosets $y\mathcal K_{\mathcal P}(M)$ and
+reindex (\lean{New.Floors.IntegralPlace.IsLargeLatticeData.besselOrbitalIntegral_besselVector_apply});
+the third combines the first two
+(\lean{New.Filling.IsFillingData.scaledOrbitalIntegral_smul_eq_cosetAmplitude}). The first is
+\lean{New.Filling.IsFillingData.cosetAmplitude_eq_kloostermanSum_smul}: the rational $u\in\mathsf U$
+with $h_c^{-1}uh_c$ integral off $\mathcal P$ match, modulo the level, the cosets of $\mathsf U\cap\mathcal
+K_{\mathcal P}(M)$; summing over a coset removes the cutoffs
+(\lean{New.Filling.hasSum_besselOrbitalIntegral_cosetAmplitude}); $J_\infty(u^{-1}\gamma u')=
+\psi_{\mathsf U}(u)\overline{\psi_{\mathsf U}(u')}J_\infty(\gamma)$, $\psi_{\mathsf U}(u)=\chi_M(u_{\mathcal P})$;
+$u^{-1}\gamma u'$ lies over $(c,\bar n,c')$ iff $(u,u')$ is a pair of $\operatorname{Kl}$.
+\end{proof}
+
+\subsection{Siegel's step}\label{sp-main:ss:siegel}
+
+\begin{fact}[\lean{New.classSum_eq_mul_normDensity}, \lean{New.lintegral_gauss_sum_le_idealZeta},
+\lean{New.idealZeta_intAdeles_pow_le}, \lean{New.Floors.IntegralPlace.enorm_localDensity_le}]
+\label{sp-main:fact:siegel}
+(a) Let $\#\mathfrak k\ge3$, $\mathcal K'$ a level of $\U(X_0)$, $\phi_0\ge0$ locally constant, $\mathcal K'$-invariant and of
+compact support on $\Af^{\mathfrak k}$, and $\alpha\in E^+$ totally positive. Then $\sum_h\frac1{\#\operatorname{Aut}h}
+\sum_{x^*x=\alpha}\phi_0(h^{-1}x)=\operatorname{mass}(\mathcal K')\abs{D_E}^{1/4}\prod_v\frac{\pi^{\#\mathfrak k}
+\Phi_v(\alpha)^{\#\mathfrak k-1}}{(\#\mathfrak k-1)!}\delta(\phi_0,\alpha)$, the sums over the classes $h$ and
+$x\in E^{\mathfrak k}$, with $\delta(\phi_0,\alpha)=\iint\phi_0(x)\psi_{\mathrm f}(z(x^*x-\alpha)/2)dxdz$.
+(b) If $\zeta_{\hat\cO}(\mu)=\sum_I[\hat\cO:I]^{-\mu}\le2$ and $\#\mathfrak k\ge2\mu+2$, then
+$\int\abs{\int_{\hat\cO^{\mathfrak k}}\psi_{\mathrm f}(z(w^*w-\Gamma)/2)dw}dz\le\zeta_{\hat\cO}(\mu)
+\vol(\hat\cO)^{\#\mathfrak k}$; and $\zeta_{\hat\cO}(u+v+4)^n\le1+2^{-u}$ if $n[E:\Q]\le2^v$. (c) At a finite
+place the density $\iint\Psi(x)\psi(z(x^*x-\alpha))dx\,dz$ of a continuous $\Psi\ge0$ of compact support
+has modulus at most the integral of $\Psi$ over the sphere $x^*x=\alpha$. (Siegel, Über die analytische Theorie
+der quadratischen Formen, 1935; Weil, 1965.)
+\end{fact}
+
+Take $\phi_0=\Psi$ at $\mathcal P$ times the indicator of the vectors integral off $\mathcal P$. Then $\delta$ is
+an integral of Gauss sums off $\mathcal P$, at most $(1+b^{-6})\vol(\hat\cO)^k$, times the density at
+$\mathcal P$ (\lean{New.Filling.normDensity_indicator_eq_mul}, Fact~\ref{sp-main:fact:siegel}). So the sum of $\Psi(h_c^{-1}x-N^{-1}\eta z)$ over the
+classes $c$ and rational $x$ with $Nx^*x=\eta\bar\eta-N^2$, $h_c^{-1}x$ integral off $\mathcal P$, is at most $(1+b^{-6})\#\mathcal C\,c_S
+\prod_v(\abs{\Phi_v\eta}^2-N^2)^{k-1}\abs{\pi_N}_{\mathcal P}^{-1}$ times the integral of $\Psi$ over the
+sphere at $\mathcal P$ (\lean{New.Filling.IsFillingData.siegel_sum_le_lintegral_sphere}), with
+$c_S=(\pi^k/(k-1)!N^k)^f\abs{D_E}^{1/4}\vol(\hat\cO)^k$ (\lean{New.Filling.siegelConst}). Let
+$\tilde c_S=\#\bar R_0\,\#\mathsf U(\cO/M)\,\#\mathcal C\,c_S$ (\lean{New.Filling.scaledSiegelConst}),
+$c_{\mathrm n}>0$ an explicit constant (\lean{New.Filling.normalizingConst}), and
+$J^{\mathcal P}_{\varrho+1}(\mathbf p,\mathbf q)$ the density $D_{\mathbf p,\mathbf q}$ at the last entry of $W_Z$
+(\lean{New.Floors.PlaceData.lastEntryDensity}) divided by the mass ratio $\operatorname{mr}(Z)$
+(\lean{New.Floors.PlaceData.IntermediateGroup.massRatio}), both of Section~\ref{sec:sp-frames}.
+
+\begin{proposition}[Siegel's step; \lean{New.Filling.IsFillingData.mul_sum_norm_sum_cosetAmplitude_sq_le}]
+\label{sp-main:prop:siegel}
+Let $(c_i,c'_i,s_i,\lambda_i)_{i\in\mathcal I}$ be finitely many distinct tuples, $\lambda_i\in
+G^{(\varrho)}(E)$ with $\eta_i=h(z,\lambda_iz)$, $\abs{\Phi_v\eta_i}>N$, $h_{c_i}^{-1}\lambda_ih_{c'_i}$ integral
+off $\mathcal P$, $s_i$ the reduction of $n_i\in\mathcal K$ with $(n_i)_{\mathcal P}\in Z$, and $A$ a finite set of
+$\mathcal P$-units. Then $c_{\mathrm n}^2\sum_i\norm{\sum_{\alpha\in A^\varrho}\mathcal B(c_i,s_i,c'_i;
+w_{(\alpha,\eta_i)}\lambda_i)}^2$ is at most $(1+b^{-6})\tilde c_S$ times the left side of
+Theorem~\ref{sp-main:thm:sieve} for $U=\set{\eta_i}$.
+\end{proposition}
+
+\begin{proof}
+Fix $\eta$. $R_{\alpha\alpha'}=\prod_vJ^{(v)}_{\varrho+1}$ is the Gram matrix of the
+$\rho_\alpha J_\infty(w_{(\alpha,\eta)}\lambda_i)$ (\lean{New.Filling.prod_bandLimit_eq_gram}), and by
+the product formula $\rho_\alpha\mathsf h_\varrho(\alpha,1)=c_{\mathrm n}\prod_v(\abs{\Phi_v\eta}^2-N^2)^{(k-1)/2}$
+(\lean{New.Filling.gramScalar_mul_headDensity}). (i) For fixed $(c,c',\lambda)$, by
+Proposition~\ref{sp-main:prop:kloosterman} the entries $(a,a')$ of $(\hat J_{\mathcal P}(\alpha))_\alpha$
+paired against $R\ge0$ give, for $[Z:\mathcal K_{\mathcal P}(M)]$ choices of $a$ each, the squared class sums at
+the distinct reductions; so their sum is at most the pairing of the whole vectors (\lean{New.Filling.IsFillingData.sum_sq_norm_sum_cosetAmplitude_le_headSumNormSq}).
+(ii) Tuples with one class $c$ and one point $e=g^{-1}z$ have positions in distinct cosets of $\mathcal
+K_{\mathcal P}(M)$, so they give at most the fiber pairing (\lean{New.Floors.PlaceData.fiberPairing}) at $e$ against $R$
+(\lean{New.Floors.IntegralPlace.IsLargeLatticeData.sum_headSumNormSq_le_fiberPairing}). (iii)
+$e=x-N^{-1}\eta z$ with $x=h_c^{-1}\omega$, $\omega$ rational of norm $(\eta\bar\eta-N^2)/N$; the fiber pairing
+is a step function $\Psi$ on the quadric (\lean{New.Floors.IntegralPlace.IsLargeLatticeData.exists_step_function_eqOn_fiberPairing});
+Siegel's formula sums it over the points, and the sphere integral of $\Psi$ is the sum of the last entry
+densities against $R$ (\lean{New.Floors.IntegralPlace.IsLargeLatticeData.sum_lastEntryDensity_nonneg_and_eq_inv_mul_lintegral}).
+(iv) $\operatorname{mr}(Z)\le\mu_H(\mathcal K_{\mathcal P}(M))\,\mu(\mathcal K_{\mathcal P}(M))^2\,[Z:\mathcal K_{\mathcal P}(M)]\,
+\tilde c_S/(\#\mathcal C\,c_S)$, $\mu_H$ the measure on $H$ of the place datum
+(\lean{New.Filling.IsFillingData.exists_scaledSiegelConst_eq_and_massRatio_le}).
+\end{proof}
+
+\subsection{The sieve system at the finite places}\label{sp-main:ss:finite}
+
+\begin{proposition}[\lean{New.Filling.IsFillingData.exists_intermediateGroup_sieveSystem}]
+\label{sp-main:prop:finite}
+There is $Z$ with $\mathcal K_{\mathcal P}(M)\le Z\le\mathcal K_{\mathcal P}$, containing the $n_{\mathcal P}$,
+$n\in\mathcal K$ reducing into $\operatorname{Fix}(\Pi,\mathbf d)$, such that the forms of floor $j\le\varrho$ of
+$W_Z$ (\lean{New.Floors.PlaceData.floorForm}) and the density at the last entry, divided by
+$\operatorname{mr}(Z)$, satisfy Theorem~\ref{sp-main:thm:sieve} with
+$E^{\mathcal P}_0=(1+b^{-6})b^{-6k\#\Pi}$.
+\end{proposition}
+
+\begin{proof}
+All inputs are bounds at one place from Section~\ref{sec:sp-frames}. $Z$ and the saving:
+\lean{New.Filling.IsFillingData.exists_intermediateGroup_places} gives
+$\varkappa(Z)\mu(\mathcal K_{\mathcal P})b^{6k\#\Pi}\le\varkappa(\mathcal K_{\mathcal P})\mu(Z)$ for
+the mass integral $\varkappa$ (\lean{New.Floors.PlaceData.massIntegral}), and
+\lean{New.Floors.IntegralPlace.IsLargeLatticeData.massIntegral_le_main_add_error} with
+$\mu(\mathcal K_{\mathcal P})\le1+2^{-\varrho-1}$ gives
+$\varkappa(\mathcal K_{\mathcal P})\le(1+b^{-6})\mu(\mathcal K_{\mathcal P})\mu(\mathcal K_{\mathcal P}(M))$; the floor-$0$
+form is the integral of a square (\lean{New.Floors.PlaceData.floorForm_zero_eq_integral}), at most
+$\varkappa(Z)/\mathrm{fl}^2$, with $\mathrm{fl}$ the mass of $\mathsf U\cap\mathcal K(M)$ defined in
+Section~\ref{sec:sp-frames}: this is (S3). (S1) is the descent
+\lean{New.Floors.Gauge.integral_psi_mul_floorForm_succ} and
+\lean{New.Floors.IntegralPlace.IsLargeLatticeData.integral_lastEntryDensity}; the decay in (S1), (S4)
+is \lean{New.Floors.IntegralPlace.IsLargeLatticeData.enorm_floorForm_le}; (S2) is
+\lean{New.Floors.IntegralPlace.IsLargeLatticeData.continuous_lastEntryDensity} and
+\lean{New.Floors.IntegralPlace.IsLargeLatticeData.sum_lastEntryDensity_nonneg}.
+\end{proof}
+
+\subsection{Proof of Theorem~\ref{sp-main:thm:main}}\label{sp-main:ss:proof}
+
+For finite subsums: each nonzero block $(c,s,c',\Lambda)$ gives by Lemma~\ref{sp-main:lem:cell} a
+tuple $(c,c',s,\lambda)$, distinct for distinct blocks as $\lambda$ determines $\Lambda$. With
+$A=\mathcal E$ and $Z$ from Proposition~\ref{sp-main:prop:finite}, Proposition~\ref{sp-main:prop:siegel}
+and Theorem~\ref{sp-main:thm:sieve} give $c_{\mathrm n}^2\mathcal L(\Sigma)\le(1+b^{-6})\tilde c_S\prod_iP_i(\prod_v
+\frac{1+b^{-10}}{\deg_v}(1+b^{-6})b^{-6k\#\Pi}+b^{2403(\varrho+1)^9f}\mathfrak d)$
+(\lean{New.Filling.sum_norm_sum_cosetAmplitude_sq_le}). Now $\prod_iP_i=c_{\mathrm n}^2w$
+(\lean{New.Filling.prod_poissonConst_eq}), and the hypothesis $\tilde c_Sw\le(1+b^{-9})\mathcal
+D_{\mathrm{main}}\deg\,\nu^2$ (\lean{New.Filling.IsAdmissible.scaledSiegelConst_le}, proved in
+Section~\ref{sec:sp-unfold} from the masses) and $(1+b^{-10})^f\le1+b^{-9}$ bound the first
+term; the second is at most $b^{O((\varrho+1)^9f)+2kf}\mathcal D_{\mathrm{id}}\nu^2\le
+b^{-10-6k\#\Pi}\mathcal D_{\mathrm{main}}\nu^2$ (\lean{New.Filling.scaledSiegelConst_mul_decayConst_le},
+$b^{11kf}\mathcal D_{\mathrm{id}}\le\mathcal D_{\mathrm{main}}$). The factors combine to $1+b^{-4}$
+(\lean{New.Filling.sieve_constant_le}). \qed
+
+\subsection{Bad labels}\label{sp-main:ss:bad}
+
+Over a field $\F$ with $q$ elements a \emph{label} is a monic squarefree $c$ of degree $r$ with
+$c(0)\ne0$; it is \emph{allowed} for $M'$ if no root $x\in\F$ has $x^{M'}=1$
+(\lean{New.IsAllowedPolynomial}), \emph{primitive} if irreducible with a root of order $q^r-1$
+(\lean{New.IsPrimitivePolynomial}). It names a character $\Xi_c$ of $G=\GL_r(\F)$ and
+$e_c=\sum_g\frac{\Xi_c(1)}{\#G}\overline{\Xi_c(g)}g$ (\lean{New.labelIdem}), with coefficient at $1$
+the Plancherel share $\abs{\Xi_c(1)}^2/\#G$. For $f$ fields $\F_w$ (chosen places above $p_i$) and $c=(c_w)$, $e_c=\otimes_we_{c_w}$
+(\lean{New.tupleIdem}); $c$ is \emph{good} if all $c_w$ are allowed and one is primitive
+(\lean{New.goodTuples}). $e_0$ acts as $\otimes_ie_{p_i}$, $e_{p_i}$ the sum of the good $e_c$ above $p_i$
+(Theorem~\ref{sp-unfold:thm:good}). \lean{New.Data.bad_types_rare}
+applies Theorem~\ref{sp-main:thm:bad} with $q=p_i$, $M'=q_2$, $\varepsilon=(1+q_2+2r)/p_i$,
+$L=9\log b$, giving $b^{-8}/2$.
+
+\begin{fact}[\lean{New.labelChar_degree_bounds}, \lean{New.le_totient_mul_log}]\label{sp-main:fact:green}
+(a) $\Re\Xi_c(1)\ge0$ and $\abs{\Xi_c(1)}^2/\#G\ge(1-r/q)/q^r$ for a label $c$ (Green, The characters
+of the finite general linear groups, 1955). (b) $n\le\varphi(n)(2\log n+1)$ for $n\ge1$ (elementary; no source is given).
+\end{fact}
+
+\begin{theorem}[Bad share; \lean{New.re_coeff_one_sub_sum_tupleIdem_le}]\label{sp-main:thm:bad}
+If all $\#\F_w=q$, $1<r<q$, $M'\ge1$, $(1+M'+2r)/q\le\varepsilon\le1$ and $2r(2r\log q+1)L\le f$, the coefficient at
+$1$ of $1-\sum_{c\text{ good}}e_c$ has real part at most $f\varepsilon+e^{-L}$.
+\end{theorem}
+
+\begin{proof}
+With $\theta=(1-r/q)/q^r$, each good $c$ has coefficient $\ge\theta^f$ (\lean{New.prod_le_re_tupleIdem_coeff_one}).
+At most $(1+M'+r)q^{r-1}$ monic polynomials are not allowed, being $(X-a)B$ with $a=0$ or $a^{M'}=1$, or
+$P^2B$ (\lean{New.card_not_isAllowedPolynomial_le}), so the allowed ones weigh $\ge1-\varepsilon$;
+minimal polynomials of roots of order $q^r-1$ give $\varphi(q^r-1)\le r\,\#\{\text{primitive}\}$
+(\lean{New.totient_le_mul_card_isPrimitivePolynomial}), so by (b) the others weigh $\le e^{-1/A}$,
+$A=2r(2r\log q+1)$ (\lean{New.card_not_primitive_mul_le}). Allowed tuples that are not good have no
+primitive entry: $\#\{\text{good}\}\theta^f\ge(1-\varepsilon)^f-e^{-f/A}\ge1-f\varepsilon-e^{-L}$.
+\end{proof}

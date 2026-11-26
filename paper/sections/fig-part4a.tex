@@ -1,0 +1,72 @@
+% Diagram of the proof of Theorem C down to the cost of one lift (head of Part 4).
+\begin{figure}[tbp]
+\centering
+\begin{tikzpicture}[x=1cm,y=1cm]
+% row 0
+\node[pfmain] (C) at (-0.82,0) {Thm.~\ref{main:thm:C}\\Theorem~C};
+% row 1
+\node[pfnode, text width=1.8cm] (aux) at (-6.145,-1.8) {Thm.~\ref{det-chain:thm:aux}\\auxiliary forms};
+\node[pfnode, text width=1.8cm] (height) at (-0.82,-1.8) {Thm.~\ref{det-chain:thm:height}\\the inverse ratio};
+\node[pfnode, text width=3.0cm] (twl) at (3.9,-1.8) {Thm.~\ref{setup:thm:twist}, Prop.~\ref{setup:prop:targetlattice}\\a twist for each prime; target lattice (Part~1)};
+% row 2
+\node[pfnode, text width=2.4cm] (chain) at (-3.64,-3.6) {Thms.~\ref{det-chain:thm:inj}--\ref{det-chain:thm:factor}\\injectivity, norm, factorisation};
+\node[pfpart, text width=1.8cm] (regular) at (-0.82,-3.6) {Thm.~\ref{cg-selmer:thm:regular}\\regular families\\Fig.~\ref{fig:part4b}};
+\node[pfnode, text width=2.3cm] (olmain) at (2.3,-3.6) {Thm.~\ref{ol-values:thm:main}\\the cost of one lift};
+% row 3
+\node[pfnode, text width=2.1cm] (onelift) at (-4.945,-5.6) {Prop.~\ref{det-chain:prop:onelift}\\norm of one lift};
+\node[pfnode, text width=2.1cm] (triangle) at (-2.335,-5.6) {Lem.~\ref{det-chain:lem:triangle}, Thm.~\ref{det-chain:thm:triangle}\\triangle of the chain};
+\node[pfnode, text width=2.1cm] (comp) at (0.6,-5.6) {Thm.~\ref{ol-values:thm:comp}\\comparison operator};
+\node[pfnode, text width=2.1cm] (inv) at (4.04,-5.6) {Prop.~\ref{ol-values:prop:rallis}--Cor.~\ref{ol-values:cor:hv}\\Hecke values, inverse ratios};
+% row 4
+\node[pfnode, text width=1.8cm] (mult) at (-6.145,-7.7) {Cor.~\ref{sp-moment:cor:mult}\\equal multiplicities (Part~3)};
+\node[pffact, text width=1.8cm] (rallisdc) at (-3.835,-7.7) {Fact~\ref{det-chain:fact:rallis}\\Rallis' inner product formula};
+\node[pfnode, text width=2.2cm] (olc) at (-0.68,-7.7) {\S\S\ref{ol-compare:sec:exchanges}--\ref{ol-compare:sec:span}\\three exchanges, seesaw for one lift, products span};
+\node[pfnode, text width=1.8cm] (periods) at (1.83,-7.7) {Thm.~\ref{ol-values:thm:periods}\\periods of false lifts vanish};
+\node[pfnode, text width=1.6cm] (sharp) at (4.04,-7.7) {Thm.~\ref{der:thm:sharp}\\sharpness (Part~2)};
+\node[pffact, text width=1.8cm] (rallisol) at (6.25,-7.7) {Fact~\ref{ol-values:fact:rallis}\\Rallis' inner product formula};
+% row 5
+\node[pfnode, text width=1.8cm] (square) at (-2.335,-9.8) {Thm.~\ref{det-exchange:thm:square}\\one square};
+\node[pfnode, text width=1.8cm] (explicit) at (0.1,-9.8) {Thm.~\ref{det-exchange:thm:explicit}\\explicit real data};
+\node[pffact, text width=2.0cm] (tower) at (2.6,-9.8) {Fact~\ref{ol-values:fact:tower}\\descents, periods, Hecke operators};
+% row 6
+\node[pfnode, text width=2.6cm] (exchange) at (-1.2,-11.6) {Thm.~\ref{det-exchange:thm:exchange}, Props.~\ref{det-exchange:prop:top}--\ref{det-exchange:prop:equalrank}\\exchange identity};
+% row 7
+\node[pffact, text width=2.6cm] (factsdx) at (-1.2,-13.2) {Facts~\ref{det-exchange:fact:tower}--\ref{det-exchange:fact:lib}\\tower, constancy, three inputs};
+% arrows: premise -> conclusion
+\draw[pfedge] (aux) -- (C);
+\draw[pfedge] (chain) -- (C);
+\draw[pfedge] (height) -- (C);
+\draw[pfedge] (twl) -- (C);
+\draw[pfedge] (chain) -- (height);
+\draw[pfedge] (regular) -- (height);
+\draw[pfedge] (olmain) -- (height);
+\draw[pfedge] (onelift) -- (chain);
+\draw[pfedge] (triangle) -- (chain);
+\draw[pfedge] (comp) -- (olmain);
+\draw[pfedge] (inv) -- (olmain);
+\draw[pfedge] (mult) -- (onelift);
+\draw[pfedge] (rallisdc) -- (onelift);
+\draw[pfedge] (rallisdc) -- (triangle);
+\draw[pfedge] (square) -- (triangle);
+\draw[pfedge] (olc) -- (comp);
+\draw[pfedge] (periods) -- (comp);
+\draw[pfedge] (periods) -- (inv);
+\draw[pfedge] (sharp) -- (inv);
+\draw[pfedge] (rallisol) -- (inv);
+\draw[pfedge] (explicit) -- (olc);
+\draw[pfedge] (tower) -- (periods);
+\draw[pfedge] (exchange) -- (square);
+\draw[pfedge] (exchange) -- (explicit);
+\draw[pfedge] (exchange.west) -- (-7.45,-11.6) |- (aux.west);
+\draw[pfedge] (factsdx) -- (exchange);
+\end{tikzpicture}
+\caption{The proof of Theorem~C down to the cost of one lift (Part~4,
+Sections~\ref{sec:det-chain}--\ref{sec:ol-compare}). Each box is a result, with its number and a
+short name; a box with several numbers, or with the number of a subsection, stands for a group of
+results. An arrow from one box to
+another means that the proof of the second, as written in this paper, uses the first. Dashed grey
+boxes are background results admitted without proof; the double box stands for the existence of
+regular families, whose proof is drawn in Figure~\ref{fig:part4b}. Boxes marked Part~1, 2 or~3
+are results of the earlier parts.}
+\label{fig:part4a}
+\end{figure}

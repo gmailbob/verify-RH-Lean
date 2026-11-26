@@ -1,0 +1,470 @@
+\section{Unfolding the Poincaré series: the second moments}\label{sec:sp-unfold}
+
+This section proves the moment bounds \eqref{sp-moment:eq:moments} behind Theorem~B. They are proved
+for abstract \emph{filling data} $S$ (\lean{New.Filling}): a hermitian space of Bessel shape over a
+CM field, a prime $N$, two level primes, a level on the definite part and Bessel functions at the
+infinite places. If $P$ maps the source $\C^{\mathcal C\times I}$ into a unitary representation of
+the finite group $\Gbar$, and its matrix coefficients are \emph{amplitude sums}
+(sums over rational $\gamma$ of orbital integrals of Bessel functions), then
+$\sum_s\norm{P^*sP}^2\le(1+9b^{-4})\mathcal D_{\mathrm{main}}$ (Theorem~\ref{sp-unfold:thm:moment})
+and $e_0P$ is a near isometry (Theorem~\ref{sp-unfold:thm:good}). The Poincaré map $\Poin$
+(\lean{New.Data.poincare}) is defined here, and unfolding shows that, scaled, it has such matrix
+coefficients (Theorem~\ref{sp-unfold:thm:petersson}): a Petersson formula, or a relative trace
+formula for the Bessel subgroup (Remark~\ref{sp-unfold:rem:petersson}). In \S\ref{sp-unfold:ss:terms}
+a character argument with \emph{climbing} along flags shows that only the Bessel subgroup and the
+\emph{remaining terms} $\Gamma^*$ contribute. The inputs from Sections~\ref{sec:sp-moment},
+\ref{sec:sp-main}--\ref{sec:sp-remain} are cited where they are used; the vocabulary of
+\S\S\ref{sp-unfold:ss:data}, \ref{sp-unfold:ss:terms} serves Sections~\ref{sec:sp-main}--\ref{sec:sp-remain},
+and $\Poin$ and \lean{New.Data.goodProjTranslate} ($\#\Gbar e_0s$ on forms) serve
+Sections~\ref{sec:main}, \ref{sec:ub-seesaw}.
+
+\subsection{Filling data}\label{sp-unfold:ss:data}
+
+$E$ is a CM field with $f$ infinite places $v$ and a CM type $(\Phi_v)_v$; $\Af$ are its finite
+adeles, $\hat\cO$ their integral elements. A \emph{shape} is an integer $\varrho$ and a finite set
+$\mathfrak k\ni k_0$; $k=\#\mathfrak k$, $n=\varrho+1$, $r=k+2\varrho+1$. $V=E^r$ has the basis
+$e_1,\dots,e_\varrho$, $\mathbf x_i$ ($i\in\mathfrak k$), $z$, $e_1^*,\dots,e_\varrho^*$ with
+$h(e_a,e_b^*)=\delta_{ab}$, $h(\mathbf x_i,\mathbf x_j)=\delta_{ij}$, $h(z,z)=-N$ and all other products $0$. The
+\emph{frame} is $\mathbf f=(\mathbf f_0,\dots,\mathbf f_\varrho)=(e_1,\dots,e_\varrho,z)$,
+$A=\pair{e_1,\dots,e_\varrho}$, $X_0=\pair{\mathbf x_i}$. $G=\U(V)$; $\mathsf U\subset G$ is the group of
+block upper unitriangular isometries for the flag $\pair{e_1}\subset\dots\subset A\subset A^\perp
+\subset\cdots$, trivial on $A^\perp/A$; $H=\U(X_0)$; $R=\mathsf UH$ is the \emph{Bessel subgroup}.
+For $u\in\mathsf U$, $\operatorname{sr}(u)$ is the sum of the entries just above the diagonal on the frame.
+
+\begin{definition}[Filling data; \lean{New.Filling}]\label{sp-unfold:def:filling}
+Filling data $S$ consist of: a prime $N\ge5$ and an integral finite idele $\pi$ with $\pi\bar\pi=N$,
+a unit except at places of norm $N$, where $\bar\pi$ is a unit; primes $p_0\ne p_1$, $\ne N$, with
+$b^{10}\le p_i\le b^{11}$, and for each $i$ a set of $f$ \emph{chosen places} of norm $p_i$, no
+place chosen twice, no conjugate of a chosen place chosen, such that $M=p_0p_1$ divides
+$x\in\hat\cO$ if and only if $x$ and $\bar x$ vanish modulo every chosen place; a purely imaginary
+generator $\delta_E$ of the different (for the data $D$ it is the $\delta_E$ of
+Definition~\ref{der:def:field}(d), \lean{New.Parameters.deltaE}); a level $\mathcal K_X\subset H(\Af)$ with $H(E)\cap g\mathcal K_Xg^{-1}=1$ for
+all $g$; at each $v$ a Bessel system $(W_v,W_v^\flat)$ with values in $\C^{I_v}$ and degree
+$\deg_v$ (Definition~\ref{sp-moment:def:system}); and $b\in\R$ with size conditions, among them
+$10^5\le\varrho$, $n^7\le k\le f$, $(200fk\,\rdE)^{1000}\le b$, $b^{19}\le M\le b^{23}$.
+\end{definition}
+
+\emph{Groups.} In the \emph{lattice basis} $\mathbf x_{k_0}$ is replaced by $\mathbf x_{k_0}/\bar\pi+z/N$.
+$\mathcal K\subset G(\Af)$ (\lean{New.Filling.latticeStabilizer}) consists of the elements that are
+invertible over $\hat\cO$ in this basis. It is the stabiliser $J^\circ$ of the standard lattice of
+Section~\ref{sec:ub-objects} (\S\ref{ub-objects:sec:spaces}), read in the lattice basis: for a space
+that fits $S$ (\S\ref{sp-unfold:ss:poincare}; for the data $D$, the space $Y_0$), the identification of
+the finite adelic groups maps its $J^\circ$ onto $\mathcal K$, compatibly with the reductions at the
+chosen places (\lean{New.Filling.Fits.finiteEquiv_mem_latticeStabilizer_iff},
+\lean{New.Filling.Fits.reduction_finiteEquiv_iff}). Reduction at the chosen places is a homomorphism
+$\mathcal K\to\Gbar=\prod_i\prod_{w\mid p_i\text{ chosen}}\GL_r(\F_w)$ (\lean{New.Filling.reduction},
+\lean{New.Filling.ResidueGL}) with kernel $\mathcal K(M)$. For $B\le G(\Af)$, $\bar B\le\Gbar$ is the
+reduction of $B\cap\mathcal K$ (\lean{New.Filling.reducedImage}); so $\bar R_0$ is that of $R$. An element of
+$H(\Af)$ lies in $\mathcal K$ if and only if it is integral and its row $k_0$ is that of $1$ modulo $\pi$
+(\lean{New.Filling.inclHFin_mem_latticeStabilizer_iff}): the lattice basis encodes the level at $N$.
+The \emph{classes} $\mathcal C=H(E)\backslash H(\Af)/\mathcal K_X$ (\lean{New.Filling.Classes}) have
+representatives $h_c$. A rational $\gamma\in G(E)$ is a \emph{term over the block} $(c,s,c')$,
+$s\in\Gbar$, if $h_c^{-1}\gamma h_{c'}\in\mathcal K$ has reduction $s$ (\lean{New.Filling.termsOver}).
+$\mathsf U_c=\set{u\in\mathsf U(E):h_c^{-1}uh_c\in\mathcal K(M)}$ (\lean{New.Filling.classUnipotent}), and
+$\psi_{\mathrm f}(u)=\psi_{\Af}(-\operatorname{sr}(u)/(M\delta_E))$ on $\mathsf U(\Af)$, $\psi_{\Af}$ the standard character
+(\lean{New.Filling.unipotentChar}).
+
+\emph{Infinite places.} $G_\infty=\prod_vG_1$, $G_1$ the complex unitary group of
+\S\ref{sp-moment:ss:bessel}; $\gamma\in G(E)$ maps to $\gamma_\infty$ by the $\Phi_v$ and a
+rescaling of the basis by $M_v^{\varrho+1-a}/\sqrt N$ on $e_a$ (its inverse on $e_a^*$), $1$ on $X_0$, $1/\sqrt N$ on $z$,
+$M_v=M\Phi_v(\delta_E)/2\pi i\in\R$ (\lean{New.Filling.ratToInf}). Put $I=\prod_vI_v$ and
+$W_i(y)=\prod_vW_{v,i_v}(y_v)$ (\lean{New.Filling.besselFn}), likewise $W^\flat$. For rational
+$u\in\mathsf U$, $W(u_\infty y)=\psi_{\mathrm f}(u)^{-1}W(y)$ (\lean{New.Filling.besselFn_ratToInf_mul}).
+
+\begin{definition}[Amplitudes; \lean{New.Filling.classCutoff}, \lean{New.Filling.amplitude},
+\lean{New.Filling.amplitudeSum}]\label{sp-unfold:def:amp}
+For each class $c$, $\beta_c\ge0$ is measurable on $G_\infty$: a cutoff for the elements of
+$\mathsf U_c$ fixing the frame, times the indicator of the points whose Gram--Schmidt entries lie in
+a fixed domain of representatives modulo $M\cO_E$. If $S$ is admissible and $E$ contains a
+primitive $5040$-th root of unity (assumed from now on), $\sum_{u\in\mathsf U_c}\beta_c(u_\infty
+y)=1$ (\lean{New.Filling.tsum_classCutoff_eq_one}). The \emph{amplitude} of $\gamma\in G(E)$ and the \emph{block} of $\mathcal F\subseteq G(E)$ are
+\[
+a_{cc'}(\gamma)=\int_{G_\infty}\beta_c(y)\beta_{c'}(\gamma_\infty^{-1}y)\,
+W(y)\otimes W(\gamma_\infty^{-1}y)^*\,dy,
+\]
+\[
+A_{\mathcal F}(c,s,c')=\sum\nolimits_{\gamma\in\mathcal F\text{ over }(c,s,c')}a_{cc'}(\gamma)\in\C^{I\times I};
+\]
+$a^\flat$, $A^\flat$ use $W^\flat$. The \emph{covolume} $\nu>0$
+(\lean{New.Filling.unipotentCovolume}) is an explicit product of powers of $M$, $N$,
+$\vol(\hat\cO)$, $\abs{\disc E}$ and the $M_v$ with $\int_{\mathsf U_\infty}\beta_c(uy)\,du=\nu$
+for all $c,y$ (\lean{New.Filling.lintegral_classCutoff_eq_unipotentCovolume}).
+\end{definition}
+
+The sums converge absolutely by the decay of the Bessel systems and a count of frames in boxes
+(\lean{New.Filling.tsum_amplitudeMajorant_lt_top}). With $\mathsf E(\mathsf A,\Sigma)$ the second moment of
+Definition~\ref{sp-remain:def:block}, the numbers to compare are $D_X=\#\mathcal C\cdot\#I$,
+$\mathcal D_{\mathrm{id}}=\#\bar R_0D_X$ and $\mathcal D_{\mathrm{main}}=D_X^2/(\deg\cdot
+\operatorname{mass}_r)$, $\deg=\prod_v\deg_v$, $\operatorname{mass}_r$ the mass of the standard
+lattice of rank $r$ (\lean{New.Filling.sourceDim}, \lean{New.Filling.identitySecondMoment},
+\lean{New.Filling.mainSecondMoment}). The \emph{standing hypotheses}
+(\lean{New.Filling.IsAdmissible}) are: $\mathcal K_X$ is the preimage of $\mathcal K(M)$, $\mathcal K\to\Gbar$ is onto,
+$\abs{\Phi_v\delta_E}\le b$, $1\le\abs{M_v}\le b^{23}$, $N\le b^{60n}$, $\#I\le b^{2kf}$,
+$[H(\hat\cO):H(\Af)\cap\mathcal K]\ge(N^k/b)^f$, a bound for a Siegel constant used in
+Section~\ref{sec:sp-main}, and
+\begin{equation}\label{sp-unfold:eq:window}
+b^{11kf}\,\mathcal D_{\mathrm{id}}\le\mathcal D_{\mathrm{main}}\le(M/b^6)^{kf}\,\mathcal D_{\mathrm{id}}.
+\end{equation}
+For the data $D$, \lean{New.Data.filling} takes $V=Y_0$, $\mathcal K_X$ the level of $X_0$, the
+preimage of $\mathcal K(M)$ (\lean{New.Data.levelX_zero_eq_comap}), $\pi=\pi_N$, the chosen places and the Bessel systems of
+Theorem~\ref{sp-moment:thm:system}; \leanfile{New/Spanning/Unfolding/FillingAdmissible}
+verifies the hypotheses (the Siegel constant by the masses of frames, \lean{New.Data.scaledSiegelConst_le}). In \eqref{sp-unfold:eq:window} the choice of $N$ (Definition~\ref{setup:def:data}(e))
+enters: $\#\mathcal C=\#\bar H(N^k-1)^f\operatorname{mass}_k$, and with the sizes of $\deg$ and of
+$\operatorname{mass}_r/\operatorname{mass}_k$ the ratio $\mathcal D_{\mathrm{main}}/\mathcal
+D_{\mathrm{id}}$ is $(Mb^{-15/2})^{kf}\#I((k-1)!)^f$ up to $b^{\pm kf/4}$
+(\lean{New.Data.abs_log_mainSecondMoment_div_identitySecondMoment_sub_le}).
+
+\subsection{The Poincaré map and its Petersson products}\label{sp-unfold:ss:poincare}
+
+For the data $D$ let $R_0=\mathsf U\rtimes\U(X_0)\subset\U(Y_0)$, $[R_0]=R_0(E)\backslash R_0(\A)$,
+and $\psi_{\mathsf U}(u)=\psi_\A(-\operatorname{sr}(u)/(M\delta_E))$ the generic character; its finite part is $\psi_{\mathrm f}$. For a
+source form $\varphi$ with values in a Weyl module $L$, a linear form $\mathfrak t$ on $L$ and a real point
+$g_0$, put $\mathcal W_\varphi(uh)=\psi_{\mathsf U}(u)\,\mathfrak t(\rho_L(h_\infty)^{-1}\varphi(h_{\mathrm f}))$ on $R_0(\A)$
+(the linear form $\mathfrak t$ and the point $g_0$ are the $\mathfrak t$ and $g$ of
+\S\ref{ub-objects:sec:poincare}).
+
+\begin{definition}[Poincaré map; \lean{New.Data.poincareAt}, \lean{New.Data.poincare}]
+\label{sp-unfold:def:poincare}
+$\Poin_{g_0,\mathfrak t}\varphi\in\mathcal A(Y_0)$ is the form with $\pair{y,\Poin_{g_0,\mathfrak t}\varphi}=\int_{[R_0]}
+\mathcal W_\varphi(r)\,\overline{y(rg_0)}\,dr$ for all $y\in\mathcal A(Y_0)$ (Riesz), and
+$\Poin=\Poin_{g_0,\mathfrak t}$ for the $g_0$, $\mathfrak t$ of Theorem~\ref{sp-unfold:thm:series}
+(\lean{New.Data.besselPoint}, \lean{New.Data.besselForm}; written $g_B$, $\mathfrak t_B$ in
+Section~\ref{sec:ub-objects}). This is the definition by the reproducing property made in
+Definition~\ref{ub-objects:def:poincare}, restated here; Theorem~\ref{sp-unfold:thm:series}(b)
+shows that $\Poin$ is also a Poincar\'e series.
+\end{definition}
+
+So $\Poin$ is the adjoint of the Bessel period. Let $V$
+\emph{fit} $S$ (\lean{New.Filling.Fits}: the Gram matrix of $S$, Bessel systems of the archimedean
+type of the forms, finite point the lattice basis up to units and a central $\eta\in H(\Af)$); $Y_0$
+fits the filling data of $D$ (\lean{New.Data.filling_fits}). Let $J$ be the principal level at the
+chosen places (\lean{New.Filling.stdPrincipalLevel}) and $g_c$ the finite point of $c$. Let
+$\omega_{c,i}(g)=\beta_c(g_\infty)W_i(g_\infty)$ if $g_c^{-1}g_{\mathrm f}\in J$ and $0$ otherwise
+(\lean{New.Filling.Fits.cutBessel}), and for $\phi\in\C^{\mathcal C\times I}$ put
+$P_\phi(g)=\sum_{c,i}\phi(c,i)\sum_{\gamma\in G(E)}\omega_{c,i}(\gamma g)$
+(\lean{New.Filling.Fits.poincareSeries}). As $\sum_{u\in\mathsf U_c}\omega_{c,i}(ug)=W_i(g_\infty)$ on
+$g_cJ$ (\lean{New.Filling.Fits.tsum_cutBessel_classUnipotent}), $P_\phi$ is the Poincaré series
+over $\mathsf U_c\backslash G(E)$, written without coset representatives.
+
+\begin{fact}[Unfolding; \lean{New.integral_quotMeasure_tsum},
+\lean{New.integral_quotMeasure_eq_zero_of_twist}, \lean{New.eq_of_forall_ψf_mul_eq},
+\lean{New.denseRange_algebraMap_finAdele}]\label{sp-unfold:fact:unfold}
+Let $\Gamma$ be a discrete subgroup of a second countable locally compact Hausdorff group $G$. (a)
+If $F\in L^1(G)$, then $\sum_{\gamma\in\Gamma}F(\gamma g)$ is integrable on $\Gamma\backslash G$ with integral
+$\int_GF$. (b) If $F$ is continuous, left $\Gamma$-invariant and $F(uy)=cF(y)$ for some $u$, all $y$
+and some $c\ne1$, $\abs c=1$, then $\int_{\Gamma\backslash G}F=0$. (c) $E$ is dense in $\Af$, and
+$a=a'$ if $\psi_{\Af}(ta)=\psi_{\Af}(ta')$ for all $t\in\Af$. (Weil's integration formula; Bourbaki,
+Intégration VII, 1963. Tate, Fourier analysis in number fields and Hecke's zeta-functions, 1950
+(his thesis), in Cassels--Fröhlich, 1967, ch.~XV; Cassels, Global Fields, 1967, ch.~II.)
+\end{fact}
+
+\begin{theorem}[The series; \lean{New.Filling.Fits.exists_tsum_enorm_cutBessel_le},
+\lean{New.Data.poincare_eq_poincareMap_comp}]\label{sp-unfold:thm:series}
+Let $S$ be admissible and $V$ fit $S$. (a) $\sum_\gamma\abs{\omega_{c,i}(\gamma g)}$ is bounded
+uniformly in $g$, and $\phi\mapsto P_\phi$ is a linear map $\Pi_V$ (\lean{New.Filling.Fits.poincareMap})
+into the forms of the type of $W$ and level $J$. (b) For some $g_0,\mathfrak t$, $\Poin_{g_0,\mathfrak t}=\Pi_{Y_0}\circ
+\mathrm{co}$, where $\mathrm{co}(\varphi)(c,i)$ is the $i$-th coordinate of the value at $h_c$ of
+a central translate of $\varphi$, read in $\C^I$ by a fixed isomorphism $L\cong(\C^I)^*$
+(\lean{New.Data.sourceFormCoords}).
+\end{theorem}
+
+\begin{proof}
+(a) If $\omega_{c,i}(\delta g)\ne0$, then $\omega_{c,i}(\gamma g)\ne0$ forces $\delta\gamma^{-1}$ to be a
+term over $(c,1,c)$, and the block sums are bounded
+(\lean{New.Filling.exists_tsum_classCutoff_mul_prod_enorm_le}); the discrete series kernel
+reproduces $W$. (b) By Fact~\ref{sp-unfold:fact:unfold}(a), for $y$ of the conjugate type and level
+$J$ (\lean{New.Filling.Fits.integral_mul_poincareSeries_eq_sum_classes})
+\[
+\textstyle\int_{[G]}yP_\phi=\vol(J)\sum_c\int_{G_\infty}\beta_c(x)\bigl(\sum_i\phi(c,i)W_i(x)\bigr)
+y(x,g_c)\,dx.
+\]
+Insert $\mathrm{co}\varphi(c)\cdot W(x)=\int_{R_0(F_\infty)}\overline{e(g_0^{-1}s^{-1}x)}
+\mathcal W_\varphi(s,h_c)\,ds$, $e$ the discrete series kernel
+(\lean{New.Filling.Fits.exists_dotProduct_besselFn_eq_integral}), and move the quotient by $\mathsf
+U_c$ from $G(F_\infty)$ to $R_0(F_\infty)$, where $e$ reproduces $y$
+(\lean{New.Filling.Fits.integral_classCutoff_integral_mul}): this leaves
+$\vol(J)\sum_c\int_{\mathsf U_c\backslash R_0(F_\infty)}\mathcal W_\varphi(s,h_c)y(sg_0,h_c)\,ds$. The
+period is a constant $c_{J'}\ne0$ times the same sum, as $[R_0]/J'$ is the disjoint union of the $\mathsf
+U_c\backslash R_0(F_\infty)$, $J'=J\cap R_0(\Af)$
+(\lean{New.Filling.Fits.exists_integral_besselMeasure_eq_sum}); the ratio goes into $\mathfrak t$.
+\end{proof}
+
+\begin{theorem}[Petersson products; \lean{New.Filling.Fits.petersson_poincare}]
+\label{sp-unfold:thm:petersson}
+Let $S$ be admissible and $V$ fit $S$. If $g$ stabilises the standard lattice and has reduction $s$
+at the chosen places, then $\pair{g\cdot\Pi_Ve_{(c',i')},\Pi_Ve_{(c,i)}}=\vol(J)\,
+A_{G(E)}(c,s,c')_{ii'}$. So $P=(\vol(J)\nu)^{-1/2}\Poin\circ\mathrm{co}^{-1}$ has amplitude blocks
+(Definition~\ref{sp-unfold:def:blocks}) for $\Gbar$ acting on $\mathcal A(Y_0)$
+(\lean{New.Filling.hasAmplitudeBlocks_smul_of_inner_eq}, \lean{New.Data.hasAmplitudeBlocks_scaledPoincare}).
+\end{theorem}
+
+\begin{proof}
+Fold the series of $(c,i)$ against $z=g\cdot\Pi_Ve_{(c',i')}$, of level $J$ as $g$ normalises $J$,
+and expand $z$ as its series: the term of $\gamma^{-1}$ is nonzero at $(x,g_c)$ exactly when $\gamma$
+is a term over $(c,s,c')$ (\lean{New.Filling.Fits.mem_principalLevel_iff_mem_termsOver}), and then
+it is $\beta_{c'}(\gamma^{-1}x)W_{i'}(\gamma^{-1}x)$.
+\end{proof}
+
+\begin{remark}[The analogy]\label{sp-unfold:rem:petersson}
+For $\SL_2(\Z)$, unfolding the Petersson product of two Poincaré series gives a sum over
+$\Gamma_\infty\backslash\Gamma/\Gamma_\infty$: the identity coset gives the diagonal, the big cell
+Kloosterman sums times $J$-Bessel functions. Here $\mathsf U$ and $\psi_{\mathsf U}$ play the parts of
+the upper unipotent group and its character, $W$ is the archimedean Bessel vector, and $s\in\Gbar$
+records $\gamma$ modulo the chosen places, so $\sum_s\norm{P^*sP}^2$ is a mean of Petersson formulas
+over the level group. The terms in $R$ give the diagonal $r_\psi(s)$, now negligible,
+$\mathcal D_{\mathrm{id}}\le b^{-11kf}\mathcal D_{\mathrm{main}}$; the main term comes from the open
+cell, through Siegel's mass formula (Section~\ref{sec:sp-main}).
+\end{remark}
+
+\subsection{Which terms contribute}\label{sp-unfold:ss:terms}
+
+Let $Z(\gamma)=(h(\mathbf f_a,\gamma\mathbf f_b))_{a,b}$, $D_l$ its leading minors and
+$\mathsf g(\gamma)=\abs{D_n}^2-N^2\abs{D_\varrho}^2$ (\lean{New.Filling.termDisc}). A pair
+$(\mu,\mu')$ \emph{occurs at} $j$ if $\mathbf fx=\gamma\mathbf fy$ for some $x,y$ vanishing above
+$j$ with $x_j=\mu$, $y_j=\mu'$ (\lean{New.PairOccursAt}). Links, cell ranks and $\Gamma^*$ are as
+in Definition~\ref{sp-remain:def:frame} (\lean{New.link}, \lean{New.Filling.HasCellRank},
+\lean{New.Filling.remainingTerms}). $\gamma$ \emph{agrees} if $\psi_{\mathrm f}(u)=\psi_{\mathrm f}(u')$ whenever
+$u,u'\in\mathsf U(E)$, $u\gamma=\gamma u'$ (\lean{New.Filling.CharsAgree}); $s\in\Gbar$ agrees if the
+same holds for integral $u,u'\in\mathsf U(\Af)$ with $\bar us=s\bar u'$ (\lean{New.Filling.Agrees}).
+$\mathcal F\subseteq G(E)$ is \emph{stable} if $\mathsf U(E)\mathcal F\mathsf U(E)=\mathcal F$.
+
+\begin{lemma}[Characters; \lean{New.Filling.amplitudeSum_eq_zero_of_not_charsAgree},
+\lean{New.Filling.amplitudeSum_eq_zero_of_not_agrees}]\label{sp-unfold:lem:char}
+Let $S$ be admissible and $\mathcal F$ stable. If no $\gamma\in\mathcal F$ agrees, or if $s$ does not agree, then
+$A_{\mathcal F}(c,s,c')=0$, also for $W^\flat$.
+\end{lemma}
+
+\begin{proof}
+The weights $\beta$ may be replaced by any weights with sum $1$ on the orbits of $\mathsf
+U_c\times\mathsf U_{c'}$ (\lean{New.Filling.hasSum_amplitudeSum_of_cutoff}); so an orbit contributes
+the integral of $W(y)\otimes W(\gamma^{-1}y)^*$ over $\Gamma\backslash G_\infty$, $\Gamma$ the
+stabiliser of $\gamma\mathsf U_{c'}$ in $\mathsf U_c$. If $u\gamma=\gamma u'$ with
+$\psi_{\mathrm f}(u)\ne\psi_{\mathrm f}(u')$, translation by $u_\infty$ multiplies this kernel by
+$\psi_{\mathrm f}(u)^{-1}\psi_{\mathrm f}(u')\ne1$; apply Fact~\ref{sp-unfold:fact:unfold}(b). For $s$: translating the
+block by integral $u,u'\in\mathsf U$ multiplies it by $\psi_{\mathrm f}(u)^{-1}\psi_{\mathrm f}(u')$
+(\lean{New.Filling.amplitudeSum_besselU_mul}).
+\end{proof}
+
+\begin{lemma}[Climbing; \lean{New.Filling.pairOccursAt_succ}]\label{sp-unfold:lem:climb}
+Let $\gamma$ agree. If $(\mu,\mu')$ occurs at $j<\varrho$, it occurs at $j+1$; so it occurs at every
+index $\ge j$, and $\mu\bar\mu=\mu'\bar\mu'$.
+\end{lemma}
+
+\begin{proof}
+It suffices that every linear form $\theta$ vanishing on $\mathbf f_0,\dots,\mathbf f_j,\gamma\mathbf
+f_0,\dots,\gamma\mathbf f_j$ takes the same value $\alpha=\alpha'$ on $\mu\mathbf f_{j+1}$ and
+$\mu'\gamma\mathbf f_{j+1}$ (\lean{New.pairOccursInColumnsAt_of_forall_mul_vecMul_eq}). Let $\mathbf
+fx=\gamma\mathbf fy$ as given and $\theta=h(v,\cdot)$. For $\tau\in E$ the Eichler transformations $u$
+along $(\tau x,v)$ and $u'$ along $(\tau y,\gamma^{-1}v)$ lie in $\mathsf U(E)$, have
+$\operatorname{sr}(u)=\tau\alpha$, $\operatorname{sr}(u')=\tau\alpha'$ (\lean{New.exists_mem_besselU_eq_eichlerMap}), and
+$u\gamma=\gamma u'$. Agreement gives $\psi_{\Af}(t\alpha)=\psi_{\Af}(t\alpha')$ for all $t\in E$, so
+$\alpha=\alpha'$ by Fact~\ref{sp-unfold:fact:unfold}(c). At the index $\varrho$
+the common vector $w$ has $-N\mu\bar\mu=h(w,w)=h(\mathbf fy,\mathbf fy)=-N\mu'\bar\mu'$, as the $e_a$
+are isotropic, orthogonal to each other and to $z$.
+\end{proof}
+
+\begin{proposition}[Cells; \lean{New.Filling.termDisc_pos_or_eq_zero},
+\lean{New.Filling.termDisc_eq_zero_iff}, \lean{New.Filling.CharsAgree.exists_hasCellRank}]
+\label{sp-unfold:prop:cells}
+(a) Either $\mathsf g(\gamma)$ is totally positive and $\det Z(\gamma)\ne0$, or $\mathsf g(\gamma)=0$;
+and $\mathsf g(\gamma)=0$ if and only if $\Span\mathbf f\cap\Span\gamma\mathbf f\ne0$. (b) If
+$\gamma$ agrees and $\mathsf g(\gamma)=0$, then $\gamma$ has a cell rank $j\le\varrho$. (c) If
+$\gamma$ agrees and $\gamma\notin\Gamma^*$, a pair $(\epsilon,1)$ with $\epsilon\bar\epsilon=1$ occurs at
+every index (\lean{New.Filling.CharsAgree.normOnePairOccursFrom_zero}).
+\end{proposition}
+
+\begin{proof}
+(a) A norm identity shows that each $\Phi_v(\mathsf g(\gamma))$ is real and $\ge0$
+(\lean{New.Filling.map_termDisc_eq_norm}); the criterion is linear algebra on the link
+(\leanfile{New/Spanning/Unfolding/Link}). (b) Take a nonzero common vector of the two spans and its
+top index $j_0$; by Lemma~\ref{sp-unfold:lem:climb} its top coefficients, of equal nonzero norm,
+occur at every index $\ge j_0$; divide by the second. For the least such index $j$, $D_j\ne0$
+(\lean{New.Filling.CharsAgree.leadingMinor_ne_zero}). (c) Now $\mathsf g(\gamma)=0$ and
+$A=\gamma A$, and $A=A_{\le j}\oplus(A\cap\gamma A)$ for the cell rank $j$ forces $j=0$
+(\leanfile{New/Spanning/Unfolding/TermStructure}).
+\end{proof}
+
+$\Sigma\subseteq\Gbar$ \emph{avoids scalar cosets} if no $s\in\Sigma$ lies in $\epsilon\bar R_0$ for an
+integral $\epsilon\in E$, $\epsilon\bar\epsilon=1$, $\epsilon\ne1$, acting by residues
+(\lean{New.Filling.AvoidsScalarCosets}).
+
+\begin{proposition}[Sorting the terms; \lean{New.Filling.AvoidsScalarCosets.amplitudeSum_compl_besselS_eq},
+\lean{New.Filling.amplitudeSum_besselS_apply}]\label{sp-unfold:prop:sort}
+Let $S$ be admissible and $E$ contain a primitive $5040$-th root of unity. (a) If $\Sigma$ avoids
+scalar cosets and $s\in\Sigma$, then $A_{G(E)\smallsetminus R}(c,s,c')=A_{\Gamma^*}(c,s,c')$. (b) If
+$\gamma\in R(E)$ is a term over $(c,s,c')$ and $W(\gamma_\infty y)=M_\gamma W(y)$, then
+$A_R(c,s,\tilde c)=\nu M_\gamma$ for $\tilde c=c'$ and $0$ otherwise. In particular $A_R(c,1,c')=\nu\delta_{cc'}1$.
+\end{proposition}
+
+\begin{proof}
+(a) $\Gamma^*\cap R=\emptyset$, as $(1,1)$ occurs at every index for $\gamma\in R$. The other terms
+off $R$ that do not agree form a stable set, with blocks $0$ by Lemma~\ref{sp-unfold:lem:char}. For
+those that agree, Proposition~\ref{sp-unfold:prop:cells}(c) gives $\epsilon$ with $\epsilon^{-1}\gamma\in R$,
+$\epsilon$ integral, so $s\in\epsilon\bar R_0$ (\lean{New.Filling.exists_scalar_mul_besselS}); then
+$\epsilon=1$ and $\gamma\in R$, a contradiction. (b) At $s=1$ only $\gamma\in\mathsf U_c$, $c=c'$,
+contribute, as $\mathcal K_X$ is free; put the whole weight on $\gamma=1$, unfold over $\mathsf U_\infty$
+with $\int\beta_c(uy)du=\nu$ and use orthonormality on $\mathsf U\backslash G_1$
+(Proposition~\ref{sp-moment:prop:orth}; \lean{New.Filling.amplitudeSum_besselS_one_eq_ite}).
+Translation by $\gamma$ moves the block $(c',1,\tilde c)$ to $(c,s,\tilde c)$ and acts by $M_\gamma\otimes1$.
+\end{proof}
+
+\emph{Modulo a place.} For $s\in\Gbar$ and a place $p$ above $M$ ($s$ acts modulo a conjugate place
+by the inverse adjoint), $s$ \emph{meets} at $p$ if modulo $p$ the spans of $\mathbf f$ and
+$s\mathbf f$ share a nonzero vector; $\operatorname{mn}(s)$ is the norm of the product of these
+places (\lean{New.Filling.meetNorm}). With Eichler elements of $\mathcal K$ of prescribed reduction, climbing
+works modulo $p$ for agreeing reductions (\lean{New.Filling.pairOccursInColumnsAt_succ_of_agree}),
+and gives the gain of Section~\ref{sec:sp-remain}: if $g\in\mathcal K$, $\bar g$ agrees and $(\mathbf
+f\mid g\mathbf f)^*$ times an integral matrix with two columns vanishes off the two last rows, where
+it has determinant $\delta\in\Af^\times$, then $\operatorname{mn}(\bar g)\le[\hat\cO:\delta\hat\cO]$
+(\lean{New.Filling.meetNorm_le_genIndex_det}). A \emph{frame vector} at a chosen $w\mid p_0$ is a
+nonzero vector of $\Span\mathbf f$ modulo $w$ or $\bar w$; for a set $\Pi$ of such $w$ and frame
+vectors $\mathbf d=(\mathbf d_w)$, $\operatorname{Fix}(\Pi,\mathbf d)\le\Gbar$ fixes $\mathbf d_w$ for $w\in\Pi$
+(\lean{New.Filling.fixer}); $s$ is \emph{open} if at some chosen $w\mid p_0$ all $D_l(Z(s_w))$, $l<n$,
+are nonzero (\lean{New.Filling.IsOpenElement}).
+
+\subsection{The moment bounds}\label{sp-unfold:ss:moments}
+
+\begin{definition}[\lean{New.Filling.HasAmplitudeBlocks}, \lean{New.Filling.besselTranslate}]
+\label{sp-unfold:def:blocks}
+Let $\rho$ be a representation of $\Gbar$ on a finite-dimensional $\mathcal V$ and
+$P\colon\C^{\mathcal C\times I}\to\mathcal V$. $P$ has \emph{amplitude blocks} if
+$\pair{\rho(s)Pe_{(c',i')},Pe_{(c,i)}}=A_{G(E)}(c,s,c')_{ii'}/\nu$ for all $s,c,i,c',i'$. Put $P_s=P^*\rho(s)P$;
+$r_\psi(s)$ is the operator whose blocks are the conjugates of the $A_R(c,s,c')/\nu$.
+\end{definition}
+
+\begin{lemma}\label{sp-unfold:lem:rpsi}
+Let $P$ have amplitude blocks, $\rho$ be unitary, $S$ admissible and $E$ contain a primitive
+$5040$-th root of unity. (a) $\norm{P_s-r_\psi(s)}^2=\mathsf E(A_{G(E)\smallsetminus R},\{s\})$ and
+\begin{equation}\label{sp-unfold:eq:unfolded}
+\norm{P_s}^2=\mathsf E(A_{G(E)},\{s\})=\nu^{-2}\sum\nolimits_{c,c'\in\mathcal C}\Bigl\Vert
+\sum\nolimits_{\gamma\in G(E)\text{ over }(c,s,c')}a_{cc'}(\gamma)\Bigr\Vert^2.
+\end{equation}
+(b) $r_\psi=0$ off $\bar R_0$, and $r_\psi$ is a unitary representation of $\bar R_0$. (c)
+$P_{st}=P_sr_\psi(t)$ and $P_{ts}=r_\psi(t)P_s$ for $t\in\bar R_0$.
+\end{lemma}
+
+\begin{proof}
+\lean{New.Filling.HasAmplitudeBlocks.hilbertSchmidtNorm_sub_besselTranslate_sq},
+\lean{New.Filling.adjoint_besselTranslate}, \lean{New.Filling.HasAmplitudeBlocks.adjoint_comp_rep_mul_left}.
+(a) is the definition. (b), (c) follow from Proposition~\ref{sp-unfold:prop:sort}(b): for a stable
+$\mathcal F$ with $\mathcal F\delta=\mathcal F$ and $\delta\in R(E)$ over $(\tilde c,t,\tilde c')$, $A_{\mathcal F}(c,st^{-1},\tilde c)=A_{\mathcal F}(c,s,\tilde c')M_\delta^*$
+(\lean{New.Filling.amplitudeSum_mul_inv_apply}); for $P_{ts}$, unitarity of $\rho$ then gives
+$\rho(t)P=Pr_\psi(t)$.
+\end{proof}
+
+\begin{remark}[Where the terms go]\label{sp-unfold:rem:terms}
+In \eqref{sp-unfold:eq:unfolded} there are four kinds of terms. (i) $\gamma\in R$ give the diagonal
+$r_\psi(s)$, only for $s\in\bar R_0$, of total second moment $\mathcal D_{\mathrm{id}}$. (ii)
+$\gamma$ that do not agree give $0$ (Lemma~\ref{sp-unfold:lem:char}). (iii) $\gamma\notin R$ that
+agree, with $\mathsf g(\gamma)=0$, $A=\gamma A$, lie in $\epsilon R$
+(Proposition~\ref{sp-unfold:prop:cells}(c)), so only over the few elements of the scalar cosets
+$\epsilon\bar R_0$, $\epsilon\ne1$. (iv) In $\Gamma^*$, the $\gamma$ with $\mathsf g(\gamma)\ne0$, link by
+link over open $s$, give the main term (Section~\ref{sec:sp-main}); the rest is small
+(Section~\ref{sec:sp-remain}).
+\end{remark}
+
+\begin{proposition}[Expansion of the squares; \lean{New.Filling.sqrt_secondMoment_compl_besselS_le}]
+\label{sp-unfold:prop:expand}
+Let $\Sigma$ avoid scalar cosets and $\mathcal L(\Sigma)\le C\nu^2$ for the link sum of the terms
+with $\mathsf g\ne0$ (Theorem~\ref{sp-remain:thm:main}), $C\ge0$. Then $\sqrt{\mathsf
+E(A_{G(E)\smallsetminus R},\Sigma)}\le\sqrt C+b^{-15}\sqrt{\mathcal D_{\mathrm{id}}}$.
+\end{proposition}
+
+\begin{proof}
+By Proposition~\ref{sp-unfold:prop:sort}(a) the blocks are those of $\Gamma^*$. By
+Lemma~\ref{sp-remain:lem:cut}, $\sqrt{\mathsf E(A_{\Gamma^*})}\le\sqrt{\mathsf
+E(A_{\Gamma^*}-A^\flat_{\Gamma^*})}+\sqrt{\mathsf E(A^\flat_{\Gamma^*})}$ and the first term is at most
+$b^{-20}\sqrt{\mathcal D_{\mathrm{id}}}$; the second is at most $\sqrt{C+b^{-kf}\mathcal
+D_{\mathrm{id}}}$ by Theorem~\ref{sp-remain:thm:main}(a), and $kf\ge40$.
+\end{proof}
+
+\begin{proposition}[Near $\bar R_0$; \lean{New.Filling.secondMoment_compl_besselS_le},
+\lean{New.Filling.HasAmplitudeBlocks.hilbertSchmidtNorm_sub_one_sq_le}]\label{sp-unfold:prop:near}
+In the setting of Lemma~\ref{sp-unfold:lem:rpsi}, let $\Sigma_i$ be the set of $s$ that coincide
+with an element of $\bar R_0$ at the factor above $p_i$. Then $\sum_{s\in\Sigma_i}\norm{P_s-r_\psi(s)}^2\le b^{-12}\mathcal
+D_{\mathrm{id}}$, $\norm{P^*P-1}^2\le b^{-12}D_X$ and $\norm{P^*P}^2\le2D_X$.
+\end{proposition}
+
+\begin{proof}
+Elements of $\bar R_0$ fix $e_1$ modulo every chosen place, so each $s\in\Sigma_i$ meets at the $2f$
+places above $p_i$: $\operatorname{mn}(s)\ge p_i^{2f}\ge(M/b)^f$. If $s=\epsilon t$, $t\in\bar R_0$,
+then $\epsilon\equiv1$ modulo the chosen places above $p_i$, so $\epsilon=1$, by the freeness of the principal
+level applied to $\epsilon$ on a line (\lean{New.Filling.eq_one_of_reduceAt_scalar_eq_one}): $\Sigma_i$
+avoids scalar cosets. Theorem~\ref{sp-remain:thm:main}(b) and \eqref{sp-unfold:eq:window} give
+$C=(b^{2f}(b/M)^f)^k\mathcal D_{\mathrm{main}}\le b^{-3kf}\mathcal D_{\mathrm{id}}\le
+b^{-30}\mathcal D_{\mathrm{id}}$, and Proposition~\ref{sp-unfold:prop:expand} the first bound. For
+$t\in\bar R_0$, $P_t-r_\psi(t)=(P^*P-1)r_\psi(t)$ by Lemma~\ref{sp-unfold:lem:rpsi}(c), with $r_\psi(t)$
+unitary; sum over $t\in\bar R_0\subseteq\Sigma_0$. Last, $\norm{P^*P}\le\norm{P^*P-1}+\norm1$.
+\end{proof}
+
+\begin{theorem}[\lean{New.Filling.HasAmplitudeBlocks.sum_hilbertSchmidtNorm_sq_le}]
+\label{sp-unfold:thm:moment}
+Let $S$ be admissible, $E$ carry Weil data (so it has a primitive $5040$-th root of unity), $\rho$ be
+unitary and $P$ have amplitude blocks. Then $\sum_{s\in\Gbar}\norm{P^*\rho(s)P}^2\le
+(1+9b^{-4})\,\mathcal D_{\mathrm{main}}$.
+\end{theorem}
+
+\begin{proof}
+(\lean{New.Filling.sum_secondMoment_le}.) Let $\Theta(s)=\norm{P_s}^2$. It has positive type,
+$\Theta(g^{-1}g')=\pair{\Xi_g,\Xi_{g'}}$ with $\Xi_g=\rho(g)PP^*\rho(g)^{-1}$ as in
+Proposition~\ref{sp-moment:prop:one}; so $\Theta\le\Theta(1)\le2D_X$ by
+Proposition~\ref{sp-unfold:prop:near}. Put $\mathfrak M(\Pi,\mathbf d)=\sum_{s\in\operatorname{Fix}(\Pi,\mathbf d)}\Theta(s)$ and
+choose $(\Pi,\mathbf d)$ with $b^{6k\#\Pi}\mathfrak M(\Pi,\mathbf d)$ maximal. As $\operatorname{Fix}(\emptyset,\mathbf d)=\Gbar$, it
+suffices to show $\mathfrak M(\Pi,\mathbf d)\le(1+9b^{-4})\mathcal D_\Pi$ for $\mathcal D_\Pi=b^{-6k\#\Pi}\mathcal
+D_{\mathrm{main}}$; note $\mathcal D_{\mathrm{id}}\le b^{-5kf}\mathcal D_\Pi$ by \eqref{sp-unfold:eq:window}.
+
+\emph{All places} (\lean{New.Filling.secondMoment_fixer_univ_le}). If $\Pi$ is the set of all $f$
+chosen places above $p_0$, every $s\in\operatorname{Fix}(\Pi,\mathbf d)$ has $\operatorname{mn}(s)\ge
+p_0^f\ge b^{10f}$. At most $M^f\#\bar R_0$ elements lie in scalar cosets; they carry at most
+$2M^f\mathcal D_{\mathrm{id}}$. The others avoid scalar cosets and $\bar R_0$; by
+Theorem~\ref{sp-remain:thm:main}(b) and Proposition~\ref{sp-unfold:prop:expand} they carry at most
+$2b^{-8kf}\mathcal D_{\mathrm{main}}+2b^{-30}\mathcal D_{\mathrm{id}}$; in all, at most $\mathcal D_\Pi$.
+
+\emph{A free place.} Otherwise take a chosen $w\mid p_0$, $w\notin\Pi$. By maximality, for each frame
+vector $\mathbf d'$ at $w$ the $s\in\Gamma=\operatorname{Fix}(\Pi,\mathbf d)$ fixing $\mathbf d'$ carry at most
+$b^{-6k}\mathfrak M(\Pi,\mathbf d)$. Apply Lemma~\ref{sp-moment:lem:positive} to $\Gamma$ acting on $\F_w^r$ ($q=p_0$),
+$A_0$ the first $l$ frame vectors, $A_1$ their linear forms under $h$, and $\Theta$: fixing $A_0v$
+or $A_1v$ is fixing a frame vector modulo $w$ or $\bar w$. As $p_0^{l+r/2}\le b^{6k}$ and $p_0\ge
+b^{10}$, the $s$ with $D_l(Z(s_w))=0$ carry at most $3b^{-10}\mathfrak M$
+(\lean{New.Filling.sum_leadingMinor_eq_zero_le}); summing over $l<n\le b$, the elements that are not
+open carry at most $b^{-4}\mathfrak M$.
+
+\emph{Open elements} (\lean{New.Filling.secondMoment_fixer_isOpenElement_le}). An element $s=\epsilon t$ of a
+scalar coset maps $e_1$ to $\epsilon e_1$ modulo $w$, so $D_1=h(e_1,se_1)=0$. Hence the open elements $\Sigma$ of
+$\Gamma$ avoid scalar cosets and $\bar R_0$, and no term in $R$ lies over them. The main term,
+$\mathcal L(\Sigma)\le(1+b^{-4})\mathcal D_\Pi\nu^2$ (Theorem~\ref{sp-main:thm:main}), and
+Proposition~\ref{sp-unfold:prop:expand} give
+$\sum_{s\in\Sigma}\Theta(s)\le((1+b^{-4})^{1/2}+b^{-15})^2\mathcal D_\Pi\le(1+4b^{-4})\mathcal D_\Pi$.
+
+So $\mathfrak M\le(1+4b^{-4})\mathcal D_\Pi+b^{-4}\mathfrak M$ with $b^{-4}\le1/10$, whence $\mathfrak M\le(1+9b^{-4})\mathcal D_\Pi$.
+\end{proof}
+
+\begin{theorem}[Good forms; \lean{New.Filling.HasAmplitudeBlocks.isNearIsometry_piTensorElem_comp}]
+\label{sp-unfold:thm:good}
+In the setting of Theorem~\ref{sp-unfold:thm:moment}, let $g_i$ be a central idempotent of
+$\C[\Gbar_i]$, $\Gbar_i$ the factor above $p_i$, with $\Re(1-g_i)(1)\le b^{-8}/2$, and
+$e_0=g_0\otimes g_1$. Then $\norm{(1-e_0)P}^2\le4b^{-4}D_X$, and $e_0P$ is a near isometry with
+error $5b^{-4}$ (Definition~\ref{sp-moment:def:spread}).
+\end{theorem}
+
+\begin{proof}
+\emph{One prime} (\lean{New.Filling.HasAmplitudeBlocks.hilbertSchmidtNorm_asAlgebraHom_comp_sq_le}).
+Let $\xi$ be a central idempotent of $\C[\Gbar_i]$ with $\Re\xi(1)\le b^{-8}/2$; it acts as an
+orthogonal projection (\lean{New.IsCentralProj.isSymmetricProjection}), so
+$\norm{\xi P}^2=\Re\tr(P^*\xi P)=\Re\sum_t\xi(t)\tr r_\psi(t)+\Re\tr Y$, $Y=\sum_t\xi(t)(P_t-r_\psi(t))$. For
+$t\in\Gbar_i$, $\tr r_\psi(t)=D_X\bar\psi(t)$, $\bar\psi$ the character $\psi_{\mathrm f}$ read on the reduction
+of $\mathsf U(\Af)\cap\mathcal K$ and $0$ elsewhere (\lean{New.Filling.trace_besselTranslate_eq_mul_reducedChar}).
+As $\xi$ is a class function, $\bar\psi$ may be replaced by its mean $\psi^\natural$ over conjugates;
+Cauchy--Schwarz with $\sum_t\abs{\xi(t)}^2=\Re\xi(1)$ and $\sum_s\abs{\psi^\natural(s)}^2\le2$
+(\lean{New.Filling.sum_norm_reducedCharMean_sq_le}, by a local mass integral of
+Section~\ref{sec:sp-frames}) bounds the first sum by $b^{-4}D_X$. Next $\abs{\tr Y}\le\sqrt{D_X}\norm
+Y$. By Lemma~\ref{sp-unfold:lem:rpsi}(c), $\norm Y=\norm{\sum_t\xi(t)(P_{st}-r_\psi(st))}$ for $s\in\bar
+R_0$; convolution with $\xi$ is a contraction and all $st$ lie in $\Sigma_{i+1}$, so $\#\bar
+R_0\norm Y^2\le b^{-12}\mathcal D_{\mathrm{id}}$ by Proposition~\ref{sp-unfold:prop:near}. Hence
+$\norm{\xi P}^2\le2b^{-4}D_X$.
+
+\emph{Both primes.} Take $\xi=1-g_i$ and Lemma~\ref{sp-moment:lem:isometry}(c) with the commuting
+projections $g_0\otimes1$, $1\otimes g_1$. By Proposition~\ref{sp-unfold:prop:near} and
+Lemma~\ref{sp-moment:lem:isometry}(a), $P$ is a near isometry with error $b^{-4}$; Lemma~\ref{sp-moment:lem:isometry}(b) gives the error $b^{-4}+4b^{-4}=5b^{-4}$
+for $e_0P$.
+\end{proof}

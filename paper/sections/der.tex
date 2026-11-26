@@ -1,0 +1,618 @@
+\section{Derivatives of theta functions and the primes they count}\label{sec:der}
+
+This section is where the primes enter. The values of the composite lift of Theorem~A are Taylor
+coefficients (\emph{jets}) of theta functions of the CM curve $\C/\Omega_0\cO_K$ along linear forms
+over $E$. At every prime $\ell$ that does not split in $K$ such a jet is divisible by an explicit
+power $\ell^{D_\ell}$, the \emph{predicted divisibility}, up to a loss logarithmic in its degree.
+For rows whose partners have the orders $\kappa$, and for $\ell\ne d$, $D_\ell$ is the part at
+$\ell$ of the prime sum $\sfin$, divided by $2\log\ell$ (\S\ref{der:sec:primesums}).
+
+The mechanism is the following. After a scaling $z\mapsto\varpi z$ the theta function is an
+integral series times $\exp(c_\varpi\Xi)$, where $\Xi$ is a combination of \emph{couplings}
+$z^{\ell^e}z$. Along a resolution of the identity of $E^n$ the couplings pair each place $\tau$
+with its \emph{partner} $-\ell^e\tau$, because for $e\in I_\ell^\circ$ (odd $e$ for inert $\ell$,
+all $e$ for $\ell=d$) the $\ell^e$-th power at $\tau$ is, modulo $\pi_\ell$, complex conjugation at
+the partner (Lemma~\ref{der:lem:frob}). Killing the couplings by a change of variables costs
+determinants, and Legendre's formula gives the rest. (Classically, the curve is supersingular at
+such $\ell$.)
+
+From the data of Definition~\ref{setup:def:data} the section obtains four things: the count
+(Theorems~\ref{der:thm:count} and~\ref{der:thm:schur}), used in Sections~\ref{sec:ub-divis}
+and~\ref{sec:ub-objects}; the integral vacuum, standard data and the archimedean scale
+(\S\ref{der:sec:vacuum}), with which Section~\ref{sec:ub-objects} expands the composite lift and
+bounds it by $\sinf$; sharpness (Theorem~\ref{der:thm:sharp}), used for the lower bound in
+Section~\ref{sec:ol-values}; and the arithmetic of $E$ (\S\ref{der:sec:field}).
+
+\subsection{The field, its places and its primes}\label{der:sec:field}
+
+This subsection fixes the notation for places and for the primes that do not split in $K$. Its
+one result, Lemma~\ref{der:lem:frob}, is the congruence that makes the $\ell^e$-th power at a place
+agree with complex conjugation at the partner; Definition~\ref{der:def:field} collects arithmetic
+data of $E$ that other sections use.
+
+\begin{notation}
+Letters are those of Definition~\ref{setup:def:data} and Section~\ref{sec:setup}; in particular
+$\Phi\cong\Gal(E/K)\cong(\Z/q_1)^\times$, $M=p_0p_1$ and
+$\Omega=e^{\gamma-\Re L'/L(1,\chiK)}2\pi/\rdE$. As there, for an integer $\nu$ and $\tau\in\Phi$,
+$\nu\tau$ is the product of $\tau$ with the place of the class of $\nu$, read as $\tau$ if
+$\gcd(\nu,q_1)>1$. Each $\tau\in\Phi$ is also an embedding $E\to\C$ of the CM type, and
+$\sigma_\tau\in\Gal(E/K)$ is its Galois element; for an integer $\nu$, $\sigma_\nu$ is the Galois
+element of the place of the class of $\nu$. For a prime $\ell$ we fix $\iota\colon\C\to\Cl$,
+$\iota\mid\ell$; $\cO$ is the ring of integers of $\Cl$, $v$ the valuation with $v(\ell)=1$, and a
+series is \emph{integral} if its coefficients lie in $\cO$.
+\end{notation}
+
+\begin{definition}[Non-split primes; \lean{New.Parameters.partner}]\label{der:def:nonsplit}
+Let $\chiK(\ell)\ne1$, so that $\ell$ is inert or $\ell=d$. Put
+$(\pi_\ell,q_\ell,v(\pi_\ell))=(\ell,\ell^2,1)$ if $\ell$ is inert and $(\sqrt{-d},\ell,\frac12)$ if
+$\ell=d$, and put $\rho_\ell=v(\pi_\ell)/(q_\ell-1)$ and $\gamma_\ell=\frac1{\ell-1}-\rho_\ell$. Let
+$I_\ell^\circ$ be the set of odd numbers if $\ell$ is inert and $\N$ if $\ell=d$, and
+$I_\ell=I_\ell^\circ\setminus\{0\}$; then $\gamma_\ell=v(\pi_\ell)\sum_{e\in I_\ell}\ell^{-e}$. The
+\emph{partner} of $\tau\in\Phi$ for $e$ is $-\ell^e\tau$. For split $\ell$, $I_\ell=\emptyset$ and
+$\gamma_\ell=0$. As primes dividing $q_1$ split (\lean{New.Parameters.chiK_eq_one_of_dvd}), a
+non-split $\ell$ does not divide $q_1$.
+\end{definition}
+
+\begin{lemma}[Frobenius; \lean{New.Parameters.norm_pow_sub_conj_partner_le}, \lean{New.Parameters.norm_conj_pow_sub_partner_le}]
+\label{der:lem:frob}
+Let $\chiK(\ell)\ne1$, $e\in I_\ell^\circ$, $\tau\in\Phi$, and let $\tau'=-\ell^e\tau$ be its partner.
+Then in $\Cl$ we have $\tau(w)^{\ell^e}\equiv\overline{\tau'(w)}\pmod{\pi_\ell}$ for $w\in\cO_E$, and
+$\overline{\tau(w)}^{\,\ell^e}\equiv\tau'(w)$ for $w\in E$ integral above $\ell$.
+\end{lemma}
+
+\begin{proof}
+The maps $w\mapsto\tau(w)^{\ell^e}$ and $w\mapsto\tau(\sigma_{-\ell^e}\bar w)$ from
+$\cO_E=\Z[\beta_K,\zeta]$, $\beta_K=\frac{1+\sqrt{-d}}2$, to $\cO/\pi_\ell$ are ring maps, so it
+suffices that they agree on $\zeta$, where $\sigma_{-\ell^e}(\bar\zeta)=\zeta^{\ell^e}$, and on
+$\sqrt{-d}$ (\lean{New.Parameters.forall_map_galOfPlaceInt_eq_pow_iff}). For inert $\ell$,
+$(\sqrt{-d})^{\ell^e}\equiv\chiK(\ell)^e\sqrt{-d}=-\sqrt{-d}$ as $e$ is odd; for $\ell=d$ both sides
+are $\equiv0\bmod\sqrt{-d}$. For $w$ integral above $\ell$ write $w=w_0/m'$ with $w_0\in\cO_E$ and
+$\ell\nmid m'$, and use ${m'}^{\ell^e}\equiv m'$.
+\end{proof}
+
+\begin{definition}[Arithmetic data used elsewhere]\label{der:def:field}
+(a) \emph{Chosen places} (\lean{New.Data.IsChosen}, \lean{New.Data.ChosenPlace}): let
+$\bar\pi_M\in\cO_K$ have norm $M$ and let $\pi_M$ (\lean{New.Data.piM}) be the conjugate of its
+image in $\cO_E$, so that $\pi_M\bar\pi_M=M$ (\lean{New.Data.piM_mul_star}). The chosen places are
+the primes dividing $\pi_M$; each has norm $p_0$ or $p_1$ (\lean{New.Data.q_eq_levelPrime}), and
+those above $p_i$ correspond to $\Phi$ (\lean{New.Parameters.nonempty_infinitePlace_equiv_finPlace}).
+(b) \emph{Characters}: $\omega_{\fq}$ (\lean{New.Data.chiMLocal}) is the $q_2$-th power of a fixed
+character of order $q_2^2$ of the residue field at a chosen $\fq$, and is trivial elsewhere;
+$\mu^\flat$ (\lean{New.Data.chiZero}) and $\chi$ (\lean{New.Data.chiM}) are the automorphic characters
+of $\U(1)$ of Definition~\ref{data:def:liftchar}, the first of weight $-(\kappa+\Delta/2)$ and trivial
+tame part, the second of weight $0$ and tame part $\omega$.
+(c) \emph{Critical pairs} (\lean{New.Data.CriticalPair}): a character $\nu$ of weight $-c$ whose
+tame part is supported on the chosen places, and an integer $z\in[1,t]$ with $z\le c(\tau)\le4b$
+at every $\tau$; there are finitely many. The letters $\nu$, $z$, $c$ are those of
+Section~\ref{sec:det-chain}, which defines ramified pairs, main pairs and their ratios
+(\S\S\ref{det-chain:sec:setup} and~\ref{det-chain:sec:regular}).
+(d) \emph{The different}: $\delta_E=u\,P'(\zeta)\sqrt{-d}$ (\lean{New.Parameters.deltaE}), with
+$P'$ the derivative of the $q_1$-th cyclotomic polynomial and $u\bar u=1$, is a purely imaginary
+generator of the different of $E$. It has $\prod_\tau|\tau(\delta_E)|=\rdE^f$
+(\lean{New.Parameters.prod_deltaE_eq_rootDiscr_pow}), and $|\tau(\delta_E)|,\rdE\in
+[x^{10},x^{12}]$ (\lean{New.Data.hasLogBound_deltaE}, \lean{New.Data.rootDisc_mem_Icc}).
+(e) \emph{Weil data} (\lean{New.Parameters.instWeilDataE}): $\jmath=-1/\sqrt{-d}$, the idele
+$\alpha$ with component $1/P'(\zeta)$ at the places dividing $\beta_K$ and $1$ elsewhere, and a
+splitting character $\upsilon$. Put $\fa_0=E\cap\alpha\hat\cO$; then $\jmath\fa_0\bar\fa_0$ is the inverse
+different. The number $s_0$ (\lean{New.Parameters.vacuumRoot}), an $f$-th root of
+$\upsilon(\alpha)^{-1}\abs{\alpha}^{1/2}$, $\abs{\alpha}$ the idele norm, has $|\sigma s_0|^2=\rdE/\sqrt d$ for $\sigma\in\Gal(\C/K)$
+(\lean{New.Parameters.norm_gal_vacuumRoot}).
+\end{definition}
+
+\subsection{The curve and its exponent at a non-split prime}\label{der:sec:curve}
+
+This subsection works on a single CM curve. It recalls the formal group of the curve at a
+non-split prime (Fact~\ref{der:fact:formal}) and proves Theorem~\ref{der:thm:exponent}: after the
+scaling $z\mapsto\varpi z$ the theta function is an integral series times $\exp(c_\varpi\Xi)$, with
+$\Xi$ congruent modulo $\pi_\ell$ to a combination of the $\ell^j$-th powers of the couplings
+$z^{\ell^e}z$. From it Proposition~\ref{der:prop:thetaprod} passes to products of theta functions
+in many variables (\S\ref{der:sec:normal}).
+
+A \emph{CM lattice} $C$ is a lattice $\Lambda\subset\C$ stable under $\cO_K$ with a point $t_0$ of
+order two and $\wp''(t_0)=2$. Its theta function $\theta$ is the translate by $t_0$ of the sigma
+function, twisted to a theta function, with $\theta(0)=1$. The functions
+$\mathrm x=\wp(z+t_0)-\wp(t_0)=z^2+\cdots$ and $\mathrm y=\frac12(\wp'(z+t_0)-a_1\mathrm x)$
+satisfy $\mathrm y^2+a_1\mathrm x\mathrm y=\mathrm x^3+\mathrm x$, and we put $g=-\log\theta$.
+Taylor series at $0$ are read in $\Cl$ through $\iota$, and $\cO[[\mathrm y]]$ is the ring of
+integral series in $\mathrm y$. The curve of the proof is $\C/\Omega_0\cO_K$
+(\lean{New.Parameters.cmCurve}).
+
+\begin{fact}[Formal group; \lean{New.CMLattice.taylorVia_translatedX_mem_integralSeriesRing},
+\lean{New.CMLattice.derivative_mem_integralSeriesRing},
+\lean{New.CMLattice.mem_integralSeriesRing_iff_exists_subst_formalParam},
+\lean{New.CMLattice.exists_scaled_formalParam}]\label{der:fact:formal}
+Let $d\equiv7\bmod8$ be prime. (a) The ring $\cO[[\mathrm y]]$ contains $\mathrm x$ and is stable
+under $d/dz$. (b) The part $\mathcal U$ of $\mathrm y$ in the degrees $\equiv1\bmod q_\ell-1$ has
+$\cO[[\mathcal U]]=\cO[[\mathrm y]]$. (c) For some $\varpi$ with $v(\varpi)=\rho_\ell$, the series
+$\mathcal Y=\mathcal U(\varpi z)/\varpi$ is integral and
+$\mathcal Y\equiv\sum_{j\ge0}z^{q_\ell^j}\pmod{\pi_\ell}$.
+(\leanfile{Lib/CM/FormalGroup/IntegralParameter}, \leanfile{Lib/CM/FormalGroup/FormalParameter};
+after Lubin--Tate, Formal complex multiplication in local fields.)
+\end{fact}
+
+Hence $h(\varpi z)$ is integral and $v(h^{(n)}(0))\ge v(n!)-n\rho_\ell\ge\gamma_\ell n-O(\log n)$
+for $h\in\cO[[\mathrm y]]$; this is the rate of Katz (Divisibilities, congruences, and Cartier
+duality, 1981). Put $c_\varpi=\varpi^{\ell+1}/\ell$. Then $v(c_\varpi)<0$ but
+$v(c_\varpi\pi_\ell)=\frac1{\ell-1}$ (\lean{New.Parameters.norm_pow_succ_div_mul_piPrimeInt}), so
+$\exp(c_\varpi\pi_\ell G)$ is integral for integral $G$ with $G(0)=0$.
+
+\begin{theorem}[The exponent on one curve; \lean{New.CMLattice.exists_exponent_tsum}]
+\label{der:thm:exponent}
+Let $\chiK(\ell)\ne1$. There are $\varpi$ with $v(\varpi)=\rho_\ell$, integral $\mathcal W,\Xi$
+with $\Xi(0)=0$ and $\lambda_{ej}\in\cO$ ($e\in I_\ell^\circ$, $j\ge0$), the $\lambda_{e0}$ units if
+$\ell$ is inert, with
+\[
+\theta(\varpi z)=\mathcal W(z)\exp\bigl(c_\varpi\Xi(z)\bigr),\qquad
+\Xi\equiv\textstyle\sum_{e\in I_\ell^\circ}\sum_{j\ge0}\lambda_{ej}\,(z^{\ell^e}z)^{\ell^j}\pmod{\pi_\ell}.
+\]
+\end{theorem}
+
+\begin{proof}
+\emph{Frobenius congruence} (\lean{New.CMLattice.exists_rescale_theta_eq_pow_mul_one_add_smul}):
+$\theta(\pi_\ell z)=\theta(z)^{q_\ell}(1+\pi_\ell H)$ with $H\in\cO[[\mathrm y]]$. As $\pi_\ell$ is an
+isogeny of degree $q_\ell$, the quotient is an even elliptic function with integral torsion values,
+a polynomial $R(\mathrm x)$, $2\deg R<q_\ell$. It is $\exp(q_\ell g(z)-g(\pi_\ell z))$, whose
+coefficients $(q_\ell-\pi_\ell^n)g_n$ are divisible by $\pi_\ell$ for $n<q_\ell$, since
+$\pi_\ell^2\mid q_\ell-\pi_\ell^n$ ($n\ge2$) and $\pi_\ell g_n$ is integral
+($g''=g''(0)+\mathrm x$, $v(n(n-1))\le v(\pi_\ell)$).
+So $R\equiv1\bmod\pi_\ell$, and $q_\ell g(z)-g(\pi_\ell z)\in\pi_\ell\cO[[\mathrm y]]$.
+\emph{Averaging}: for the part $g^\flat$ of $g$ in the degrees $\equiv\ell+1\bmod q_\ell-1$,
+$\exp(g^\flat-g)\in\cO[[\mathrm y]]$, as $\ell\nmid q_\ell-1$ and its $(q_\ell-1)$-th power is the
+product of the $\exp(\zeta'^{-\ell-1}g(\zeta'z)-g(z))$, $\zeta'^{q_\ell-1}=1$. These lie in the
+closed ring $\cO[[\mathrm y]]$: $\exp(\alpha\bar\alpha g-g(\alpha z))=\theta(\alpha z)/\theta^{\alpha\bar\alpha}$
+does for $\alpha\in\cO_K$, and
+$(\zeta'^{-1},\zeta'^{-\ell-1})=\lim(\alpha_0^{q_\ell^n},(\alpha_0\bar\alpha_0)^{q_\ell^n})$ for
+$\alpha_0\in\cO_K$ lifting $\zeta'^{-1}$, as $\bar\alpha_0\equiv\alpha_0^\ell\bmod\pi_\ell$; then
+$z\mapsto\zeta'z$
+(\lean{New.mem_normPairClosure_of_pow_eq},
+\lean{New.CMLattice.expSubst_rescale_sub_mem_of_pow_eq_one}). So
+$\theta(\varpi z)=\mathcal W\exp(c_\varpi\Xi_1)$ with $\Xi_1=-g^\flat(\varpi z)/c_\varpi$.
+\emph{Functional equation} (\lean{New.CMLattice.exists_functional_equation_exponentSeries}): the
+congruence for $g^\flat$ at $\varpi z$ gives
+$(1-\pi_\ell^n/q_\ell)[z^n]\Xi_1\equiv\lambda[z^n]\mathcal Y^{i_0}$, $\lambda\in\cO$, with
+$i_0=\ell+1$ (inert) or $2$ ($\ell=d$). As $\Xi_1$ has no terms below $i_0$ and
+$\pi_\ell^n/q_\ell\equiv0$ for $n>2$, $\Xi_1\equiv\lambda\mathcal Y^{\ell+1}$ (inert),
+$\Xi_1\equiv\lambda(\mathcal Y^2-z^2/2)$ ($\ell=d$, where $1-\pi_\ell^2/q_\ell=2$).
+\emph{Solution}: by Fact~\ref{der:fact:formal}(c), for inert $\ell$,
+$\mathcal Y^\ell\mathcal Y\equiv\sum_{i\text{ odd}}z^{\ell^i}\sum_{i\text{ even}}z^{\ell^i}=\sum_{e\text{
+odd}}\sum_j(z^{\ell^e}z)^{\ell^j}$, and for $\ell=d$, $\mathcal Y^2\equiv\sum_j(z^2)^{\ell^j}+2\sum_{e\ge1,j}
+(z^{\ell^e}z)^{\ell^j}$. For inert $\ell$, $\lambda$ is a unit multiple of $h_1=[z^{\ell-1}]\mathrm x$, and
+$h_n=[z^{\ell-1}]\mathrm x^n$ satisfies $(4n+6)h_{n+2}+(n+1)a_1^2h_{n+1}+(4n+2)h_n\equiv0$ (the
+$z^{\ell-1}$-coefficient of $(\mathrm x^n\mathrm x')'$), which leads from $h_1$ to $h_{(\ell-1)/2}=1$; so
+$h_1$ is a unit (\lean{New.CMLattice.norm_coeff_taylorVia_translatedX_eq_one}).
+\end{proof}
+
+\subsection{The normal form and products of theta functions}\label{der:sec:normal}
+
+This subsection passes from one variable to many. It defines couplings and the normal form, shows
+that a series in normal form becomes integral in low degrees after a substitution that makes the
+couplings divisible (Lemma~\ref{der:lem:nf}), and proves that products of theta functions along a resolution
+of the identity by vectors integral above $\ell$ have the normal form
+(Proposition~\ref{der:prop:thetaprod}). These two properties
+are what the count of \S\ref{der:sec:count} uses.
+
+For variables $z_{\tau,i}$ ($\tau\in\Phi$, $i$ in a finite set), a non-split $\ell$ and
+$e\in I_\ell^\circ$, the \emph{coupling} is
+$\Gamma_e=\sum_{\tau,i}z_{\tau,i}^{\ell^e}z_{-\ell^e\tau,i}$ (\lean{New.coupling}); it is
+homogeneous of degree $\ell^e+1$.
+
+\begin{definition}[Normal form; \lean{New.HasNormalForm}]
+A series $F$ has the \emph{normal form} at $\ell$ (for $\varpi$ and $\lambda_{ej}\in\cO$) if
+$F(\varpi z)=\mathcal W\exp(c_\varpi\Xi)$ with $\mathcal W$ integral and
+$\Xi=\sum_{e\in I_\ell^\circ}\sum_j\lambda_{ej}\Gamma_e^{\ell^j}$.
+\end{definition}
+
+\begin{lemma}[\lean{New.HasNormalForm.norm_coeff_subst_le_one}, \lean{New.HasNormalForm.of_dvd_sub}]
+\label{der:lem:nf}
+Let $F$ have the normal form, let $Z$ be integral without constant term, and let $\pi\in\cO$ with
+$v(c_\varpi\pi)\ge\frac1{\ell-1}$ divide $\Gamma_e(Z)$ for $e\in I_\ell^\circ$ with $\ell^e\le B$.
+Then $F(\varpi Z)$ is integral in the degrees $\le B$ (the terms of $\Xi(Z)$ with $\ell^e>B$ have
+order $>B$, and the others are divisible by $\pi$). For the normal form it suffices that
+$F(\varpi z)=\mathcal W\exp(c_\varpi\Xi')$ with $\mathcal W,\Xi'$ integral, $\Xi'(0)=0$ and
+$\Xi'\equiv\Xi\bmod\pi$.
+\end{lemma}
+
+A \emph{resolution of the identity} (\lean{New.IsResolution}) is a family of vectors $u_j\in E^n$
+with multiplicities $c_j$ such that $\sum_jc_j(u_j^\dagger z)u_j=z$ on $\C^{\Phi\times n}$, where
+$u^\dagger z=\sum_{\tau,i}\overline{\tau(u_i)}z_{\tau,i}$. A \emph{tight frame} of length $M'$
+(\lean{New.IsTightFrame}) is a family $w_i\in\fa_0$ with multiplicities $c_i$ and
+$\sum_ic_i\tau(w_i)\overline{\sigma(w_i)}=M'[\tau=\sigma]$. If $M'=b'^2$ and $c_i=1$, the vectors
+$w_i/b'$, placed in each coordinate, form a resolution (\lean{New.IsTightFrame.isResolution}).
+
+\begin{proposition}[Normal form of theta products; \lean{New.Parameters.exists_hasNormalForm}]
+\label{der:prop:thetaprod}
+Let $\chiK(\ell)\ne1$. There are $\varpi$, $v(\varpi)=\rho_\ell$, and $\lambda_{ej}\in\cO$ (the
+$\lambda_{e0}$ units if $\ell$ is inert) such that for every resolution $(u_j,c_j)$ by vectors
+integral above $\ell$ and every integral series $H$ in the $\mathrm y(u_j^\dagger z)$, the product
+$\prod_j\theta(u_j^\dagger z)^{c_j}\cdot H$ has the normal form.
+\end{proposition}
+
+\begin{proof}
+Let $L_j=u_j^\dagger z$, a form with integral coefficients. By Theorem~\ref{der:thm:exponent},
+$\prod_j\theta(\varpi L_j)^{c_j}=\prod_j\mathcal W(L_j)^{c_j}\exp(c_\varpi\sum_jc_j\Xi(L_j))$. By
+Lemma~\ref{der:lem:frob} and additivity of $\ell^e$-th powers mod $\ell$,
+$L_j^{\ell^e}\equiv\sum_{\tau,i}\tau'(u_{j,i})z_{\tau,i}^{\ell^e}$ with $\tau'=-\ell^e\tau$, so by the
+resolution identity (\lean{New.Parameters.piPrimeInt_dvd_sum_linearSeries_sub_coupling})
+\[
+\textstyle\sum_jc_jL_j^{\ell^e}L_j\equiv\sum_{\tau,i,\sigma,i'}z_{\tau,i}^{\ell^e}z_{\sigma,i'}
+\sum_jc_j\tau'(u_{j,i})\overline{\sigma(u_{j,i'})}=\Gamma_e\pmod{\pi_\ell}.
+\]
+As $\ell^{j'}$-th powers are additive mod $\pi_\ell$,
+$\sum_jc_j(L_j^{\ell^e}L_j)^{\ell^{j'}}\equiv\Gamma_e^{\ell^{j'}}$, so
+$\sum_jc_j\Xi(L_j)\equiv\sum_{e,j'}\lambda_{ej'}\Gamma_e^{\ell^{j'}}$; apply Lemma~\ref{der:lem:nf}, as
+$H(\varpi z)$ is integral.
+\end{proof}
+
+\subsection{The integral vacuum and standard data}\label{der:sec:vacuum}
+
+This subsection connects the theta functions of the curve with the vectors of the Weil
+representation from which the lifts are built. It defines the jet scale, the integral vacuum and
+standard data (Definition~\ref{der:def:std}); it shows that the integral vacuum has integral values
+with bounded conjugates (Proposition~\ref{der:prop:vacuum}) and that the jet series of standard data
+are theta products (Proposition~\ref{der:prop:product}), whence a lower bound for the valuation of
+their jets and, at a non-split prime and for level one, the normal form
+(Corollary~\ref{der:cor:integral}); and it
+computes the absolute value of the jet scale and describes the action of $\Gal(\C/K)$ on jets
+(Proposition~\ref{der:prop:scale}). The count uses Corollary~\ref{der:cor:integral}(b);
+Section~\ref{sec:ub-objects} uses Corollary~\ref{der:cor:integral}(a), standard data and
+Proposition~\ref{der:prop:scale}.
+
+For a hermitian space $V$ of rank $n$ over $E$ the background provides the space $\mathscr S(V)$
+of the adelic Weil representation, the theta functional $\theta_V$, the translations
+$\mathrm H(\mathbf y)$ and the \emph{vacuum} $\mathrm{vac}_V$ (Gaussian at infinity times twisted
+indicator of the standard lattice). A vector $\mathcal F\in\mathscr S(V)$ is read as the function
+$\mathbf y\mapsto\theta_V(\mathrm H(\mathbf y)\mathcal F)$. The space $V$ is \emph{standard} if its
+signs are $+1$ and its point is $1$. Put $\mathrm{finVec}(\mathbf x)=(0,\alpha\mathbf x)$; the finite
+Heisenberg operator $\mathrm H_{\mathbf x}$ (\lean{New.Space.finHeisenbergOp}) is
+$\mathrm H(\mathrm{finVec}\,\mathbf x)$ times a root of unity, and the \emph{finite part}
+$\mathscr S_{\mathrm f}(V)$ is the span of the $\mathrm H_{\mathbf x}\mathrm{vac}_V$. The \emph{jet
+series} $J_\eta\mathcal F$ (\lean{New.Space.jetSeries}), $\eta\in\C$, has coefficient
+$\eta^{|\mathbf k|}\theta_V(\mathsf v_{z^{\mathbf k}}\otimes\mathcal F)/\mathbf k!$ at $z^{\mathbf k}$,
+where $\mathsf v_{z^{\mathbf k}}$ is the Fock vector of $z^{\mathbf k}$. On the finite part it is the
+Taylor series at $0$ of $z\mapsto\mathcal E_{\mathcal F}(\eta z)$, where $\mathcal E_{\mathcal F}$ is
+the entire extension of $\mathbf y\mapsto\theta_V(\mathrm H(\mathbf y)\mathcal F)e^{|\mathbf y|^2/2}$.
+For $P$ homogeneous of degree $l$ we write $\mathrm{jet}_P(J_\eta\mathcal F):=(P(\partial)J_\eta\mathcal F)(0)$;
+it equals $\eta^l\theta_V(\mathsf v_P\otimes\mathcal F)$ (\lean{New.Space.jet_jetSeries_of_isHomogeneous}).
+For $\eta\ne0$, $J_\eta$ is injective on the finite part (\lean{New.Space.eq_zero_of_jetSeries_eq_zero}).
+
+\begin{definition}[Scales, integral vacuum, standard data]\label{der:def:std}
+The \emph{jet scale} (\lean{New.Parameters.jetScale}) is
+$\varsigma=s_0u_{\mathrm{CS}}^{-1}\sqrt{2\pi/\sqrt d}/\Omega_0$, where $u_{\mathrm{CS}}$ is the unit
+of Fact~\ref{der:fact:bg}(a) for $\C/\Omega_0\cO_K$. The \emph{vacuum scale} $c_s\ne0$
+(\lean{New.Parameters.vacuumScale}) makes the values of $c_s\mathrm{vac}$ in rank one at the points
+$\mathrm{finVec}(\mathbf x)$ integral at every $\iota$, with conjugates over $K$ of modulus
+$\le e^{C_{\mathrm{vac}}q_1^2}$ ($C_{\mathrm{vac}}$ = \lean{New.Parameters.vacuumBoundConst}). The
+\emph{integral vacuum} is $\theta^\circ_V=c_s^n\mathrm{vac}_V$ (\lean{New.Parameters.intVacuum}). For
+$\delta\in\cO_K$ the \emph{standard data} of level $\delta$ at $\ell$ (\lean{New.Parameters.standardData})
+are the span over $\cO_\iota$ (the numbers integral at $\iota$, Section~\ref{sec:setup}) of the
+$\mathrm H_{\mathbf x}\theta^\circ_V$ with $\delta\mathbf x$ integral above $\ell$
+(\lean{New.Parameters.integralAfter}).
+\end{definition}
+
+\begin{fact}[\lean{New.CMLattice.chowla_selberg}, \lean{New.Space.exists_entireTheta_eq_of_isThetaFunction},
+\lean{New.CMLattice.exists_rescale_twistedTranslate_eq_theta_pow_mul}]\label{der:fact:bg}
+(a) For a CM lattice $C$ there is $u_{\mathrm{CS}}\in\C$, a unit at every $\iota$, with
+$\operatorname{area}(C^\sigma)|\sigma u_{\mathrm{CS}}|^2=\pi e^{\gamma-\Re L'/L(1,\chiK)}2\pi/\sqrt d$
+for $\sigma\in\Gal(\C/K)$ (Selberg--Chowla, On Epstein's zeta-function, 1967). (b) For $V$ standard
+and integral $\delta\in E$ with $\delta\bar\delta\in\N\setminus\{0\}$, every entire function fixed by
+the signed translations along $\bar\delta\fa_0^n$ is $\mathcal E_{\mathcal F}$ for a vector
+$\mathcal F$ of the finite part (Mumford, Tata lectures on theta I). (c) If $\bar\delta$ is an
+isogeny of degree $N_\delta$ of $C$ and $\delta\eta\in\Lambda$, the series of
+$(T_\eta\theta)(\bar\delta z)$, $T_\eta$ the twisted translation, is $\theta^{N_\delta}$ times an
+element of $\cO[[\mathrm y]]$ (Silverman, The Arithmetic of Elliptic Curves, ch.~IV and VII).
+\end{fact}
+
+\begin{proposition}[\lean{New.Parameters.norm_intVacuum_le_one}, \lean{New.Parameters.norm_ringEquiv_intVacuum_le},
+\lean{New.Parameters.exists_intVacuum_ne_zero},
+\lean{New.Parameters.norm_dataInner_self_le}, \lean{New.Parameters.finHeisenbergOp_mem_standardData},
+\lean{New.Parameters.omega_mem_standardData}]\label{der:prop:vacuum}
+Let $V$ be standard. The values $\theta^\circ_V(\mathrm{finVec}\,\mathbf x)$ are integral at every
+$\iota$, not all zero, with all conjugates under $\Aut(\C)$ of modulus $\le e^{nC_{\mathrm{vac}}
+q_1^2}$; if $|\mathcal F(\mathrm{finVec}\,\mathbf x)|\le A$ for all $\mathbf x$, then
+$\langle\mathcal F,\mathcal F\rangle\le A^2$. Standard data of level $\delta$ are stable under
+$\mathrm H_{\mathbf x}$ for $\delta\mathbf x$ integral above $\ell$, and under $\omega(g)$ for unitary
+$g$ integral above $\ell$.
+\end{proposition}
+
+\begin{proof}
+Values in rank $n$ are products of values in rank one. There (Fact~\ref{der:fact:bg}(b)) a
+multiple of the vacuum is a sum of $q_1^{2f}$ translates of a vector whose values are products of
+torsion values of $\theta$, integral with bounded conjugates
+(\lean{New.Parameters.exists_mul_vacElem_integral_bounded}). Finally, $\Aut(\C)$ acts on absolute
+values through $\Gal(\C/K)$ (\lean{New.Parameters.exists_algEquiv_norm_eq},
+\lean{New.Parameters.norm_gal_intVacuum_le}).
+\end{proof}
+
+\begin{proposition}[Standard data are theta products;
+\lean{New.Parameters.exists_jetSeries_map_eq_thetaProd_pow_mul}]\label{der:prop:product}
+Let $V$ be standard, $0\ne\delta\in\cO_K$, $N_\delta=\delta\bar\delta$, and let $\mathcal F$ be
+standard data of level $\delta$ at $\ell$. There are a resolution $(u_j,c_j)$ of $E^n$ with
+$\alpha^{-1}u_j$ integral above $\ell$ and an integral series $H$ in the $\mathrm y(u_j^\dagger z)$
+with $\iota J_{\bar\delta\sqrt{2\pi/\sqrt d}/\Omega_0}\mathcal F=\bigl(\prod_j\theta(u_j^\dagger
+z)^{c_j}\bigr)^{N_\delta}H$.
+\end{proposition}
+
+\begin{proof}
+(1) \emph{Vacuum expansion} (\lean{New.Parameters.exists_isVacuumExpansion}): for a tight frame
+$(w_i)$ of length $b'^2$, $\ell\nmid b'$, the product of the $\theta(u^\dagger z)$, $u=w_i/b'$ in
+each coordinate, is by the frame identity a theta function for $b'\fa_0^n$, so it is
+$\mathcal E_{\mathcal F_0}$ with $\mathcal F_0$ in the finite part (Fact~\ref{der:fact:bg}(b)).
+Rational translates of $\mathcal F_0$ give products of twisted translates of $\theta$, and Fourier
+inversion gives $\theta^\circ_V=\sum_j\gamma_j\mathrm H(\mathrm{finVec}\,\mathbf x_j)\mathcal F_0$ with
+$\gamma_j\in\cO_\iota$ and $b'\mathbf x_j$ integral. (2) A translate of $\mathcal F_0$ by $\mathbf x$
+with $\delta\mathbf x$ integral above $\ell$ is one by a rational $\mathbf r$ with
+$m'\delta\mathbf r\in\fa_0^n$, $\ell\nmid m'$, so its series is a product of
+$(T_\eta\theta)(\bar\delta\,\cdot)$ with $m'b'\delta\eta$ periods. (3) Apply
+Fact~\ref{der:fact:bg}(c), and take as resolution the $w_i/(b'N')$ with multiplicity ${N'}^2$, for
+$N'$ prime to $\ell$ a common multiple of the $m'b'$ over the generators of $\mathcal F$.
+\end{proof}
+
+\begin{corollary}[\lean{New.Parameters.norm_jet_jetSeries_le_pow}, \lean{New.Parameters.norm_jet_jetSeries_le_one},
+\lean{New.Parameters.exists_hasNormalForm_jetSeries}]
+\label{der:cor:integral}
+Let $V$ be standard and $\mathcal F$ standard data of level $\delta\ne0$ at $\ell$. (a) For
+$\eta\in\C$ and $P$ homogeneous of degree $l$ over $\cO_\iota$,
+$v(\iota\,\mathrm{jet}_P(J_{\eta\varsigma}\mathcal F))\ge l\,v(\iota(\eta/(\bar\delta d)))$. (b) If
+$\chiK(\ell)\ne1$, $\delta=1$ and $v(\iota\eta)\ge0$, then $\iota J_{\eta\varsigma}\mathcal F$ has the
+normal form at $\ell$ for some $\varpi$ with $v(\varpi)=\rho_\ell$.
+\end{corollary}
+
+\begin{proof}
+(a) As $s_0u_{\mathrm{CS}}^{-1}\overline{\tau(w)}$ is integral when $\alpha^{-1}w$ is integral above
+$\ell$ (\lean{New.Parameters.norm_periodFactor_mul_daggerForms_le_one}),
+Proposition~\ref{der:prop:product} puts $J_{\bar\delta d\varsigma}\mathcal F$ in the ring generated
+by the integral series in the $\mathrm y(\mu_jz)$, the $\theta(\mu_jz)$ and the $g'(\mu_jz)$, where
+$\mu_j=d\nu_j$ with $\nu_j$ integral. This ring has integral constant terms and is stable under
+$\partial$, as $d\,g''\in\cO[[\mathrm y]]$; so its jets are integral
+(\lean{New.CMLattice.norm_jet_thetaProd_pow_mul_le_one}).
+(b) As $\ell\nmid q_1$, $s_0$ is an $\ell$-adic unit and the $u_j$ are integral above $\ell$
+(\lean{New.Parameters.isIntegralAbove_of_finiteImage_mem}); apply Proposition~\ref{der:prop:thetaprod}
+and rescale by $\eta$ (\lean{New.HasNormalForm.rescale}).
+\end{proof}
+
+The Galois part of the next proposition rests on the main theorem of complex multiplication, in
+the following form.
+
+\begin{fact}[Complex multiplication for theta functions; \lean{New.CMLattice.complex_multiplication_theta}]
+\label{der:fact:cm}
+Let $C$ be a CM lattice whose lattice is $\Omega_0\cO_K$, and let $\sigma\in\Gal(\C/K)$. There are
+$\Omega_\sigma\in\C^\times$, a non-zero integral ideal $\mathfrak c$ of $\cO_K$ and a finite adele
+$\beta_\sigma$ of $K$ such that the lattice of the conjugate curve $C^\sigma$ is
+$\Omega_\sigma\mathfrak c^2/\Nm\mathfrak c$, has area $|\Omega_\sigma|^2\sqrt d/2$ and contains a
+positive integral multiple of $\Omega_\sigma$, and such that for each $\phi\in K$ and each $\phi'\in K$
+close enough to $\beta_\sigma\phi$ in the finite adeles, $\sigma$ takes the Taylor series of the
+twisted translate $T_{\phi\Omega_0}\theta$ to that of the twisted translate
+$T_{\phi'\Omega_\sigma}\theta^\sigma$ of the theta function $\theta^\sigma$ of $C^\sigma$. This is a
+case of the main theorem of complex multiplication without the reciprocity law: $\beta_\sigma$ is
+not identified with the Artin map and is not shown to be a unit (\leanfile{Lib/CM/ChowlaSelberg};
+after Shimura, Introduction to the Arithmetic Theory of Automorphic Functions, 1971, Thm.~5.4, and
+Milne, Complex Multiplication, 2020, 9.17).
+\end{fact}
+
+\begin{proposition}[\lean{New.Parameters.norm_jetScale_sq}, \lean{New.Data.norm_conj_piMBar_mul_jetScale_sq},
+\lean{New.Parameters.exists_isJetConjugate_translates}]\label{der:prop:scale}
+We have $|\varsigma|^2=\Omega^{-1}$ and $|\pi_M\varsigma|^2=M/\Omega$. Every standard $V$ has
+$\mathcal F$ in the finite part, $\theta_V(\mathcal F)=1$, whose translates span it, such that each
+$\sigma\in\Gal(\C/K)$ carries the jets of $\mathrm H(\mathrm{finVec}\,\mathbf x)\mathcal F$ at the
+scale $\varsigma$ to those of $\mathrm H(\mathrm{finVec}\,\mathsf B_\sigma\mathbf x)\mathcal F'$ at a
+scale $\varsigma'$ with $|\varsigma'|^2=\Omega^{-1}$ (places permuted by $\sigma$), for some
+$\mathcal F'$, $\varsigma'$ and a finite adele $\mathsf B_\sigma$ independent of $V$.
+\end{proposition}
+
+\begin{proof}
+From $|s_0|^2=\rdE/\sqrt d$, $\operatorname{area}(\Omega_0\cO_K)=|\Omega_0|^2\sqrt d/2$ and
+Fact~\ref{der:fact:bg}(a) one computes $|\varsigma|^2=\rdE/(2\pi e^{\gamma-\Re L'/L(1,\chiK)})$.
+For the Galois part, $\mathcal F$ is the product of $\theta$ along $\zeta^i/q_1$. The series of a
+rational translate of $\mathcal F$ is a product of translates of $\theta$ by points $\phi\Omega_0$,
+$\phi\in K$. By Fact~\ref{der:fact:cm}, $\sigma$ takes these to the translates by $\phi'\Omega_\sigma$,
+$\phi'\in K$ near $\beta_\sigma\phi$ ($\beta_\sigma$ a finite adele), of the $\theta$ of the conjugate
+curve, of area $|\Omega_\sigma|^2\sqrt d/2$, at a scale $\varsigma'$ with $|\varsigma'|^2=\Omega^{-1}$
+as above. Local constancy and density of rational points give all $\mathbf x$, with $\mathsf B_\sigma$
+the image of $\beta_\sigma$.
+\end{proof}
+
+So a jet of order $j$ at the scale $\pi_M\varsigma$ has at every conjugate a factor $(M/\Omega)^{j/2}$,
+whence the term $j\log(M/\Omega)$ of $\sinf(j)=\log j!+j\log(M/\Omega)$
+(Definition~\ref{setup:def:primesums}, \lean{New.Data.jetSize}).
+
+\subsection{The count}\label{der:sec:count}
+
+This subsection proves the main estimate of the section. For a series in normal form at a
+non-split $\ell$, with $v(\varpi)=\rho_\ell$, the jets
+along products of minors have valuation at least the predicted divisibility $D_\ell$ of the
+diagram, less a loss logarithmic in the number of boxes (Theorem~\ref{der:thm:count}).
+Theorem~\ref{der:thm:schur} is the form in which Sections~\ref{sec:ub-divis}
+and~\ref{sec:ub-objects} use it: for the entries of the Schur jet matrix of standard data, with
+charges $\mathsf w$ and a set $S$ of places at which the columns of height one are removed from the
+diagram.
+
+Let $z_\tau$ ($\tau\in\Phi$) be $n'\times n$ matrices of variables $z_{\tau,j,\psi}$ (row $j$, column
+$\psi$). A \emph{diagram} $\mathfrak d$ gives the number $\mathfrak d_\tau(h)$ of columns of height
+$h$ at $\tau$; only heights $h<n'$ count. A standard filling puts a row index into each box. For
+integral $\xi_\tau\in\cO^{n\times n'}$ the \emph{product of minors} $P_\xi$ (\lean{New.minorProd}) is
+the product, over the columns, of the minor of $z_\tau\xi_\tau$ on the rows of the column and the
+first $h$ columns, $h$ its height. Put $\mathsf a_\tau=\mathfrak d_\tau(1)$,
+$\mathsf a'_\tau=\sum_{h\ne1}\mathfrak d_\tau(h)$ and $\mathsf l_\tau=\sum_{h\ne1}h\,\mathfrak d_\tau(h)$
+(\lean{New.heightOneColumns}, \lean{New.lowColumnCount}, \lean{New.lowBoxCount}), and let
+$B=\sum_\tau(\mathsf a_\tau+\mathsf l_\tau)=\deg P_\xi$ (\lean{New.boxes_eq_sum}) be the number of
+boxes (written $L$ in Section~\ref{sec:ub-objects}, Definition~\ref{ub-objects:def:kernel}).
+
+\begin{definition}[Predicted divisibility; \lean{New.predictedDivisibility}]\label{der:def:pred}
+For $\chiK(\ell)\ne1$, and with $\tau'=-\ell^e\tau$,
+\[
+D_\ell(\mathfrak d)=v(\pi_\ell)\sum_{e\in I_\ell}\sum_\tau\Bigl(\bigl(\tfrac{\mathsf a_\tau}{\ell^e}-\mathsf a_{\tau'}
+-\mathsf a'_{\tau'}\bigr)_++\bigl(\tfrac{\mathsf l_\tau}{\ell^e}-\mathsf l_{\tau'}\bigr)_+
+-\tfrac{\mathsf a'_\tau}{\ell^e}\Bigr)-[\ell=d]\,\tfrac12\sum_\tau\mathrm{ded}(\tau,(-1)\tau,0),
+\]
+with $\mathrm{ded}(\tau,\tau',e)=\min(\frac{\mathsf a_\tau}{\ell^e},\mathsf a_{\tau'}+\mathsf a'_{\tau'})
++\frac{\mathsf a'_\tau}{\ell^e}+\min(\frac{\mathsf l_\tau}{\ell^e},\mathsf l_{\tau'})$ (\lean{New.deductionTerm}).
+\end{definition}
+
+\begin{theorem}[The count; \lean{New.Parameters.norm_jet_minorProd_le_of_hasNormalForm}]
+\label{der:thm:count}
+Let $\chiK(\ell)\ne1$ and let $F$ have the normal form at $\ell$, with $v(\varpi)=\rho_\ell$, for the
+couplings $\Gamma_e=\sum_{\tau,j,\psi}z_{\tau,j,\psi}^{\ell^e}z_{-\ell^e\tau,j,\psi}$. For every
+standard filling and integral $\xi$,
+$v(\mathrm{jet}_{P_\xi}F)\ge D_\ell(\mathfrak d)-fn'^3(1+\log_\ell\max(B,1))$.
+\end{theorem}
+
+\begin{theorem}[Schur entries with charges; \lean{New.Parameters.norm_schurJet_jetSeries_le_of_charges},
+\lean{New.Parameters.norm_jet_minorProd_jetSeries_le}]
+\label{der:thm:schur}
+Let $V=\operatorname{Hom}(E^n,E^{n'})$ be standard, $\mathcal F$ standard data of level one at a
+non-split $\ell$, $v(\iota\eta)\ge0$ and $F=\iota J_{\eta\varsigma}\mathcal F$, and let
+$\mathfrak d$ fit the ranks ($n\le n'$, no column height strictly between). Let $S\subset\Phi$ and
+charges $\mathsf w(\tau,h,j)\in\N$ be such that for $e\in I_\ell^\circ$ and every row $j$: if
+$\tau\in S$, or $h=1$ and $-\ell^e\tau\in S$, then $\mathsf w(\tau,1,j)\ne0$ or
+$\mathsf w(-\ell^e\tau,h,j)\ne0$. Let $\mathfrak d^\circ$ be $\mathfrak d$ without the columns of
+height one at $S$ (\lean{New.eraseHeightOne}), with $B^\circ$ boxes. Then for standard fillings
+$\mathfrak t',\mathfrak t$, with $\Sigma\mathsf w$ the sum of the $\mathsf w(\tau,h,j)$ over the boxes
+of $\mathfrak t'$ ($h$ the height of the column, $j$ the row),
+\[
+v\bigl(\mathrm{schurJet}_{\mathfrak d}(F)_{\mathfrak t',\mathfrak t}\bigr)+\Sigma\mathsf w\ \ge\
+D_\ell(\mathfrak d^\circ)+\gamma_\ell(B-B^\circ)-fn'^3\bigl(1+\log_\ell\max(B,1)\bigr).
+\]
+Without charges the same holds for $\mathrm{jet}_{P_\xi}F$.
+\end{theorem}
+
+\begin{proof}[Proof of Theorems~\ref{der:thm:count} and~\ref{der:thm:schur}]
+By Corollary~\ref{der:cor:integral}(b) the series of Theorem~\ref{der:thm:schur} has the normal form,
+and a Schur entry is bounded by the jet along some $P_\xi$, since the $P_\xi$ are combinations of the
+Schur entries with coefficients polynomial in $\xi$ and independent modulo the maximal ideal
+(\lean{New.exists_norm_schurJet_le_norm_jet_minorProd}). Put
+$\mathrm{loss}_B=fn'^3(1+\log_\ell\max(B,1))$, $\mathsf a_\tau:=0$ for $\tau\in S$ (the counts of
+$\mathfrak d^\circ$) and
+$\Sigma_{\mathrm{ded}}=\sum_{e\in I_\ell^\circ,\,\ell^e\le B}\sum_\tau\mathrm{ded}(\tau,-\ell^e\tau,e)$;
+we show $v(\mathrm{jet}_{P_\xi}F)+\Sigma\mathsf w\ge\gamma_\ell B-v(\pi_\ell)\Sigma_{\mathrm{ded}}-\mathrm{loss}_B$.
+This suffices: drop the cut ($\mathrm{ded}\ge0$) and split
+$\gamma_\ell B=\gamma_\ell(B-B^\circ)+\gamma_\ell B^\circ$; in
+$\gamma_\ell B^\circ=v(\pi_\ell)\sum_{e\in I_\ell,\tau}(\mathsf a_\tau+\mathsf l_\tau)\ell^{-e}$ the term
+of $(\tau,e)$ less $v(\pi_\ell)\mathrm{ded}(\tau,-\ell^e\tau,e)$ is that of $D_\ell(\mathfrak d^\circ)$,
+as $u-\min(u,u')=(u-u')_+$, and $e=0$, in $I_\ell^\circ$ only for $\ell=d$, gives the correction
+(\lean{New.mul_tsum_deductionAt}, \lean{New.mul_sum_deductionTerm_le}).
+
+\emph{Step 1: new directions} (\lean{New.exists_newDirection_dvd}). There are $U_{\tau,h}\in M_h(\cO)$
+such that the directions $\beta_{\tau hi}=\sum_{i'}(U_{\tau,h})_{ii'}\xi_{\tau,\cdot,i'}$ ($i,i'<h$)
+have $\pi_\ell\mid\langle\beta,\beta'\rangle_e=\sum_\psi\beta_\psi^{\ell^e}\beta'_\psi$ for $\beta$ of
+height $h$ at $\tau$ and $\beta'$ of height $h'$ at $\tau'=-\ell^e\tau$ ($e\in I_\ell^\circ$,
+$\ell^e\le B$), unless $h=1$ and $\tau\in S$, or $h=h'=1$ and $\tau'\in S$, and such that
+$\sum_{\tau,h}\mathfrak d_\tau(h)v(\det U_{\tau,h})\le v(\pi_\ell)\Sigma_{\mathrm{ded}}$.
+By elimination a linear congruence on all rows of $U_{\tau,h}$ costs the valuation of its modulus once
+per column of height $h$. Take it mod $\pi_\ell^{1/\ell^e}$ at $\tau$ ($\ell^e$-th powers are additive
+mod $\ell$) and mod $\pi_\ell$ at $\tau'$, on all coordinates of a direction or on its pairing with
+the first direction $\xi_{\cdot,0}$ at the other place (a multiple of the one of height one). Covering
+the pairs $(1,h')$ costs $\min(\mathsf a_\tau/\ell^e,\mathsf a_{\tau'}+\mathsf a'_{\tau'})$ (coordinates
+at $\tau$, or pairings at $\tau'$), the pairs $(h,1)$, $h\ne1$, cost $\mathsf a'_\tau/\ell^e$ (pairings
+at $\tau$), and the pairs $(h,h')$, $h,h'\ne1$, cost $\min(\mathsf l_\tau/\ell^e,\mathsf l_{\tau'})$
+(coordinates); the sum is $\mathrm{ded}(\tau,\tau',e)$, in units of $v(\pi_\ell)$.
+
+\emph{Step 2: substitution.} Put $z_{\tau,j,\psi}=\sum_{h<n',\,i<h}\ell^{\mathsf w(\tau,h,j)}\beta_{\tau hi\psi}
+\tilde z_{\tau hij}$ ($\le fn'^3$ new variables). Modulo $\ell$, the coefficient of
+$\tilde z_{\tau hij}^{\ell^e}\tilde z_{\tau'h'i'j}$ in $\Gamma_e(z(\tilde z))$ is
+$\ell^{\ell^e\mathsf w(\tau,h,j)+\mathsf w(\tau',h',j)}\langle\beta_{\tau hi},\beta_{\tau'h'i'}\rangle_e$,
+divisible by $\pi_\ell$ by Step~1 or, for the exempt pairs, by the charges. So
+$G=F(\varpi z(\tilde z))$ is integral in the degrees $\le B$ by Lemma~\ref{der:lem:nf}.
+
+\emph{Step 3: chain rule} (\lean{New.norm_jet_columnDetProd_subst}). For the product $P_*$ over the
+columns of $\det(\tilde z_{\tau hij})_{j,i}$ ($j$ the rows of the column, $i<h$), homogeneous of degree
+$B$, $\mathrm{jet}_{P_*}G=\varpi^B\ell^{\Sigma\mathsf w}\prod_{\tau,h}(\det U_{\tau,h})^{\mathfrak d_\tau(h)}
+\mathrm{jet}_{P_\xi}F$.
+
+\emph{Step 4: Legendre} (\lean{New.norm_jet_le_of_isHomogeneous}). As $G$ is integral in degree $B$,
+$v(\mathrm{jet}_{P_*}G)\ge\min_{|\mathbf k|=B}v(\mathbf k!)\ge\frac B{\ell-1}-\mathrm{loss}_B$, each of
+the at most $fn'^3$ variables losing at most $1+\log_\ell B$. So
+$v(\mathrm{jet}_{P_\xi}F)+\Sigma\mathsf w\ge\frac B{\ell-1}-B\rho_\ell-v(\pi_\ell)\Sigma_{\mathrm{ded}}-\mathrm{loss}_B$,
+and $\frac1{\ell-1}-\rho_\ell=\gamma_\ell$.
+\end{proof}
+
+\subsection{The predicted divisibility and the prime sums}\label{der:sec:primesums}
+
+This subsection evaluates the predicted divisibility for diagrams of rows and relates it to the
+prime sum $\sfin$ of Definition~\ref{setup:def:primesums}: for rows of lengths $\kappa$ and
+$\ell\ne d$ it is the local prime sum $S_\ell$, and for $y\le a$, $\sfin(y,\tau)$ is the sum over
+the primes $\ell<x_1$ of the local prime sums $s_\ell(y,\tau)$, weighted by $2\log\ell$. This
+identifies, up to the error term and the correction at $d$, the divisibility that the count
+guarantees with the prime sums of Section~\ref{sec:setup}.
+
+For diagrams of rows ($\mathsf a_\tau$ columns of height one at $\tau$, no others) the predicted
+divisibility is
+\[
+D_\ell=v(\pi_\ell)\sum_\tau\sum_{e\in I_\ell}\bigl(\tfrac{\mathsf a_\tau}{\ell^e}-\mathsf a_{-\ell^e\tau}\bigr)_+
+-[\ell=d]\,\tfrac12\sum_\tau\min(\mathsf a_\tau,\mathsf a_{(-1)\tau});
+\]
+the last term is the term $e=0$ of Definition~\ref{der:def:pred}, which pays for the coupling
+$\Gamma_0$ of $\tau$ with $(-1)\tau$.
+The \emph{local prime sums} are
+$s_\ell(y,\tau)=v(\pi_\ell)\sum_{e\in I_\ell}(y/\ell^e-\kappa(-\ell^e\tau))_+$
+(\lean{New.Data.localPrimeSum}; it converges, \lean{New.Data.summable_posPart_sub_weight}) and
+$S_\ell=\sum_\tau s_\ell(\kappa(\tau),\tau)$ (\lean{New.Data.localPrimeSumTotal}). If $\mathsf a=\kappa$
+at the partners of $\tau$, the term of $\tau$ is $s_\ell(\mathsf a_\tau,\tau)$; so for
+$\mathsf a=\kappa$ and $\ell\ne d$, $D_\ell=S_\ell$. For $y\le a$ the prime sum of
+Definition~\ref{setup:def:primesums} is
+\[
+\sfin(y,\tau)=\sum_{\nu\le a}\LambdaK(\nu)\bigl(\tfrac y\nu-\kappa(-\nu\tau)
+\bigr)_+=\sum_{\ell<x_1}2\log\ell\cdot s_\ell(y,\tau)
+\]
+(\lean{New.Data.primeSum_eq_sum_localPrimeSum}): only $\nu=\ell^e$, $e\in I_\ell$, contribute, with
+$\LambdaK(\nu)=\Lambda(\nu)(1-\chiK(\nu))=2v(\pi_\ell)\log\ell$. Divisibility by $\ell^{v_\ell}$ saves
+$2v_\ell\log\ell$ in the height of a squared norm, so $\sfin(y,\tau)$ is, up to the error term and the
+correction at $d$, the saving over all primes that the count guarantees for a jet of order $y$ at
+$\tau$ whose partners have the orders $\kappa$. Section~\ref{sec:ub-divis} bounds the correction, for
+its diagrams, by $2a/(dm)$ per place, as $\tau$ and $(-1)\tau$ are neither both $a$-places nor both
+$b$-places (\lean{New.Data.sub_le_predictedDivisibility}, \lean{New.Data.ne_d_of_placeClass_eq}),
+and it compares the diagrams of the composite lift (a row of length $a$ at the $a$-places, columns
+of heights $k+i(t+1)$) with the gain (\lean{New.Data.le_divisibilityBound}).
+
+\subsection{The bound is attained}\label{der:sec:sharp}
+
+This subsection shows that the bound of the count is attained up to a normalisation: at every
+prime $\ell$, some Taylor coefficient of the jet series of an indicator datum on
+$\operatorname{Hom}(E,E^{12})$, multiplied by factorials, by $c_s^{12}$ and by $t_\sharp^{-1}$ for a
+number $t_\sharp$ whose conjugates are bounded independently of $\ell$, has valuation at most
+$S_\ell$ (Theorem~\ref{der:thm:sharp}).
+
+\begin{theorem}[Sharpness; \lean{New.Data.exists_rpow_neg_localPrimeSumTotal_le_norm_coeff}]
+\label{der:thm:sharp}
+Let $l\colon\Phi\to\N$ with $\kappa(\tau)\le l_\tau\le\kappa(\tau)+x^{42}$. There is
+$t_\sharp\in\C^\times$ with $|\sigma t_\sharp|\le e^{fmb/k}$ for all $\sigma\in\Aut(\C)$ such that for
+every modulus $\fm$ with ideal $(\pi_M)$, every prime $\ell$ and every $\iota\mid\ell$ there are an
+exponent $\mathbf k$ on $\Phi\times\{1,\dots,12\}$ with $\sum_i\mathbf k(\tau,i)=l_\tau$ and a class
+$\mathbf y_0\in(\cO_E/\fm)^{12}$ with
+\[
+v\bigl(\iota\bigl(c_s^{12}t_\sharp^{-1}\textstyle\prod_\tau l_\tau!\cdot[z^{\mathbf k}]
+J_{\pi_M\varsigma}\mathcal F_{\fm,\mathbf y_0}\bigr)\bigr)\le S_\ell,
+\]
+where $\mathcal F_{\fm,\mathbf y_0}$ on $\operatorname{Hom}(E,E^{12})$ is the vacuum with its component
+at the places dividing $\fm$ replaced by the indicator of $\mathbf y_0$ (\lean{New.Data.indicatorDatum}).
+\end{theorem}
+
+\emph{Role.} The upper bound does not use this theorem; the lower bound does:
+Section~\ref{sec:ol-values} builds from it test forms whose pairing with a lift has valuation at most
+$S_\ell+v(c\cdot\mathrm{ratio})$ for a fixed $c\ne0$
+(\lean{New.Data.exists_isTestForm_le_norm_inner_trivialLift}).
+
+\begin{proof}[Sketch]
+Let $\Theta=\prod_i\theta(\mu_iz)^{c_i}$ along the resolution $w_i/\bar\pi_M$, where $(w_i,c_i)$ is a
+tight frame of length $M$ with $c_i\ge6fb$ (\lean{New.Data.exists_isTightFrame}), and let
+$\mathrm{val}_n(l)$ be the least valuation of a product of coefficients, of total degree $l$, of $n$
+series $H\Theta$, $H$ integral in the $\mathrm y(\mu_iz)$. (1) On one curve $\gamma_\ell$ is optimal:
+some $h\in\cO[[\mathrm y]]$ has $v(h^{(n)}(0))\le\gamma_\ell n$, by superadditivity in $n$ and the
+formal parameter at $n=q_\ell^j$ (\lean{New.CMLattice.katz_divisibility_limit}). (2) Six copies
+$\Theta(\varepsilon_\bullet z)$, $\varepsilon_\bullet\in\Zl$, $\varepsilon_0=1$,
+$\sum\varepsilon_\bullet^2=0$, multiply to a unit $U$
+(\lean{New.CMLattice.exists_scaledThetaProd_mem_mul_eq_one}); $H_0=U^{-1}h(\mu_{i_0}z)$, where
+$\mu_{i_0}$ has unit coefficients, gives $v(l!)+\mathrm{val}_6(l)\le\gamma_\ell|l|$. (3) For inert
+$\ell$, in $F(z'+z'')F(\varepsilon_1z')\cdots F(\varepsilon_5z')$, $F=\Theta(\varpi z)=\mathcal W\exp(c_\varpi\Xi)$
+(Proposition~\ref{der:prop:thetaprod}), each $z''_{\tau'}$-derivative brings down
+$c_\varpi\partial\Xi/\partial z_{\tau'}$, of negative valuation and lowest term
+$c_\varpi\lambda_{e0}z_\tau^{\ell^e}$; so $j_\tau$ couplings $z_\tau^{\ell^e}z_{\tau'}$, each lowest
+among those with its partner, give $\mathrm{val}_6\le-\sum j_\tau$
+(\lean{New.CMLattice.leastValLE_six_of_isCouplingFamily}). Couple $\tau$ with $-\ell\tau$ if $\ell>k$,
+and pairs of $b$-places, sparse along the powers of $-\ell$, if $\ell\le k$; six more copies give the
+rest of the degree, by (2) or, if $\ell>k$, at valuation $\le0$; for split $\ell$ use (2). So
+$v(\prod l_\tau!)+\mathrm{val}_{12}(l)\le S_\ell+2\sum_\tau v(\Pi_\tau)$, where $\Pi_\tau$ is a
+product of $\lceil6b/k\rceil$ consecutive integers (\lean{New.Data.leastValLE_twelve}). (4) Twelve
+copies of $\prod_i\mathrm y(\mu_iz)^{e_i}\Theta$ form the jet series of a vector with integral values,
+and Fourier inversion passes to indicator data (\lean{New.Data.exists_le_norm_coeff_indicatorDatum});
+$t_\sharp=M^{12f}c_0\prod_\tau\Pi_\tau^2$, with $c_0\ne0$ a value of $\theta^\circ$.
+\end{proof}

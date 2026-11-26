@@ -1,0 +1,264 @@
+\section{Introduction}\label{sec:intro}
+
+\subsection{The theorems}
+
+The Lean file \leanfile{Main} proves five statements. In ordinary notation they are the following.
+
+\begin{theorem}[\lean{LFunction_ne_zero_of_half_lt_re}]\label{intro:thm:grh}
+Let $N \ge 1$, let $\chi$ be a Dirichlet character modulo $N$, and let $s \in \C$ with
+$\Re s > 1/2$. If $\chi$ is not principal or $s \ne 1$, then $L(s,\chi) \ne 0$.
+\end{theorem}
+
+\begin{theorem}[\lean{LFunction_eq_zero_re}, \lean{LFunction_eq_zero_re_of_isPrimitive}]
+\label{intro:thm:line}
+Let $\chi$ be a Dirichlet character modulo $N \ge 1$, primitive or not. Every zero $s$ of
+$L(s,\chi)$ with $0 < \Re s < 1$ has $\Re s = 1/2$.
+\end{theorem}
+
+\begin{theorem}[\lean{riemannHypothesis}, \lean{riemannZeta_eq_zero_re}]\label{intro:thm:rh}
+Every zero $s \ne 1$ of the Riemann zeta function other than $-2, -4, -6, \dots$ has real part
+$1/2$.
+\end{theorem}
+
+The statements use Mathlib's definitions of $\zeta$ and of Dirichlet $L$-functions;
+\lean{riemannHypothesis} has Mathlib's own type \lean{RiemannHypothesis}, and the other four have
+the types fixed in \texttt{grh/src/Statements.lean}. Theorems~\ref{intro:thm:line}
+and~\ref{intro:thm:rh} follow from Theorem~\ref{intro:thm:grh} by the functional equation
+(Proposition~\ref{zeros:prop:line}). Theorems~\ref{intro:thm:grh} and~\ref{intro:thm:line} say
+nothing about zeros of $L(s,\chi)$ with $\Re s \le 0$. In Theorem~\ref{intro:thm:rh} the point
+$s = 1$ is excluded because Mathlib's $\zeta$ has a value there.
+
+\subsection{The source, and what this document is}
+
+The proof exists as Lean~4 code built on Mathlib: the repository \texttt{lsernau/grh-lean}, folder
+\texttt{grh}, the ``readable edition'', with 803 Lean files in \texttt{grh/src} and about
+$300{,}000$ lines of code. Its \texttt{README} states that the proof is Levent Alp\"oge's, with the
+AI system Claude; that the Lean text and the accompanying documents were written by Claude; and
+that this edition is a shorter rewriting of Alp\"oge's Lean proof that follows its method
+(it refers to \url{https://alpo.ge/remark.pdf}). The code compiles without \texttt{sorry}, and the
+five theorems depend only on the axioms \texttt{propext}, \texttt{Classical.choice} and
+\texttt{Quot.sound}. The repository reports that an export of the five theorems with all they
+depend on is accepted by three independent checkers (nanoda, con-leche and con-ron). The
+\texttt{README} at the top of the repository says: ``No mathematician has read it through, and
+no paper comes with it.''
+
+This document is a reading of that code. Its purpose is to say, in ordinary mathematical
+language, what the argument is. The reader should know exactly what it is and what it is not.
+
+\begin{itemize}
+\item \emph{It follows the Lean text.} Every definition and every stated result is tied to a
+  Lean declaration. In the text the declaration appears as a short marker; for instance
+  \lean{New.star_inequality} is the main inequality, \texttt{New.star\_inequality}. The index in
+  Appendix~\ref{sec:app-leanindex} gives the name behind each marker, and in the PDF each marker
+  links to the declaration in the repository, at the file and line. Files are cited like
+  \leanfile{New/Reduction/MainInequality}, relative to the folder \texttt{grh/src}. Where this
+  document and the Lean text differ, the Lean text is right.
+\item \emph{It admits the background.} The code is divided into a folder \texttt{New}, the
+  argument, and a folder \texttt{Lib}, results classed as known in the literature that Mathlib
+  lacks. We write out \texttt{New}. The results of \texttt{Lib} on which the argument turns are
+  stated as \emph{Facts}, without proof, with the sources that the Lean files name; other
+  declarations of \texttt{Lib} are cited where a proof uses them. Appendix~\ref{sec:app-facts}
+  lists both kinds, and it is complete: it is generated from the source of this document. The
+  code often proves a weaker or differently shaped statement than the textbook theorem; we state
+  what the code proves. We have not compared the Facts with their sources. The list of
+  references at the end gives the sources that the Lean files name.
+\item \emph{It is not a second verification.} The correctness of the theorems rests on the Lean
+  kernel, not on this text. The statements here were translated from the formal statements by
+  reading, and the proofs are explanations of the formal proofs: the mechanism, the key identity
+  or inequality, and how the pieces combine. A step that is routine or long is replaced by a
+  reference to the Lean declaration that proves it. A translation can contain mistakes that the
+  kernel cannot catch.
+\item \emph{How it was made.} The repository credits the Lean text to Claude, the author of
+  the present text. The two are separate pieces of work: this text was written from the
+  published repository alone, with no access to the work that produced the code. It was drafted
+  from the Lean sources:
+  the documentation in the files, the formal statements and, where needed, the proofs. Each
+  section was drafted from one group of folders. Each was then checked, independently of its
+  drafting, against the Lean text: every stated definition and result was compared with the
+  formal declaration it cites, and the proofs of the main results with the structure of the
+  formal proofs. That check examined about $680$ statements, definitions and proofs and
+  corrected about $250$ of them; most corrections restored a hypothesis that the draft had
+  dropped, and some replaced a proof step that described a mechanism other than the one the
+  code uses. Part~1 and the four sections that carry most of the proof
+  (Sections~\ref{sec:der}, \ref{sec:cg-selmer}, \ref{sec:cg-first} and~\ref{sec:cg-lifting})
+  were then checked a second time, with the Lean proofs read for the steps that the first check
+  had compared only as statements; this corrected about $50$ further items and added the
+  explanation of about $50$ steps. A third reader re-derived Part~1 and the arithmetic of the
+  budgets of Parts~2 to~4 by hand and compared about $45$ statements with their declarations;
+  that found one discrepancy. Last, the notation was unified and repeated definitions were
+  replaced by references, in a pass that was to change no mathematics and was itself compared
+  with the text before it. None of this shows that no error remains. The comments in the code
+  were trusted unless the code contradicted them. All citations of Lean names were checked
+  mechanically to name declarations that exist.
+\item \emph{What is not explained.} For many auxiliary steps the text gives the statement and
+  the Lean name but not the reason, and for some it describes the mechanism only as far as the
+  documentation in the code does. Appendix~\ref{sec:app-open} lists these steps section by
+  section.
+\end{itemize}
+
+\subsection{The proof in outline}
+
+Figure~\ref{fig:overview} shows the top of the proof. Each of Parts~2, 3 and~4 opens with a
+diagram of the same kind for the theorem it proves
+(Figures~\ref{fig:part2}, \ref{fig:part3}, \ref{fig:part4a} and~\ref{fig:part4b}).
+
+\input{sections/fig-overview}
+
+\subsubsection*{A one-sided bound suffices}
+Fix a modulus $q_0$ and a prime $d$, and let $K = \Q(\sqrt{-d})$ with quadratic character
+$\chiK$. Consider the weighted sum over the prime powers $n \equiv 1 \bmod q_0$ with
+$\chiK(n) \ne 1$,
+\[
+  R_{q_0}(x) = \sum_{\substack{n \le x \\ n \equiv 1 \bmod q_0}}
+     \Lambda(n)\bigl(1 - \chiK(n)\bigr)\Bigl(\frac1n - \frac1x\Bigr) - \frac{\log x}{\varphi(q_0)} - c ,
+\]
+with the constant $c$ for which $R_{q_0}(x) \to 0$. A theorem of Landau's type
+(Section~\ref{sec:zeros}) shows that an \emph{upper} bound $R_{q_0}(x) \le x^{-1/2+\eps}$ for all
+large $x$, for every $\eps > 0$ and all primes $d$ in a residue class, excludes zeros of the
+$L$-functions modulo $q_0$ in $\Re s > 1/2$. The rest of the proof establishes this upper bound for one $x$ at a time.
+
+\subsubsection*{Size against divisibility}
+The upper bound is proved by the principle that drives transcendence theory and Stepanov's proof
+of the Riemann hypothesis for curves: a non-zero integer cannot be both small and highly
+divisible. One builds a lattice of ``integral'' objects, shows that it contains many vectors that
+are small, and compares the resulting upper bound for a determinant with a lower bound that comes
+from the product formula. In his remark, Alp\"oge describes the argument as a descendant of
+Stepanov's, in which the high multiplicity of an auxiliary function is replaced by a chain of
+theta lifts, each lift contributing one unit of multiplicity, and the length of the chain is about
+$\sqrt{x}$.
+
+The primes enter through divisibility. A theta function of an elliptic curve with complex
+multiplication by $K$ has Taylor coefficients (``jets'') at the origin which, suitably
+normalised, are algebraic integers; and at a prime $p$ that does \emph{not} split in $K$ a jet of
+order $a$ is divisible by about $p^{a\gamma_p}$, with $\gamma_p = 1/p + 1/p^3 + \cdots$ for inert
+$p$ and $\gamma_d = \frac12(1/d + 1/d^2 + \cdots)$ (Section~\ref{sec:der}). The reason is a
+Frobenius congruence $\theta(\pi_p z)/\theta(z)^{q_p} \equiv 1$ modulo the prime $\pi_p$ of $K$
+above $p$, of norm $q_p$: after a scaling of $z$ it makes the theta series integral up to an
+exponential factor, and Legendre's formula for $a!$ does the rest. Summed over $p$ with weights
+$\log p$ these exponents give half of $\sum_n \Lambda(n)(1 - \chiK(n))\cdot a/n$, a sum over
+primes of the kind that occurs in $R_{q_0}$ (the factor $2$ returns because sizes are squared
+norms).
+
+\subsubsection*{The lattice}
+For each large integer $x$ the proof fixes \emph{admissible data} (Section~\ref{sec:setup}): a
+cyclotomic extension $E = K(\zeta)$, a CM field with $f$ infinite places; hermitian spaces over
+$E$; and scales $x < x_1 < b$ with $a = xb$. \emph{Source forms} are algebraic modular forms of
+weight about $a$ on a definite unitary group $\U(X_0)$. \emph{Target forms} are automorphic forms
+on a unitary group $\U(Y_0)$. A Poincar\'e series construction maps source forms to target forms,
+and a chain of $m \approx \sqrt{x}$ theta lifts $\Theta_\vartheta$, twisted by a character
+$\vartheta$, maps target forms to algebraic modular forms on a definite group $\U(Y_m)$, where
+integrality and size make sense. The target forms with the maps $\Theta_\vartheta$ are the
+lattice; a family of target forms has a \emph{covolume} (its size) and an \emph{index} (its
+distance from integrality).
+
+\subsubsection*{Three theorems}
+\emph{Theorem A} (the upper bound, Part~2) produces short integral vectors. A seesaw identity
+rewrites the lifts of a Poincar\'e series as a combination of chains of lifts between definite
+spaces, whose values are jets of CM theta functions. Their archimedean size is explicit, and their
+divisibility at the non-split primes is as above. Dividing by the guaranteed power of each prime
+leaves forms whose lifts have logarithmic size at most $\hmain - m\,\rem + f a\log^4 b$, where
+the \emph{main amount} $\hmain$ is explicit and huge and the \emph{total remainder} $\rem$ is a combination of the remainders
+$R_{q_0}$.
+
+\emph{Theorem B} (spanning, Part~3) shows by a second-moment computation, of the type of the
+Petersson formula, that few translates of the Poincar\'e map span almost all target forms.
+
+\emph{Theorem C} (the lower bound, Part~4) bounds covolume plus twice the index from below by
+$\dT\,\hmain$, $\dT$ the dimension of the target, up to small errors, for every independent family
+of almost full rank. It evaluates a Gram determinant by the product formula, with a different
+twist at each prime (Theorem~\ref{setup:thm:twist}). The Gram determinant $Z(\vartheta)$ of a
+chain of lifts is not evaluated: exchange identities of Siegel--Weil type write $Z(1)/Z(\vartheta)$,
+up to a power of the norm of the modulus, as ratios of twisted to untwisted Hecke $L$-values times
+the same ratios for the $m$ single lifts; the latter are bounded through comparison operators and
+lifts of characters of $\U(1)$, whose squared norms are Hecke $L$-values (Rallis inner product
+formula). The main amount reappears as the height of $Z(1)/Z(\vartheta)$, with $\vartheta$ chosen
+for each prime; the twists are chosen through congruences, Galois representations and Selmer
+groups, which bound the denominators of the lifts.
+
+\subsubsection*{The conclusion}
+In the comparison the main amount cancels, and what remains is $m\cdot\rem \le f a\log^5 b$
+(Theorem~\ref{main:thm:star}). The weights of the forms are chosen larger at a sparse set of
+places of $E$ of class $-1$ modulo $q_0$; this is how the residue class modulo $q_0$ enters, and
+it makes $\rem$ equal to $a\,\#\Phi_b\,R_{q_0}(x)$ up to remainders at the far larger point $x_1$,
+where the classical prime number theorem suffices (Proposition~\ref{setup:prop:rem}). Dividing by
+$m \approx \sqrt{x}$ gives $R_{q_0}(x) \le C x^{-1/2+6\eps}$ for data with $\log b \approx x^\eps$.
+
+\subsection{Organisation}
+
+Part~1 is the reduction: the analytic criterion (Section~\ref{sec:zeros}), the data and the
+general lower bound for Gram determinants (Section~\ref{sec:setup}), and the derivation of the
+theorem from Theorems A, B and C (Section~\ref{sec:main}); it is complete in itself, given
+Theorems B and C and the results of Part~2 from which Section~\ref{sec:main} assembles Theorem~A. Parts~2, 3 and~4 prove Theorems A, B and C. Table~\ref{intro:tab:parts} lists the
+sections with the folders of the Lean text that they cover. The appendices give the notation
+(Appendix~\ref{sec:app-notation}), the background results admitted
+(Appendix~\ref{sec:app-facts}), the steps cited without explanation
+(Appendix~\ref{sec:app-open}) and the index of Lean declarations
+(Appendix~\ref{sec:app-leanindex}); the references follow.
+
+The parts are of very unequal weight. A few sections quote a percentage for a result: it is the
+share, among the declarations that the final theorem \lean{riemannHypothesis} needs, of those
+that are needed only through that result. The figures come from the dependency graph of the
+compiled code, in which the final theorem needs $49{,}815$ declarations. By this measure almost
+half ($46\%$) of the proof is needed only through Theorem~C, and most of that only through the
+existence of suitable twists (Section~\ref{sec:cg-selmer}).
+
+\begin{table}[ht]
+\centering
+\small
+\begin{tabular}{llp{7.9cm}}
+\toprule
+section & subject & Lean folders under \texttt{New/} \\
+\midrule
+\ref{sec:zeros} & one-sided criterion & \texttt{Reduction/Zeros}, \texttt{Main} \\
+\ref{sec:setup}, \ref{sec:data} & data, heights, lattices & \texttt{Reduction/Data}, \texttt{Reduction/Lattices} \\
+\ref{sec:main} & main inequality & \texttt{Reduction} \\
+\midrule
+\ref{sec:ub-objects} & objects & \texttt{UpperBound/Kernels}, \texttt{UpperBound/Objects} \\
+\ref{sec:der} & derivatives of theta functions & \texttt{Derivatives} \\
+\ref{sec:ub-seesaw} & seesaw identity & \texttt{UpperBound/Seesaw} \\
+\ref{sec:ub-divis} & divisibility and size & \texttt{UpperBound/Divisibility}, \texttt{UpperBound/Size} \\
+\ref{sec:ub-eldiv} & elementary divisors & \texttt{UpperBound/ElementaryDivisors} \\
+\midrule
+\ref{sec:sp-moment} & second moment, Bessel functions & \texttt{Spanning/SecondMoment}, \texttt{Multiplicities}, \texttt{Bessel}; \texttt{Appendix/DiscreteSeries} \\
+\ref{sec:sp-unfold} & unfolding & \texttt{Spanning/Unfolding} \\
+\ref{sec:sp-main} & main term & \texttt{Spanning/MainTerm} \\
+\ref{sec:sp-frames} & local estimates & \texttt{Spanning/Frames} \\
+\ref{sec:sp-remain} & remaining terms & \texttt{Spanning/RemainingTerms} \\
+\midrule
+\ref{sec:det-chain} & Theorem C, chain of lifts & \texttt{Determinant/Twist}, \texttt{Norms}, \texttt{Chain}, \texttt{AuxiliaryForms} \\
+\ref{sec:det-exchange} & exchange identity & \texttt{Determinant/Exchange} \\
+\ref{sec:ol-values} & one lift, Hecke values & \texttt{OneLift} except \texttt{ComparisonOperator} \\
+\ref{sec:ol-compare} & comparison operator & \texttt{OneLift/ComparisonOperator} \\
+\ref{sec:cg-selmer} & twists, Selmer groups & \texttt{Congruences/FitTwistsExist}, \texttt{Selmer}, \texttt{GaloisRepresentations} \\
+\ref{sec:cg-first} & Ribet's method & \texttt{Congruences/FirstOrder} \\
+\ref{sec:cg-lifting} & local loss & \texttt{Congruences/LocalLoss}, \texttt{Lifting} \\
+\bottomrule
+\end{tabular}
+\caption{The sections and the Lean folders they cover.}
+\label{intro:tab:parts}
+\end{table}
+
+\subsection{Conventions}
+
+\emph{Total functions.} In Lean every function is defined everywhere. Mathlib's $\zeta$ has a
+value at $s = 1$, its $\Gamma$ has the value $0$ at the poles, division by zero gives $0$. Formal
+statements therefore carry side conditions such as $s \ne 1$; we keep them when they matter and
+otherwise write as usual.
+
+\emph{Places.} $\Aut(\C)$ is the group of all field automorphisms of $\C$. A pair $\iota$ of a
+prime $\ell$ and a field isomorphism $\C \isom \Qlbar$ is written $\iota \mid \ell$. A complex
+number is integral at $\iota$ if its image has absolute value at most $1$; a quantity is bounded
+``at every conjugate'' if the bound holds after applying every $\sigma \in \Aut(\C)$.
+
+\emph{Letters.} The symbols listed in Appendix~\ref{sec:app-notation} have one meaning in the
+whole paper; among them are the letters of the data of Section~\ref{sec:setup}. There are two
+standing exceptions: $s$ is also a complex variable (Section~\ref{sec:zeros}) and an element of
+$\Gbar$ (as in $s\nPoin$), and a bound variable may reuse a letter. Sections introduce further
+symbols for their own objects and say what they mean; where a section gives a listed letter a
+local meaning, it says so at that place. A twist is $\vartheta$. Constants are explicit in the
+Lean text and are not optimised; we keep them.
+
+\emph{Sizes.} Inequalities between the sizes of the data are used constantly. They compare
+quantities through bounds for their logarithms, which reduces them to linear inequalities between
+$\log x$, $\log x_1$, $\log b$, $\log\log b$, $\log\log x_1$ and a constant; they are proved by one
+uniform mechanism (\lean{New.Data.le_of_hasLogBound}), and are quoted without proof.

@@ -1,0 +1,60 @@
+% Diagram of the top of the proof (Introduction): from the final theorems down to Theorems A, B, C.
+\begin{figure}[tbp]
+\centering
+\begin{tikzpicture}[x=1cm,y=1cm]
+% row 0: the statements on the critical line
+\node[pfmain] (line) at (0,0) {Thms.~\ref{intro:thm:line}, \ref{intro:thm:rh}\\zeros on the critical line};
+% row 1
+\node[pfmain] (grh) at (0,-1.7) {Thm.~\ref{main:thm:grh}\\(=~Thm.~\ref{intro:thm:grh})\\half-plane theorem};
+\node[pfnode] (fe) at (6,-1.7) {Prop.~\ref{zeros:prop:line}\\functional equation};
+% row 2
+\node[pfnode] (crit) at (-3.75,-3.4) {Thm.~\ref{zeros:thm:criterion}\\one-sided criterion};
+\node[pfnode] (one) at (3.75,-3.4) {Thm.~\ref{main:thm:onesided}\\one-sided bound};
+% row 3
+\node[pffact, text width=1.9cm] (landau) at (-6.25,-5.1) {Fact~\ref{zeros:fact:landau}\\Landau's lemma};
+\node[pffact, text width=1.9cm] (prime) at (-3.75,-5.1) {Fact~\ref{zeros:fact:prime}\\choice of the prime};
+\node[pfnode, text width=1.9cm] (poles) at (-1.25,-5.1) {Prop.~\ref{zeros:prop:poles}\\poles};
+\node[pfnode, text width=1.9cm] (atx) at (1.25,-5.1) {Prop.~\ref{main:prop:atx}\\remainder at the first scale};
+\node[pfnode, text width=1.9cm] (exist) at (3.75,-5.1) {Thm.~\ref{setup:thm:existence}\\existence of the data};
+\node[pfnode, text width=1.9cm] (pnt) at (6.25,-5.1) {Thm.~\ref{zeros:thm:pnt}\\prime number theorem};
+% row 4
+\node[pfnode] (rem) at (-1.75,-6.8) {Prop.~\ref{setup:prop:rem}\\total remainder};
+\node[pfmain] (star) at (1.25,-6.8) {Thm.~\ref{main:thm:star}\\main inequality};
+% row 5
+\node[pfmain] (A) at (-1.75,-8.5) {Thm.~\ref{main:thm:A}\\Theorem A: upper bound};
+\node[pfmain] (B) at (1.25,-8.5) {Thm.~\ref{main:thm:B}\\Theorem B: spanning};
+\node[pfmain] (C) at (4.25,-8.5) {Thm.~\ref{main:thm:C}\\Theorem C: lower bound};
+% row 6: the parts
+\node[pfpart] (P2) at (-1.75,-10.2) {Part~2\\seesaw identity,\\divisibility, size\\Fig.~\ref{fig:part2}};
+\node[pfpart] (P3) at (1.25,-10.2) {Part~3\\second moment\\Fig.~\ref{fig:part3}};
+\node[pfpart] (P4) at (4.25,-10.2) {Part~4\\chain of lifts,\\twists\\Figs.~\ref{fig:part4a}, \ref{fig:part4b}};
+% arrows: premise -- conclusion
+\draw[pfedge] (grh) -- (line);
+\draw[pfedge] (fe) -- (line);
+\draw[pfedge] (crit) -- (grh);
+\draw[pfedge] (one) -- (grh);
+\draw[pfedge] (landau) -- (crit);
+\draw[pfedge] (prime) -- (crit);
+\draw[pfedge] (poles) -- (crit);
+\draw[pfedge] (atx) -- (one);
+\draw[pfedge] (exist) -- (one);
+\draw[pfedge] (pnt) -- (one);
+\draw[pfedge] (rem) -- (atx);
+\draw[pfedge] (star) -- (atx);
+\draw[pfedge] (A) -- (star);
+\draw[pfedge] (B) -- (star);
+\draw[pfedge] (C) -- (star);
+\draw[pfedge] (P2) -- (A);
+\draw[pfedge] (P3) -- (B);
+\draw[pfedge] (P4) -- (C);
+\end{tikzpicture}
+\caption{The top of the proof: from the theorems of the introduction down to Theorems~A, B
+and~C (Sections~\ref{sec:intro}, \ref{sec:zeros}, \ref{sec:setup} and~\ref{sec:main}). Each box
+is a result, with its number and a short name; a box with several numbers stands for a group of
+results. An arrow from one box to another means that the proof of the second, as written in this
+paper, uses the first. Bold boxes are the final theorems,
+the main inequality and Theorems~A, B and~C. Dashed grey boxes are background results admitted
+without proof. Double boxes stand for the parts that prove Theorems~A, B and~C; each has its own
+diagram.}
+\label{fig:overview}
+\end{figure}

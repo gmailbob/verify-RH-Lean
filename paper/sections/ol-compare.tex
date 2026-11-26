@@ -1,0 +1,384 @@
+\section{One lift: the comparison operator}\label{sec:ol-compare}
+
+This section constructs the gluing map from which Section~\ref{sec:ol-values} builds the
+\emph{comparison operator} of a single lift $\Theta_{j,\vartheta}\colon W_j\to V_j$
+(\leanfile{New/OneLift/ComparisonOperator}): forms on $V''$ (the \emph{first factors}) and on
+$V^\circ$, $V_j=V''\oplus V^\circ$, are glued to a map $\operatorname{gl}_\vartheta$ into the forms
+on $V_j$, and three exchange identities show that $\operatorname{gl}_\vartheta^*\Theta_{j,\vartheta}$
+depends on $\vartheta$ only through a scalar $c'_\vartheta$.
+
+\subsection{Set-up}\label{ol-compare:sec:setup}
+
+Letters are those of Sections~\ref{sec:setup} and~\ref{sec:ub-objects}, with $\upsilon$
+(\lean{New.WeilData.upsilonU1}), $\chi$
+(\lean{New.Data.chiM}, of order $>8m$, tame part non-trivial exactly at the chosen places) and
+$\mu_j^0$ as in Definition~\ref{data:def:liftchar}, $\Nm Q_\vartheta$ and $\Sigma_\vartheta$ as in
+Section~\ref{sec:det-chain}, and $A=f\,m\,b\log^2b$ as in Section~\ref{sec:ol-values}. Fix
+$1\le j\le m$; $I_n^-$ is the negative of $I_n$. Moduli $\fm$,
+characters tame for $(\fm,\chi_\fm)$ are as in Section~\ref{sec:det-exchange}
+(\lean{New.Exchange.IsTameFor}), and for a set $\Sigma$ of places $L_*^{\Sigma}(e;\nu)$ is
+\eqref{det-exchange:eq:Lstar} with $\Sigma$ for $S$ (\lean{New.Exchange.lValueProd}).
+$\theta_{V,V'}[F,P](g,h)$ is the theta kernel of $(V,V')$ for the
+datum made of the Fock vector of the polynomial $P$ at infinity, the function $F$ on matrices
+modulo $\fm$, and the vacuum elsewhere (\lean{New.modKernel}); in $\theta^{\alpha,\beta}_{V,V'}$ the Weil representation is
+twisted by $\alpha(\det h)\,\beta(\det g)^{-1}$: $\alpha$ twists $\U(V')$, $\beta$ twists $\U(V)$ (\lean{New.pairWeil}). On a
+definite space, $\Sigma^J_h\varphi(h)=\sum_{h\in\Gamma\backslash G_f/J}\varphi(h)/\#(\Gamma\cap hJh^{-1})$
+(\lean{New.stdClassSum}), $J$ omitted at full level.
+
+\begin{definition}[\lean{New.Data.exchangePair}, \lean{New.Data.heckeValueProd}]\label{ol-compare:def:gamma}
+The three pairs of lift $j$ are $(\nu_*,z_*)=(\mu_j^0\upsilon^{j+(t-11m-1)/2},\,\tfrac{7m}2+\tfrac k2)$,
+$(\nu_+,z_+)=(\upsilon^{-m}\chi^{j},m)$ and
+$(\nu_-,z_-)=(\upsilon^{-m/2}\chi^{-j},\tfrac m2)$ (critical pairs, Section~\ref{sec:det-chain}), and
+\[
+  \Gamma_j(\vartheta)=L_*^{\Sigma_\vartheta}\bigl(z_*;(\nu_*\vartheta)^{-1}\bigr)
+  L_*^{\Sigma_\vartheta}\bigl(z_+;(\nu_+\vartheta)^{-1}\bigr)
+  L_*^{\Sigma_\vartheta}\bigl(z_-;(\nu_-\vartheta^{-1})^{-1}\bigr),\qquad
+  \rho_\vartheta=\frac{\Gamma_j(\vartheta)}{\Gamma_j(1)}.
+\]
+\end{definition}
+
+\emph{Spaces and choices.} $V_j=I_{r+t}=V''\oplus V^\circ$ (\lean{New.Rows.splittingV}): $V''$ has rank
+$r+9m+1$, on the indices of $W_j$, of $I_j^-\oplus I_{3m-j}$ and of $W^\flat=I_{6m+1}$; $V^\circ$ has rank
+$t-9m-1$. On the indices of $V''$ lives also $W'=W_j\oplus I_j^-\oplus I_{3m-j}\oplus W^\flat$; $S$ has
+signature $(2m,m)$, and $W^{\mathrm{add}}=I_{3m-j}\oplus W^\flat\oplus I_{3m}$. Lift $j$
+(\lean{New.Data.descentPair}) has diagrams $\mu^\pm$: forms on $V''$ have values of weight $\mu^+$,
+forms on $V^\circ$ of weight $\mu^-$; $\mathrm{hk}$ is the hook number of $\mu^-$ ($n_{\mathrm{Aut}}$ is
+as in Section~\ref{sec:ol-values}). A \emph{choice}
+$i=(\Lambda,h^\flat,\text{rows})$ (\lean{New.Data.ChoiceIndex}) is a $3m\times(r+9m+1)$ matrix $\Lambda$
+modulo $\pi_M^2$, a class $h^\flat$ of $\U(W^\flat)$ at level $\pi_M^2$, and at each place
+$\Delta/2-(t+1)/2$ lists of $2m$ rows of a short basis of $h^\flat$. $\mathcal A^\oplus$
+(\lean{New.Data.FormTuples}) is the space of tuples $\eta=(\eta_i)_i$ of forms on $V^\circ$ at level
+$J(\pi_M^2)$, where all stabilisers are trivial, so $\|\eta\|_\sigma^2$ is a plain sum. $\theta^\circ$
+is the kernel of $(W_j,V^\circ)$ with datum $(1;0)$ modulo $\pi_M^2$, and
+$\langle\eta_i,\theta^\circ(g,\cdot)\rangle$ its pairing with a form (\lean{New.Data.thetaKernelPairing}).
+$\Theta_{j,\vartheta}\colon\mathcal G_j\to\mathcal F_{\vartheta,j}$ is the single lift on the good forms
+(Section~\ref{sec:ol-values}, \lean{New.Data.goodLift}), and comparison operators $U_\vartheta$ on
+$\mathcal F_{\vartheta,j}$, with properties (i)--(v), are those of Definition~\ref{ol-values:def:comp}
+(\lean{New.Data.IsComparisonOperator}).
+
+\subsection{Three exchanges}\label{ol-compare:sec:exchanges}
+
+We use Theorem~\ref{det-exchange:thm:explicit} (\lean{New.Rows.exists_mul_stdClassSum_eq_integral_modKernel})
+for $W$ of rank $n_0+n_1$, $V'$ of rank $n_0$, $n_1=n_0+2e$, with
+$|c|^2=C/L_*^{\fm}(e;\alpha^{-1}\upsilon^{n_0+e})$, $C\in\R$ possibly $0$; the twist
+enters only through $\alpha$, hence only through $c$.
+
+\begin{proposition}[Equal rank; \lean{New.Rows.exists_mul_stdClassSum_modKernelStdSpace_eq_one}]
+\label{ol-compare:prop:rallis}
+Let $n=2e>0$ and $\lambda\colon\Phi\to\N$. There is $C\in\R$ such that every $\alpha$ of weight $-\lambda$, tame for
+$(\fm,\chi_\fm)$, has a $\gamma$ with $|\gamma|^2=C/L_*^{\fm}(e;\alpha^{-1}\upsilon^e)$ and
+$\gamma\,\Sigma_h\,\theta^{\alpha,\alpha}_{I_n,I_n}[\chi_\fm\circ\det,\prod_\tau\det(y_\tau)^{\lambda_\tau}](g,h)=1$
+for all $g\in\U(I_n)(\A)$.
+\end{proposition}
+
+\begin{proof}
+Take Theorem~\ref{det-exchange:thm:explicit} with $W=I_n$, $V'=0$, $n_0=0$, $n_1=n=2e$: the data $\chi_\fm\circ\det$ and
+$1$ are matched (\lean{New.Rows.areMatched_det_one}) and the integral over the trivial group is $1$.
+\end{proof}
+
+The proposition does not assert $C\ne0$. As $\alpha^{-1}\upsilon^e$ is tame of weight $\lambda+e>0$,
+Fact~\ref{det-exchange:fact:lib}(a) gives $L_*^{\fm}(e;\alpha^{-1}\upsilon^e)>0$ (in Lean not with the
+proposition but in \lean{New.Rows.exists_stdClassSum_eq_mul_integral_modKernel}); so once one tame
+$\alpha$ exists, $|\gamma|^2\ne0$ gives $C>0$ and $|1/\gamma|^2=C^{-1}L_*^{\fm}(e;\alpha^{-1}\upsilon^e)$.
+Computed is the dependence on $\fm$ and $\alpha$; not computed are $C$ (it depends only on $E$, $n$, $\lambda$)
+and the phase of $\gamma$.
+
+The \emph{carrier} (\lean{New.Rows.carrierForm}) is the theta lift of $1$ from $\U(I_m^-)$ to $\U(S)$,
+\[
+\varphi^\circ(x)=\int_{[\U(I_m^-)]}\theta^{\upsilon^m,1}_{I_m^-,S}\Bigl[1,\prod_\tau\det(y^-_\tau)^{2m}\Bigr](y,x)\,dy
+\]
+($y^-_\tau$ the block of variables in the negative rows). Put
+$\mathsf a_c(h)=\Sigma_v\theta^{c,1}_{I_m,I_{3m}}[1,1](v,h)$ (\lean{New.Rows.carrierCoeff}).
+
+\begin{fact}[A vanishing lift kills the real convolution, from Rallis' inner product formula;
+\lean{New.SiegelWeil.realConv_eq_zero_of_lift_eq_zero}, \leanfile{Lib/SiegelWeil/RallisInner/SharpData}]
+\label{ol-compare:fact:rallis}
+Let $\rk V'>2\rk V$, $F$ a finite datum on $\mathrm{Hom}(V,V')$ \emph{sharp} for a level $J$
+(Fact~\ref{det-chain:fact:rallis}),
+$v$ a Fock vector with $x\mapsto\langle v,\omega(x)v\rangle$ integrable on $\U(V)_\infty$ ($\omega$ the Weil representation), and $y$
+on $\U(V)$ rapidly decreasing, automorphic, fixed by $J$. If the theta lift of $y$ by $v\otimes F$ vanishes, then $\int_{\U(V)_\infty}\langle v,\omega(x)v\rangle\,y(gx)\,dx=0$ for all
+$g$. (Rallis, Injectivity properties of liftings associated to Weil representations, 1984;
+J.-S.~Li, 1992.)
+\end{fact}
+
+\begin{proposition}[The carrier; \lean{New.Rows.exists_mul_stdClassSum_eq_carrierForm}]
+\label{ol-compare:prop:carrier}
+Let $m$ be even. There is $C\in\R$ such that every $c$ of weight $0$, tame for $(\fm,\chi_\fm)$, has a
+$\gamma$ with $|\gamma|^2=C/(L_*^{\fm}(m;c^{-1}\upsilon^m)L_*^{\fm}(\frac m2;c\upsilon^{m/2}))$ and
+$\gamma\,\Sigma_h\,\mathsf a_c(h)\,\theta^{\upsilon^m,c}_{S,I_{3m}}[\chi_\fm\circ\det,1](x,h)=\varphi^\circ(x)$ for
+all $x$. Moreover $\varphi^\circ\ne0$, and (given one such $c$) it has every principal level, decays
+rapidly and is holomorphic of weight $(0;3m)$ (\lean{New.Rows.carrierForm_ne_zero},
+\lean{New.Rows.carrierForm_mem_rapidOfLevel_and_isAdelicHol}).
+\end{proposition}
+
+\begin{proof}
+Take Theorem~\ref{det-exchange:thm:explicit} with $W=I_m\oplus S$, $V'=I_m^-$, $n_1=3m$, $n_0=e=m$,
+$\alpha=c\upsilon^m$, and sum over the classes $v$ of $\U(I_m)$
+(\lean{New.Rows.mul_stdClassSum_eq_integral_mul_modKernel}). On the left the kernel of $I_m\oplus S$ is
+the product of the kernels of $I_m$, which sum to $\mathsf a_c$, and of $S$. On the right
+$\Sigma_v\theta_{I_m^-,I_m}(y,v)$ is constant by Proposition~\ref{ol-compare:prop:rallis} ($n=m$) for $c^{-1}$
+(conjugated, \lean{New.Rows.exists_stdClassSum_modKernelStdSpace_neg_eq_one}), and the lift of $1$ is left.
+By the identity, $\varphi^\circ$ is a combination of kernels with datum $\chi_\fm\circ\det$, which have full
+level, are holomorphic, and decay rapidly as the datum lives on invertible matrices
+(\lean{New.Rows.isRapid_modKernel}). If $\varphi^\circ=0$, Fact~\ref{ol-compare:fact:rallis} ($3m>2m$, trivial modulus, $y=1$) would make the integral over the compact $\U(0,m)_\infty$ of $\langle v,\omega(u)v\rangle$ vanish, $v$ the
+Fock vector of $\prod_\tau\det(y^-_\tau)^{2m}$; but this coefficient is the constant $\langle v,v\rangle\ne0$.
+\end{proof}
+
+Put $\chi'=\chi^j\vartheta$
+(\lean{New.Data.twistedChiMPow}); thanks to $\chi^j$ it is tame for $\pi_M^2Q_\vartheta$ even for
+$\vartheta=1$ (\lean{New.Data.isTameFor_twistedChiMPow}). For a choice $i$ let
+$\psi_\Lambda(y)=\psi(\tr y\Lambda)$ ($\psi$ a primitive additive character of $\cO/\pi_M^2$),
+$\psi^{\mathrm{inv}}_\Lambda$ the sum of its translates by
+$\GL_{3m}(\cO/\pi_M^2)$, $P$ a fixed product of minors on $W_j\oplus I_j^-\oplus I_{3m-j}$
+(\lean{New.Data.paddedMinorProd}), $P^\flat_i$ the product of the determinants of the rows of $i$
+against the variables of $W^\flat$, and $P_V$ the product over the columns of $\mu^+$ of determinants of
+constant rows stacked over the variables (\lean{New.Rows.stackedDetProd}). Define
+$\mathsf F_i$ (\lean{New.Data.choiceFn}) and $\mathrm{LS}_{\vartheta,i}$ (\lean{New.Data.thirdExchangeLeftSide}) by
+\begin{align*}
+  \mathsf F_i(g)&=\int_{[\U(S)]}\varphi^\circ(x)\,\theta_{S,W'}[\psi_\Lambda,PP^\flat_i](x,(g,1,1,h^\flat))\,dx,\\
+  \mathrm{LS}_{\vartheta,i}(g)&=\Sigma_{h'}\mathsf a_{\chi'}(h')\,\Sigma_h\,
+  \theta_{I_{3m}\oplus W',V''}[\chi'(\det x'')\psi^{\mathrm{inv}}_\Lambda(x''^{-1}x'),P_V]((h',g,1,1,h^\flat),h).
+\end{align*}
+The characters $\upsilon^m$, $\nu^\flat\upsilon^m$ of its kernel
+(\lean{New.Data.carrierChar}) do not involve $\vartheta$: \emph{$\mathsf F_i$ is free of the twist}.
+
+\begin{proposition}[Third exchange; \lean{New.Data.exists_mul_thirdExchangeLeftSide_eq_choiceFn}]
+\label{ol-compare:prop:third}
+There are $C\in\C$ (possibly $0$) and $c_\vartheta$ with $|c_\vartheta|^2=C/\Gamma_j(\vartheta)$ and
+$c_\vartheta\mathrm{LS}_{\vartheta,i}=\mathsf F_i$ for all twists $\vartheta$ and choices $i$.
+\end{proposition}
+
+\begin{proof}
+Take Theorem~\ref{det-exchange:thm:explicit} with $W=I_{3m}\oplus W'$, $V''$ for $I_{n_1}$, $V'=S$, $n_0=3m$,
+$n_1=3m+2z_*$ (so $e=z_*$), $\alpha=\chi'\nu^\flat\upsilon^m$ (tame for $\pi_M^2Q_\vartheta$), sum over the classes $h'$
+of $I_{3m}$ against $\mathsf a_{\chi'}$, and use Proposition~\ref{ol-compare:prop:carrier} with $c=\chi'$.
+The right side becomes $\int\varphi^\circ\theta_{S,W'}[\psi^{\mathrm{inv}}_\Lambda,\dots]$; as $\varphi^\circ$ has
+full level, every translate of $\psi_\Lambda$ gives the same integral, so this is
+$\#\GL_{3m}(\cO/\pi_M^2)\mathsf F_i$ (\lean{New.Data.integral_carrierForm_mul_eq_card_mul_choiceFn}).
+The characters of the three constants are $\alpha^{-1}\upsilon^{3m+z_*}=(\nu_*\vartheta)^{-1}$,
+$\chi'^{-1}\upsilon^m=(\nu_+\vartheta)^{-1}$ and $\chi'\upsilon^{m/2}=(\nu_-\vartheta^{-1})^{-1}$.
+\end{proof}
+
+\subsection{The first factors}\label{ol-compare:sec:first}
+
+Regroup $I_{3m}\oplus W'=W_j\oplus I_j^-\oplus W^{\mathrm{add}}$. Then $\mathrm{Hom}$ into $V''$ has three
+blocks, and a kernel with product datum and polynomial is a product of three kernels.
+
+\begin{lemma}[\lean{New.Data.renameRowsCols_stackedDetProd_eq_sum},
+\lean{New.Data.exists_isHomogeneousOverEntries_smul_stackedDetProdCoords}]\label{ol-compare:lem:zeta}
+$P_V(X,z)=\sum_lL_l(X)R_l(z)$, with $X$ the variables of the positive vectors of $W_j$, $z$ those
+of $W^{\mathrm{add}}$, $L_l$ the letter polynomial of the $l$-th basis vector of weight $\mu^+$, and
+$R$ a polynomial map to that Weyl module, homogeneous of a degree $\delta_R\le(10m+1)q$ ($q$ the
+number of determinants). An integer $0<H\le(\delta_R^{\delta_R})^3$ puts the coefficients of $HR$ in the
+ring of the conjugates of the entries of the short bases, and if these and $z$ have conjugates
+$\le M^4$, then $\|R(z)\|^2\le M^{9(12m+1)q}$
+(\lean{New.Data.weylNormSq_comp_eval_stackedDetProdCoords_le}).
+\end{lemma}
+
+This is the expansion of a product of determinants in its first columns
+(\leanfile{New/OneLift/ComparisonOperator/DeterminantProducts}); the bound is Hadamard's inequality.
+The datum $\chi'(\det x'')\psi^{\mathrm{inv}}_\Lambda(x''^{-1}x')$ becomes a product at the level
+$J_\Lambda$ that stabilises the rows of $\Lambda$ stacked over $\pi_M\cdot1$
+(\lean{New.Rows.stdClassSum_rowStabilizer_eq}, a tower identity of class sums). The \emph{series}
+$\Upsilon_{\vartheta,i}(h)$ of weight $\mu^+$ (\lean{New.Data.leftSideSeries}) is the kernel of
+$(I_j^-,V'')$ at $(1,h)$ times
+$\Sigma_{h'}\mathsf a_{\chi'}(h')\theta_{W^{\mathrm{add}},V''}[F^{\mathrm{add}}_\Lambda,R]((1,h^\flat,h'),h)$, where
+$F^{\mathrm{add}}_\Lambda$ is $\psi^{\mathrm{inv}}_\Lambda$ on the columns of $I_{3m}$ if the other columns are those of $1$, and $0$ otherwise;
+the \emph{first factor} is $\varphi''_{\vartheta,i}=\overline{c''\Upsilon_{\vartheta,i}}$
+(\lean{New.Rows.firstFactor}), and $\Xi_{\vartheta,i}(g)=\Sigma^{J_\Lambda}_h\theta_{W_j,V''}[\overline{\varphi''_{\vartheta,i}(h)}](g,h)$
+its theta series on $\U(W_j)$ (\lean{New.Rows.firstFactorPairing}).
+
+\begin{proposition}[Integrality and size]\label{ol-compare:prop:first}
+There is $c''\ne0$, independent of $\vartheta,i,h$, such that (a) $\varphi''_{\vartheta,i}(h)$ is integral
+(gauge $\le1$ at $h$) above every prime $\ell\nmid\Nm Q_\vartheta$; (b) all conjugates of
+$\varphi''_{1,i}(h)$ have squared norm at most $e^A$.
+\end{proposition}
+
+\begin{proof}
+This is \lean{New.Data.exists_isIntegralAndSmall_leftSideSeries}. Here $c''=n_{\mathrm{Aut}}^2Hc_0\bar c_1c_2c$, $|c|=1$, $c_i$ the
+scalings of the kernels below, and $\overline{c''\Upsilon}$ is $n_{\mathrm{Aut}}^2$ times a double
+class sum over $\U(I_{3m})$, $\U(I_m)$ of products of kernels of the definite pairs $(I_m,I_{3m})$,
+$(I_j,V'')$, $(W^{\mathrm{add}},V'')$, the last at $HR_l$
+(\lean{New.Data.exists_star_leftSideSeries_eq_classSum}). Denominators can come only from the weights
+$1/\#\mathrm{Aut}$ (cleared by $n_{\mathrm{Aut}}^2$), the coefficients of $R$ (cleared by $H$) and
+the kernels; after one fixed scaling these are $p$-integral for integral input
+(\lean{New.Rows.exists_ne_zero_isModKernelScale}, Section~\ref{sec:ub-objects}) for $p$ prime to
+$\Nm Q_\vartheta$, as $(\Nm Q_\vartheta)M^2\in\pi_M^2Q_\vartheta$ (\lean{New.Data.normQ_mul_M_pow_mem_modulus});
+the data are sums of roots of unity. For (b), each kernel is at most $e^{x_1}$ times its polynomial
+at points with conjugates $\le M^4$, the datum at most $\#\GL_{3m}(\cO/\pi_M^2)$, and with
+Lemma~\ref{ol-compare:lem:zeta}, $q\le f(b+a/x_1+(m+1)\Delta)$ and $\log M\le22\log b$ the product is at most
+$e^A$ (\lean{New.Data.firstFactorSize_sq_le_exp}).
+\end{proof}
+
+\begin{corollary}[\lean{New.Rows.firstFactorPairing_eq_mul_thirdExchangeLeftSide}, \lean{New.Rows.twistFactor_mul_firstFactorPairing}, \lean{New.Rows.exists_norm_twistFactor_sq_eq}]
+\label{ol-compare:cor:twistfactor}
+$\Xi_{\vartheta,i}=c''\mathrm{LS}_{\vartheta,i}$; so there are $C\in\C$ and $c'_\vartheta$ (\lean{New.Rows.twistFactor}, chosen like the
+$c_\vartheta$ of Proposition~\ref{ol-compare:prop:third}) with $c'_\vartheta\Xi_{\vartheta,i}=c''\mathsf F_i$ for all $i$ and $|c'_\vartheta|^2=C/\Gamma_j(\vartheta)$.
+\end{corollary}
+
+\begin{proof}
+By the splitting of the datum and Lemma~\ref{ol-compare:lem:zeta}, $\mathrm{LS}_{\vartheta,i}$ is the class sum
+at level $J_\Lambda$ of kernels of $(W_j,V'')$ with the vectors $\Upsilon_{\vartheta,i}(h)$
+(\lean{New.Data.thirdExchangeLeftSide_eq_kernelClassSum}). Apply Proposition~\ref{ol-compare:prop:third}.
+\end{proof}
+
+\subsection{Gluing}\label{ol-compare:sec:gluing}
+
+The datum of $\Theta_{j,\vartheta}$ asks $x\equiv(1;0)\bmod\pi_M$; a product datum asks conditions modulo
+$\pi_M^2$ on the two blocks of $x$. A lattice $\gamma_\Lambda\cO^n$, between $\pi_M\cO^n$ and $\cO^n$
+at the chosen places, spanned by $(1;0)$ on both summands, by $\{u\in V'':\Lambda u\equiv0\bmod\pi_M\}$
+and by $\pi_M$ times the lattice of $V^\circ$, is \emph{glued}: $\gamma_\Lambda^{-1}x\equiv(1;0)\bmod\pi_M$ if
+and only if $xY$ satisfies the block conditions for exactly one $Y$ in
+$\bar J^1=\ker(\GL_r(\cO/\pi_M^2)\to\GL_r(\cO/\pi_M))$ (\lean{New.Rows.DividedSplitting.exists_isGlued}).
+The \emph{product form} $P_\gamma(h,h^\circ)(v'',v^\circ)$ is supported on the class of $\diag(h,h^\circ)\gamma$
+with the Cartan product of $v'',v^\circ$ as value (\lean{New.Rows.DividedSplitting.productForm}). So its
+descent to $W_j$ is the conjugate of $c_\gamma\sum_{Y\in\bar J^1}$ of a kernel of $(W_j,V'')$ at
+$(gY,h)$ times one of $(W_j,V^\circ)$ at $(gY,h^\circ)$, $c_\gamma$ a scalar of the lattice
+(\lean{New.Rows.DividedSplitting.normalizedDescent_productForm}). The change of lattice costs a
+bounded denominator: the gauge of the product at $\diag(h,h^\circ)\gamma$ is at most $|M|_\ell^{-l_1}$
+times the gauges of $v''$ and $\bar v^\circ$, with
+$l_1=\sum_\tau(3m\,\#\mathrm{cols}(\mu^+_\tau)+\rk V^\circ\,\#\mathrm{cols}(\mu^-_\tau))$
+(\lean{New.Rows.DividedSplitting.weylGauge_cartanProduct_le}).
+
+\begin{definition}[\lean{New.Rows.glue}]\label{ol-compare:def:glue}
+The \emph{gluing map} $\operatorname{gl}_\vartheta\colon\mathcal A^\oplus\to\mathcal F_{\vartheta,j}$ is
+\[
+\operatorname{gl}_\vartheta\eta=M^{l_1}\sum_i\sum_c\Sigma^{J_\Lambda}_hP_{\gamma_i}(h,c)\bigl(\varphi''_{\vartheta,i}(h),\eta_i(c)\bigr),
+\]
+over choices $i$, classes $c$ of $\U(V^\circ)$ at level $J(\pi_M^2)$ and classes $h$ of $\U(V'')$ at level
+$J_\Lambda$; the lattices $\gamma_i$ are chosen once, for $\vartheta=1$.
+\end{definition}
+
+\begin{proposition}[\lean{New.Rows.glue_mem_integralForms}, \lean{New.Rows.normSqAt_glue_le}]
+\label{ol-compare:prop:glue}
+(a) If $\ell\nmid\Nm Q_\vartheta$ and $\eta$ is integral at $\iota\mid\ell$, so is $\operatorname{gl}_\vartheta\eta$.
+(b) $\|\operatorname{gl}_1\eta\|^2_\sigma\le e^{2A}\|\eta\|^2_\sigma$ for all $\sigma\in\Aut(\C)$.
+\end{proposition}
+
+\begin{proof}
+(a) All stabilisers at these levels are trivial, so $\operatorname{gl}_\vartheta\eta$ is $M^{l_1}$ times a
+plain sum of forms supported on one class, each of gauge at most $|M|_\ell^{-l_1}$ times those of
+$\varphi''$ and $\eta$; use Proposition~\ref{ol-compare:prop:first}(a). (b) Each term has squared norm
+at most $n_{\mathrm{Aut}}^2e^A\|\eta\|_\sigma^2$; any level containing $J(\pi_M^2)$ in rank $\le2n_m$
+has at most $e^b$ classes; and $M^{2l_1}e^b(\#\{(i,c)\}e^bn_{\mathrm{Aut}})^2\le e^A$
+(\lean{New.Rows.M_pow_denominatorExponent_sq_mul_le_exp}).
+\end{proof}
+
+\begin{theorem}[Seesaw for one lift; \lean{New.Rows.twistFactor_smul_adjoint_glue_comp}]
+\label{ol-compare:thm:seesaw}
+Let $\Theta^\circ=c'_1\operatorname{gl}_1^*\Theta_{j,1}$ (\lean{New.Rows.periodLift}). Then
+$c'_\vartheta\operatorname{gl}_\vartheta^*\Theta_{j,\vartheta}=\Theta^\circ$ for every twist, and
+$\langle\eta,\Theta^\circ y\rangle=\sum_ic^\circ_i\int_{[\U(W_j)]}y\,\mathsf F_i\,\langle\eta_i,\theta^\circ(g,\cdot)\rangle\,dg$
+with $c^\circ_i=M^{l_1}c_{\gamma_i}\#\bar J^1c''\ne0$ (\lean{New.Rows.inner_periodLift}).
+\end{theorem}
+
+\begin{proof}
+The lift is $y\mapsto\int y(g)\theta(g,\cdot)\,dg$ and $\langle\theta(g,\cdot),\varphi\rangle$ is the descent of $\varphi$
+(\lean{New.Rows.inner_adjoint_glue_goodLift_eq_integral}), so $\langle\eta,\operatorname{gl}_\vartheta^*\Theta_{j,\vartheta}y\rangle$
+integrates $y$ against the conjugate descent of $\operatorname{gl}_\vartheta\eta$, a sum over
+$Y\in\bar J^1$ of products of kernels on $V''$ and on $V^\circ$ at $gY$. Good forms are invariant
+under the lifts of $\bar J^1$, which lie in their level $J(\pi_M)$; so the sum gives $\#\bar J^1$, and the
+class sum over $h$ of the kernels on $V''$ is $\Xi_{\vartheta,i}$
+(\lean{New.Rows.inner_adjoint_glue_goodLift_eq_sum_integral}). Multiply by $c'_\vartheta$ and use
+Corollary~\ref{ol-compare:cor:twistfactor}.
+\end{proof}
+
+\subsection{Products span}\label{ol-compare:sec:span}
+
+\begin{fact}[\lean{New.Rows.IsPeak.le_firstMinimum}, \leanfile{Lib/DiscreteSeries/Holomorphic/PeaksAwayFromCusp}]
+\label{ol-compare:fact:peaks}
+A non-zero bounded form has a \emph{peak}, where $|F|$ exceeds half its supremum. If $F$ is
+holomorphic of a weight with gap $1$ and entries in $[-B_1,B_1]$, $B_1\ge2$, and of a level $p=-\bar p$
+with $0<\Im\Phi_wp\le B_2$, $B_2\ge1$, then the first minimum $\lambda_1(g)$ of the lattice at a peak $g$
+is at least $(B_1B_2)^{-1/2}$. (Poor and Yuen, Linear dependence among Siegel modular forms, 2000.)
+\end{fact}
+
+\begin{fact}[\lean{New.Rows.reproducing_formula_modKernel}, \leanfile{Lib/SiegelWeil/Reproduction}]
+\label{ol-compare:fact:repro}
+Let $\fm=(\varpi)$ have a prime divisor and both characters have trivial tame part. Let $u$ be dominant with $\mathsf m_u$ (the basic holomorphic coefficient of weight $u$,
+\lean{New.holMinorsPi}) integrable, let the definite space have more than twice the rank of the other,
+and at each class $p$ of level $\varpi$ let the span of the Fock vectors of polynomials $P_{p,i}$ contain the
+translates by the real definite group of a non-zero holomorphic vector of weight $u$. Then at each $x$,
+$\int\psi(xh)\mathsf m_u(h)\,dh$ over the real group is a fixed combination of the integrals of $\psi$ against the
+kernels at $p$ with polynomial $P_{p,i}$ and datum the indicator of an inclusion modulo $\fm$, for all rapidly
+decreasing automorphic $\psi$ of level $\varpi$. (B\"ocherer, \"Uber die Fourier-Jacobi-Entwicklung Siegelscher
+Eisensteinreihen, 1983; J.-S.~Li, 1992.)
+\end{fact}
+
+\begin{theorem}[Products span]\label{ol-compare:thm:span}
+If $y\in\mathcal G_j$ and $\int_{[\U(W_j)]}y\,\mathsf F_i\,\langle\eta,\theta^\circ(g,\cdot)\rangle\,dg=0$ for all
+choices $i$ and all forms $\eta$ on $V^\circ$ at level $J(\pi_M^2)$, then $y=0$.
+\end{theorem}
+
+\begin{proof}
+This is \lean{New.Data.eq_zero_of_integral_choiceFn_thetaKernelPairing}. Let $n_*=2ft^3$, $u$ the weight of $\bar y$, $u^\circ$ that of $\theta^\circ$; the $\mathsf F_i$ have weight
+$u-u^\circ$, and all weights are dominant with gaps $300n_*$. Suppose $y\ne0$.
+
+\emph{1.} By Fact~\ref{ol-compare:fact:repro} on $(W_j,V^\circ)$, $\int_{G_\infty}y(gh)\mathsf F(gh)\mathsf m_{u^\circ}(h)\,dh=0$ for
+every $g$ and every combination $\mathsf F$ of the $\mathsf F_i$
+(\lean{New.Data.integral_mul_sum_choiceFn_eq_zero}).
+\emph{2.} $\varphi^\circ$ has a peak $g_1$ with $\lambda_1(g_1)\ge(5b\sqrt b)^{-1/2}$
+(\lean{New.Data.exists_isPeak_carrierForm}); by Fact~\ref{ol-compare:fact:peaks} the peaks of $\bar y$ have $\lambda_1\ge(5b^{24})^{-1/2}$.
+
+\emph{3.} Let $\mathsf F^0(h)=\int\varphi^\circ(g_1h')c_P(h',h)\mathsf m_{u_1}(h')\,dh'$, $c_P$ the Fock matrix
+coefficient of $P$, $u_1$, $u_3$ the weights of the kernels on $(S,W^\flat)$ and of the antiholomorphic factor
+of $c_P(\cdot,1)$; by holomorphic projection $\mathsf F^0(1)=\varphi^\circ(g_1)c_P(1,1)\int|\mathsf m_{u_3}|^2\ne0$.
+If $\lambda_1(g)\ge(5b^{24})^{-1/2}$, then $\lambda_1(g_1)\lambda_1(g)\ge b^{-13}$, so the lattice of
+$\mathrm{Hom}$ at $(g_1,g)$ has no short vectors (\lean{New.Rows.firstMinimum_mul_le_hom}); as Fock
+coefficients of homogeneous vectors decay faster than any power
+(\lean{New.Fock.norm_fockInner_realHeisenbergOp_le}), in the theta sum the term $0$ dominates, and a
+mean over additive characters gives a datum whose kernel is $c_P$ up to
+$b^{-20n_*}(|h||h'|)^{6n_*}|c_P(1,1)|$ (\lean{New.Data.exists_datum_norm_modKernel_sub_polyMatrixCoeff_le}).
+The integral with this kernel in place of $c_P$ is a combination of the $\mathsf F_i$ (reproducing
+formula on $(S,W^\flat)$, Fourier expansion of the datum; \lean{New.Data.exists_sum_choiceFn_eq_integral}).
+So some $\mathsf F$ has $|\mathsf F(gh)-\mathsf F^0(h)|\le\delta|h|^{6n_*}$ with $\delta=2b^{-19n_*}|\mathsf F^0(1)|$
+(\lean{New.Data.exists_choiceFn_approx}).
+
+\emph{4.} So at every peak of $\bar y$ the integral of step 1 vanishes for a holomorphic $\mathsf F$
+within $\delta|h|^{6n_*}$ of $\mathsf F^0$. Averaging over a circle of peaks and comparing with the
+holomorphic projection $\int\psi\,\bar{\mathsf m}_u=\psi(1)\int|\mathsf m_u|^2$ gives $|\mathsf F^0(1)|\le(4b^{n_*}+1)\delta$
+(\lean{New.Data.norm_apply_one_le_of_forall_isPeak}), impossible as $b^{n_*}>10$.
+\end{proof}
+
+\begin{corollary}[\lean{New.Rows.periodLift_injective}, \lean{New.Rows.twistFactor_ne_zero}]
+\label{ol-compare:cor:injective}
+$\Theta^\circ$ is injective and $c'_\vartheta\ne0$ for every twist. Hence $C\ne0$, and, as the Lean text reads the
+quotient in $|c'_\vartheta|^2=C/\Gamma_j(\vartheta)$ with the convention $x/0=0$, $\Gamma_j(\vartheta)\ne0$.
+\end{corollary}
+
+\begin{proof}
+If $\Theta^\circ y=0$, test Theorem~\ref{ol-compare:thm:seesaw} against the tuple equal to $\eta$ in copy
+$i$ and $0$ elsewhere; as $c^\circ_i\ne0$, Theorem~\ref{ol-compare:thm:span} gives $y=0$. If $c'_\vartheta=0$
+then $\Theta^\circ=0$, impossible as $\mathcal G_j\ne0$ (\lean{New.Data.finrank_targetForms_ne_zero}).
+\end{proof}
+
+Neither is proved analytically or stated in Lean: $\Gamma_j(\vartheta)\ne0$ is implicit in (i), and
+$C\ne0$ comes from $C/\Gamma_j(1)=|c'_1|^2\ne0$ in \lean{New.Data.heckeValueProd_div_eq}, which
+gives (i) as $\rho_\vartheta=|c'_1|^2/|c'_\vartheta|^2$.
+
+\subsection{False lifts and the comparison operator}\label{ol-compare:sec:assembly}
+
+\begin{proposition}[\lean{New.Rows.isOrthogonalToFalseLifts_glue_periodLift}]\label{ol-compare:prop:false}
+For $y\in\mathcal G_j$, $\operatorname{gl}_\vartheta(\Theta^\circ y)$ is orthogonal to the false lifts at
+every split place off the level.
+\end{proposition}
+
+\begin{proof}
+For a false lift $\Xi$, $\langle\Xi,\operatorname{gl}_\vartheta\Theta^\circ y\rangle=\langle\operatorname{gl}_\vartheta^*\Xi,\Theta^\circ y\rangle$
+is, by Theorem~\ref{ol-compare:thm:seesaw}, a combination of integrals against
+$\langle(\operatorname{gl}_\vartheta^*\Xi)_i,\theta^\circ(g,\cdot)\rangle$. These are sums of slices of $\Xi$
+along $V^\circ$ against $\theta^\circ$, which vanish since periods of false lifts vanish
+(\lean{New.Rows.thetaKernelPairing_adjoint_glue_eq_zero}; \lean{New.Rows.stdClassSum_gramForm_eq_zero},
+Section~\ref{sec:ol-values}).
+\end{proof}
+
+Theorem~\ref{ol-values:thm:comp} assembles these into the comparison operator
+$n_{\mathrm{Aut}}\mathrm{hk}^2\operatorname{gl}_\vartheta\operatorname{gl}_\vartheta^*$
+(\lean{New.Data.comparisonOp}, \lean{New.Data.comparisonOp_eq_sum}), $\mathrm{hk}$ and the
+number of fillings of $\mu^-$ being at most $e^{x^{999}}$
+(\lean{New.Rows.hookNumberMinus_le}, \lean{New.Rows.card_columnFilling_colsMinus_le}).
+
+Used elsewhere: \lean{New.Rows.twoSidedSubst_stackedDetProd}, \lean{New.exists_det_fromCols_eq_mul_det},
+\lean{New.Rows.isRapid_modKernel}, \lean{New.Data.places_twistModulus},
+\lean{New.Data.isTameFor_of_hasWeight}, \lean{New.Data.ideal_untwistedModulus_eq_span},
+\lean{New.Rows.span_piM}, \lean{New.Rows.exists_int_weylRep_invariant_fockPoly_eq_smul_monomial}.

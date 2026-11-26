@@ -51,6 +51,10 @@ The four criteria for trusting a Lean proof all hold in our run:
 This is a verification of the formal proof, not a review of its mathematical ideas. Upstream says
 the same of its own checks: "No mathematician has read it through, and no paper comes with it."
 
+For what the argument is, [`paper/`](paper/README.md) holds a reading of the proof in ordinary
+mathematical language ([PDF](paper/GRH-reading.pdf)), drafted by Claude from the Lean source and
+not refereed. It is an exposition and adds nothing to the evidence here.
+
 **Evidence.** The logs and outputs behind every statement here are in [`evidence/`](evidence/). Its
 [README](evidence/README.md) says which file backs which claim.
 
@@ -130,10 +134,23 @@ file, and `Main.lean` proves the same five theorem names.
   of the trivial character); zeros in the strip 0 < Re s < 1 lie on Re s = 1/2; the same for
   primitive χ.
 
-## Proof structure (exploration, not verification)
+## Understanding the proof (exploration, not verification)
 
-From the declaration-level dependency graph of the built project (`scripts/extra/depgraph/`). We
-did not check the mathematics.
+Neither part of this section is evidence for the conclusion above. We did not check the
+mathematics.
+
+**A reading of the proof.** The folder [`paper/`](paper/) holds a text that explains the argument
+in ordinary mathematical language ([PDF](paper/GRH-reading.pdf), 145 pages: 112 pages of text in
+22 sections, then appendices). Claude drafted it from the Lean source. Each section was then
+checked against the formal statements it cites, and the sections that carry most of the proof a
+second time against the Lean proofs. It has not been refereed. The background results, which the
+Lean code proves in its folder `Lib`, are stated without proof. Where the text and the Lean code
+differ, the Lean code is right. Its status and what is still open are in
+[`paper/README.md`](paper/README.md).
+
+**Dependency structure.** From the declaration-level dependency graph of the built project
+(`scripts/extra/depgraph/`). The paper says what the declarations named below are in mathematical
+terms, and the percentages it quotes are the exclusive shares computed here.
 
 - The project has 64,456 declarations, 26,524 of them user-written, and 713,214 dependency edges.
 - `riemannHypothesis` needs 49,815 of them (77.3%), including 25,127 of the user-written ones
@@ -189,6 +206,6 @@ From `grh/README.md`, with what our run adds:
 | The five theorems depend only on `propext`, `Classical.choice` and `Quot.sound` | reproduced, by our own audit and by nanoda's allow-list |
 | An export is accepted by nanoda, con-leche and con-ron | reproduced, on an export of our own build |
 | Comparator v4.35.0 accepted the proofs against `Challenge.lean` | not run; our step 6 compares the statements with our own reviewed text instead |
-| "No mathematician has read it through, and no paper comes with it" | unchanged: we verified the formal proof only |
+| "No mathematician has read it through, and no paper comes with it" | unchanged: we verified the formal proof only. A reading of the proof, drafted in this repository and not refereed, is in [`paper/`](paper/README.md) |
 
 Our run also did a fresh kernel replay of the whole environment (step 7).

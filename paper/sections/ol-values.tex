@@ -1,0 +1,469 @@
+\section{One lift: its determinant, false lifts and Hecke L-values}\label{sec:ol-values}
+
+This section proves the bound for one lift $W_j\to V_j$ used in Section~\ref{sec:det-chain},
+Theorem~\ref{ol-values:thm:main} (\lean{New.Data.heightLe_liftDeterminant_ratio}),
+with a \emph{comparison operator}, theta lifts from $\U(1)$, whose squared norms are $L$-values
+(Rallis), and test forms orthogonal to the \emph{false lifts}.
+
+\subsection{Set-up}\label{ol-values:sec:setup}
+
+The budget $\beta_D$, critical, ramified and main pairs, the ratios $\mathrm{rat}_p(\vartheta,\epsilon)$
+and regular families are those of Section~\ref{sec:det-chain}; put $A=fmb\log^2b$. For $1\le j\le m$
+and a twist $\vartheta$ of modulus $Q$, $\Theta_{j,\vartheta}\colon\mathcal G_j\to\mathcal F_{\vartheta,j}$
+is the single lift of Definition~\ref{det-chain:def:det} on the good forms on $W_j$,
+$\dim\mathcal G_j=\dT$ (\lean{New.Data.targetDim_eq_finrank_goodForms_spaceW}), into the forms on
+$V_j$ of level at the chosen places and $Q$ (\lean{New.Data.goodLift}); it is injective
+(Proposition~\ref{det-chain:prop:onelift}), and
+$Z_j(\vartheta)=\det(\Theta^*_{j,\vartheta^j}\Theta_{j,\vartheta^j})$ as there.
+
+For a \emph{descent pair} $O$ (Section~\ref{sec:ub-objects}), a lift from $W$ of rank $r_O$ to
+$I_n$, $n>r_O$, $\mathcal F_O$ is the space of forms on $\U(I_n)$ of its weight and level, on which
+$\prod_w\GL_{r_O}(\F_w)$ over the chosen places acts (\lean{New.DescentPair.formAction});
+$e\mathcal F_O$ is the image of an element $e$ of the group algebra, and the \emph{descent} is the
+adjoint of the lift from $W$ (\lean{New.DescentPair.normalizedDescent}). For
+$\sigma\in\Aut(\C)$, $\pair{\varphi,\varphi'}_\sigma$ is $\sigma^{-1}$ of the class sum of the Gram
+pairings of the conjugate values $\sigma\varphi(g)$, $\sigma\varphi'(g)$, and
+$\norm{\varphi}^2_\sigma=\Re\,\sigma\pair{\varphi,\varphi}_\sigma$
+(\lean{New.LevelPlaces.LevelForm.innerAt}, \lean{New.LevelPlaces.LevelForm.normSqAt}); orthogonal
+complements and projections refer to $\sigma=1$. A form is \emph{integral} at $\iota\colon\C\to\C_\ell$
+if all its values have gauge at most $1$ (\lean{New.LevelPlaces.LevelForm.integralForms}). For a
+split place $w\ne\bar w$ of norm $q_w$ off the level let
+$H_w(X)=\sum_i(-X)^iq_w^{i(i-1)/2}T_{w,i}$ (\lean{New.DescentPair.heckePolyOnForms}) and
+$X^*_w=(\nu_wq_w^{n-r_O-1})^{-1}$ with $\abs{\nu_w}=q_w^{r_O/2}$
+(\lean{New.DescentPair.liftHeckeRoot}). Every form with the Hecke polynomials of a lift from $W$ is
+killed by $H_w(X^*_w)$ (\lean{New.DescentPair.heckePolyOnForms_liftHeckeRoot_eq_zero}); so are the
+lifts $\Theta_{j,\vartheta}\mathcal G_j$, which also lie in $e_0\mathcal F_{\vartheta,j}$
+(\lean{New.Data.range_goodLift_le_range_inf_ker}). The form $\delta_h(v)$ supported on the class of $h$
+(\lean{New.Rows.classForm}) has $\pair{\delta_h(v),\varphi}=(v,\varphi(h))$
+(\lean{New.Rows.inner_classForm}); \emph{point forms} are such forms at points $hA$, $A$ integral
+with prescribed reductions at the level (\lean{New.Rows.pointForm}), and their descents are explicit
+conjugate theta kernels (\lean{New.Rows.normalizedDescent_pointForm}).
+
+\begin{definition}[False lifts, denominators, test forms; \lean{New.DescentPair.falseLiftsAt},
+\lean{New.DescentPair.IsOrthogonalToFalseLifts}, \lean{New.Selmer.DenominatorLe},
+\lean{New.DescentPair.IsTestForm}]\label{ol-values:def:false}
+Let $e$ be in the group algebra and $Z\subseteq\mathcal F_O$ a subspace.
+\begin{enumerate}[label=(\alph*)]
+\item The \emph{false lifts} at $w$ are $e\mathcal F_O\cap\ker H_w(X^*_w)\cap Z$. A form is
+  \emph{orthogonal to the false lifts} (for $e$, $Z$) if it is so at every split $w$ off the level.
+\item The projection to $Z$ has \emph{denominator at most $e^\beta$ at} $\iota\colon\C\isom\Qlbar$
+  if some $\Lambda\in\End(Z)$ with $\abs{\iota\det\Lambda}\ge e^{-\dim Z\cdot r_O\beta}$ has the
+  following property: for every $y$ integral at $\iota$ and orthogonal to the false lifts for $e$,
+  $Z^\perp$, the form $\Lambda(\mathrm{pr}_Zy)$ is integral at $\iota$ and
+  $\abs{\iota\pair{y',\Lambda\,\mathrm{pr}_Zy}}\le1$ for all $y'$ integral at every place above
+  $\ell$.
+\item If $r_O=1$, a \emph{test form at} $\ell$ is a form integral at every $\iota\colon\C\to\C_\ell$
+  and orthogonal to the false lifts for $e$ the mean over $\prod_w\GL_1(\F_w)$ and $Z$ the
+  kernel of the descent.
+\end{enumerate}
+\end{definition}
+
+For one lift, $e=e_0$ and $Z=(\Theta_{j,\vartheta}\mathcal G_j)^\perp$; the false lifts pass the
+tests of a lift at $w$ without being lifts (Section~\ref{sec:cg-first}). $\vartheta$ \emph{clears the
+projection with} $\beta$ at $\iota$ (\lean{New.Data.ClearsProjection}) if (b) holds for
+$Z=\Theta_{j,\vartheta}\mathcal G_j$ without its last clause; this is (i) of
+Definition~\ref{det-chain:def:regular}, and in (ii) there the line is that of the lift
+$\varphi_{p,\vartheta}$ defined next. A ratio is real and
+non-zero (\lean{New.Data.CriticalPair.ratio_ne_zero}). A pair is \emph{flat} on a set of $2z\ge4$
+indices if $c=z$ everywhere (\lean{New.Data.CriticalPair.HasEmptyRow}); a main pair for $j$ has
+$\kappa(\tau)\le c(\tau)-z\le\kappa(\tau)+x^{42}$
+(\lean{New.Data.CriticalPair.IsMainPair.negWeight_sub_z_mem_Icc}).
+
+\begin{definition}[Lifts from $\U(1)$; \lean{New.LValueData.trivialLift},
+\lean{New.Data.CriticalPair.trivialLift}, \lean{New.Data.CriticalPair.integralAlgebraicPart}]
+\label{ol-values:def:rankone}
+Let $p=(\nu,z)$ be a pair, $z\ge2$, and $\vartheta$ a twist. The descent pair of $p$ at $\vartheta$
+(\lean{New.Data.CriticalPair.lValueData}) goes from the definite line to $I_{2z}$, with the chosen
+places, twist places $Q$, one row of length $c(\tau)-z$ at $\tau$ and character $\nu\vartheta$. Its
+\emph{lift} $\varphi^\circ_{p,\vartheta}$ is the class sum over $\U(1)$ (principal level at the
+chosen places) of the theta kernel of jets of the block datum, a nonzero multiple of the theta lift
+of $1$ (\lean{New.LValueData.trivialLift_eq_smul_thetaLift}). The \emph{normalised lift} is
+$\varphi_{p,\vartheta}=v^{2z}(\pi_M j_s)^{J}\varphi^\circ_{p,\vartheta}$ with
+$J=\sum_\tau(c(\tau)-z)$, $v$ the scale that makes the vacuum integral and $j_s$ the scale of the
+jets (\lean{New.Parameters.vacuumScale}, \lean{New.Parameters.jetScale}). The \emph{integral
+algebraic part} is $n_L\norm{\varphi_{p,\vartheta}}^2/(\Nm Q)^{2z-1}$ with
+$n_L=n_{\mathrm{Aut}}\cdot(M^{4fz}(Md)^J)^2$, where $n_{\mathrm{Aut}}$
+(\lean{New.Data.chosenGroupOrder}) is a multiple of the orders of all stabilisers.
+\end{definition}
+
+\subsection{False lifts: projections and periods}
+
+\begin{lemma}[\lean{New.DescentPair.normSqAt_starProjection_le}]\label{ol-values:lem:proj}
+Let $e$ be a central idempotent, $w$ a split place off the level and
+$Z\subseteq e\mathcal F_O\cap\ker H_w(X^*_w)$. If $y$ is orthogonal to the false lifts for $e$,
+$Z^\perp$, then $\norm{\mathrm{pr}_Zy}^2_\sigma\le\norm{y}^2_\sigma$ for every $\sigma\in\Aut(\C)$.
+\end{lemma}
+
+\begin{proof}
+The operator $e$ is self-adjoint for every $\pair{\,,}_\sigma$
+(\lean{New.DescentPair.innerAt_groupAlgAction}), and the adjoint of $H_w(X)$ for
+$\pair{\,,}_\sigma$ is $H_{\bar w}(\sigma^{-1}\overline{\sigma X})$, which commutes with it
+(\lean{New.LevelPlaces.LevelForm.innerAt_heckePolyOnForms}); so the image of $H_w(X)$ is
+$\sigma$-orthogonal to its kernel. Taking orthogonal complements in the definition of false lifts
+gives $y=z+x$ with $z\in Z$ and $x\in\ker e+\image H_w(X^*_w)$
+(\lean{New.DescentPair.mem_sup_ker_sup_range_of_isOrthogonalToFalseLifts}). By the two facts,
+$\pair{x,z}_\sigma=0$ for every $\sigma$. For $\sigma=1$ this says $z=\mathrm{pr}_Zy$; for general
+$\sigma$ it gives $\norm{z}^2_\sigma\le\norm{z+x}^2_\sigma$.
+\end{proof}
+
+It applies to $Z=\Theta_{j,\vartheta}\mathcal G_j$, with $w$ from
+\lean{New.Selmer.frequently_isSplit_notMem_places} (\lean{New.Data.normSqAt_starProjection_range_goodLift_le}).
+
+\begin{fact}[Descents, periods and Hecke operators]\label{ol-values:fact:tower}
+(a) Let $Y$ be a continuous automorphic function on $\U(I_n)(\A)$, right invariant under the
+integral elements that are $1$ outside a set $\Sigma$ of places and its conjugate, and
+$I_n=I_{l'}\oplus I_l$. If the integrals of $Y$ against all theta kernels of the split space
+$\mathbb H^{l'}$ of rank $2l'$, twisted by $\upsilon^{l'}$, with data that are vacua at $\Sigma$,
+vanish, then $\int_{[\U(I_l)]}Y(\diag(h_1,h_2))\,dh_2=0$ for all $h_1$
+(\lean{New.SiegelWeil.integral_blockEmb_eq_zero_of_descentsVanish}; Walls, 2015, Prop.~2.1.1;
+Rallis, On the Howe duality conjecture, 1984). (b) (The version for the descent of Fact~\ref{ub-divis:fact:hecke}, which is stated for the
+lift.) For split $w$, characters unramified at $\bar w$, data that are vacua at $\bar w$
+and $y$ rapidly decreasing and spherical at $w$, the descent from rank $n'+e$
+to rank $n'$ carries $H_w(X)y$ to $\prod_{l<e}(1-q_w^l\alpha X)\cdot H_w(q_w^e\alpha\beta^{-1}X)F$, $F$
+the descent of $y$, with explicit Frobenius values $\alpha,\beta$
+(\lean{New.SiegelWeil.lift_swap_heckePolyOp}; compare Howe, 1979; Rallis, 1982; Kudla, 1986). (c) If $v$ is bounded above and
+$l\,v(g)\le\sum_i\abs{c_i}v(h(g,i))$ with $\sum_i\abs{c_i}<l$, then $v\le0$
+(\lean{New.SiegelWeil.maximum_principle}).
+\end{fact}
+
+\begin{theorem}[Periods of false lifts vanish; \lean{New.Rows.integral_conj_pairTheta_mul_algFormCoeff_eq_zero},
+\lean{New.Rows.stdClassSum_gramForm_eq_zero}]\label{ol-values:thm:periods}
+Let $O$ be a descent pair that fits a parameter on $W$ (\lean{New.DescentPair.FitsParams}), with
+residue characters nontrivial at the twist places, and let
+$\Xi\in\mathcal F_O$ be killed by (i) the hyperplane sums $\sum_s\chi_w(\det s)^{-1}s$ over
+invertible $s=1+u\lambda_w$, for rows $\lambda_w\ne0$ at the chosen places
+(\lean{New.DescentPair.HyperplaneSumsAnnihilate}), (ii) the
+descent to $W$, and (iii) $H_w(X^*_w)$ for one split place $w$ off the level. Let
+$I_n=I_{l'}\oplus I_l$ with $2r_O+2l'+3<n$. Then $\int_{[\U(I_l)]}\overline{\theta_\phi(g,h_2)}\,\pair{\varpi,\Xi((h_1,h_2)\gamma)}\,dh_2=0$
+for every datum $\phi$ on $\Hom(W,I_l)$ that is the vacuum off the level, all $g\in\U(W)(\A)$,
+$h_1\in\U(I_{l'})(\A)$, $\gamma$ supported on the level and every vector $\varpi$. Consequently, the class sums of the Gram pairings of $\Xi((h_1,h)x)$ with vectors made of theta
+kernels of $(W,I_l)$ vanish.
+\end{theorem}
+
+\begin{proof}
+\emph{Bottom of the tower.} By (ii), and as $O$ fits a parameter, the descents of $\Xi$ by the block
+datum times any Fock polynomial vanish (\lean{New.Rows.lift_polyVector_blockDatum_eq_zero}); all descents
+by data that are vacua off the level then vanish
+(\lean{New.DescentPair.descentsVanish_of_hyperplaneSumsAnnihilate}). Take the indicator of a small coset of a point $x$ (modulo $i!$, $i$ large). If at every place of
+$O$ the rows of $x$ in $W$ form an invertible block $x'$ with $x''x'^{-1}$ integral ($\equiv0$ at
+the chosen places), the mean of its translates under the level group is a multiple of a
+$\U(W)$-translate of the block datum. If not, an annihilating row of $x$ gives integral elements
+fixing $x$ at the places of $O$ whose weighted sum is a hyperplane sum, killing $\Xi$ by (i), or a
+vanishing sum $\sum\chi_w(\det s)^{-1}$, $\chi_w\ne1$, at a twist place.
+
+\emph{The tower} (\lean{New.Rows.descentsVanish_hyperbolicSum},
+\lean{New.SiegelWeil.descentsVanish_add_planes}). By induction on $n'\le l'$, all descents of $\Xi$ to
+$W\oplus\mathbb H^{n'}$ vanish. For the step write $W'=W''\oplus\mathbb H$. The theta kernel of
+$(W',I_n)$ minus its zero term along the isotropic line is bounded after a rational translation
+(\lean{New.SiegelWeil.exists_norm_theta_sub_zeroTerm_le}), and the zero term gives descents to
+$W''$, which vanish. So the descent $F$ of $\Xi$ to $\U(W')$ is bounded. By (iii) and
+Fact~\ref{ol-values:fact:tower}(b), $F$ is killed by a Hecke polynomial at a point of modulus at
+most $q_w^{-\rk W'-1}$ (the factor $\prod_{l<e}(1-q_w^l\alpha X^*_w)$ is nonzero by the size of
+$X^*_w$); here $2r_O+2l'+3<n$ is used. Then $F=0$ by the maximum principle
+(\lean{New.SiegelWeil.eq_zero_of_heckePolyOp_eq_zero}).
+
+\emph{Periods.} Choose a datum $\phi''$ on $\Hom(W,I_{l'})$ with $\theta_{\phi''}(g,h_1)\ne0$ and put
+$Y(h)=\theta_{\phi''\otimes\phi}(g,h)\,\overline{\pair{\varpi,\Xi(h\gamma)}}$. Theta kernels multiply
+in orthogonal sums, so the descents of $Y$ to $\mathbb H^{l'}$ are descents of $\Xi$ to
+$W\oplus\mathbb H^{l'}$, and vanish. Fact~\ref{ol-values:fact:tower}(a) gives
+$\int Y(\diag(h_1,h_2))dh_2=0$, and $\theta_{\phi''\otimes\phi}(g,\diag(h_1,h_2))=
+\theta_{\phi''}(g,h_1)\theta_\phi(g,h_2)$.
+\end{proof}
+
+False lifts for $Z$ the kernel of the descent, or for $e=e_0$ and
+$Z=(\Theta_{j,\vartheta}\mathcal G_j)^\perp$, satisfy (ii), (iii), and (i) if $e$ is the mean over
+$\GL_1$ and the characters at the
+chosen places are nontrivial (\lean{New.Rows.hyperplaneSum_apply_eq_zero_of_rank_one}), or $e=e_0$
+(Section~\ref{sec:ol-compare}). So point forms and product forms built from theta kernels pair to
+zero with them (\lean{New.Rows.stdClassSum_period_eq_zero},
+\lean{New.Rows.DividedSplitting.stdClassSum_inner_productForm_eq_zero}).
+
+\subsection{Hecke values as squared norms of lifts from U(1)}
+
+\begin{fact}[Rallis' inner product formula for sharp data, as a real integral; vacuum sums in rank one]\label{ol-values:fact:rallis}
+Let $\Theta$ be the theta lift from $\U(V)$ to $\U(V')$, $\rk V'>2\rk V$, by $v\otimes F$ with $F$
+sharp (Fact~\ref{det-chain:fact:rallis}) of mass $c$ for a level $J$. For rapidly decreasing $y,y'$ with $y$ fixed by $J$,
+$\pair{\Theta y',\Theta y}=\vol[\U(V')]\,c\int\pair{v,\omega(x)v}\pair{y',R(x)z}\,dx$ over the real
+points of $\U(V)$, where $z$ is the sum of the translates of $y$ weighted by the vacuum
+coefficients (\lean{New.SiegelWeil.IsSharp.petersson_lift_eq_integral}). If $\rk V=1$,
+$\rk V'=2n'>2$, the sum of the vacuum coefficients off $S'$ is $L^{S'}(n',\nu^{-1})$ over a partial
+Euler product of $\zeta_{E^+}(2n')$ (\lean{New.vacuumSum_eq_L_div_eulerProd}). (Shimura, 1975; Yang,
+1997; Harris--Li--Skinner, 2005.) An Euler product over a number field $\mathcal K$ with coefficients of
+modulus $\le1$ is nonzero at real $s\ge2$, and $\abs{\log\abs{\cdot}}\le2[\mathcal K:\Q]$ there
+(\lean{New.eulerProd_ne_zero_and_abs_log_norm_le}; Tate, 1950).
+\end{fact}
+
+\begin{proposition}[\lean{New.LValueData.inner_trivialLift_self_eq_L},
+\lean{New.Data.CriticalPair.ratio_eq_algPart_div}]\label{ol-values:prop:rallis}
+For lift data of rank $2z\ge4$ with character $\mu$, row lengths $c_\tau$ and twist places $Q$,
+\[
+\norm{\varphi^\circ}^2=C\cdot\prod_{w\text{ chosen}}(q_w-1)\cdot\prod_\tau c_\tau!\cdot\dim\cdot
+L^{\Sigma}(z,\mu^{-1})\cdot(\Nm Q)^{2z-1},
+\]
+with $\Sigma$ the chosen places and $Q$, $C\ne0$ depending on the rank only and $\dim$ the dimension of the weight. Hence for a pair
+$p$, $\norm{\varphi_{p,\vartheta}}^2/(\Nm Q)^{2z-1}$ is a constant independent of $\vartheta$ times
+$L^{\Sigma_\vartheta}(z,(\nu\vartheta)^{-1})$, and
+$\mathrm{rat}_p(\vartheta)=\frac{\norm{\varphi_{p,\vartheta}}^2(\Nm Q)^{1-2z}}{\norm{\varphi_{p,1}}^2}$.
+\end{proposition}
+
+\begin{proof}
+Apply Fact~\ref{ol-values:fact:rallis} to the constant function $1$ on $\U(1)$ and the block
+datum, which is sharp (\lean{New.LValueData.isSharp_blockDatum}). The real integral is the hook
+number of the weight times $\vol[\U(1)]$, and the hook number of a one-row weight is
+$\prod_\tau c_\tau!$ (\lean{New.LValueData.hookNumber_eq_prod_factorial}). The mean square of the
+block datum, the index of the level and the omitted Euler factors of $\zeta_{E^+}(2z)$ multiply to
+$(\Nm Q)^{2z-1}$ (\lean{New.LValueData.blockMeanSquare_mul_relIndex_mul_prod_eq_pow}).
+\end{proof}
+
+\begin{proposition}[Conjugates; \lean{New.Data.CriticalPair.exists_log_norm_map_norm_sq_trivialLift_eq_add_sum_jetSize}]
+\label{ol-values:prop:conj}
+For $\sigma\in\Aut(\C/K)$ and a rank $2z$ there is $c_\sigma$ such that every pair $p=(\nu,z)$ has
+\[
+\log\abs{\sigma\norm{\varphi_{p,1}}^2}=c_\sigma+r_p+\sum_\tau\sinf(c(\tau)-z),\qquad
+r_p\ge-4f,\quad\text{and } r_p\le4f\text{ if $p$ is flat.}
+\]
+\end{proposition}
+
+\begin{proof}
+$\norm{\varphi_{p,1}}^2=\abs{v^{2z}}^2M^J\pair{\Upsilon,\Upsilon}$ with $\Upsilon=j_s^J\varphi^\circ_{p,1}$, as
+$\abs{\pi_M}^2=M$. The Galois conjugation of CM theta jets
+(\lean{New.Parameters.exists_isJetConjugation}, Section~\ref{sec:ub-objects}, with $\Omega$ from
+\leanfile{Lib/CM/ChowlaSelberg}) takes jets at scale
+$j_s$ to jets at a scale $j'_s$ with $\abs{j'_s}^2=1/\Omega$, and gives
+$\abs{\sigma\pair{\Upsilon,\Upsilon}}=\alpha_\sigma\Omega^{-J}\norm{\varphi^\circ_Y}^2$, $\alpha_\sigma>0$ independent of
+$p$, for lift data $Y$ with the
+conjugate character and permuted row lengths, the Weil multipliers cancelling
+(\lean{New.LValueData.map_trivialLift},
+\lean{New.Data.CriticalPair.exists_norm_map_inner_trivialLift_eq_mul}). By Proposition~\ref{ol-values:prop:rallis},
+$\log\norm{\varphi^\circ_Y}^2=c+\sum_\tau\log(c(\tau)-z)!+\log\dim+\log\abs{L}$, and
+$\abs{\log\abs L}\le4f$ by Fact~\ref{ol-values:fact:rallis} as $z\ge2$; $\dim\ge1$, with equality
+for flat pairs. Finally $J\log M-J\log\Omega+\sum_\tau\log(c(\tau)-z)!=\sum_\tau\sinf(c(\tau)-z)$.
+\end{proof}
+
+\begin{proposition}[\lean{New.Data.heightLe_norm_trivialLift_sq}]\label{ol-values:prop:untwisted}
+For a main pair $p$ the constant family $\norm{\varphi_{p,1}}^2$ has height at most
+$\beta_D-\sum_\tau\sinf(\kappa(\tau))$.
+\end{proposition}
+
+\begin{proof}
+Let $p^\flat$ be a flat pair of the same rank (\lean{New.Data.exists_hasEmptyRow}) and take the
+multiplier $H=\mathcal L_{p^\flat}/\norm{\varphi_{p,1}}^2$, where $\mathcal L_{p^\flat}$ is the integral algebraic
+part of $p^\flat$ at $\vartheta=1$. Then $H\norm{\varphi_{p,1}}^2=\mathcal L_{p^\flat}$ is integral at every
+prime, as $n_L$ clears the denominators of $\varphi_{p^\flat,1}$ and the stabilisers (\lean{New.Data.CriticalPair.norm_integralAlgebraicPart_one_le_one}). For $\sigma$ over
+$K$ (others have the same moduli, \lean{New.Parameters.exists_algEquiv_norm_eq}),
+Proposition~\ref{ol-values:prop:conj} gives, with the same $c_\sigma$ for $p$ and $p^\flat$,
+$\log\abs{\sigma H}\le\log n_L+8f-\sum_\tau\sinf(c(\tau)-z)\le x^{33}+8f-\sum_\tau\sinf(\kappa(\tau))$,
+since $c(\tau)-z\ge\kappa(\tau)$ and $\sinf$ increases; and $x^{33}+8f\le\beta_D$.
+\end{proof}
+
+\subsection{Test forms and the inverse ratios}
+
+\begin{proposition}[Test forms with small pairing;
+\lean{New.Data.exists_isTestForm_le_norm_inner_trivialLift}]\label{ol-values:prop:test}
+Let $p$ be a main pair for $j$ and $p^\flat_2$ a flat pair of rank $4$. There is $c_0\ne0$, with
+$\abs{\sigma c_0}\le\exp(fmb/k+3x^{34})$ for all $\sigma$, such that for every prime $\ell$, every
+$\iota\colon\C\to\C_\ell$ and every twist $\vartheta$ with $\ell\nmid\Nm Q$ some test form $\Xi$ at
+$\ell$ for the descent pair of $p$ at $\vartheta$ has
+\[
+\norm{\iota(c_0\,\mathrm{rat}_{p^\flat_2}(\vartheta))}\,\ell^{-S_\ell}\le
+\norm{\iota\pair{\Xi,\varphi_{p,\vartheta}}},
+\]
+where $S_\ell=\sum_\tau s_\ell(\kappa(\tau),\tau)$ (\lean{New.Data.localPrimeSumTotal}) is the
+local prime sum of Section~\ref{sec:der}.
+\end{proposition}
+
+\begin{proof}
+Split the $2z$ indices into blocks of sizes $12,4,4,2z-20$. Let $\Xi$ be the class sum over $h_1$
+of point forms at $\diag(1,h_2,h_3,h_1)$ with an integer vector, weighted by the untwisted lift of a
+flat pair $p^\flat_1$ on the last block. It is integral, and orthogonal to the false lifts by
+Theorem~\ref{ol-values:thm:periods}, as $p$ is ramified
+(\lean{New.Data.isTestForm_trivialLiftClassSum_pointForm}). A seesaw at one point
+(\lean{New.Data.inner_pointForm_kernelForm}) factors its pairing with the theta kernel of $p$ at
+$g\in\U(1)(\Af)$ into the integral algebraic parts of $p^\flat_1$, $p^\flat_3$ at $1$ and of $p^\flat_2$ at
+$\vartheta$, $\prod_\tau(c(\tau)-z)!/\alpha!$, and a theta kernel of rank $12$ with an indicator
+datum and a monomial $\alpha$ of degree $c(\tau)-z\in[\kappa(\tau),\kappa(\tau)+x^{42}]$ at $\tau$. For such degrees, Section~\ref{sec:der} gives $B\ne0$ with $\abs{\sigma B}\le e^{fmb/k}$
+such that at every prime some such Taylor coefficient, times $v^{12}\prod_\tau(c(\tau)-z)!/B$, has
+absolute value at least $\ell^{-S_\ell}$ (\lean{New.Data.exists_rpow_neg_localPrimeSumTotal_le_norm_coeff}).
+The pairing with $\varphi_{p,\vartheta}$ is the class sum over $g$, in which this kernel appears
+twisted by a character $\psi$ of the classes of $\U(1)$ that the characters of $p^\flat_1$, $p^\flat_3$ must
+compensate. Orthogonality of characters gives $\psi$ and a translate for which the twisted mean is
+as large at $\iota$ as the coefficient (\lean{New.exists_norm_le_norm_twisted_classSum}). Take
+$p^\flat_1$, $p^\flat_3$ over $\psi_1$, $\psi_3$ with $\psi=\psi_3\psi_1$; a multiplicative pigeonhole
+(\lean{New.Data.exists_mul_eq_norm_map_le_norm_map_mul}) finds the factorisation for which
+$\abs{\iota(\mathcal L_{p^\flat_3}\mathcal L_{p^\flat_1})}$ is at least $\abs{\iota L}$, for a geometric mean $L$
+of these products over all characters, with $\abs{\sigma L}\le e^{2x^{34}}$. Since
+$\mathcal L_{p^\flat_2}(\vartheta)=\mathrm{rat}_{p^\flat_2}(\vartheta)\mathcal L_{p^\flat_2}(1)$, take
+$c_0=B\,\mathcal L_{p^\flat_2}(1)L$.
+\end{proof}
+
+\begin{theorem}[\lean{New.Data.heightLe_inv_ratio}]\label{ol-values:thm:invratio}
+Let $\xi$ be a regular family, $1\le j\le m$ and $p$ a main pair for $j$. Then the family
+$\iota\mapsto\mathrm{rat}_p(\xi_\iota^j)^{-1}$ has height at most $6\beta_D-\hdir$.
+\end{theorem}
+
+\begin{proof}
+Fix $\iota\mid\ell$, put $\vartheta=\xi_\iota^j$, $\varphi=\varphi_{p,\vartheta}$ and
+$\varphi_1=\varphi_{p,1}$; let $p^\flat_2$ be a flat pair of rank $4$ with tame part $\omega$ (it is
+ramified) and
+$\rho=\mathrm{rat}_{p^\flat_2}(\vartheta)$. Proposition~\ref{ol-values:prop:test} at $\iota$ and at
+$\bar\iota$ gives test forms $\Xi$, $\Xi'$ at $\ell$; since $\rho$ is real,
+$\norm{\iota(c_0\bar c_0\rho^2)}\ell^{-2S_\ell}\le\norm{\iota(\pair{\Xi,\varphi}\pair{\varphi,\Xi'})}$.
+On the line $\C\varphi$, $\pair{\mathrm{pr}\,\Xi,\mathrm{pr}\,\Xi'}=
+\pair{\Xi,\varphi}\pair{\varphi,\Xi'}/\norm\varphi^2$. With Proposition~\ref{ol-values:prop:rallis},
+\[
+\mathrm{rat}_p(\vartheta)^{-1}=(\Nm Q)^{2z-1}\cdot\norm{\varphi_1}^2\cdot
+\pair{\mathrm{pr}\,\Xi,\mathrm{pr}\,\Xi'}\cdot\rho^{-2}\cdot
+\frac{\rho^2}{\pair{\Xi,\varphi}\pair{\varphi,\Xi'}} .
+\]
+Heights add. The integer $(\Nm Q)^{2z-1}$ has $\norm{\iota(\cdot)}\le1$. The second factor has height
+at most $\beta_D-\sum_\tau\sinf(\kappa(\tau))$ (Proposition~\ref{ol-values:prop:untwisted}). The
+third has height at most $\sum_\ell\gamma_\ell\le\beta_D$, by the denominator bound for main pairs
+in the regular family (take $H=1$). The fourth has height at most $2x_1$, as $p^\flat_2$ is ramified. For
+the fifth take $H=c_0\bar c_0$: then $\abs{\sigma H}\le e^{2\beta_D}$, and by the inequality above
+$\norm{\iota(H\rho^2/\pair{\Xi,\varphi}\pair{\varphi,\Xi'})}\le\ell^{2S_\ell}$; and
+$\sum_\ell2S_\ell\log\ell\le\sum_\tau\sfin(\kappa(\tau),\tau)$
+(\lean{New.Data.sum_localPrimeSumTotal_mul_log_le}). The sum is
+$4\beta_D+2x_1-\sum_\tau(\sinf(\kappa(\tau))-\sfin(\kappa(\tau),\tau))\le6\beta_D-\hdir$.
+\end{proof}
+
+The product $\Gamma_j(\vartheta)$ of the Hecke values of lift $j$, over the three pairs
+$(\nu_*,z_*)$, $(\nu_\pm,z_\pm)$ of the exchanges, is that of Definition~\ref{ol-compare:def:gamma}
+(\lean{New.Data.heckeValueProd}, \lean{New.Data.exchangePair}); put
+$\rho_\vartheta=\Gamma_j(\vartheta)/\Gamma_j(1)$. That $\Gamma_j(\vartheta)\ne0$ is not stated in
+Lean but follows, with $x/0=0$, from $\abs{c'_\vartheta}^2=C/\Gamma_j(\vartheta)$ and
+$c'_\vartheta\ne0$ (after Corollary~\ref{ol-compare:cor:injective}).
+Fact~\ref{det-exchange:fact:lib}(a), behind $c\ne0$ in the exchange identity, shows each $L$-value in
+$\Gamma_j$ to be non-zero (in the proof of \lean{New.Data.CriticalPair.ratio_ne_zero}, for the pairs
+of Lemma~\ref{ol-values:lem:hv}), but Lean does not combine these into $\Gamma_j(\vartheta)\ne0$.
+
+\begin{lemma}[\lean{New.Data.exists_heckeValueProd_eq_mul_prod_ratio}]\label{ol-values:lem:hv}
+There are $e\in\N$, $k/2$ main pairs $p_i$ for $j$, $5m$ ramified pairs $p'_{i'}$ and signs $\epsilon_{i'}$, not
+depending on $\vartheta$, with
+$\rho_\vartheta=(\Nm Q)^e\bigl(\prod_i\mathrm{rat}_{p_i}(\vartheta)\prod_{i'}\mathrm{rat}_{p'_{i'}}(\vartheta,\epsilon_{i'})\bigr)^2$.
+\end{lemma}
+
+\begin{proof}
+The factor of a pair $(\nu,z)$ of the exchanges is $(\Nm Q)^{z^2}$ times the untwisted factor times
+$\prod_{z'\le z}\mathrm{rat}^2$ for the pairs $(\nu,z')$ (\lean{New.Data.CriticalPair.lValueProd_eq_mul_prod_ratio_sq}). The pairs
+$(\nu_*,z)$ with $7(m/2)<z\le z_*$ are main (\lean{New.Data.isMainPair_lowerPoint_exchangePair_none});
+the other $7m/2+m+m/2$ are ramified.
+\end{proof}
+
+\begin{corollary}[\lean{New.Data.heightLe_inv_heckeValueProd_div}]\label{ol-values:cor:hv}
+For a regular family $\xi$, the family $\iota\mapsto\rho_{\xi_\iota^j}^{-1}$ has height at
+most $10mx_1+k(6\beta_D-\hdir)$.
+\end{corollary}
+
+\begin{proof}
+By Lemma~\ref{ol-values:lem:hv}, Theorem~\ref{ol-values:thm:invratio} for the $k/2$ main
+ratios, the bound $x_1$ for the $5m$ ramified ones (all squared), and $\norm{\iota\Nm Q}=1$
+(\lean{New.Data.IsRegularFamily.heightLe_of_eq_zpow_mul}).
+\end{proof}
+
+\subsection{The comparison operator and the cost of one lift}
+
+\begin{definition}[\lean{New.Data.IsComparisonOperator}, \leanfile{New/OneLift/LiftVolumeHeight}]\label{ol-values:def:comp}
+A \emph{comparison operator} for the lift from $W_j$ is a family of operators $U_\vartheta$ on
+$\mathcal F_{\vartheta,j}$ with: (i) $\rho_\vartheta\ne0$; (ii) there is a positive definite
+$U^\circ$ on $\mathcal G_j$ with $\pair{\Theta_{j,\vartheta}y',U_\vartheta\Theta_{j,\vartheta}y}=
+\rho_\vartheta\pair{y',U^\circ y}$ for all $\vartheta,y,y'$; (iii) $U_\vartheta$ maps lifts to
+forms orthogonal to the false lifts; (iv) $U_\vartheta$ keeps integrality at $\iota\mid\ell$ if
+$\ell\nmid\Nm Q$; (v) $\norm{U_1\varphi}^2_\sigma\le e^{6A}\norm\varphi^2_\sigma$ for all $\sigma$.
+\end{definition}
+
+\begin{theorem}[\lean{New.Data.isComparisonOperator_comparisonOp}]\label{ol-values:thm:comp}
+$U_\vartheta=n_{\mathrm{Aut}}\mathrm{hk}^2\,\mathrm{gl}_\vartheta\mathrm{gl}_\vartheta^*$ is a comparison
+operator, with $\mathrm{gl}_\vartheta$ the gluing map of Section~\ref{sec:ol-compare} from tuples
+of forms on a definite space $V^\circ$ to $\mathcal F_{\vartheta,j}$ and $\mathrm{hk}$ the hook number of
+their weight (\lean{New.Data.comparisonOp}).
+\end{theorem}
+
+\begin{proof}
+By Section~\ref{sec:ol-compare} there are $c'_\vartheta\ne0$ such that
+$\Theta^\circ=c'_\vartheta\mathrm{gl}_\vartheta^*\Theta_{j,\vartheta}$ does not depend on $\vartheta$
+(\lean{New.Rows.twistFactor_smul_adjoint_glue_comp}), $\Theta^\circ$ is injective
+(\lean{New.Rows.periodLift_injective}), $\abs{c'_\vartheta}^2=C/\Gamma_j(\vartheta)$
+(\lean{New.Rows.exists_norm_twistFactor_sq_eq}; by three exchange identities),
+$\mathrm{gl}_\vartheta(\Theta^\circ y)$ is orthogonal
+to the false lifts (\lean{New.Rows.isOrthogonalToFalseLifts_glue_periodLift}, by
+Theorem~\ref{ol-values:thm:periods}), $\mathrm{gl}_\vartheta$ keeps integrality away from $Q$, and
+$\norm{\mathrm{gl}_1\eta}^2_\sigma\le e^{2A}\norm\eta^2_\sigma$. Then
+$\pair{\Theta_{j,\vartheta}y',U_\vartheta\Theta_{j,\vartheta}y}=n_{\mathrm{Aut}}\mathrm{hk}^2
+\abs{c'_\vartheta}^{-2}\pair{\Theta^\circ y',\Theta^\circ y}$, which is (i) and (ii) with
+$\rho_\vartheta=\abs{c'_1}^2/\abs{c'_\vartheta}^2$ and
+$U^\circ=n_{\mathrm{Aut}}\mathrm{hk}^2\abs{c'_1}^{-2}\Theta^{\circ*}\Theta^\circ$. (iii) holds as
+$U_\vartheta\Theta_{j,\vartheta}y$ is a multiple of $\mathrm{gl}_\vartheta(\Theta^\circ y)$. For (iv),
+(v) take an integral tight frame $(\eta^i)_i$ of tuples, $\sum_i\pair{\eta^i,\eta}\eta^i=\mathrm{hk}^2\eta$
+(\lean{New.Data.exists_tight_frame_formTuples}; \lean{New.«GL».exists_tightFrame} in \leanfile{Lib/GLn/SchurModule/GramMatrix}): then
+$U_\vartheta\varphi=\sum_in_{\mathrm{Aut}}\pair{\mathrm{gl}_\vartheta\eta^i,\varphi}\mathrm{gl}_\vartheta
+\eta^i$ has integral terms, and Cauchy--Schwarz and a count give (v).
+\end{proof}
+
+\begin{lemma}\label{ol-values:lem:det}
+Let $U$ be a comparison operator and $\mathcal D(\vartheta)=\det(\mathrm{pr}\,U_\vartheta)$ on the lifts
+$\Theta_{j,\vartheta}\mathcal G_j$ (\lean{New.Data.liftCompression}). (a) There is $C\ne0$ with
+$\det(\Theta^*_{j,\vartheta}\Theta_{j,\vartheta})\,\mathcal D(\vartheta)=C\rho_\vartheta^{\dT}$ for all
+$\vartheta$. (b) If $\ell\nmid\Nm Q$ and $\vartheta$ clears the projection with $\beta$ at
+$\iota\mid\ell$, then $\norm{\iota\mathcal D(\vartheta)}\le e^{\dT r\beta}$. (c)
+$\abs{\sigma\mathcal D(1)}\le e^{3\dT A}$ for all $\sigma\in\Aut(\C)$.
+\end{lemma}
+
+\begin{proof}
+(a) (\lean{New.Data.IsComparisonOperator.exists_normDet_sq_mul_det_eq}) For injective $u$, $\det(u^*u)\det(\mathrm{pr}\,P|_{\image u})=\det(u^*Pu)$
+(\lean{New.Data.normDet_sq_mul_det_compression}), and
+$\Theta^*_{j,\vartheta}U_\vartheta\Theta_{j,\vartheta}=\rho_\vartheta U^\circ$ by (ii); take
+$C=\det U^\circ$. (b) (\lean{New.Data.IsComparisonOperator.norm_padic_det_liftCompression_le}) Let $\Lambda$ clear the projection. Let $\alpha$ be an eigenvalue of
+$\Lambda\,\mathrm{pr}\,U_\vartheta$ with eigenvector $z$, scaled so that $z$ is integral at $\iota$
+but $\mu z$ is integral only if $\abs{\iota\mu}\le1$
+(\lean{New.DescentPair.exists_smul_mem_integralForms_maximal}). By (iv) and (iii), $U_\vartheta z$
+is integral and orthogonal to the false lifts, so $\alpha z=\Lambda\,\mathrm{pr}\,U_\vartheta z$ is
+integral and $\abs{\iota\alpha}\le1$. Hence $\abs{\iota\det\Lambda}\abs{\iota\mathcal D(\vartheta)}\le1$.
+(c) (\lean{New.Data.IsComparisonOperator.norm_map_det_liftCompression_le}) If $\mathrm{pr}\,U_1z=\alpha z$ with $z\ne0$, Lemma~\ref{ol-values:lem:proj} and (iii), (v) give
+$\abs{\sigma\alpha}^2\norm z^2_\sigma\le\norm{U_1z}^2_\sigma\le e^{6A}\norm z^2_\sigma$, and
+$\norm z^2_\sigma>0$.
+\end{proof}
+
+\begin{theorem}[The cost of one lift; \lean{New.Data.heightLe_liftDeterminant_ratio}]
+\label{ol-values:thm:main}
+Let $\xi$ be a regular family of $m$-fold twists and $1\le j\le m$. Then the family
+$\iota\mapsto Z_j(1)/Z_j(\xi_\iota)$ has height at most $\dT\,k\,(\beta_D\log b-\hdir)$.
+\end{theorem}
+
+\begin{proof}
+Let $U$ be the comparison operator of Theorem~\ref{ol-values:thm:comp} and $\vartheta_\iota=
+\xi_\iota^j$. By Lemma~\ref{ol-values:lem:det}(a) at $\vartheta_\iota$ and at $1$,
+$Z_j(1)/Z_j(\xi_\iota)=\bigl(\mathcal D(\vartheta_\iota)/\mathcal D(1)\bigr)\cdot
+\rho_{\vartheta_\iota}^{-\dT}$. \emph{First factor.} Take $H=\mathcal D(1)\ne0$. By Lemma~\ref{ol-values:lem:det}(c),
+$\abs{\sigma H}\le e^{3\dT A}$, and $H$ times the factor is $\mathcal D(\vartheta_\iota)$, of norm at
+most $e^{\dT r\gamma_\ell}$ at $\iota$ by (b), with $\gamma_\ell$ from the regular family,
+$\sum_\ell\gamma_\ell\le\beta_D$; its height is at most $\dT(3A+r\beta_D)$.
+
+\emph{Second factor.} By Corollary~\ref{ol-values:cor:hv}, at most
+$\dT\bigl(10mx_1+k(6\beta_D-\hdir)\bigr)$.
+
+\emph{Bookkeeping.} The heights add to
+$\dT\bigl(3A+r\beta_D+10mx_1+6k\beta_D-k\,\hdir\bigr)$. Here $k\beta_D\log b=fa\log^4b/m$, while
+$3A=3fmb\log^2b$, $(r+6k)\beta_D\le8k\beta_D$ and $10mx_1$ are smaller by at least a factor
+$\log b/100$ in total (as $a=xb$, $m^2\le4x$), so the sum is at most
+$\dT k(\beta_D\log b-\hdir)$ (\lean{New.Data.le_of_hasLogBound}).
+\end{proof}
+
+\begin{remark}[The main amount]\label{ol-values:rem:main}
+The term $-\dT k\hdir$ is $\dT$ times $k$ main ratios, each repaying one of the $k$
+directions charged per lift in Theorem~A: $\sinf$ by the size
+of the untwisted value (Proposition~\ref{ol-values:prop:untwisted}), $\sfin$
+by the sharpness of the divisibility of the twisted lift (Proposition~\ref{ol-values:prop:test}).
+\end{remark}
+
+\subsection{Further results used elsewhere}
+
+For Sections~\ref{sec:cg-selmer} and~\ref{sec:cg-first}: (1) on twists of modulus $Q$ the integral
+algebraic part is evaluation on an element of the group ring of $\U(1)(\A)$ integral away from $Q$
+(\lean{New.Data.CriticalPair.isIntegralMeasure_integralAlgebraicPart}). (2) A
+denominator bound $e^\beta$ on the line of $\varphi^\circ$ bounds $\abs{\iota\pair{\mathrm{pr}\,\Xi,
+\mathrm{pr}\,\Xi'}}$ for test forms by $e^\beta$ times the $\ell$-part of the class number of $\U(1)$
+at the chosen level, if all stabilisers are trivial
+(\lean{New.Selmer.DenominatorLe.norm_inner_starProjection_le}). (3) The period of the determinant
+theta kernel of $(I_n,I_n)$ gains $\prod_{l<n}(1-q_w^lX)$ when a prime $w$ is added to the modulus,
+$X^{-1}$ the Frobenius value of the character there
+(\lean{New.Rows.detPeriod_insert}).

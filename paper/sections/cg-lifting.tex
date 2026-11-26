@@ -1,0 +1,451 @@
+\section{The local loss above \texorpdfstring{$\ell$}{l}: crystalline classes in large weight}
+\label{sec:cg-lifting}
+
+The bound for denominators of Section~\ref{sec:cg-first} compares Ribet's cocycles modulo $\ell^\nu$
+with those that satisfy the crystalline local conditions at the places of $E$ above $\ell$. This
+section bounds the difference, the \emph{local loss above $\ell$}, for every prime $\ell$. The
+Hodge--Tate weights lie near $\pm\kappa_j(\sigma)$, as large as $b$, far outside the
+Fontaine--Laffaille range $[0,\ell-2]$ for all $\ell<b$; the argument computes with
+Breuil--Kisin modules inside $A_{\inf}$. Two results go to Section~\ref{sec:cg-first}:
+Proposition~\ref{cg-lifting:prop:tatedual} bounds the
+loss at a place $v\mid\ell$ by a \emph{defect} defined by cup products, and
+Theorem~\ref{cg-lifting:thm:main} bounds the defect
+by local degree $\times$ rank $\times\mathrm{defect}_\ell$; there both are summed over the
+places $v\mid\ell$. Section~\ref{sec:cg-selmer} uses
+Lemma~\ref{cg-lifting:lem:rank}(a), and both use Lemma~\ref{cg-lifting:lem:local}. We use the data
+(Definition~\ref{setup:def:data}), with the sparseness of $\Phi_b$, and the conjugate self-dual
+representations of Section~\ref{sec:cg-selmer} (\lean{New.Selmer.IsConjSelfDualOfLevel}).
+
+\emph{Notation.} $\ell$ is a prime, $\iota\colon\C\isom\Qlbar$ is fixed, $G_\ell=\Gal(\Qlbar/\Ql)$,
+$C=\Cl$ with tilt $C^\flat$ ($\fm^\flat$ its maximal ideal), $A_{\inf}=W(\cO_{C^\flat})$ with $\theta$
+and $\varphi$, $\tau=[\eps^{1/\ell}]-1$, and $B_{\max}$, $B_{\mathrm{dR}}^+\ni t_{\mathrm{dR}}$ the period rings. $\Gamma$ is a group with an open embedding
+$\iota_\Gamma\colon\Gamma\to G_\ell$. A \emph{coefficient ring} $\cO$ is the ring of integers of a finite Galois
+extension of $\Ql$ in $\Qlbar$; ``for large $\cO$'' means for all $\cO$ containing a fixed one. A
+\emph{lattice} is a finite free $\cO$-module $L$ with an $\cO$-linear action of $\Gamma$, and
+$L^\vee(1)=\Hom_\cO(L,\cO(1))$. Hodge--Tate jumps are taken at the embeddings $\gamma\colon\cO\to C$,
+with multiplicity, so that $\cO(1)$ has the jump $-1$. $\operatorname{nlen}$ is the length divided
+by that of $\cO/\ell$. From the data: $r,k,m,t$, $h=r^8=\Delta/2$, $b$, $G=a/x_1$ (the weight off
+$\Phi_b$), $\kappa_j$, $M=p_0p_1$, and $\epsilon_\sigma=1$ or $-1$ as $\sigma\colon E\to\C$ lies in the CM type or not
+(\lean{New.Selmer.cmSign}).
+
+\subsection{Crystalline cocycles, the defect and the main bound}\label{cg-lifting:sec:defect}
+
+\begin{definition}[\lean{New.Period.crysCocycles}, \lean{New.Lift.InClass}, \lean{New.Lift.Pairing},
+\lean{New.Lift.cupOrthogonal}, \lean{New.Lift.dualDefect}]\label{cg-lifting:def:defect}
+(a) $Z_f(L)$ is the module of maps $c\colon\Gamma\to L$ with $1\otimes c(g)=gy-y$ for some
+$y\in B_{\max}\otimes L$.
+(b) A \emph{class} $\mathcal Q(F,R,U)$ ($F$ a filter on $\Gamma$, $R$ a relation between elements of
+$\Gamma$ and polynomials, $U(\gamma)\subset\Z$ finite) consists of the lattices $Y$ whose periods
+fixed by almost all $g$ (for $F$ and near $1$) span $B_{\max}\otimes Y$, whose jumps at $\gamma$ lie in
+$U(\gamma)$, and on whose periods $q(g)=0$ if $g$ is in inertia and $R(g,q)$. For $F=\top$,
+$R=\emptyset$: the crystalline lattices with jumps in $U$.
+(c) A \emph{pairing} $P\colon Y\times L\to\Z/\ell^\nu(1)$ is an $\cO$-linear
+$\psi\colon Y\otimes L\to\cO(1)$ with $g\psi-\psi=\ell^\nu c_P(g)$, $c_P\in Z_f((Y\otimes L)^\vee(1))$,
+read through a $\Zl$-linear map $\cO\to\Zl$.
+(d) $\mathcal Q^\perp(L)$ is the set of maps $c\colon\Gamma\to L$ such that for all $Y\in\mathcal Q$,
+pairings $P$ and $c_Y\in Z_f(Y)$ the cup product $(g,g')\mapsto P(c_Y(g),g\,c(g'))$, read in
+$\Qlbar^\times$, is a continuous coboundary.
+(e) The \emph{defect} is $\operatorname{def}_{\mathcal Q}(L)=\length Z_f(L)/(Z_f(L)\cap\mathcal
+Q^\perp(L))$; $\ell^e$ is a \emph{cup exponent} if $\ell^eZ_f(L)\subset\mathcal Q^\perp(L)$
+(\lean{New.Lift.HasCupExponent}).
+\end{definition}
+
+\begin{lemma}\label{cg-lifting:lem:rank}
+(a) Let $\iota_E\colon E\to\Qlbar$, $\iota_\Gamma(\Gamma)$ the pointwise stabiliser of $\iota_E(E)$, and $L$ potentially crystalline with the jumps $J(\sigma_g)$ at $g|_\cO$
+($g\in G_\ell$, $\sigma_g=\iota^{-1}\circ g^{-1}\circ\iota_E$). Then $\rk Z_f(L)=\rk L+\sum_\sigma\#\{u\in J(\sigma):u<0\}$,
+over the distinct $\sigma_g$
+(\lean{New.Selmer.finrank_crysCocycles_eq_add_neg_jumps}).
+(b) For $L$ potentially crystalline and $\ell^e$ a cup exponent,
+$\operatorname{nlen}\operatorname{def}_{\mathcal Q}(L)\le[G_\ell:\iota_\Gamma(\Gamma)]\cdot2e\rk L$
+(\lean{New.Selmer.normLength_dualDefect_le_of_hasCupExponent}).
+\end{lemma}
+
+\begin{proof}
+(a) is the Bloch--Kato rank formula (\leanfile{Lib/PadicHodge/BlochKato}; Bloch--Kato, 1990). (b)
+The defect is the length of a quotient of $Z_f(L)/\ell^e$, and $\rk Z_f(L)\le2[G_\ell:\iota_\Gamma(\Gamma)]\rk L$.
+\end{proof}
+
+\begin{definition}\label{cg-lifting:def:loss}
+(a) The \emph{crystalline loss} (\lean{New.Selmer.crystallineLoss}) is
+$\lambda(h,\beta,\ell)=v_\ell\bigl((2\beta)!\,(\prod_{n\in I}n)^{h^3}\bigr)$,
+$I=(\beta-30h^3,\beta+30h^3]\cap\Z_{>0}$; $\lambda_\ell=\lambda(h,b,\ell)$, and
+$\mathrm{defect}_\ell=10^6\frac mk(b\,v_\ell(M)+\lambda_\ell)$
+(\lean{New.Selmer.defectBound}). So $2\beta<\ell(\lambda+1)$, and $\lambda\ge h^3$ if $\ell$ divides an
+element of $I$.
+(b) Multisets $J(\sigma)$, $\sigma\colon E\to\C$, are the \emph{weights of a main summand} of rank
+$r'$ with $t'$ characters (\lean{New.Selmer.IsMainSummandWeights}) if $1\le r'\le r$, $t'\le t$,
+and: for one $j\le m$ every $u\in J(\sigma)$ is \emph{low}, $h/2\le|u|\le4mh$, or \emph{high},
+$|\epsilon_\sigma u+\kappa_j(\sigma)|\le t$; at most $r'm/k$ members have $|u|\le2h^2$; at most $r'$
+members of $J(\sigma)$ and $J(\bar\sigma)$ together are negative (restated from (i) of
+Definition~\ref{cg-selmer:def:row}).
+(c) A set of polynomials is a \emph{tame type} $\operatorname{Tame}(\ell,r,n)$
+(\lean{New.Lift.IsTameType}) if it contains $X^{e_r}-1$, $e_r=\operatorname{lcm}_{1\le i\le r}(\ell^i-1)$,
+and a monic polynomial over $\Zl$ of degree at most $n$.
+\end{definition}
+
+\begin{theorem}[\lean{New.Selmer.summand_defect_le_at_place}]\label{cg-lifting:thm:main}
+Let $\iota_E\colon E\to\Qlbar$, let $\iota_\Gamma(\Gamma)$ be the pointwise stabiliser of $\iota_E(E)$, and let $J$ be the weights of a
+main summand (rank $r'$, $t'$ characters). For large $\cO$: let $L_\star,L_0,\dots,L_{t'-1}$ be
+lattices and $\mathcal Q=\mathcal Q(F,R,U)$ a class such that (i) either $\ell\in\{p_0,p_1\}$ and
+$R(g)$ is $\operatorname{Tame}(\ell,r,(r+t)r)$ for $g$ in inertia, or $F=\top$, $R=\emptyset$; (ii)
+every $u\in U(\gamma)$ is a jump at $\gamma$ of some $L_c$; (iii) at $g|_\cO$, $L_\star$ has the jumps
+$J(\sigma_g)$ and $L_c$ the single jump $c$; (iv) $\rk L_\star=r'$. Then for every $c$ with
+$L_c\in\mathcal Q$
+\[
+  \operatorname{nlen}\operatorname{def}_{\mathcal Q}\bigl(L_c^\vee(1)\bigr)
+  \le[G_\ell:\iota_\Gamma(\Gamma)]\cdot\rk L_c\cdot\mathrm{defect}_\ell/t_c,
+  \qquad t_\star=1,\ t_c=t\ (c<t').
+\]
+\end{theorem}
+
+The proof is in \S\ref{cg-lifting:sec:proof}. The defect enters the Selmer bound thus. Let
+$u_\pi\colon G\to\mathrm M_{n_u}(\cO)$ ($\pi$ in a finite set) and $\rho\colon G\to\mathrm M_{n_\rho}(\cO)$ be matrix representations of a group $G$ over $\cO$. The
+\emph{Ribet cocycles} $\mathcal R(u,\rho,\mathfrak a)$ (\lean{New.Selmer.ribetCocycles}; as in Section~\ref{sec:cg-first}) are the cocycles
+$w\colon G\to(\cO/\mathfrak a)^{n_\rho}$ of $\rho$ with $\sum_g\theta_gw(g)=0$ whenever the $\theta_g\in\cO$, almost all zero,
+have $\sum_g\theta_g(u_\pi(g)-1)=0$ for all $\pi$. For $G=\Gal(\Qbar/E)$, the
+\emph{crystalline colength} (\lean{New.Selmer.crystallineColength}) is the length of
+$\mathcal R(u,\rho,\ell^\nu)$ modulo the $w$ that obey, at each $v\mid\ell$, every linear relation that
+holds on the crystalline cocycles of the decomposition group (\lean{New.Selmer.crysRelations}).
+
+\begin{proposition}[\lean{New.Selmer.relLength_ribetCocycles_le}]\label{cg-lifting:prop:tatedual}
+Let $\eta\colon\Gamma\to G$, and let the lattices of all $u_\pi\circ\eta$ and the lattice $L$ of
+$\rho\circ\eta$ lie in one class $\mathcal Q$. Then $\mathcal R(u,\rho,\ell^\nu)$ modulo the $w$ such
+that $w\circ\eta$ obeys every linear relation valid on $Z_f(L)$ has length at most
+$\operatorname{def}_{\mathcal Q}(L^\vee(1))$.
+\end{proposition}
+
+\begin{proof}
+As $w$ obeys every relation among the $(u_\pi(g)-1)_\pi$, $w(g)=\Pi((u_\pi(g)-1)_\pi)$ for a linear
+$\Pi$. By Artin--Rees the graph of $\Pi$, enlarged by $\ell^{\nu n}$ times all families, is a
+subrepresentation $Y$ of $(\bigoplus_\pi\mathrm M_{n_u}(\cO))\times(\cO/\ell^\nu)^{n_\rho}$ on which the first
+projection is injective (\lean{New.Selmer.ribetCocycles.exists_graph_subrepresentation}); so
+$Y\in\mathcal Q$, $g\mapsto((u_\pi(g)-1)_\pi,w(g))$ lies in $Z_f(Y)$, and $w\circ\eta=\mathrm{pr}_2\circ c_Y$ with
+$c_Y\in Z_f(Y)$ and $\mathrm{pr}_2$ the second projection. Lifting $\mathrm{pr}_2$ to $q\colon Y\to L$, equivariant modulo
+$\ell^\nu$, the form $y\otimes\phi\mapsto\phi(q(y))$ is a pairing of $Y$ and $L^\vee(1)$; so
+$\mathrm{pr}_2\circ c_Y$ has coboundary cup products with $\mathcal Q^\perp(L^\vee(1))$; the reductions of $Z_f(L)$
+obey the relations, and Fact~\ref{cg-lifting:fact:duality} gives the bound (\lean{New.Selmer.relLength_le_of_comesFromClass}).
+\end{proof}
+
+\begin{fact}[Local duality; \lean{New.Period.IsPotentiallyCrystalline.relIndex_dvd_of_orthogonal}]
+\label{cg-lifting:fact:duality}
+Let $L,L'$ be potentially crystalline, in equivariant perfect duality $L'\times L\to\Zl(1)$,
+$q\colon L\to L/\ell^\nu L$, $H$, $S$ groups of maps $\Gamma\to L'$, $\Gamma\to L/\ell^\nu L$. If all $q\circ z$ ($z\in Z_f(L)$) and all elements of $S$ are continuous cocycles
+with lifts $\Gamma\to L$ cupping with $H$ to coboundaries, then $[S:S\cap q(Z_f(L))]$ divides $[Z_f(L'):Z_f(L')\cap H]$. (Serre, Galois
+Cohomology, 1997, II \S5; Milne, Arithmetic Duality Theorems, 2006, I 2.3, 2.8.)
+\end{fact}
+
+\begin{lemma}[\lean{New.Selmer.IsConjSelfDualOfLevel.hasJumps_localLattice},
+\lean{New.Selmer.IsConjSelfDualOfLevel.inClass_localLattice}, \lean{New.Selmer.isTameType_of_roots}]
+\label{cg-lifting:lem:local}
+A lattice in a conjugate self-dual representation of given level with jumps $J$, at
+$w\mid\ell$, has the jumps $J(\sigma_g)$ at $g|_\cO$, is potentially crystalline,
+crystalline if $w\nmid M$, and above $M$ killed by the polynomials killing inertia on the family. A set containing the polynomials vanishing
+on a multiset of at most $n$ $(\ell^a-1)$-th roots of unity, $a\le r$, is
+$\operatorname{Tame}(\ell,r,nr)$.
+\end{lemma}
+
+\subsection{Kummer charts, Kisin modules and sides}\label{cg-lifting:sec:charts}
+
+\begin{fact}[\lean{New.Lift.exists_kummerChart}, \lean{New.Lift.KummerChart.JumpLattice.frame_theorem}]
+\label{cg-lifting:fact:frame}
+(a) There is a \emph{Kummer chart} of $\Gamma$: $f_\Gamma\ge1$, a map $\Lambda[[X]]\to A_{\inf}$,
+$\Lambda=W(\F_{\ell^{f_\Gamma}})$, with image $S$, sending $X$ to $z=[\varpi^\flat]$ (not a unit) and
+$X^{e_\Gamma}A(X)+\ell$ ($A$ a unit) to a generator $\mathcal E$ of $\ker\theta$, and an open subgroup $\Gamma'$ of index
+prime to $\ell$ fixing $\Lambda$ and $\theta(z)$; $e_\Gamma f_\Gamma=[G_\ell:\iota_\Gamma(\Gamma)]$, and the chart is
+\emph{unramified} ($\mathcal E=z+\ell$) if $\iota_\Gamma(\Gamma)$ contains inertia.
+(b) Let $L$ be crystalline over $\Gamma'$ with jumps in $[-n,n]$. \emph{Forms} are the
+$A_{\inf}$-linear $\mu\colon W(C^\flat)\otimes L\to B_{\mathrm{dR}}$ that are $\Gamma'$-equivariant on
+$1\otimes L$. Let $\mathfrak M(L)$ be the $\mathsf x\in A_{\inf}[1/\tau]\otimes L$ with
+$\mu(\varphi^i\mathsf x)\in B_{\mathrm{dR}}^+$ for all $i\ge1$ and all forms, and $\mathfrak N(L)$ the
+$S$-module of those $\mathsf x\in\mathfrak M(L)$ at which all forms take values in a fixed subfield of $B_{\mathrm{dR}}$. Then
+$\mathfrak N$ has an $S$-basis that is an $A_{\inf}$-basis of $\mathfrak M$,
+$\tau^n\mathfrak M\subset A_{\inf}\otimes L\subset\tau^{-n}\mathfrak M$,
+$\mathcal E^n\varphi(\mathfrak N)\subset\mathfrak N$, and an approximation and a divisibility property hold
+(Kisin, 2006; Bhatt--Morrow--Scholze, 2018; Cais--Liu, 2016; $\mathcal E^n\mathfrak N\subset
+S\varphi(\mathfrak N)$ is not proved).
+\end{fact}
+
+\begin{definition}[\lean{New.Lift.KummerChart.Letter}, \lean{New.Lift.KummerChart.JumpLattice.withOrders},
+\lean{New.Lift.KummerChart.PairingSide}, \lean{New.Lift.KummerChart.PairingSide.KillsCokernel}]
+\label{cg-lifting:def:side}
+(a) The \emph{letters} are the $i\in\F_{\ell^{f_\Gamma}}^\times$, permuted by $i\mapsto i^\ell$; $i^{(-a)}$ is
+the letter with $\ell^a$-th power $i$. Fix $\zeta_\Gamma\in\cO$, $\zeta_\Gamma^{\ell^{f_\Gamma}-1}=1$; $\gamma$ lies
+\emph{over} $i$ if $\gamma(\zeta_\Gamma)=\theta([i])$. $W(C^\flat)\otimes L$ splits into letter parts
+($\zeta_\Gamma$ acts as $[i]$); a lattice crystalline over $\Gamma'$ carries a \emph{jump set} $U_i$ at each
+letter, containing its jumps at the $\gamma$ over $i$.
+(b) \emph{Orders} are functions $o(a,u)$ of a level $a\ge0$ (the prime $\varphi^a(\mathcal E)$) and a jump
+$u\in U_{i^{(-a)}}$. An element $\mathsf x$ at the letter $i$ of $A_{\inf}\cdot\mathcal N$, $\mathcal N=\mathfrak N[1/\prod_a\varphi^a(\mathcal E)]$ the
+\emph{localised} Kisin module, has orders $o$
+if $\mu(\varphi^{-a}\mathsf x)\in t_{\mathrm{dR}}^{o(a,u)}B_{\mathrm{dR}}^+$ for all forms $\mu$ of type $u$ at $i^{(-a)}$
+(sending that letter part of $1\otimes L$ into $t_{\mathrm{dR}}^{-u}B_{\mathrm{dR}}^+$); it has \emph{depth} $o'$ if
+all $g\mathsf x-\mathsf x$, $g\in\Gamma'$, have orders $o'$. The \emph{standard orders of level $l$}, $0$ for $a<l$
+and $-u$ for $a\ge l$, cut out $\varphi^l\mathfrak M$.
+(c) A \emph{side} is a lattice $Y$ as in (a), with $0\in U_i$, a lattice $C$, and a linear
+$\alpha\colon C\to Z_f(Y)$, which defines an extension $0\to Y\to\tilde Y\to C\to0$ ($C$ trivial). A
+\emph{point over $\ell^ec$} at $i$ is an element of $\mathcal N(\tilde Y)$ that maps
+to $\ell^e$ times the letter-$i$ part of $1\otimes c$. $\ell^\varkappa\mathcal E^s$ \emph{kills the cokernel}
+at $i$ if it maps the letter-$i$ part of $A_{\inf}\otimes C$ into the image of the level-$0$
+standard module of $\tilde Y$.
+(d) A pairing $P$ of the lattices of sides $S,S'$ gives the \emph{Tate dual side}
+$(Y\otimes Y')^\vee(1)$, with jumps $0$ and $-u-u'-1$, $C=\cO$, $\alpha(1)=c_P$;
+$\operatorname{CB}(e;c,c')$ (\lean{New.Lift.Pairing.IsScaledCupCoboundary}) means:
+$\alpha(c)\cup_P\ell^e\alpha'(c')$ is a continuous coboundary.
+\end{definition}
+
+The \emph{universal side} of $L$ has $C=Z_f(L)$, $\alpha=\mathrm{id}$
+(\lean{New.Lift.KummerChart.universalSide}); $\operatorname{CB}(e;c,c')$ for all universal sides and
+pairings makes $\ell^e$ a cup exponent
+(\lean{New.Lift.KummerChart.pow_smul_mem_cupOrthogonal_of_isScaledCupCoboundary}).
+
+\subsection{Safe moves and the walk}\label{cg-lifting:sec:walk}
+
+A pair $(w,y)$ in $W(C^\flat)\otimes\tilde Y\times W(C^\flat)\otimes\tilde Y'$ is \emph{safe for
+$\varkappa$} (\lean{New.Lift.Pairing.IsSafe}) if $\ell^\varkappa P(w_Y,y_{Y'})$ lies in the image of
+$W(\fm^\flat)$. A move of the first side by $y$, the second resting at $\mathsf x'$, is safe if all
+$(y,g\mathsf x'-\mathsf x')$, $g\in\Gamma'$, are safe; one of the second side by $y'$, the first at $\mathsf x$, if all
+$(g\mathsf x-\mathsf x,gy')$ are.
+
+\begin{lemma}\label{cg-lifting:lem:pairing}
+(a) (Pairing lemma; \lean{New.Lift.Pairing.IsScaledCupCoboundary.of_isSafePath}) Let $\mathsf x,w$ map to
+$\ell^{e_1}(1\otimes c)$ and $\mathsf x',w'$ to $\ell^{e_2}(1\otimes c')$. If the moves by $g'\mathsf x'-\mathsf x'$ ($g'\in\Gamma'$) with
+$\mathsf x$ at rest and the four moves $(\varphi\mathsf x,\varphi\mathsf x')\to(w,\varphi\mathsf x')\to(w,w')\to(\mathsf x,w')\to(\mathsf x,\mathsf x')$
+are safe for $e_3$, then $\operatorname{CB}(e;c,c')$ for $e\ge e_1+e_2+e_3$.
+(b) (Rule; \lean{New.Lift.KummerChart.PairingSide.SidePairing.isSafeMoveFst_of_killsCokernel}) Let
+$\ell^\varkappa\mathcal E^s$ kill the cokernel of the Tate dual side at $i^{(-l)}$, let $y$ lie over $0$ with
+orders $o$ at $i$, and let $\mathsf x'$ be a point of depth $o'$. If $o(a,u)+o'(a,u')\ge\rho(a,u+u')$ for
+all levels $a$ and jumps $u,u'$, where $\rho(a,v)$ is $1$ for $a<l$, $s-v$ for $a=l$ and $-v$ for $a>l$, the move by $y$
+with $\mathsf x'$ at rest is safe for $\varkappa$.
+\end{lemma}
+
+\begin{proof}
+(a) Let $B=\ell^{e_3}P$ on first components and solve the Artin--Schreier equation
+$(\varphi-1)y=B(w)(\varphi\mathsf x'-w')+B(\mathsf x)(w'-\mathsf x')$. The cochain
+$\varsigma(g)=B(g\mathsf x)(g\mathsf x')-g(B(\mathsf x)(\mathsf x')-y)-B(\mathsf x)(g\mathsf x'-\mathsf x')-y$ then has $(\varphi-1)\varsigma(g)$ small by the safe moves,
+so $\varsigma(g)$ is a constant $\chi(g)\in\Z/\ell^\nu(1)$ modulo $W(\fm^\flat)$, where $\varphi-1$ is
+bijective. On $\Gamma'$, $\ell^e$ times the cup product is a multiple of $\partial\chi$ (the moves by
+$g'\mathsf x'-\mathsf x'$ make the rest small), and $\chi$ is continuous as $\chi=0$ near $1$. So its class in
+$H^2(\Gamma,\Qlbar^\times)$ dies on $\Gamma'$ and is killed by $[\Gamma:\Gamma']$ (corestriction) and
+by $\ell^\nu$, which are coprime (\lean{New.Lift.Pairing.isCupCoboundary_of_eq_coboundary}).
+(b) Lift $1$ of the Tate dual side to a point $\mathsf x^\vee$ over $\ell^\varkappa$ with a pole of order $\le s$ at
+$\mathcal E$; paired with $w\otimes y$ it computes $\ell^\varkappa P(w,y)$, and orders add under equivariant
+pairings. The orders of
+$\varphi^l\mathsf x^\vee$ at $-u-u'-1$ plus $\rho(a,u+u')$ equal $1$; as $g-1$ is divisible by $z\tau$, the total order
+is positive at every level, which puts the value into $W(\fm^\flat)$.
+\end{proof}
+
+\begin{proposition}[The walk; \lean{New.Lift.KummerChart.PairingSide.SidePairing.isScaledCupCoboundary_of_stops}]
+\label{cg-lifting:prop:walk}
+Choose \emph{cuts} among the letters; let $l(i)>0$ be the distance back from $i$ to the nearest cut before $i$.
+Suppose that at each cut $i$: $\ell^\varkappa\mathcal E^{s_i}$ kills the cokernel of the Tate dual side; there
+are \emph{standard points} $\mathsf x_i,\mathsf x'_i$ over $\ell^ec,\ell^{e'}c'$ (orders $-u$, lowered by $\eta$ at
+level $0$; depth $-u$, raised by $s_i$ at level $0$ and by $\eta$ below level $l(i)$); and one side
+has a \emph{stop} (a point with orders and depth $\max(\text{standard of level }l(i),-u-\eta[a<l(i)])$ at level $a$) at which
+it rests while the other side moves safely from $\varphi^{l(i)}$ of its point at the previous cut to
+its point at $i$. Then $\operatorname{CB}(n;c,c')$ for $n\ge e+e'+\varkappa$.
+\end{proposition}
+
+\begin{proof}
+Carry the points from each cut along the Frobenius orbit by $\varphi$, sum over the letters (letter
+projectors add to $1$; distinct letters are orthogonal) and apply
+Lemma~\ref{cg-lifting:lem:pairing}(a): at a cut the side with the stop moves to it, the other moves,
+the first goes on; the first and third moves obey the rule (b).
+\end{proof}
+
+A side is \emph{down} at a letter if its jumps are $\le\eta$, \emph{up} if they are $\ge-\eta$. If
+on the $l$ letters up to a cut one side is down and the other up (a \emph{plain} cut), a standard
+point of the down side with depth raised by $\eta$ at level $l$ is a stop
+(\lean{New.Lift.KummerChart.PairingSide.SidePairing.exists_mem_stopPoints_isSafeMoveSnd}). When the
+jumps lie in \emph{windows} $[-\eta,\eta]\cup\mp\epsilon_i[\beta_i,\beta_i+V]$, opposite on the two
+sides, a stretch on which the far windows have one sign, or are small,
+is plain. Let $\mathfrak d=0$ if $e_\Gamma=1$, else $\mathfrak d=v_\ell(e_\Gamma)+1$.
+
+\begin{lemma}\label{cg-lifting:lem:costs}
+(a) (Depth; \lean{New.Lift.KummerChart.JumpLattice.exists_valueAt_sub_mem_hodgeFil_succ}) Raising the
+depth of a point at level $a$ on one line from $n$ to $n+1$ costs $v_\ell(n)+\mathfrak d+3a$ powers of $\ell$,
+by an operator $\ell^{c}+\upsilon\sum_l(g_l-1)/(z\tau)$, $g_l\in\Gamma'$.
+(b) (\lean{New.Lift.KummerChart.PairingSide.killsCokernel_zero_of_jumps_le}) If all jumps are
+$\le\omega$, those at $i^\ell,\dots,i^{\ell^J}$ are $\le\omega'$ and $8e_\Gamma\le\ell^{J+1}$, then $\ell^\varkappa$
+kills the cokernel at $i$ for $\varkappa\ge2J\mathfrak d\omega'+(2J+4)\omega'/(\ell-1)+8e_\Gamma\omega/\ell^{J+1}$. If the
+chart is unramified and $\ell\ge5$, $\ell^s\mathcal E^{s'}$ kills it when all jumps are $\le(\ell-3)(s+s')$
+(\lean{New.Lift.KummerChart.PairingSide.killsCokernel_of_isUnramified}).
+(c) (Long gap; \lean{New.Lift.KummerChart.PairingSide.pointsOver_nonempty_of_long_gap}) On an
+unramified chart let $\mathcal E^s$ kill the cokernel at $i$ and $\ell^\varkappa$ at $i^{(-l)}$, let the jumps
+at the $l$ letters up to $i$ be $\le g$, and $n'=s+g(1+\dots+\ell^{l-1})<A\le\ell^l\delta$,
+$3\le\ell^l$. Then a point over $\ell^{\varkappa+4\delta}c$ at $i$ has the standard orders and depth of
+level $l$, raised by $A$ at $\mathcal E$ (the orders only for $u<-n'$).
+\end{lemma}
+
+\begin{proof}
+(a) For $n\ne0$ some $g\in\Gamma'$ multiplies $\varphi^a(\mathcal E)$ by a unit $\omega$ with
+$\omega^n-1=z\tau\beta$ and $\upsilon\beta\equiv\ell^c$ modulo $\varphi^a(\mathcal E)$. (b) Some $z^a$ with $(\ell-1)a\le e_\Gamma(\omega+\varkappa)$
+lies in the ideal of multipliers modulo $\ell^{\varkappa+1}$. Stepping back from $i^\ell$ to $i$ turns
+$z^n$ into $z^{(n+\omega')/\ell}$ at the price $\mathfrak d\omega'+v_\ell(\omega'!)$, as $\varphi(z)=z^\ell$;
+after $J$ steps lowering $z^n$ to $1$ costs $n+v_\ell(n!)$; Nakayama's lemma removes the modulus.
+(c) Multiply a lift $y$ with a pole of order $\le s$ at $\mathcal E$ by $\mathcal P(\mathcal E)=\mathcal E^s\prod_{a<l}\varphi^a(\mathcal E)^g$,
+monic of degree $n'$ in $\mathcal E$ as $\varphi^a(\mathcal E)=(\mathcal E-\ell)^{\ell^a}+\ell$. By the approximation clause of
+Fact~\ref{cg-lifting:fact:frame} and $\mathcal E$-adic digits in $\Lambda$, $\ell^{4\delta}\mathcal P(\mathcal E)y=\sum_n\mathcal E^n\xi_n$
+with $\xi_n$ invariant modulo $\mathcal E^A$. As $\mathcal P$ is monic, $\xi_{n'}$ lies over $\ell^{4\delta}c$ up to $\mathcal E^A$
+times a vector, which $\ell^\varkappa$ at $i^{(-l)}$ lifts; on the lines $u<-n'$, where $\mathcal P(\mathcal E)y$ has order
+$g-u>n'$ at $\mathcal E$, $\xi_{n'}$ has positive order, hence order $A$ by invariance.
+\end{proof}
+
+\subsection{Cuts: sparse b-letters and any pattern}\label{cg-lifting:sec:cuts}
+
+\begin{theorem}\label{cg-lifting:thm:cuts}
+Let $L$ be crystalline with jumps in $U'$; at each letter $i$ let $U_i$, $U'_i$
+lie in $[-\eta,\eta]\cup\mp\epsilon_i[\beta_i,\beta_i+V]$, $\eta\ge1$, $\beta_i=b$ on a set
+$\mathcal B$ of \emph{b-letters}, $\beta_i=G$ otherwise.
+\begin{enumerate}[label=(\alph*)]
+\item (\lean{New.Lift.KummerChart.hasCupExponent_sparse_thick}) Let $G+V\le\eta$, $J\ge1$, and let no
+  $i$ have $i,i^{\ell^s},i^{\ell^{s+s'}}\in\mathcal B$ with $1\le s,s'\le J$. Let the chart be
+  unramified with $\ell\ge7$ and $10\ell^J\eta\le b$, or $\epsilon$ be constant and $8e_\Gamma\le\ell^{J+1}$. If
+  $2e_\Gamma(b+5\eta)\le\ell^{J+1}\delta$ and $20(J+1+\mathfrak d)\eta+\lfloor\log_\ell2(b+5\eta)\rfloor\le X$, then
+  $\ell^{10^3(\delta+(J+1)X)}$ is a cup exponent for $L$ and the crystalline class of $U$.
+\item (\lean{New.Lift.KummerChart.hasCupExponent_any_pattern}) Let the chart be unramified,
+  $\ell\ge7$, $V+4\eta\le M'\le\Xi$, $0<G\le b<\Xi\ell^2$, $2G<\Xi\ell$. Then
+  $\ell^{10^4(\Xi+\lfloor\log_\ell2(b+M')\rfloor)}$ is a cup exponent.
+\end{enumerate}
+\end{theorem}
+
+\begin{proof}
+Both apply Proposition~\ref{cg-lifting:prop:walk} to universal sides through a scheme of cuts
+(\lean{New.Lift.KummerChart.PairingSide.SidePairing.isScaledCupCoboundary_of_cut_windows}): each
+letter has a cut at most $2J+1$ steps back, each cut has its cokernel killed by
+Lemma~\ref{cg-lifting:lem:costs}(b), and the stretch from the nearest cut up to each letter is plain or has a
+\emph{long gap}: a \emph{pivot} whose far window starts beyond $s_0+\omega(1+\ell+\dots+\ell^J)$
+($\mathcal E^{s_0}$ kills its cokernel, $\omega$ bounds the windows before it), the others of the opposite sign
+or small. There the side with the negative far window at the pivot gets its stop, of depth $2b$ at
+the pivot, from Lemma~\ref{cg-lifting:lem:costs}(c). If $\varkappa>12((J+1)X+\delta)$ (and further size
+conditions, \lean{New.Lift.KummerChart.CutSizes}), every point used lies over $\ell^{25\varkappa}c$:
+$\varkappa$ for the cokernel, $4\delta$ for a long gap, and $\le30X$ per level for the depth steps
+through the two windows at each of the $2J+2$ levels (Lemma~\ref{cg-lifting:lem:costs}(a);
+\lean{New.Lift.KummerChart.CutSizes.sum_cost_windowSteps_le}). The walk gives
+$25\varkappa+25\varkappa+\varkappa=51\varkappa$, with $\varkappa=12((J+1)X+\delta)+1$.
+(a) Cut at the letters followed by $J$ letters outside $\mathcal B$; by sparseness one lies $1$ to
+$2J+1$ steps back from each letter, and between the nearest cut and $i$ a b-letter is $i$ or the
+pivot $J+1$ steps after the cut. The thin far windows lie in the low window ($G+V\le\eta$), so the
+stretch is plain or has a long gap at the pivot
+(\lean{New.Lift.KummerChart.Letter.hasSignBefore_or_isLongGap}). At a cut $b$ enters as
+$16e_\Gamma b/\ell^{J+1}\le8\delta$, and $51\varkappa\le10^3(\delta+(J+1)X)$.
+(b) $J=1$. Give $i$ the pole order $s_i=\lfloor b/\ell\rfloor-7\Xi$ if $i^\ell\in\mathcal B$, else $0$, and
+cut where $s_i<\beta_i$: at all b-letters and letters with a thin successor. Before a b-letter
+$\ell^\varkappa\mathcal E^{s_i}$ kills the cokernel (Lemma~\ref{cg-lifting:lem:costs}(b), second clause), and the pole
+costs about $s_i/\ell<\Xi$, as $\mathfrak d=0$; a thin non-cut before a b-letter has $G+7\Xi\le b/\ell$, so a change
+of sign there is a long gap with that b-letter as pivot. Here $X=3\Xi+\lfloor\log_\ell2(b+M')\rfloor$,
+$\delta=4\Xi$.
+\end{proof}
+
+\subsection{Generic primes and tame types}\label{cg-lifting:sec:generic}
+
+\begin{theorem}[Few low jumps; \lean{New.Lift.KummerChart.dualDefect_eq_zero_and_dualDefect_le}]
+\label{cg-lifting:thm:generic}
+Let the chart be unramified, $\ell\ge5$, $\eta\ge1$, and at each letter let
+$\beta_i+W+\eta\le(\ell-3)\alpha$, $6(\alpha+\eta+W)<\beta_i$, and let $\ell$ divide no non-zero
+integer within $6(\alpha+\eta+W)$ of $0$, $\pm\beta_i$. Let $L$ be crystalline with jumps in $U'$, and
+$U,U'$ in opposite windows of width $W$ at $\beta_i$; $\mathcal Q$ is the crystalline class of $U$.
+Then $\operatorname{def}_{\mathcal Q}(L)=0$ if
+$U,U'$ avoid $[-\alpha,0)$ or $U'\subset[-\eta,0]$; and if $L$ has at most $\mu$ jumps in
+$[-\eta,\eta]$ at each embedding, $\operatorname{def}_{\mathcal Q}(L)\le11f_\Gamma(\mu(\alpha+1)+\rk
+L\,(W+1))\length(\cO/\ell)$.
+\end{theorem}
+
+\begin{proof}
+All jumps of the three sides are $\le(\ell-3)\alpha$, so $\mathcal E^\alpha$ kills every cokernel, and
+raising depth at level $0$ through the windows near $0,\pm\beta_i$ is free, as $v_\ell(n)=\mathfrak d=0$
+there. Without small negative
+jumps the walk thus has exponent $0$
+(\lean{New.Lift.KummerChart.PairingSide.SidePairing.isScaledCupCoboundary_of_killsCokernel}). Otherwise
+the poles at $\mathcal E$ on the low lines must be removed, and at negative far windows the depth at
+level $1$ raised; each step shrinks the module of constants with
+deep points by at most its cost times $f_\Gamma$ times the multiplicity of the jump, since among
+$f_\Gamma\cdot\mathrm{mult}+1$ points some primitive combination gains the step. The pole costs
+$\alpha$ per low jump; a negative far window costs $\alpha+1$ more per low jump at level $0$, and
+$3(W+1)$ per jump and $6\alpha$ per low jump of the letter before at level $1$. As
+$8\alpha+1\le11(\alpha+1)$, the constants with deep points form a submodule of colength at most $11\sum_i(n_i(\alpha+1)+r_i(W+1))$, $n_i,r_i$ being
+$f_\Gamma$ times the numbers of low and of all jumps at $i$, which cups to zero with exponent $0$
+(\lean{New.Lift.KummerChart.PairingSide.exists_relLength_le_and_isScaledCupCoboundary}).
+\end{proof}
+
+\begin{proposition}[\lean{New.Lift.hasCupExponent_of_isTameType}]\label{cg-lifting:prop:tame}
+Let $\iota_\Gamma$ be onto, $R(g)$ be $\operatorname{Tame}(\ell,r',n)$ for $g$ in inertia,
+$L\in\mathcal Q(F,g\mapsto R(g^{-1}),U')$, $U,U'$ in opposite windows at $\beta$ of width $W$, and
+$\ell>\beta+6(W+\eta)+r'^2(n+1)^2+2$. Then $\ell^{3r'^2(n+1)^2+150(\eta+W+1)}$ is a cup exponent for
+$L$ and $\mathcal Q(F,R,U)$.
+\end{proposition}
+
+\begin{proof}
+Over a tame chart of ramification $e_{r'}\le\ell^{r'^2}$ the class becomes crystalline
+(\lean{New.Lift.TameChart.inClass_of_pow_sub_one}). The tame generator multiplies $z$ by a
+primitive $e_{r'}$-th root of unity $\xi$ modulo $\ell$; if a monic $q$ kills it on the periods,
+lowering $z^i$, $i<e_{r'}$, to $z^0$ in the ideal of multipliers is free except at the at most
+$\deg q+1$ steps $i$ where $(\xi^i-1)q(\xi^i)$ is not a unit, each of price $\le r'^2$
+(\lean{New.Lift.TameChart.killsCokernel_of_isKilledBy}). Here $\deg q\le n$ on $Y$ and $L$, and
+$\le n^2$ on $(Y\otimes L)^\vee(1)$; so $\ell^\varkappa$, $\varkappa=r'^2(n+1)^2$, kills the three cokernels,
+and the walk at all letters, as in Theorem~\ref{cg-lifting:thm:generic}, costs $3\varkappa$ and, as
+$\mathfrak d\le1$, at most $150(\eta+W+1)$ for depth.
+\end{proof}
+
+\subsection{Proof of Theorem~\ref{cg-lifting:thm:main}}\label{cg-lifting:sec:proof}
+
+\begin{lemma}[\lean{New.Selmer.eventually_exists_lettersReadThick}]\label{cg-lifting:lem:letters}
+For large $\cO$ there are a Kummer chart with $e_\Gamma\le h$, a root $\zeta_\Gamma\in\cO$, $\zeta_\Gamma^{\ell^{f_\Gamma}-1}=1$,
+and functions $\mathsf b$, $\epsilon$ on $C$ such that: $\sigma_g$ lies over a b-place if and only if $\mathsf b(g\zeta_\Gamma)$,
+and $\epsilon_{\sigma_g}=\epsilon(g\zeta_\Gamma)$, for all $g\in G_\ell$ if $\ell>kt$ and for $g$ at b-places otherwise;
+the chart is unramified with $\ell\ge7$, or $\ell\le kt$ and $\epsilon$ is constant; and for $\ell\le kt$ no
+$z$ has $\mathsf b(z),\mathsf b(z^{\ell^a}),\mathsf b(z^{\ell^{a+a'}})$ with $1\le a,a'\le\log_\ell h^3$.
+\end{lemma}
+
+\begin{proof}
+If $\ell\nmid q_1d$, $E\subset\Q(\zeta_{q_1d})$ is unramified at $\ell$, so the chart is unramified
+and $g\zeta_\Gamma$ determines $\sigma_g$; primes $\ell\le7$ divide $q_0$. If $\ell\mid q_1d$ then
+$\ell\le kt$, and b-places in one orbit have one CM sign
+(\lean{New.Selmer.cmSign_eq_of_mem_bPlaces}): for opposite signs, if $\ell\mid q_1$ some $g$ maps
+$\omega_K=(1+\sqrt{-d})/2$ to $1-\omega_K$, so $|\omega_K|=|1-\omega_K|<1$ as $\ell\mid\omega_K(1-\omega_K)=(d+1)/4$, against $\omega_K+(1-\omega_K)=1$; if $\ell=d$, the ratio of the
+places is $-d^n$ modulo $q_0$, but b-places are $\equiv-1$ and no power of $d$ is $\equiv-1$. If $g_1\zeta_\Gamma=(g_0\zeta_\Gamma)^{\ell^a}$ and
+$g_2\zeta_\Gamma=(g_0\zeta_\Gamma)^{\ell^{a+a'}}$, the places of $\sigma_{g_1},\sigma_{g_0}$ are $\pm\ell^{a'}$,
+$\pm\ell^{a+a'}$ times that of $\sigma_{g_2}$ modulo the prime-to-$\ell$ part of $q_1$; as $2\log_\ell h^3<l_0$, sparseness forbids three
+b-places (\lean{New.Selmer.notMem_bPlaces_of_short_arc}).
+\end{proof}
+
+\begin{proof}[Proof of Theorem~\ref{cg-lifting:thm:main}]
+(\lean{New.Selmer.normLength_dualDefect_le_of_isSummandClass}.) Put $\eta=h^2+1$, $W=4t$,
+$w=j\Delta+h-2t<\eta$. The class has jumps in $[-\eta,\eta]\cup-\epsilon_\sigma[S_\sigma,S_\sigma+W]$,
+$S_\sigma=\kappa_j(\sigma)-2t$, $=b+w$ on $\Phi_b$ and $G+w$ elsewhere, and the dual jumps
+$-u-1$ in the opposite windows (\lean{New.Selmer.fitsWindows_and_image_neg_sub_one}).
+
+\emph{Tame case}, $\ell=p_i\equiv1\bmod q_1d$: $\iota_\Gamma$ is onto, all $\sigma_g$ agree, and $\ell\ge b^{10}$
+exceeds the weights. Proposition~\ref{cg-lifting:prop:tame} ($r'=r$, $n=(r+t)r$) and
+Lemma~\ref{cg-lifting:lem:rank}(b) bound the defect per rank by $2(3r^2(n+1)^2+150(h^2+4t+2))\le
+\mathrm{defect}_\ell/t_c$, as $b\,v_\ell(M)\ge b$.
+
+\emph{Crystalline case}. The data satisfy $(kt)^2\ll h$, $h^3\ll G$, $h^3G\ll b$, $\log b\ll m$
+(\lean{New.Selmer.crystallineSizes_data}). Let $\lambda=\lambda_\ell$ and $\Xi=\lfloor2\lambda/kt\rfloor$; the relation $R$ of the class is empty here.
+For $L_\star$ the negative jumps of the class and of the dual are $\le-h/2$, and the dual has at most
+$\mu=\lfloor r'm/k\rfloor$ jumps in $[-\eta,\eta]$; the dual of $L_c$ has the jump $-c-1\in[-\eta,0]$. By Lemma~\ref{cg-lifting:lem:letters}
+the letters read b-places and signs. Then
+(\lean{New.Selmer.normLength_dualDefect_le_of_crystallineSizes}):
+(i) $\ell\le kt$: widen the low window to $[-2G,2G]$, which swallows the thin far windows; apply
+Theorem~\ref{cg-lifting:thm:cuts}(a) with $J=\lfloor\log_\ell h^3\rfloor$, so $\ell^{J+1}>h^3$,
+$X=\Xi$ and $\delta=2\Xi$, as $2(b+w)<h^2\Xi$: the exponent is $\le10^4\Xi(J+1)\le10^4\Xi m$.
+(ii) $\ell>kt$, $\lambda\ge h^3$: Theorem~\ref{cg-lifting:thm:cuts}(b) with this $\Xi$, since
+$2b<\ell(\lambda+1)$ gives $b+w<\Xi\ell^2$ (and $2(G+w)<\Xi\ell$, $W+4\eta\le\Xi$); exponent $\le10^4\Xi m$.
+(iii) $\ell>kt$, $\lambda<h^3$: $\ell$ divides no integer in $(b-30h^3,b+30h^3]$, and $\ell>9G$ as
+$2b<\ell h^3$; so it divides no non-zero integer near $0,\pm(b+w),\pm(G+w)$, and
+Theorem~\ref{cg-lifting:thm:generic} with $\alpha=2(\lambda+1)$ applies: the defect is $0$ for the $L_c$,
+and for $L_\star$ if $\lambda<h/5$ (the negative jumps, $\le-h/2$, avoid $[-\alpha,0)$); otherwise it is at
+most $11f_\Gamma(\mu(2\lambda+3)+\rk L(W+1))$.
+With Lemma~\ref{cg-lifting:lem:rank}(b) in (i), (ii), the normalised defect is always at most
+$[G_\ell:\iota_\Gamma(\Gamma)]\,10^5(\rk L\cdot\Xi m+\mu\lambda)\le[G_\ell:\iota_\Gamma(\Gamma)]\rk
+L\cdot\mathrm{defect}_\ell/t_c$ (\lean{New.Selmer.crystalline_bound_le_defectBound}).
+\end{proof}
+
+\begin{remark}[Why the b-places are sparse]\label{cg-lifting:rem:sparse}
+For primes $\ell\le kt$ and $0<i<i'<l_0$ the Behrend-type condition on $\Phi_b$ excludes three
+b-places $\sigma,\pm\ell^i\sigma,\pm\ell^{i'}\sigma$ modulo the prime-to-$\ell$ part of $q_1$. By
+Lemma~\ref{cg-lifting:lem:letters} this is the hypothesis of Theorem~\ref{cg-lifting:thm:cuts}(a),
+$J=\lfloor\log_\ell h^3\rfloor$, where a cut costs $\approx e_\Gamma b/\ell^{J+1}\le e_\Gamma b/h^3$ and the long gap at the single pivot of a
+stretch $\approx b/\ell^{J+1}$, instead of the factorial price $v_\ell((2b)!)\approx2b/(\ell-1)$ of
+Lemma~\ref{cg-lifting:lem:costs}(a). \emph{The rest is our own
+heuristic, not proved in the code}: without sparseness, for $\ell\le kt$ only Theorem~\ref{cg-lifting:thm:cuts}(b) would remain (unramified $\ell\ge7$), of exponent of order $b/\ell^2$, while the proof allows
+$10^4\Xi m$, $\Xi\approx4b/(\ell kt)$: too little for $\ell$ small against $kt/m\ge x^9$.
+\end{remark}

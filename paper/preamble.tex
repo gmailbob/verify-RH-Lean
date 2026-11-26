@@ -1,0 +1,330 @@
+% Shared preamble of the paper. Section files must not define macros of their own.
+\documentclass[11pt,a4paper]{amsart}
+
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{lmodern}
+\usepackage{amsmath,amssymb,amsthm,mathtools,mathrsfs}
+\usepackage{enumitem}
+\usepackage{booktabs,multicol}
+\usepackage{xcolor}
+\usepackage{tikz}
+\usetikzlibrary{positioning,arrows.meta}
+% Styles of the diagrams of the proof (Figures in the introduction and at the head of each part).
+%   pfnode: a result proved in this paper     pfmain: one of Theorems A, B, C or the final theorem
+%   pffact: a background result, admitted     pfpart: a block that stands for a whole part
+%   pfedge: "is used in the proof of" (drawn from the premise to the conclusion)
+\tikzset{
+  pfbase/.style={draw, rounded corners=2pt, align=center, font=\scriptsize, inner sep=3pt,
+                 text width=2.35cm, minimum height=0.9cm},
+  pfnode/.style={pfbase},
+  pfmain/.style={pfbase, line width=1pt},
+  pffact/.style={pfbase, dashed, fill=black!8},
+  pfpart/.style={pfbase, double, fill=black!3},
+  pfedge/.style={-{Stealth[length=4pt]}, line width=0.4pt, draw=black!70},
+}
+\usepackage[margin=1.15in]{geometry}
+\usepackage[colorlinks=true,linkcolor=blue,citecolor=blue,urlcolor=blue]{hyperref}
+
+% Long Lean names leave few places to break a line; let TeX stretch instead of overflowing.
+\emergencystretch=3em
+\setcounter{tocdepth}{1}
+
+% ---------------------------------------------------------------- theorem environments
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{corollary}[theorem]{Corollary}
+% A result admitted without proof: it is proved in the Lean folder Lib and is known in the
+% literature. State it precisely and give the source.
+\newtheorem{fact}[theorem]{Fact}
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{notation}[theorem]{Notation}
+\newtheorem{convention}[theorem]{Convention}
+\newtheorem{example}[theorem]{Example}
+\theoremstyle{remark}
+\newtheorem{remark}[theorem]{Remark}
+\numberwithin{equation}{section}
+
+% ---------------------------------------------------------------- references to the Lean text
+% \lean{Name}: a Lean declaration, by its full name.
+% \leanfile{New/Reduction/MainInequality}: a Lean file, path relative to grh/src, no extension.
+% \leanref{Name}: the same as \lean, flushed right, for the end of a statement.
+%
+% How a declaration is printed depends on whether an index has been loaded. The index is a file
+% of lines \leanentry{Name}{number}{file}{line} (written by tools/make_leanindex.py). With it,
+% \lean{Name} prints the short marker "L<number>", which links to the declaration on GitHub at
+% the pinned commit, and \printleanindex prints the list of markers with the names. Without it
+% (for instance when one section is compiled on its own) \lean{Name} prints the name in full.
+\ExplSyntaxOn
+\tl_new:N \l__lean_name_tl
+\tl_const:Nx \c__lean_underscore_tl { \char_generate:nn { 95 } { 8 } }
+\cs_generate_variant:Nn \tl_replace_all:Nnn { NVn }
+\NewDocumentCommand{\leanfullname}{m}
+ {
+  \group_begin:
+  \tl_set:Nn \l__lean_name_tl {#1}
+  \tl_replace_all:NVn \l__lean_name_tl \c__lean_underscore_tl { \_ \allowbreak }
+  \tl_replace_all:Nnn \l__lean_name_tl { . } { . \allowbreak }
+  \tl_replace_all:Nnn \l__lean_name_tl { / } { / \allowbreak }
+  \texttt { \small \tl_use:N \l__lean_name_tl }
+  \group_end:
+ }
+\ExplSyntaxOff
+\makeatletter
+\newcommand{\leanrepo}{https://github.com/lsernau/grh-lean/blob/72fead102f663d5c7a407964a13dc0cf9d977207/grh/src}
+\newcommand{\lean@list}{}
+\newcommand{\leanentry}[4]{%
+  \expandafter\gdef\csname lean@n@\detokenize{#1}\endcsname{#2}%
+  \expandafter\gdef\csname lean@f@\detokenize{#1}\endcsname{#3}%
+  \expandafter\gdef\csname lean@l@\detokenize{#1}\endcsname{#4}%
+  \g@addto@macro\lean@list{\leanitem{#1}{#2}{#3}{#4}}}
+\newcommand{\leanmark}[1]{\mbox{\normalfont\sffamily\small L#1}}
+\NewDocumentCommand{\lean}{m}{%
+  \@ifundefined{lean@n@\detokenize{#1}}%
+    {\leanfullname{#1}}%
+    {\begingroup\hypersetup{urlcolor=black!65}%
+     \href{\leanrepo/\csname lean@f@\detokenize{#1}\endcsname.lean\#L\csname lean@l@\detokenize{#1}\endcsname}%
+          {\leanmark{\csname lean@n@\detokenize{#1}\endcsname}}\endgroup}}
+\newcommand{\leanfile}[1]{\leanfullname{#1}}
+\newcommand{\leanref}[1]{\hfill\mbox{[\lean{#1}]}}
+\newcommand{\leanitem}[4]{%
+  \item[\leanmark{#2}\hfill] \href{\leanrepo/#3.lean\#L#4}{\leanfullname{#1}}}
+\newcommand{\printleanindex}{%
+  \begingroup\scriptsize
+  \begin{multicols}{2}
+  \begin{list}{}{\setlength{\leftmargin}{3.1em}\setlength{\labelwidth}{2.7em}\setlength{\labelsep}{0.4em}%
+     \setlength{\itemsep}{0pt}\setlength{\parsep}{0pt}\setlength{\topsep}{0pt}\raggedright}
+  \lean@list
+  \end{list}
+  \end{multicols}\endgroup}
+\makeatother
+
+% ---------------------------------------------------------------- Unicode in Lean names
+% Lean names contain subscripts and Greek letters; make them printable with pdflatex.
+\DeclareUnicodeCharacter{2080}{\textsubscript{0}}
+\DeclareUnicodeCharacter{2081}{\textsubscript{1}}
+\DeclareUnicodeCharacter{2082}{\textsubscript{2}}
+\DeclareUnicodeCharacter{2083}{\textsubscript{3}}
+\DeclareUnicodeCharacter{2084}{\textsubscript{4}}
+\DeclareUnicodeCharacter{2085}{\textsubscript{5}}
+\DeclareUnicodeCharacter{2086}{\textsubscript{6}}
+\DeclareUnicodeCharacter{2087}{\textsubscript{7}}
+\DeclareUnicodeCharacter{2088}{\textsubscript{8}}
+\DeclareUnicodeCharacter{2089}{\textsubscript{9}}
+\DeclareUnicodeCharacter{2090}{\textsubscript{a}}
+\DeclareUnicodeCharacter{2091}{\textsubscript{e}}
+\DeclareUnicodeCharacter{2092}{\textsubscript{o}}
+\DeclareUnicodeCharacter{2093}{\textsubscript{x}}
+\DeclareUnicodeCharacter{2095}{\textsubscript{h}}
+\DeclareUnicodeCharacter{2096}{\textsubscript{k}}
+\DeclareUnicodeCharacter{2097}{\textsubscript{l}}
+\DeclareUnicodeCharacter{2098}{\textsubscript{m}}
+\DeclareUnicodeCharacter{2099}{\textsubscript{n}}
+\DeclareUnicodeCharacter{209A}{\textsubscript{p}}
+\DeclareUnicodeCharacter{209B}{\textsubscript{s}}
+\DeclareUnicodeCharacter{209C}{\textsubscript{t}}
+\DeclareUnicodeCharacter{1D62}{\textsubscript{i}}
+\DeclareUnicodeCharacter{2C7C}{\textsubscript{j}}
+\DeclareUnicodeCharacter{207A}{\textsuperscript{+}}
+\DeclareUnicodeCharacter{207B}{\textsuperscript{-}}
+\DeclareUnicodeCharacter{2070}{\textsuperscript{0}}
+\DeclareUnicodeCharacter{2074}{\textsuperscript{4}}
+\DeclareUnicodeCharacter{207F}{\textsuperscript{n}}
+\DeclareUnicodeCharacter{03B1}{\ensuremath{\alpha}}
+\DeclareUnicodeCharacter{03B2}{\ensuremath{\beta}}
+\DeclareUnicodeCharacter{03B3}{\ensuremath{\gamma}}
+\DeclareUnicodeCharacter{03B4}{\ensuremath{\delta}}
+\DeclareUnicodeCharacter{03B5}{\ensuremath{\varepsilon}}
+\DeclareUnicodeCharacter{03B6}{\ensuremath{\zeta}}
+\DeclareUnicodeCharacter{03B7}{\ensuremath{\eta}}
+\DeclareUnicodeCharacter{03B8}{\ensuremath{\theta}}
+\DeclareUnicodeCharacter{03D1}{\ensuremath{\vartheta}}
+\DeclareUnicodeCharacter{03B9}{\ensuremath{\iota}}
+\DeclareUnicodeCharacter{03BA}{\ensuremath{\kappa}}
+\DeclareUnicodeCharacter{03BB}{\ensuremath{\lambda}}
+\DeclareUnicodeCharacter{03BC}{\ensuremath{\mu}}
+\DeclareUnicodeCharacter{03BD}{\ensuremath{\nu}}
+\DeclareUnicodeCharacter{03BE}{\ensuremath{\xi}}
+\DeclareUnicodeCharacter{03C0}{\ensuremath{\pi}}
+\DeclareUnicodeCharacter{03C1}{\ensuremath{\rho}}
+\DeclareUnicodeCharacter{03F1}{\ensuremath{\varrho}}
+\DeclareUnicodeCharacter{03C3}{\ensuremath{\sigma}}
+\DeclareUnicodeCharacter{03C4}{\ensuremath{\tau}}
+\DeclareUnicodeCharacter{03C5}{\ensuremath{\upsilon}}
+\DeclareUnicodeCharacter{03C6}{\ensuremath{\varphi}}
+\DeclareUnicodeCharacter{03D5}{\ensuremath{\phi}}
+\DeclareUnicodeCharacter{03C7}{\ensuremath{\chi}}
+\DeclareUnicodeCharacter{03C8}{\ensuremath{\psi}}
+\DeclareUnicodeCharacter{03C9}{\ensuremath{\omega}}
+\DeclareUnicodeCharacter{0393}{\ensuremath{\Gamma}}
+\DeclareUnicodeCharacter{0394}{\ensuremath{\Delta}}
+\DeclareUnicodeCharacter{0398}{\ensuremath{\Theta}}
+\DeclareUnicodeCharacter{039B}{\ensuremath{\Lambda}}
+\DeclareUnicodeCharacter{039E}{\ensuremath{\Xi}}
+\DeclareUnicodeCharacter{03A0}{\ensuremath{\Pi}}
+\DeclareUnicodeCharacter{03A3}{\ensuremath{\Sigma}}
+\DeclareUnicodeCharacter{03A6}{\ensuremath{\Phi}}
+\DeclareUnicodeCharacter{03A8}{\ensuremath{\Psi}}
+\DeclareUnicodeCharacter{03A9}{\ensuremath{\Omega}}
+\DeclareUnicodeCharacter{2113}{\ensuremath{\ell}}
+\DeclareUnicodeCharacter{2102}{\ensuremath{\mathbb{C}}}
+\DeclareUnicodeCharacter{211D}{\ensuremath{\mathbb{R}}}
+\DeclareUnicodeCharacter{211A}{\ensuremath{\mathbb{Q}}}
+\DeclareUnicodeCharacter{2124}{\ensuremath{\mathbb{Z}}}
+\DeclareUnicodeCharacter{2115}{\ensuremath{\mathbb{N}}}
+\DeclareUnicodeCharacter{1D538}{\ensuremath{\mathbb{A}}}
+\DeclareUnicodeCharacter{1D53D}{\ensuremath{\mathbb{F}}}
+\DeclareUnicodeCharacter{1D4AE}{\ensuremath{\mathcal{S}}}
+\DeclareUnicodeCharacter{1D4AA}{\ensuremath{\mathcal{O}}}
+\DeclareUnicodeCharacter{1D4AB}{\ensuremath{\mathcal{P}}}
+\DeclareUnicodeCharacter{1D52D}{\ensuremath{\mathfrak{p}}}
+\DeclareUnicodeCharacter{27E8}{\ensuremath{\langle}}
+\DeclareUnicodeCharacter{27E9}{\ensuremath{\rangle}}
+\DeclareUnicodeCharacter{266D}{\ensuremath{\flat}}
+\DeclareUnicodeCharacter{2192}{\ensuremath{\to}}
+\DeclareUnicodeCharacter{21A6}{\ensuremath{\mapsto}}
+\DeclareUnicodeCharacter{2264}{\ensuremath{\le}}
+\DeclareUnicodeCharacter{2265}{\ensuremath{\ge}}
+\DeclareUnicodeCharacter{2260}{\ensuremath{\ne}}
+\DeclareUnicodeCharacter{2208}{\ensuremath{\in}}
+\DeclareUnicodeCharacter{2211}{\ensuremath{\sum}}
+\DeclareUnicodeCharacter{220F}{\ensuremath{\prod}}
+\DeclareUnicodeCharacter{2282}{\ensuremath{\subset}}
+\DeclareUnicodeCharacter{2286}{\ensuremath{\subseteq}}
+\DeclareUnicodeCharacter{221E}{\ensuremath{\infty}}
+\DeclareUnicodeCharacter{2261}{\ensuremath{\equiv}}
+\DeclareUnicodeCharacter{2223}{\ensuremath{\mid}}
+\DeclareUnicodeCharacter{2016}{\ensuremath{\|}}
+\DeclareUnicodeCharacter{230A}{\ensuremath{\lfloor}}
+\DeclareUnicodeCharacter{230B}{\ensuremath{\rfloor}}
+\DeclareUnicodeCharacter{2308}{\ensuremath{\lceil}}
+\DeclareUnicodeCharacter{2309}{\ensuremath{\rceil}}
+\DeclareUnicodeCharacter{221A}{\ensuremath{\surd}}
+\DeclareUnicodeCharacter{2218}{\ensuremath{\circ}}
+\DeclareUnicodeCharacter{2297}{\ensuremath{\otimes}}
+\DeclareUnicodeCharacter{2295}{\ensuremath{\oplus}}
+\DeclareUnicodeCharacter{2200}{\ensuremath{\forall}}
+\DeclareUnicodeCharacter{2203}{\ensuremath{\exists}}
+\DeclareUnicodeCharacter{2227}{\ensuremath{\wedge}}
+\DeclareUnicodeCharacter{2228}{\ensuremath{\vee}}
+\DeclareUnicodeCharacter{00AC}{\ensuremath{\neg}}
+\DeclareUnicodeCharacter{2243}{\ensuremath{\simeq}}
+\DeclareUnicodeCharacter{2245}{\ensuremath{\cong}}
+\DeclareUnicodeCharacter{2229}{\ensuremath{\cap}}
+\DeclareUnicodeCharacter{222A}{\ensuremath{\cup}}
+\DeclareUnicodeCharacter{22A4}{\ensuremath{\top}}
+\DeclareUnicodeCharacter{22A5}{\ensuremath{\bot}}
+\DeclareUnicodeCharacter{2202}{\ensuremath{\partial}}
+\DeclareUnicodeCharacter{2032}{\ensuremath{{}'}}
+
+\DeclareUnicodeCharacter{2212}{\ensuremath{-}}
+\DeclareUnicodeCharacter{2075}{\textsuperscript{5}}
+\DeclareUnicodeCharacter{2076}{\textsuperscript{6}}
+\DeclareUnicodeCharacter{2077}{\textsuperscript{7}}
+\DeclareUnicodeCharacter{2078}{\textsuperscript{8}}
+\DeclareUnicodeCharacter{2079}{\textsuperscript{9}}
+\DeclareUnicodeCharacter{1EF8}{\ensuremath{\tilde{Y}}}
+\DeclareUnicodeCharacter{0168}{\ensuremath{\tilde{U}}}
+\DeclareUnicodeCharacter{0304}{\ensuremath{\bar{\ }}}
+\DeclareUnicodeCharacter{1FB1}{\ensuremath{\bar\alpha}}
+\DeclareUnicodeCharacter{03C2}{\ensuremath{\varsigma}}
+\DeclareUnicodeCharacter{1D52F}{\ensuremath{\mathfrak{r}}}
+\DeclareUnicodeCharacter{2262}{\ensuremath{\not\equiv}}
+\DeclareUnicodeCharacter{266E}{\ensuremath{\natural}}
+\DeclareUnicodeCharacter{1D5A5}{\ensuremath{\mathsf{F}}}
+\DeclareUnicodeCharacter{2205}{\ensuremath{\emptyset}}
+
+\DeclareUnicodeCharacter{266F}{\ensuremath{\sharp}}
+\DeclareUnicodeCharacter{208A}{\textsubscript{+}}
+\DeclareUnicodeCharacter{1D51E}{\ensuremath{\mathfrak{a}}}
+\DeclareUnicodeCharacter{210B}{\ensuremath{\mathcal{H}}}
+\DeclareUnicodeCharacter{0303}{\ensuremath{\tilde{\ }}}
+
+% ---------------------------------------------------------------- number systems
+\newcommand{\C}{\mathbb{C}}
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\Q}{\mathbb{Q}}
+\newcommand{\Z}{\mathbb{Z}}
+\newcommand{\N}{\mathbb{N}}
+\newcommand{\F}{\mathbb{F}}
+\newcommand{\A}{\mathbb{A}}
+\newcommand{\Af}{\mathbb{A}_{\mathrm{f}}}
+\newcommand{\Qbar}{\overline{\mathbb{Q}}}
+\newcommand{\Ql}{\mathbb{Q}_\ell}
+\newcommand{\Qlbar}{\overline{\mathbb{Q}}_\ell}
+\newcommand{\Zl}{\mathbb{Z}_\ell}
+\newcommand{\Qp}{\mathbb{Q}_p}
+\newcommand{\Zp}{\mathbb{Z}_p}
+\newcommand{\Cp}{\mathbb{C}_p}
+\newcommand{\Cl}{\mathbb{C}_\ell}
+\newcommand{\cO}{\mathcal{O}}
+\newcommand{\fp}{\mathfrak{p}}
+\newcommand{\fq}{\mathfrak{q}}
+\newcommand{\fa}{\mathfrak{a}}
+\newcommand{\fm}{\mathfrak{m}}
+
+% ---------------------------------------------------------------- operators
+\renewcommand{\Re}{\operatorname{Re}}
+\renewcommand{\Im}{\operatorname{Im}}
+\DeclareMathOperator{\GL}{GL}
+\DeclareMathOperator{\SL}{SL}
+\DeclareMathOperator{\U}{U}
+\DeclareMathOperator{\Sp}{Sp}
+\DeclareMathOperator{\Gal}{Gal}
+\DeclareMathOperator{\Hom}{Hom}
+\DeclareMathOperator{\End}{End}
+\DeclareMathOperator{\Aut}{Aut}
+\DeclareMathOperator{\tr}{tr}
+\DeclareMathOperator{\Tr}{Tr}
+\DeclareMathOperator{\Nm}{Nm}
+\DeclareMathOperator{\rk}{rk}
+\DeclareMathOperator{\ord}{ord}
+\DeclareMathOperator{\vol}{vol}
+\DeclareMathOperator{\covol}{covol}
+\DeclareMathOperator{\disc}{disc}
+\DeclareMathOperator{\Frob}{Frob}
+\DeclareMathOperator{\id}{id}
+\DeclareMathOperator{\Ind}{Ind}
+\DeclareMathOperator{\Res}{Res}
+\DeclareMathOperator{\Sym}{Sym}
+\DeclareMathOperator{\Span}{span}
+\DeclareMathOperator{\image}{im}
+\DeclareMathOperator{\coker}{coker}
+\DeclareMathOperator{\sgn}{sgn}
+\DeclareMathOperator{\diag}{diag}
+\DeclareMathOperator{\length}{length}
+\DeclareMathOperator{\supp}{supp}
+\DeclareMathOperator{\Stab}{Stab}
+\DeclareMathOperator{\Lie}{Lie}
+\DeclareMathOperator{\Spec}{Spec}
+\DeclareMathOperator{\Ext}{Ext}
+\DeclareMathOperator{\height}{ht}
+
+\DeclarePairedDelimiter{\abs}{\lvert}{\rvert}
+\DeclarePairedDelimiter{\norm}{\lVert}{\rVert}
+\DeclarePairedDelimiter{\floor}{\lfloor}{\rfloor}
+\DeclarePairedDelimiter{\ceil}{\lceil}{\rceil}
+\DeclarePairedDelimiter{\pair}{\langle}{\rangle}
+\newcommand{\set}[1]{\{\, #1 \,\}}
+\newcommand{\eps}{\varepsilon}
+\newcommand{\isom}{\xrightarrow{\ \sim\ }}
+\newcommand{\inj}{\hookrightarrow}
+\newcommand{\surj}{\twoheadrightarrow}
+
+% ---------------------------------------------------------------- letters of this proof
+% (see the notation table in Section 3)
+\newcommand{\chiK}{\chi_K}
+\newcommand{\LambdaK}{\Lambda_K}
+\newcommand{\sinf}{s_\infty}
+\newcommand{\sfin}{s_{\mathrm{fin}}}
+\newcommand{\smain}{s_{\mathrm{main}}}
+\newcommand{\hmain}{h_{\mathrm{main}}}
+\newcommand{\hdir}{h_{\mathrm{dir}}}
+\newcommand{\rem}{\mathrm{rem}}
+\newcommand{\rdE}{\mathrm{rd}_E}
+\newcommand{\dT}{d_T}
+\newcommand{\Gbar}{\overline{G}}
+\newcommand{\Poin}{\mathscr{P}}
+\newcommand{\nPoin}{\mathfrak{p}}

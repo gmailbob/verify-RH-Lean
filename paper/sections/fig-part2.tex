@@ -1,0 +1,69 @@
+% Diagram of the proof of Theorem A (Part 2); a box is a result, an arrow X -> Y means that the proof of Y uses X.
+\begin{figure}[tbp]
+\centering
+\begin{tikzpicture}[x=1cm,y=1cm]
+% row 0
+\node[pfmain, text width=2cm] (A) at (0,0) {Thm.~\ref{main:thm:A}\\Theorem~A};
+% row 1
+\node[pfnode] (seesaw) at (-5.4,-1.85) {Thm.~\ref{ub-seesaw:thm:seesaw}, Cor.~\ref{ub-seesaw:cor:used}\,=\,(\ref{main:eq:seesaw})\\seesaw identity};
+\node[pfnode] (size) at (-2.4,-1.85) {Thm.~\ref{ub-divis:thm:size}\,=\,\ref{main:thm:size}\\size of the composite lift};
+\node[pfnode, text width=2.6cm] (divis) at (1.4,-1.85) {Thm.~\ref{ub-divis:thm:divis}\,=\,\ref{main:thm:divis}\\divisibility of the composite lift};
+\node[pfnode] (short) at (5.4,-1.85) {Prop.~\ref{ub-divis:prop:short}\\short forms span};
+% row 2
+\node[pffact, text width=1.6cm] (unfold) at (-6.55,-4.0) {Fact~\ref{ub-seesaw:fact:unfold}\\unfolding};
+\node[pfnode, text width=2.2cm] (objects) at (-4.2,-4.0) {\S\S\ref{ub-objects:sec:kernels}--\ref{ub-objects:sec:poincare}\\chains of lifts, Poincar\'e map};
+\node[pfnode, text width=2.2cm] (jets) at (-1.3,-4.35) {\S\ref{ub-objects:sec:jets}\\conjugation and bounds of jets};
+\node[pfnode] (count) at (1.45,-4.0) {Thms.~\ref{der:thm:count}, \ref{der:thm:schur}\\the count};
+\node[pffact, text width=1.6cm] (shortbases) at (6.4,-3.7) {Fact~\ref{ub-divis:fact:short}\\short bases};
+% row 3
+\node[pfnode] (scale) at (-2.75,-6.2) {Prop.~\ref{der:prop:scale}\\jet scale and Galois action};
+\node[pfnode] (normal) at (0.3,-6.2) {Props.~\ref{der:prop:thetaprod}, \ref{der:prop:product}, Cor.~\ref{der:cor:integral}\\normal form, integrality};
+\node[pfnode] (eldiv) at (3.3,-6.2) {Thm.~\ref{ub-eldiv:thm:main}\\elementary divisors};
+\node[pffact, text width=1.9cm] (hecke) at (5.9,-6.2) {Fact~\ref{ub-divis:fact:hecke}\\Hecke transfer};
+% row 4
+\node[pffact, text width=1.9cm] (cm) at (-4.0,-8.1) {Fact~\ref{der:fact:cm}\\complex multiplication};
+\node[pffact, text width=1.9cm] (bg) at (-1.5,-8.1) {Fact~\ref{der:fact:bg}\\CM theta functions};
+\node[pfnode, text width=1.9cm] (root) at (1.2,-8.1) {Thm.~\ref{ub-eldiv:thm:root}\\root lemma};
+\node[pfnode, text width=1.9cm] (average) at (3.6,-8.1) {Thm.~\ref{ub-eldiv:thm:average}\\averaging map};
+\node[pffact] (smith) at (6.1,-8.1) {Facts~\ref{ub-eldiv:fact:smith}, \ref{ub-eldiv:fact:cn}\\Smith form; Nullstellensatz};
+% rows 5 and 6
+\node[pfnode] (exponent) at (-0.15,-9.8) {Thm.~\ref{der:thm:exponent}\\exponent on one curve};
+\node[pffact] (formal) at (-0.15,-11.4) {Fact~\ref{der:fact:formal}\\formal group};
+% arrows into Theorem A
+\draw[pfedge] (seesaw.north) -- (A.south west);
+\draw[pfedge] (size) -- (A);
+\draw[pfedge] (divis) -- (A);
+\draw[pfedge] (short) -- (A);
+% arrows into row 1
+\draw[pfedge] (unfold) -- (seesaw);
+\draw[pfedge] (objects) -- (seesaw);
+\draw[pfedge] (objects) -- (size);
+\draw[pfedge] (objects) -- (divis);
+\draw[pfedge] (jets) -- (size);
+\draw[pfedge] (jets) -- (divis);
+\draw[pfedge] (scale.north) -- (scale.north |- size.south);
+\draw[pfedge] (count) -- (divis);
+\draw[pfedge] (eldiv.north) -- (divis.south east);
+\draw[pfedge] (hecke.north) -- (divis.east);
+\draw[pfedge] (shortbases) -- (short);
+% arrows into rows 2 and 3
+\draw[pfedge] (scale) -- (jets);
+\draw[pfedge] (normal) -- (jets);
+\draw[pfedge] (normal) -- (count);
+\draw[pfedge] (cm) -- (scale);
+\draw[pfedge] (bg) -- (scale);
+\draw[pfedge] (bg) -- (normal);
+\draw[pfedge] (exponent) -- (normal);
+\draw[pfedge] (root) -- (eldiv);
+\draw[pfedge] (average) -- (eldiv);
+\draw[pfedge] (smith) -- (eldiv);
+\draw[pfedge] (formal) -- (exponent);
+\end{tikzpicture}
+\caption{The proof of Theorem~A (Part~2, Sections~\ref{sec:ub-objects}--\ref{sec:ub-eldiv},
+assembled in Section~\ref{sec:main}). Each box is a result, with its number and a short name; a
+box with several numbers, or with the number of a subsection, stands for a group of results. A
+number after an equals sign is that of the same result as quoted in Section~\ref{sec:main}. An
+arrow from one box to another means that the proof of the second, as written in this paper, uses
+the first. Dashed grey boxes are background results admitted without proof.}
+\label{fig:part2}
+\end{figure}
