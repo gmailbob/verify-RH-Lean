@@ -1,27 +1,34 @@
-=== 2026-11-21T04:28:06Z  01-install-toolchain.sh 01-install-toolchain.log  (host <host>, WORKDIR=/home/ec2-user/rh)
-[04:28:06] download lean-4.33.1-linux_aarch64.tar.zst
-  already present
-[04:28:06] authenticity
-  sha256 f7353a8b2a8741c84558523e450556f9a1c45e3cafcf54399ce68c6a24c55f07
+=== 2026-11-26T02:48:53Z  01-install-toolchain.sh 01-install-toolchain.log  (host <host>, WORKDIR=/home/ec2-user/grh-verify)
+[02:48:53] download lean-4.35.0-linux_aarch64.tar.zst
+  % Total    % Received % Xferd  Average Speed  Time    Time    Time   Current
+                                 Dload  Upload  Total   Spent   Left   Speed
+  0      0   0      0   0      0      0      0                              0  0      0   0      0   0      0      0      0                              0  0      0   0      0   0      0      0      0                              0
+  0      0   0      0   0      0      0      0                              0 10 567.3M  10 60.00M   0      0 51.17M      0   00:11   00:01   00:10 52.33M 21 567.3M  21 120.0M   0      0 52.57M      0   00:10   00:02   00:08 53.18M 31 567.3M  31 180.0M   0      0 53.83M      0   00:10   00:03   00:07 54.25M 42 567.3M  42 240.0M   0      0 53.43M      0   00:10   00:04   00:06 53.75M 52 567.3M  52 300.0M   0      0 53.76M      0   00:10   00:05   00:05 54.01M 63 567.3M  63 360.0M   0      0 54.04M      0   00:10   00:06   00:04 54.66M 73 567.3M  73 416.6M   0      0 54.39M      0   00:10   00:07   00:03 55.16M 81 567.3M  81 464.3M   0      0 53.61M      0   00:10   00:08   00:02 53.48M 91 567.3M  91 520.0M   0      0 53.01M      0   00:10   00:09   00:01 52.65M=== 2026-11-26T02:53:05Z  01-install-toolchain.sh 01-install-toolchain.log  (host <host>, WORKDIR=/home/ec2-user/grh-verify)
+[02:53:05] download lean-4.35.0-linux_aarch64.tar.zst
+  % Total    % Received % Xferd  Average Speed  Time    Time    Time   Current
+                                 Dload  Upload  Total   Spent   Left   Speed
+  0      0   0      0   0      0      0      0                              0  0      0   0      0   0      0      0      0                              0  0      0   0      0   0      0      0      0                              0
+  0      0   0      0   0      0      0      0                              0 90 567.3M  90 516.1M   0      0 415.0M      0   00:01   00:01         516.6M100 567.3M 100 567.3M   0      0 313.4M      0   00:01   00:01         516.6M100 567.3M 100 567.3M   0      0 313.4M      0   00:01   00:01         516.6M100 567.3M 100 567.3M   0      0 313.4M      0   00:01   00:01         516.6M
+[02:53:11] authenticity
+  sha256 c8f0f8a3920e839718b1343e6781fd80a3e9b1024fbcd7078eb30f54e806b028
   PASS  matches pin in config.sh
   PASS  matches GitHub release asset digest
-  PASS  tag v4.33.1 points at pinned commit 819816b2e0a3bf405af45ae5c7af2491d8f5bee6
-[04:28:10] extract
-  already extracted at /home/ec2-user/rh/toolchain/lean-4.33.1-linux_aarch64
-[04:28:10] binaries
-  Lean (version 4.33.1, aarch64-unknown-linux-gnu, commit 819816b2e0a3bf405af45ae5c7af2491d8f5bee6, Release)
-  PASS  lean reports version 4.33.1
-  PASS  lean reports commit 819816b2e0a3bf405af45ae5c7af2491d8f5bee6
-  Lake version 5.0.0-src+819816b (Lean version 4.33.1)
+  PASS  tag v4.35.0 points at pinned commit eb6cafb7290e8bd5f2937522d8d804f58f02bafc
+[02:53:12] extract
+[02:53:15] binaries
+  Lean (version 4.35.0, aarch64-unknown-linux-gnu, commit eb6cafb7290e8bd5f2937522d8d804f58f02bafc, Release)
+  PASS  lean reports version 4.35.0
+  PASS  lean reports commit eb6cafb7290e8bd5f2937522d8d804f58f02bafc
+  Lake version 5.0.0-src+eb6cafb (Lean version 4.35.0)
   PASS  lake matches
   PASS  lean resolves to the pinned toolchain
   PASS  lake resolves to the pinned toolchain
   PASS  leanchecker resolves to the pinned toolchain
-[04:28:10] smoke tests
+[02:53:15] smoke tests
   'smoke' does not depend on any axioms
   PASS  lean elaborates and checks a theorem
   PASS  leanchecker --fresh Init.Prelude
 
-To use this toolchain in your shell:  export PATH="/home/ec2-user/rh/toolchain/lean-4.33.1-linux_aarch64/bin:$PATH"
+To use this toolchain in your shell:  export PATH="/home/ec2-user/grh-verify/toolchain/lean-4.35.0-linux_aarch64/bin:$PATH"
 
 All checks passed (0 warning(s)).

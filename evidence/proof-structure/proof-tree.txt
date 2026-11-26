@@ -1,80 +1,200 @@
-- theorem riemannHypothesis  [Main]  (1 project deps)
+- theorem riemannHypothesis  [Main]  (2 project deps)
     : RiemannHypothesis
-  - theorem rhOfAll  [Supplements.Kernels.MainTheorems]  (2 project deps)
-      : RiemannHypothesis
-    - theorem Formalism.VW.rh_of_every  [Formalism.GammaFactorNonvanishing.CritLine]  (2 project deps)
-        : UpperTheory.EveryCharacter → RiemannHypothesis
-      - def UpperTheory.EveryCharacter  [Development.AutomorphicArithmetic.CharacterBoxes.EveryCharacter]  (0 project deps)
-          : Prop
-      - theorem Formalism.VW.rh_of_right  [Formalism.GammaFactorNonvanishing.RhOfRight]  (0 project deps)
-          : (∀ (s : ℂ), 1 / 2 < s.re → s ≠ 1 → riemannZeta s ≠ 0) → RiemannHypothesis
-    - theorem allChi  [Supplements.Kernels.MainTheorems]  (2 project deps)
-        : UpperTheory.EveryCharacter
-      - UpperTheory.EveryCharacter  (see above)
-      - theorem UpperTheory.FinalTheorems.everyCharacter  [Development.AutomorphicArithmetic.CharacterBoxes.MainConclusion]  (3 project deps)
-          : UpperTheory.EveryCharacter
-        - UpperTheory.EveryCharacter  (see above)
-        - theorem UpperTheory.FinalTheorems.everyCharacter_of_row  [Development.AutomorphicArithmetic.CharacterBoxes.MainConclusion]  (10 project deps)
-            : (UpperTheory.GalStar.Row0b fun {E Ω} [Field E] [NumberField E] [Field Ω] [Algebra E Ω] [IsAlgClosure E Ω] {A} {w} h rc => UpperTheory.Zero.LLC.IsRecT h rc) → UpperTheory.EveryCharacter
-        - theorem UpperTheory.Gal.Int.galoisLocalGlobalStrong_recParameter  [Development.AutomorphicArithmetic.Foundations.GaloisRepresentations.IntegralStructures.RowSrc]  (4 project deps)
-            : UpperTheory.GalStar.Row0b fun {E Ω} [Field E] [NumberField E] [Field Ω] [Algebra E Ω] [IsAlgClosure E Ω] {A} {w} => UpperTheory.Gal.Int.recT
+  - theorem New.zeta_zeros_on_line  [New.Main]  (2 project deps)
+      : DirichletLNonvanishingRightOfHalf → RiemannZetaZerosOnLine
+    - def DirichletLNonvanishingRightOfHalf  [Statements]  (0 project deps)
+        : Prop
+    - def RiemannZetaZerosOnLine  [Statements]  (0 project deps)
+        : Prop
+  - theorem New.grh  [New.Reduction.OneSidedBound]  (5 project deps)
+      : DirichletLNonvanishingRightOfHalf
+    - DirichletLNonvanishingRightOfHalf  (see above)
+    - def New.primeRemainder  [New.Reduction.Zeros.PrimeError]  (2 project deps)
+        : (d : ℕ) → [Fact (Nat.Prime d)] → (q : ℕ) → [NeZero q] → ℝ → ℝ
+      - def New.lambdaKSum  [New.Reduction.Zeros.PrimeError]  (1 project deps)
+          : (d : ℕ) → [Fact (Nat.Prime d)] → ℕ → ℕ → ℝ → ℝ
+        - def New.lambdaKResidueClass  [New.Reduction.Zeros.PrimeError]  (1 project deps)
+            : (d : ℕ) → [Fact (Nat.Prime d)] → ℕ → ℕ → ℝ
+      - def New.logDerivMean  [New.Reduction.Zeros.PrimeError]  (2 project deps)
+          : (d : ℕ) → [Fact (Nat.Prime d)] → (q : ℕ) → [NeZero q] → ℂ → ℂ
+        - def New.entireL  [Lib.General.NumberTheory.ImaginaryQuadraticField]  (0 project deps)
+            : {N : ℕ} → [NeZero N] → DirichletCharacter ℂ N → ℂ → ℂ
+        - def New.quadTwist  [Lib.General.NumberTheory.ImaginaryQuadraticField]  (1 project deps)
+            : {N : ℕ} → DirichletCharacter ℂ N → (d : ℕ) → [Fact (Nat.Prime d)] → DirichletCharacter ℂ (N * d)
+    - theorem New.instFactPrimeValNat_lib  [Lib.General.NumberTheory.ImaginaryQuadraticField]  (0 project deps)
+        : ∀ (d : Nat.Primes), Fact (Nat.Prime ↑d)
+    - theorem New.eventually_primeRemainder_le_rpow  [New.Reduction.OneSidedBound]  (12 project deps)
+        : ∀ {q₀ : ℕ} [inst : NeZero q₀], 18480 ∣ q₀ → ∀ {d : ℕ} [hd_prime : Fact (Nat.Prime d)], d ≡ q₀ / 2 - 1 [MOD q₀] → ∀ {ε : ℝ}, 0 < ε → ∀ᶠ (y : ℝ) in Filter.atTop, New.primeRemainder d q₀ y ≤ y ^ (-1 / 2 + ε)
+      - New.primeRemainder  (see above)
+      - inductive New.Parameters  [New.Reduction.Data.FieldsAndPlaces]  (0 project deps)
+          : Type
+      - ctor New.Parameters.mk  [New.Reduction.Data.FieldsAndPlaces]  (1 project deps)
+          : (q₀ d : ℕ) → 18480 ∣ q₀ → Nat.Prime d → q₀ ∣ 2 * (d + 1) ∧ ¬q₀ ∣ d + 1 → New.Parameters
+        - New.Parameters  (see above)
+      - theorem New.dvd_two_mul_succ_and_not_dvd_succ  [New.Reduction.OneSidedBound]  (0 project deps)
+          : ∀ {q₀ d : ℕ}, 0 < q₀ → 2 ∣ q₀ → d ≡ q₀ / 2 - 1 [MOD q₀] → q₀ ∣ 2 * (d + 1) ∧ ¬q₀ ∣ d + 1
+      - def New.Parameters.d  [New.Reduction.Data.FieldsAndPlaces]  (1 project deps)
+          : New.Parameters → ℕ
+        - New.Parameters  (see above)
+      - theorem New.PrimeSevenModEight.toFact  [Lib.General.NumberTheory.ImaginaryQuadraticField]  (1 project deps)
+          : ∀ {d : ℕ} [self : New.PrimeSevenModEight d], Fact (Nat.Prime d)
+        - inductive New.PrimeSevenModEight  [Lib.General.NumberTheory.ImaginaryQuadraticField]  (0 project deps)
+            : ℕ → Prop
+      - theorem New.Parameters.instPrimeSevenModEight  [New.Reduction.Data.FieldsAndPlaces]  (7 project deps)
+          : ∀ (P : New.Parameters), New.PrimeSevenModEight P.d
+        - New.Parameters  (see above)
+        - New.PrimeSevenModEight  (see above)
+        - New.Parameters.d  (see above)
+        - ctor New.PrimeSevenModEight.mk  [Lib.General.NumberTheory.ImaginaryQuadraticField]  (1 project deps)
+            : ∀ {d : ℕ} [toFact : Fact (Nat.Prime d)], d % 8 = 7 → New.PrimeSevenModEight d
+        - theorem New.Parameters.d_prime  [New.Reduction.Data.FieldsAndPlaces]  (2 project deps)
+            : ∀ (self : New.Parameters), Nat.Prime self.d
+        - def New.Parameters.casesOn  [New.Reduction.Data.FieldsAndPlaces]  (3 project deps)
+            : {motive : New.Parameters → Sort u} → (t : New.Parameters) → ((q₀ d : ℕ) → (dvd_q₀ : 18480 ∣ q₀) → (d_prime : Nat.Prime d) → (q₀_dvd_and_not_dvd : q₀ ∣ 2 * (d + 1) ∧ ¬q₀ ∣ d + 1) → motive { q₀ := q₀, d := d, dvd_q₀ := dvd_q₀, d_prime := d_prime, q₀_dvd_and_not_dvd := q₀_dvd_and_not_dvd }) → motive t
+        - New.Parameters.mk  (see above)
+      - def New.Parameters.q₀  [New.Reduction.Data.FieldsAndPlaces]  (1 project deps)
+          : New.Parameters → ℕ
+        - New.Parameters  (see above)
+      - theorem New.Parameters.instNeZeroNatQ₀  [New.Reduction.Data.FieldsAndPlaces]  (4 project deps)
+          : ∀ (P : New.Parameters), NeZero P.q₀
+        - New.Parameters  (see above)
+        - New.Parameters.q₀  (see above)
+        - New.Parameters.casesOn  (see above)
+        - New.Parameters.mk  (see above)
+      - theorem New.eventually_primeRemainder_natCast_le  [New.Reduction.OneSidedBound]  (18 project deps)
+          : ∀ (P : New.Parameters) {ε : ℝ}, 0 < ε → ε < 1 / 100 → ∀ᶠ (x : ℕ) in Filter.atTop, New.primeRemainder P.d P.q₀ ↑x ≤ (64 * ↑P.q₀.totient + 3) * ↑x ^ (-1 / 2 + 6 * ε)
+        - New.Parameters  (see above)
+        - New.primeRemainder  (see above)
+        - New.Parameters.d  (see above)
+        - New.PrimeSevenModEight.toFact  (see above)
+        - New.Parameters.instPrimeSevenModEight  (see above)
+        - New.Parameters.q₀  (see above)
+        - New.Parameters.instNeZeroNatQ₀  (see above)
+        - theorem New.eventually_abs_primeRemainder_exp_le  [New.Reduction.OneSidedBound]  (11 project deps)
+            : ∀ (P : New.Parameters) {ε : ℝ}, 0 < ε → ∀ᶠ (x : ℕ) in Filter.atTop, ∀ (l : ℝ), ↑x ^ (ε / 12) ≤ l → |New.primeRemainder P.d P.q₀ (Real.exp l)| ≤ ↑x ^ (-2) ∧ |New.primeRemainder P.d 1 (Real.exp l)| ≤ ↑x ^ (-2)
+        - inductive New.Data  [New.Reduction.Data.AdmissibleData]  (1 project deps)
+            : New.Parameters → Type
+        - def New.Data.x  [New.Reduction.Data.AdmissibleData]  (3 project deps)
+            : {P : New.Parameters} → New.Data P → ℝ
+        - def New.Data.logB  [New.Reduction.Data.AdmissibleData]  (2 project deps)
+            : {P : New.Parameters} → New.Data P → ℝ
+        - def New.Data.m  [New.Reduction.Data.AdmissibleData]  (2 project deps)
+            : {P : New.Parameters} → New.Data P → ℕ
+        - def New.Data.logX₁  [New.Reduction.Data.AdmissibleData]  (2 project deps)
+            : {P : New.Parameters} → New.Data P → ℝ
+        - theorem New.eventually_exists_data_scales  [New.Reduction.OneSidedBound]  (15 project deps)
+            : ∀ (P : New.Parameters) {ε : ℝ}, 0 < ε → ε < 1 / 100 → ∀ᶠ (x : ℕ) in Filter.atTop, ∃ D, D.x = ↑x ∧ D.logB ≤ 2 * ↑x ^ ε ∧ ↑x ^ (1 / 2) ≤ ↑D.m ∧ ↑x ^ (ε / 12) ≤ D.logX₁
+        - def New.Data.x₁  [New.Reduction.Data.AdmissibleData]  (3 project deps)
+            : {P : New.Parameters} → New.Data P → ℝ
+        - theorem New.Data.HasLogBound.pos  [New.Reduction.Data.Magnitudes]  (4 project deps)
+            : ∀ {P : New.Parameters} (D : New.Data P) {F l : ℝ} [D.HasLogLower F l], 0 < F
+        - theorem New.Data.instHasLogBoundLogBLog  [New.Reduction.Data.Magnitudes]  (12 project deps)
+            : ∀ {P : New.Parameters} {D : New.Data P} {u : Bool}, D.HasLogBound u D.logB (Real.log D.logB)
+        - theorem New.Data.primeRemainder_le  [New.Reduction.OneSidedBound]  (32 project deps)
+            : ∀ {P : New.Parameters} (D : New.Data P), New.primeRemainder P.d P.q₀ D.x ≤ ↑P.q₀.totient * D.logB ^ 6 / ↑D.m + |New.primeRemainder P.d P.q₀ D.x₁| + D.logB * |New.primeRemainder P.d 1 D.x₁|
+      - theorem New.primeRemainder_sub_primeRemainder_floor_le  [New.Reduction.OneSidedBound]  (2 project deps)
+          : ∀ {d : ℕ} [inst : Fact (Nat.Prime d)] {q : ℕ} [inst_1 : NeZero q] {y : ℝ}, 2 ≤ y → New.primeRemainder d q y - New.primeRemainder d q ↑⌊y⌋₊ ≤ 26 / y
+        - New.primeRemainder  (see above)
+        - theorem New.abs_primeRemainder_sub_le  [New.Reduction.Zeros.PrimeNumberTheorem]  (6 project deps)
+            : ∀ {d : ℕ} [inst : Fact (Nat.Prime d)] {q : ℕ} [inst_1 : NeZero q] {y z : ℝ}, 1 ≤ y → y ≤ z → |New.primeRemainder d q z - New.primeRemainder d q y| ≤ 13 * ((z - y) / y)
+      - theorem New.natFloor_rpow_le_two_mul_rpow  [New.Reduction.OneSidedBound]  (0 project deps)
+          : ∀ {y t : ℝ}, 2 ≤ y → -1 ≤ t → t ≤ 0 → ↑⌊y⌋₊ ^ t ≤ 2 * y ^ t
+    - theorem New.LFunction_ne_zero_of_primeRemainder_le  [New.Reduction.Zeros.Criterion]  (10 project deps)
+        : ∀ {q₀ : ℕ} [inst : NeZero q₀], 8 ∣ q₀ → ∀ {d₀ : ℕ}, d₀ % 8 = 7 → d₀.Coprime q₀ → ∀ {β : ℝ}, 1 / 2 < β → (∀ (d : Nat.Primes), ↑d ≡ d₀ [MOD q₀] → ∀ᶠ (x : ℝ) in Filter.atTop, New.primeRemainder (↑d) q₀ x ≤ x ^ (β - 1)) → ∀ (ψ : DirichletCharacter ℂ q₀) {ρ : ℂ}, ρ ≠ 1 → β < ρ.re → DirichletCharacter.LFunction ψ ρ ≠ 0
+      - New.primeRemainder  (see above)
+      - New.instFactPrimeValNat_lib  (see above)
+      - New.entireL  (see above)
+      - New.quadTwist  (see above)
+      - theorem New.exists_entireL_quadTwist_ne_zero  [Lib.Analytic.QuadraticTwist]  (8 project deps)
+          : ∀ {N : ℕ} [inst : NeZero N] {β : ℝ} (H : ℝ) {a : ZMod N}, 1 / 2 < β → IsUnit a → (∀ (d : Nat.Primes), ↑↑d = a → ↑d % 8 = 7 ∧ N.Coprime ↑d) → ∃ d, ↑↑d = a ∧ ∀ (ξ : DirichletCharacter ℂ N) (s : ℂ), β ≤ s.re → |s.im| ≤ H → New.entireL (New.quadTwist ξ ↑d) s ≠ 0
+        - New.entireL  (see above)
+        - New.instFactPrimeValNat_lib  (see above)
+        - New.quadTwist  (see above)
+        - def New.IsBadPrime  [Lib.Analytic.QuadraticTwist]  (1 project deps)
+            : {N : ℕ} → [NeZero N] → ZMod N → ℝ → ℝ → ℕ → Prop
+        - inductive New.IsPrimeWithTwistZero  [Lib.Analytic.QuadraticTwist]  (0 project deps)
+            : {N : ℕ} → [NeZero N] → DirichletCharacter ℂ N → ℝ → ℝ → ℕ → Prop
+        - ctor New.IsPrimeWithTwistZero.mk  [Lib.Analytic.QuadraticTwist]  (2 project deps)
+            : ∀ {N : ℕ} [inst : NeZero N] {ψ : DirichletCharacter ℂ N} {β H : ℝ} {d : ℕ} [prime : Fact (Nat.Prime d)], (∃ s, β ≤ s.re ∧ |s.im| ≤ H ∧ DirichletCharacter.LFunction (New.quadTwist ψ d) s = 0) → New.IsPrimeWithTwistZero ψ β H d
+        - theorem New.quadTwist_ne_one  [Lib.Analytic.EntireLFunction]  (2 project deps)
+            : ∀ {N : ℕ} (χ : DirichletCharacter ℂ N) (d : ℕ) [inst : Fact (Nat.Prime d)], d ≠ 2 → N.Coprime d → New.quadTwist χ d ≠ 1
+        - theorem New.zero_density_quadTwist  [Lib.Analytic.QuadraticTwist]  (12 project deps)
+            : ∀ {N : ℕ} [inst : NeZero N] {δ : ℝ}, 0 < δ → ∀ (H : ℝ) {a : ZMod N}, (∀ (d : ℕ), Nat.Prime d → ↑d = a → d % 8 = 7 ∧ N.Coprime d) → (fun X => ↑{d ∈ Finset.Ioc 0 X | New.IsBadPrime a (1 / 2 + 9 * δ) H d}.card) =O[Filter.atTop] fun X => ↑X ^ (1 - δ / 2)
+      - def New.IsPolar  [Lib.Analytic.EntireLFunction]  (0 project deps)
+          : (ℝ → ℝ) → (ℂ → ℂ) → Prop
+      - theorem New.isPolar_primeRemainder  [New.Reduction.Zeros.PrimeError]  (13 project deps)
+          : ∀ {d : ℕ} [inst : Fact (Nat.Prime d)] {q : ℕ} [inst_1 : NeZero q], d % 8 = 7 → q.Coprime d → New.IsPolar (fun v => New.primeRemainder d q (Real.exp v)) fun s => (∑ ψ, (↑(analyticOrderNatAt (New.entireL ψ) s) - ↑(analyticOrderNatAt (New.entireL (New.quadTwist ψ d)) s))) / ↑q.totient / (s * (1 - s))
+        - New.IsPolar  (see above)
+        - New.primeRemainder  (see above)
+        - New.entireL  (see above)
+        - New.quadTwist  (see above)
+        - New.logDerivMean  (see above)
+        - New.lambdaKSum  (see above)
+        - New.lambdaKResidueClass  (see above)
+        - theorem New.analyticAt_entireL  [Lib.Analytic.EntireLFunction]  (1 project deps)
+            : ∀ {N : ℕ} (χ : DirichletCharacter ℂ N) [inst : NeZero N] (s : ℂ), AnalyticAt ℂ (New.entireL χ) s
+        - theorem New.integral_primeRemainder  [New.Reduction.Zeros.PrimeError]  (9 project deps)
+            : ∀ {d : ℕ} [inst : Fact (Nat.Prime d)] {q : ℕ} [inst_1 : NeZero q], d ≠ 2 → q.Coprime d → ∀ {s : ℂ}, 2 < s.re → ∫ (v : ℝ) in Set.Ioi 0, ↑(New.primeRemainder d q (Real.exp v)) * Complex.exp ((1 - s) * ↑v) = (New.logDerivMean d q s / s - ↑(New.logDerivMean d q 1).re) / (s - 1)
+        - theorem New.abs_primeRemainder_exp_le  [New.Reduction.Zeros.PrimeError]  (4 project deps)
+            : ∀ (d : ℕ) [inst : Fact (Nat.Prime d)] (q : ℕ) [inst_1 : NeZero q] {v : ℝ}, 0 ≤ v → |New.primeRemainder d q (Real.exp v)| ≤ (|(New.logDerivMean d q 1).re| + 5) * Real.exp v
+        - theorem New.analyticAt_logDerivMean_of_one_le_re  [New.Reduction.Zeros.PrimeError]  (5 project deps)
+            : ∀ (d : ℕ) [inst : Fact (Nat.Prime d)] (q : ℕ) [inst_1 : NeZero q] {s : ℂ}, 1 ≤ s.re → AnalyticAt ℂ (New.logDerivMean d q) s
+        - theorem New.ofReal_re_logDerivMean_one  [New.Reduction.Zeros.PrimeError]  (4 project deps)
+            : ∀ {d : ℕ} [inst : Fact (Nat.Prime d)] {q : ℕ} [inst_1 : NeZero q], d ≠ 2 → q.Coprime d → ↑(New.logDerivMean d q 1).re = New.logDerivMean d q 1
+        - theorem New.tendsto_logDerivMean_residue  [New.Reduction.Zeros.PrimeError]  (4 project deps)
+            : ∀ {d : ℕ} [inst : Fact (Nat.Prime d)] {q : ℕ} [inst_1 : NeZero q] (κ : ℂ) {ρ : ℂ}, ρ ≠ 0 → ρ ≠ 1 → Filter.Tendsto (fun z => (z - ρ) * ((New.logDerivMean d q z / z - κ) / (z - 1))) (nhdsWithin ρ {ρ}ᶜ) (nhds ((∑ ψ, (↑(analyticOrderNatAt (New.entireL ψ) ρ) - ↑(analyticOrderNatAt (New.entireL (New.quadTwist ψ d)) ρ))) / ↑q.totient / (ρ * (1 - ρ))))
+      - theorem New.analyticOrderNatAt_entireL_eq_zero_iff  [Lib.Analytic.EntireLFunction]  (3 project deps)
+          : ∀ {N : ℕ} (χ : DirichletCharacter ℂ N) [inst : NeZero N] (s : ℂ), analyticOrderNatAt (New.entireL χ) s = 0 ↔ New.entireL χ s ≠ 0
+        - New.entireL  (see above)
+        - New.analyticAt_entireL  (see above)
+        - theorem New.analyticOrderAt_entireL_ne_top  [Lib.Analytic.EntireLFunction]  (3 project deps)
+            : ∀ {N : ℕ} (χ : DirichletCharacter ℂ N) [inst : NeZero N] (s : ℂ), analyticOrderAt (New.entireL χ) s ≠ ⊤
+      - theorem New.entireL_ne_zero  [Lib.Analytic.EntireLFunction]  (1 project deps)
+          : ∀ {N : ℕ} (χ : DirichletCharacter ℂ N) [inst : NeZero N] {s : ℂ}, 1 ≤ s.re → New.entireL χ s ≠ 0
+        - New.entireL  (see above)
+      - theorem New.IsPolar.landau  [Lib.Analytic.Landau]  (5 project deps)
+          : ∀ {E : ℝ → ℝ} {r : ℂ → ℂ}, New.IsPolar E r → ∀ {β : ℝ}, 0 < β → (∀ (x : ℝ), β < x → 0 ≤ (r ↑x).re) → (∀ᶠ (v : ℝ) in Filter.atTop, E v ≤ Real.exp ((β - 1) * v)) → ∀ {ρ : ℂ}, β < ρ.re → r ρ = 0
+        - New.IsPolar  (see above)
+        - theorem New.exists_measure_laplace_eq  [Lib.Analytic.Landau]  (2 project deps)
+            : ∀ {E : ℝ → ℝ} {C β : ℝ}, Measurable E → (∀ v ≥ 0, |E v| ≤ C * Real.exp v) → 0 < β → (∀ᶠ (v : ℝ) in Filter.atTop, E v ≤ Real.exp ((β - 1) * v)) → ∃ μ K, ∀ (s : ℂ), β + 2 < s.re → s.re ∈ ProbabilityTheory.integrableExpSet (fun v => -|v|) μ ∧ ProbabilityTheory.complexMGF (fun v => -|v|) μ s = ↑K / (s - ↑β) - ∫ (v : ℝ) in Set.Ioi 0, ↑(E v) * Complex.exp ((1 - s) * ↑v)
+        - theorem New.tendsto_sub_mul_of_continuousAt  [Lib.Analytic.EntireLFunction]  (0 project deps)
+            : ∀ {s : ℂ} {f : ℂ → ℂ}, ContinuousAt f s → Filter.Tendsto (fun z => (z - s) * f z) (nhdsWithin s {s}ᶜ) (nhds 0)
+        - theorem New.eventuallyEq_of_eq_far_right  [Lib.Analytic.Landau]  (0 project deps)
+            : ∀ {f g : ℂ → ℂ} {a b : ℝ}, MeromorphicOn f {z | a < z.re} → MeromorphicOn g {z | a < z.re} → (∀ (z : ℂ), b < z.re → f z = g z) → ∀ {ρ : ℂ}, a < ρ.re → f =ᶠ[nhdsWithin ρ {ρ}ᶜ] g
+        - theorem New.exists_Ioi_subset_integrableExpSet  [Lib.Analytic.Landau]  (1 project deps)
+            : ∀ {μ : MeasureTheory.Measure ℝ} {X : ℝ → ℝ}, Measurable X → (∀ (y : ℝ), X y ≤ 0) → ∀ {a : ℝ}, Set.Ioi a ⊆ interior (ProbabilityTheory.integrableExpSet X μ) → ∀ {Ψ : ℂ → ℂ}, MeromorphicAt Ψ ↑a → (∀ (x : ℝ), a < x → Ψ =ᶠ[nhdsWithin ↑x {↑x}ᶜ] ProbabilityTheory.complexMGF X μ) → ∀ {c : ℂ}, c.re ≤ 0 → Filter.Tendsto (fun z => (z - ↑a) * Ψ z) (nhdsWithin ↑a {↑a}ᶜ) (nhds c) → ∃ b < a, Set.Ioi b ⊆ Probabi …
 
 - theorem riemannZeta_eq_zero_re  [Main]  (2 project deps)
     : RiemannZetaZerosOnLine
-  - def RiemannZetaZerosOnLine  [Statements]  (0 project deps)
-      : Prop
-  - rhOfAll  (see above)
+  - RiemannZetaZerosOnLine  (see above)
+  - riemannHypothesis  (see above)
 
 - theorem LFunction_ne_zero_of_half_lt_re  [Main]  (2 project deps)
     : DirichletLNonvanishingRightOfHalf
-  - def DirichletLNonvanishingRightOfHalf  [Statements]  (0 project deps)
-      : Prop
-  - allChi  (see above)
+  - DirichletLNonvanishingRightOfHalf  (see above)
+  - New.grh  (see above)
 
-- theorem LFunction_eq_zero_re  [Main]  (5 project deps)
+- theorem LFunction_eq_zero_re  [Main]  (3 project deps)
     : DirichletLZerosOnLine
   - def DirichletLZerosOnLine  [Statements]  (0 project deps)
       : Prop
-  - def Claim.Strip  [Development.AutomorphicArithmetic.CharacterBoxes.HalfPlane]  (0 project deps)
-      : Prop
-  - def Claim.Zeta  [Development.AutomorphicArithmetic.CharacterBoxes.HalfPlane]  (0 project deps)
-      : Prop
-  - def Claim.HalfPlane  [Development.AutomorphicArithmetic.CharacterBoxes.HalfPlane]  (0 project deps)
-      : Prop
-  - theorem claimAll  [Supplements.Kernels.MainTheorems]  (6 project deps)
-      : Claim.HalfPlane ∧ Claim.Strip ∧ Claim.Zeta
-    - Claim.HalfPlane  (see above)
-    - Claim.Strip  (see above)
-    - Claim.Zeta  (see above)
-    - allChi  (see above)
-    - theorem Claim.strip  [Development.AutomorphicArithmetic.CharacterBoxes.ClaimStrip]  (4 project deps)
-        : Claim.HalfPlane → Claim.Strip
-      - Claim.HalfPlane  (see above)
-      - Claim.Strip  (see above)
-      - theorem Claim.prim_zero  [Development.AutomorphicArithmetic.CharacterBoxes.ClaimStrip]  (1 project deps)
-          : ∀ {N : ℕ} [inst : NeZero N] (χ : DirichletCharacter ℂ N) [inst_1 : NeZero χ.conductor] {s : ℂ}, 0 < s.re → s.re < 1 → DirichletCharacter.LFunction χ s = 0 → DirichletCharacter.LFunction χ.primitiveCharacter s = 0
-        - theorem Claim.factor_ne_zero  [Development.AutomorphicArithmetic.CharacterBoxes.ClaimStrip]  (0 project deps)
-            : ∀ {M : ℕ} (ψ : DirichletCharacter ℂ M) {s : ℂ}, 0 < s.re → ∀ (p : ℕ), Nat.Prime p → 1 - ψ ↑p * ↑p ^ (-s) ≠ 0
-      - theorem Claim.prim_reflect  [Development.AutomorphicArithmetic.CharacterBoxes.ClaimStrip]  (1 project deps)
-          : ∀ {M : ℕ} [inst : NeZero M] (ψ : DirichletCharacter ℂ M), ψ.IsPrimitive → ∀ {s : ℂ}, 0 < s.re → s.re < 1 → DirichletCharacter.LFunction ψ s = 0 → DirichletCharacter.LFunction ψ⁻¹ (1 - s) = 0
-        - theorem Claim.gamma_ne_zero  [Development.AutomorphicArithmetic.CharacterBoxes.ClaimStrip]  (0 project deps)
-            : ∀ {M : ℕ} [NeZero M] (φ : DirichletCharacter ℂ M) {t : ℂ}, 0 < t.re → φ.gammaFactor t ≠ 0
-    - theorem Claim.zeta  [Development.AutomorphicArithmetic.CharacterBoxes.ClaimStrip]  (3 project deps)
-        : Claim.HalfPlane → Claim.Zeta
-      - Claim.HalfPlane  (see above)
-      - Claim.Zeta  (see above)
-      - Claim.strip  (see above)
+  - theorem New.zeros_on_line  [New.Main]  (3 project deps)
+      : DirichletLNonvanishingRightOfHalf → DirichletLZerosOnLine
+    - DirichletLNonvanishingRightOfHalf  (see above)
+    - DirichletLZerosOnLine  (see above)
+    - theorem New.gammaFactor_eq_zero_or_LFunction_one_sub_eq_zero  [Lib.Analytic.ZeroSymmetry]  (3 project deps)
+        : ∀ {N : ℕ} [inst : NeZero N] (χ : DirichletCharacter ℂ N) (s : ℂ), s.re ≠ 0 → s ≠ 1 → DirichletCharacter.LFunction χ s = 0 → χ.gammaFactor s = 0 ∨ DirichletCharacter.LFunction χ⁻¹ (1 - s) = 0
+      - theorem New.exists_isPrimitive_changeLevel_eq  [Lib.Analytic.ZeroSymmetry]  (0 project deps)
+          : ∀ {N : ℕ} [NeZero N] (χ : DirichletCharacter ℂ N), ∃ M, ∃ (hM : M ∣ N), ∃ ψ, NeZero M ∧ ψ.IsPrimitive ∧ (DirichletCharacter.changeLevel hM) ψ = χ
+      - theorem New.prod_euler_factor_ne_zero  [Lib.Analytic.ZeroSymmetry]  (0 project deps)
+          : ∀ {N : ℕ} (χ : DirichletCharacter ℂ N) {M : ℕ} {s : ℂ}, s.re ≠ 0 → ∏ p ∈ M.primeFactors, (1 - χ ↑p * ↑p ^ (-s)) ≠ 0
+      - theorem New.gammaFactor_changeLevel  [Lib.Analytic.ZeroSymmetry]  (0 project deps)
+          : ∀ {M L : ℕ} (hM : M ∣ L) (ψ : DirichletCharacter ℂ M) (s : ℂ), ((DirichletCharacter.changeLevel hM) ψ).gammaFactor s = ψ.gammaFactor s
+  - New.grh  (see above)
 
 - theorem LFunction_eq_zero_re_of_isPrimitive  [Main]  (2 project deps)
     : PrimitiveDirichletLZerosOnLine
   - def PrimitiveDirichletLZerosOnLine  [Statements]  (0 project deps)
       : Prop
-  - theorem critAll  [Supplements.Kernels.MainTheorems]  (2 project deps)
-      : ∀ (N : ℕ) [inst : NeZero N] (χ : DirichletCharacter ℂ N), χ.IsPrimitive → ∀ (s : ℂ), 0 < s.re → s.re < 1 → DirichletCharacter.LFunction χ s = 0 → s.re = 1 / 2
-    - theorem Formalism.VW.critLine  [Formalism.GammaFactorNonvanishing.CritLine]  (2 project deps)
-        : UpperTheory.EveryCharacter → ∀ (N : ℕ) [inst : NeZero N] (χ : DirichletCharacter ℂ N), χ.IsPrimitive → ∀ (s : ℂ), 0 < s.re → s.re < 1 → DirichletCharacter.LFunction χ s = 0 → s.re = 1 / 2
-      - UpperTheory.EveryCharacter  (see above)
-      - theorem Formalism.VW.gammaFactor_ne_zero  [Formalism.GammaFactorNonvanishing.CritLine]  (0 project deps)
-          : ∀ {N : ℕ} (χ : DirichletCharacter ℂ N) {s : ℂ}, 0 < s.re → χ.gammaFactor s ≠ 0
-    - allChi  (see above)
+  - LFunction_eq_zero_re  (see above)
 

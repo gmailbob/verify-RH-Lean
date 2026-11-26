@@ -1,12 +1,17 @@
 exit status:     0
-started (UTC):   2026-11-21T07:04:51Z
-finished (UTC):  2026-11-21T17:23:22Z
-duration:        10h 18m
-last progress:   [183902/183903]
+started (UTC):   2026-11-26T03:15:54Z
+finished (UTC):  2026-11-26T03:28:22Z
+duration:        0h 12m 28s
+last progress:   [9851/9852]
 error lines:     0
-warning lines:   489061
+warning lines:   10
 failed jobs:     0
-final line:      Build completed successfully (183903 jobs).
-disk after:      1.3T used, 709G free
-size of .lake:   1.2T
+final line:      Build completed successfully (9852 jobs).
+modules built:   803 .olean files in the project's build
+peak memory:     22.7 GiB in use, swap peak 0 GiB
+peak mappings:   55767 memory mappings in one Lean process (vm.max_map_count is 1048576)
+largest process: 10.8 GiB RSS
+cpu time:        4.9 core-hours
+disk after:      56G used, 1.9T free
+project build:   7.5G in .lake/build; 15G in .lake including Mathlib and the other packages
 machine:         32 CPUs, 61 GiB RAM, aarch64, JOBS=28

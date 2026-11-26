@@ -1,90 +1,104 @@
-=== 2026-11-21T23:23:28Z  09-independent-kernel.sh 09-independent-kernel.log  (host <host>, WORKDIR=/home/ec2-user/rh)
-[23:23:28] Lean v4.36.0 (for con-leche)
-  % Total    % Received % Xferd  Average Speed  Time    Time    Time   Current
-                                 Dload  Upload  Total   Spent   Left   Speed
-  0      0   0      0   0      0      0      0                              0  0      0   0      0   0      0      0      0                              0  0      0   0      0   0      0      0      0                              0
-  0      0   0      0   0      0      0      0                              0 91 580.8M  91 531.3M   0      0 431.8M      0   00:01   00:01         531.8M 99 580.8M  99 579.4M   0      0 259.8M      0   00:02   00:02         289.9M100 580.8M 100 580.8M   0      0 246.7M      0   00:02   00:02         289.9M100 580.8M 100 580.8M   0      0 246.7M      0   00:02   00:02         289.9M100 580.8M 100 580.8M   0      0 246.7M      0   00:02   00:02         289.9M
-  PASS  lean-4.36.0-linux_aarch64.tar.zst matches pinned sha256
-  PASS  lean v4.36.0, commit 611c117bfaf7b7ae1cfcf246ce6fba31e8f509e9
-[23:23:35] lean4export (built with Lean v4.33.1)
-  PASS  lean4export at 15f6055e299ad5b89345e533cc2192f4cc00f659
-✔ [5/6] Built Export:c.o (1.9s)
-✔ [6/6] Built lean4export:exe (752ms)
-Build completed successfully (6 jobs).
-  PASS  built /home/ec2-user/rh/extra-tools/lean4export/.lake/build/bin/lean4export
-[23:23:42] con-leche (built with Lean v4.36.0)
-  PASS  con-leche at cd2eceab2e9b10404c663b468639c8aa99d0d1f2
-✔ [499/500] Built Main:c.o (1.1s)
-✔ [500/500] Built «con-leche»:exe (265ms)
-Build completed successfully (500 jobs).
-  PASS  built /home/ec2-user/rh/extra-tools/con-leche/.lake/build/bin/con-leche
+=== 2026-11-26T02:56:07Z  09-independent-kernel.sh 09-independent-kernel.log  (host <host>, WORKDIR=/home/ec2-user/grh-verify)
+scripts/09-independent-kernel.sh: line 29: CHECKER_LEAN_VERSION: unbound variable
+=== 2026-11-26T02:56:53Z  09-independent-kernel.sh 09-independent-kernel.log  (host <host>, WORKDIR=/home/ec2-user/grh-verify)
+[02:56:53] tools shipped with Lean v4.35.0
+  PASS  leanexport
+  PASS  con-leche
+  PASS  con-ron
+  PASS  nanoda_bin
+[02:56:53] self-test: each checker must accept a genuine export and reject a tampered one
+  PASS  con-leche accepts the genuine export
+  PASS  con-leche rejects the tampered export: invalid: type mismatch in theorem Nat.add_comm 
+  PASS  con-ron accepts the genuine export
+  PASS  con-ron rejects the tampered export: rejected: type mismatch in theorem 
+  PASS  nanoda accepts the genuine export
+  PASS  nanoda rejects the tampered export (exit 101)
+  PASS  nanoda refuses an export that uses an axiom outside the allow-list (exit 1)
 
 All checks passed (0 warning(s)).
-=== 2026-11-21T23:36:16Z  09-independent-kernel.sh 09-independent-kernel.log  (host <host>, WORKDIR=/home/ec2-user/rh)
-[23:36:16] Lean v4.36.0 (for con-leche)
-  PASS  lean v4.36.0, commit 611c117bfaf7b7ae1cfcf246ce6fba31e8f509e9
-[23:36:16] lean4export (built with Lean v4.33.1)
-  PASS  lean4export at 15f6055e299ad5b89345e533cc2192f4cc00f659
-  PASS  built /home/ec2-user/rh/extra-tools/lean4export/.lake/build/bin/lean4export
-[23:36:16] con-leche (built with Lean v4.36.0)
-  PASS  con-leche at cd2eceab2e9b10404c663b468639c8aa99d0d1f2
-  PASS  built /home/ec2-user/rh/extra-tools/con-leche/.lake/build/bin/con-leche
-[23:36:16] self-test: con-leche must accept a genuine export and reject a tampered one
-  PASS  genuine export of a few Init theorems accepted
-  PASS  tampered export rejected: invalid: type mismatch in theorem Nat.add_comm 
+=== 2026-11-26T03:47:17Z  09-independent-kernel.sh 09-independent-kernel.log  (host <host>, WORKDIR=/home/ec2-user/grh-verify)
+[03:47:17] tools shipped with Lean v4.35.0
+  PASS  leanexport
+  PASS  con-leche
+  PASS  con-ron
+  PASS  nanoda_bin
+[03:47:17] self-test: each checker must accept a genuine export and reject a tampered one
+  PASS  con-leche accepts the genuine export
+  PASS  con-leche rejects the tampered export: invalid: type mismatch in theorem Nat.add_comm 
+  PASS  con-ron accepts the genuine export
+  PASS  con-ron rejects the tampered export: rejected: type mismatch in theorem 
+  PASS  nanoda accepts the genuine export
+  PASS  nanoda rejects the tampered export (exit 101)
+  PASS  nanoda refuses an export that uses an axiom outside the allow-list (exit 1)
+[03:47:17] export the proof of Main
+  PASS  export targets match the pinned list
+  5 export targets; LEAN_PATH has 11 entries
+  leanexport: wall 218.40s, max RSS 13213536 KB
+  PASS  exported 4486595522 bytes in 218 s
+  sha256 a28b40e7e90aa8477b01294d0afce119d1756d42b582c17a009f85694493396e  (4486595522 bytes)
+[03:50:59] con-leche on solution.ndjson (30 workers)
+  	Elapsed (wall clock) time (h:mm:ss or m:ss): 0:00.00
+  FAIL  con-leche did not accept (exit 3); see /home/ec2-user/grh-verify/out/con-leche.log
+[03:50:59] con-ron on solution.ndjson (30 workers)
+  	Elapsed (wall clock) time (h:mm:ss or m:ss): 0:00.00
+  FAIL  con-ron did not accept (exit 3); see /home/ec2-user/grh-verify/out/con-ron.log
+[03:50:59] nanoda on solution.ndjson (allow-list: propext Classical.choice Quot.sound)
+  Checked 222117 declarations with no typechecker errors, 1 pretty printer errors: [
+  	Elapsed (wall clock) time (h:mm:ss or m:ss): 23:40.36
+  	Maximum resident set size (kbytes): 5867680
+  PASS  nanoda accepts the exported proof, with no axiom outside the allow-list
+  PASS  1 of 3 independent checkers accept; none rejects
+
+2 check(s) FAILED, 0 warning(s). Do not continue.
+=== 2026-11-26T04:17:11Z  09-independent-kernel.sh 09-independent-kernel.log  (host <host>, WORKDIR=/home/ec2-user/grh-verify)
+[04:17:11] tools shipped with Lean v4.35.0
+  PASS  leanexport
+  PASS  con-leche
+  PASS  con-ron
+  PASS  nanoda_bin
+[04:17:11] self-test: each checker must accept a genuine export and reject a tampered one
+  PASS  con-leche accepts the genuine export
+  PASS  con-leche rejects the tampered export: invalid: type mismatch in theorem Nat.add_comm 
+  PASS  con-ron accepts the genuine export
+  PASS  con-ron rejects the tampered export: rejected: type mismatch in theorem 
+  PASS  nanoda accepts the genuine export
+  PASS  nanoda rejects the tampered export (exit 101)
+  PASS  nanoda refuses an export that uses an axiom outside the allow-list (exit 1)
 
 All checks passed (0 warning(s)).
-=== 2026-11-22T06:43:52Z  09-independent-kernel.sh 09-independent-kernel.log  (host <host>, WORKDIR=/home/ec2-user/rh)
-[06:43:52] Lean v4.36.0 (for con-leche)
-  PASS  lean v4.36.0, commit 611c117bfaf7b7ae1cfcf246ce6fba31e8f509e9
-[06:43:53] lean4export (built with Lean v4.33.1)
-  PASS  lean4export at 15f6055e299ad5b89345e533cc2192f4cc00f659
-  PASS  built /home/ec2-user/rh/extra-tools/lean4export/.lake/build/bin/lean4export
-[06:43:54] con-leche (built with Lean v4.36.0)
-  PASS  con-leche at cd2eceab2e9b10404c663b468639c8aa99d0d1f2
-  PASS  built /home/ec2-user/rh/extra-tools/con-leche/.lake/build/bin/con-leche
-[06:43:54] self-test: con-leche must accept a genuine export and reject a tampered one
-  PASS  genuine export of a few Init theorems accepted
-  PASS  tampered export rejected: invalid: type mismatch in theorem Nat.add_comm 
-[06:43:56] export the proof of Main
+=== 2026-11-26T04:17:24Z  09-independent-kernel.sh 09-independent-kernel.log  (host <host>, WORKDIR=/home/ec2-user/grh-verify)
+[04:17:24] tools shipped with Lean v4.35.0
+  PASS  leanexport
+  PASS  con-leche
+  PASS  con-ron
+  PASS  nanoda_bin
+[04:17:24] self-test: each checker must accept a genuine export and reject a tampered one
+  PASS  con-leche accepts the genuine export
+  PASS  con-leche rejects the tampered export: invalid: type mismatch in theorem Nat.add_comm 
+  PASS  con-ron accepts the genuine export
+  PASS  con-ron rejects the tampered export: rejected: type mismatch in theorem 
+  PASS  nanoda accepts the genuine export
+  PASS  nanoda rejects the tampered export (exit 101)
+  PASS  nanoda refuses an export that uses an axiom outside the allow-list (exit 1)
+[04:17:25] export the proof of Main
   PASS  export targets match the pinned list
-=== 2026-11-22T06:45:09Z  09-independent-kernel.sh 09-independent-kernel.log  (host <host>, WORKDIR=/home/ec2-user/rh)
-[06:45:09] Lean v4.36.0 (for con-leche)
-  PASS  lean v4.36.0, commit 611c117bfaf7b7ae1cfcf246ce6fba31e8f509e9
-[06:45:09] lean4export (built with Lean v4.33.1)
-  PASS  lean4export at 15f6055e299ad5b89345e533cc2192f4cc00f659
-  PASS  built /home/ec2-user/rh/extra-tools/lean4export/.lake/build/bin/lean4export
-[06:45:10] con-leche (built with Lean v4.36.0)
-  PASS  con-leche at cd2eceab2e9b10404c663b468639c8aa99d0d1f2
-  PASS  built /home/ec2-user/rh/extra-tools/con-leche/.lake/build/bin/con-leche
-[06:45:10] self-test: con-leche must accept a genuine export and reject a tampered one
-  PASS  genuine export of a few Init theorems accepted
-  PASS  tampered export rejected: invalid: type mismatch in theorem Nat.add_comm 
-[06:45:10] export the proof of Main
-  PASS  export targets match the pinned list
-  38 export targets; LEAN_PATH has 11 entries
-=== 2026-11-22T07:55:27Z  09-independent-kernel.sh 09-independent-kernel.log  (host <host>, WORKDIR=/home/ec2-user/rh)
-[07:55:27] Lean v4.36.0 (for con-leche)
-  PASS  lean v4.36.0, commit 611c117bfaf7b7ae1cfcf246ce6fba31e8f509e9
-[07:55:28] lean4export (built with Lean v4.33.1)
-  PASS  lean4export at 15f6055e299ad5b89345e533cc2192f4cc00f659
-  PASS  built /home/ec2-user/rh/extra-tools/lean4export/.lake/build/bin/lean4export
-[07:55:29] con-leche (built with Lean v4.36.0)
-  PASS  con-leche at cd2eceab2e9b10404c663b468639c8aa99d0d1f2
-  PASS  built /home/ec2-user/rh/extra-tools/con-leche/.lake/build/bin/con-leche
-[07:55:29] self-test: con-leche must accept a genuine export and reject a tampered one
-  PASS  genuine export of a few Init theorems accepted
-  PASS  tampered export rejected: invalid: type mismatch in theorem Nat.add_comm 
-[07:55:35] fetch MIT's published export of Main
-  PASS  compressed export matches MIT's published sha256 (7699933588 bytes)
-  sha256 5ea74b912147c5c93cc2b6d70cc727cf908df2f62ac6a20480a3fa02f6be244e
-  PASS  unpacked export matches MIT's published sha256 (61570595788 bytes)
-[08:35:03] con-leche on solution-mit.ndjson (32 workers)
-  con-leche: parse done: 1468418 fold records — the file's 1468418, 0 built-in prelude records synthesised t=475.3s (parse 475.3s)
-  con-leche: check done: 1468418 declarations t=761.4s (check 286.1s)
-  con-leche: done: parse 475.3s, check 286.1s, 32 workers t=761.4s
-  con-leche: stats: peak RSS 43.63 GiB
-  con-leche: accepted 1468418 declarations (--verified)
-  PASS  con-leche (independent kernel) accepts the exported proof
+  reusing existing /home/ec2-user/grh-verify/out/solution.ndjson (REEXPORT=1 to redo)
+  sha256 a28b40e7e90aa8477b01294d0afce119d1756d42b582c17a009f85694493396e  (4486595522 bytes)
+[04:17:25] con-leche on solution.ndjson (32 workers)
+  con-leche: done: parse 17.5s, install 38.5s, check 42.4s, 32 workers t=98.5s
+  con-leche: accepted 216567 declarations (--verified)
+  	Elapsed (wall clock) time (h:mm:ss or m:ss): 1:38.89
+  PASS  con-leche accepts the exported proof
+[04:19:04] con-ron on solution.ndjson (32 workers)
+  con-ron: done: parse 25.834s, install 15.922s, check 18.104s, 32 workers t=59.860s
+  con-ron: accepted 216567 declarations (--verified)
+  	Elapsed (wall clock) time (h:mm:ss or m:ss): 0:59.92
+  PASS  con-ron accepts the exported proof
+[04:20:04] nanoda on solution.ndjson (32 threads; allow-list: propext Classical.choice Quot.sound)
+  Checked 222117 declarations with no typechecker errors, 1 pretty printer errors: [
+  	Elapsed (wall clock) time (h:mm:ss or m:ss): 1:38.54
+  	Maximum resident set size (kbytes): 13432864
+  PASS  nanoda accepts the exported proof, with no axiom outside the allow-list
+  PASS  3 of 3 independent checkers accept; none rejects
 
 All checks passed (0 warning(s)).

@@ -1,24 +1,22 @@
-=== 2026-11-21T04:29:24Z  08-verify-sources-unchanged.sh 08-verify-sources-unchanged.log  (host <host>, WORKDIR=/home/ec2-user/rh)
-[04:29:24] re-verify the archive
-  PASS  archive sha256 unchanged
-[04:29:24] hash the project tree now
-  files hashed: 175190
-  digest of the hash list: 859c80e3fe4912ad9e18ad359edbfdc62fb845ad340add30b5caa0fdc74d2ee1
-[04:29:35] hash the files inside the archive
-  175190 members hashed
-  PASS  project tree is byte-identical to the archive contents (no files added, removed or changed)
-  PASS  matches the pre-build baseline from step 2
+=== 2026-11-26T03:00:43Z  08-verify-sources-unchanged.sh 08-verify-sources-unchanged.log  (host <host>, WORKDIR=/home/ec2-user/grh-verify)
+[03:00:43] hash the project tree now
+  files hashed: 818
+  digest of the hash list: ab5bc5e431464ed94f4073ba8b4215481208465d341f702397d81a10b03c25f6
+  PASS  project tree matches the pinned content digest (no files added, removed or changed)
+  PASS  identical to the baseline from step 2
+[03:00:43] git state of the clone
+  PASS  HEAD is the pinned commit 72fead102f663d5c7a407964a13dc0cf9d977207
+  PASS  no modified tracked files
 
 All checks passed (0 warning(s)).
-=== 2026-11-21T17:26:14Z  08-verify-sources-unchanged.sh 08-verify-sources-unchanged.log  (host <host>, WORKDIR=/home/ec2-user/rh)
-[17:26:14] re-verify the archive
-  PASS  archive sha256 unchanged
-[17:26:15] hash the project tree now
-  files hashed: 175190
-  digest of the hash list: 859c80e3fe4912ad9e18ad359edbfdc62fb845ad340add30b5caa0fdc74d2ee1
-[17:27:26] hash the files inside the archive
-  175190 members hashed
-  PASS  project tree is byte-identical to the archive contents (no files added, removed or changed)
-  PASS  matches the pre-build baseline from step 2
+=== 2026-11-26T03:29:11Z  08-verify-sources-unchanged.sh 08-verify-sources-unchanged.log  (host <host>, WORKDIR=/home/ec2-user/grh-verify)
+[03:29:11] hash the project tree now
+  files hashed: 818
+  digest of the hash list: ab5bc5e431464ed94f4073ba8b4215481208465d341f702397d81a10b03c25f6
+  PASS  project tree matches the pinned content digest (no files added, removed or changed)
+  PASS  identical to the baseline from step 2
+[03:29:11] git state of the clone
+  PASS  HEAD is the pinned commit 72fead102f663d5c7a407964a13dc0cf9d977207
+  PASS  no modified tracked files
 
 All checks passed (0 warning(s)).

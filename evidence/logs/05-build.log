@@ -1,23 +1,42 @@
-=== 2026-11-21T05:07:52Z  05-build.sh 05-build.log  (host <host>, WORKDIR=/home/ec2-user/rh)
-[05:07:52] free disk 1979 GB; JOBS=28; toolchain Lean (version 4.33.1
-[05:07:52] lake build started
-=== 2026-11-21T07:04:51Z  05-build.sh 05-build.log  (host <host>, WORKDIR=/home/ec2-user/rh)
-[07:04:51] free disk 1794 GB; JOBS=28; toolchain Lean (version 4.33.1
-[07:04:51] lake build started
+=== 2026-11-26T03:15:54Z  05-build.sh 05-build.log  (host <host>, WORKDIR=/home/ec2-user/grh-verify)
+[03:15:54] free disk 2046 GB; JOBS=28; toolchain Lean (version 4.35.0
+[03:15:54] lake build started
+/home/ec2-user/workplace/verify-RH-Lean/scripts/lib.sh: line 96: /proc/3517891/maps: No such file or directory
+/home/ec2-user/workplace/verify-RH-Lean/scripts/lib.sh: line 96: /proc/3518014/maps: No such file or directory
+/home/ec2-user/workplace/verify-RH-Lean/scripts/lib.sh: line 96: /proc/3518034/maps: No such file or directory
+/home/ec2-user/workplace/verify-RH-Lean/scripts/lib.sh: line 96: /proc/3519512/maps: No such file or directory
+/home/ec2-user/workplace/verify-RH-Lean/scripts/lib.sh: line 96: /proc/3519642/maps: No such file or directory
+/home/ec2-user/workplace/verify-RH-Lean/scripts/lib.sh: line 96: /proc/3525495/maps: No such file or directory
+/home/ec2-user/workplace/verify-RH-Lean/scripts/lib.sh: line 96: /proc/3527362/maps: No such file or directory
+/home/ec2-user/workplace/verify-RH-Lean/scripts/lib.sh: line 96: /proc/3528347/maps: No such file or directory
+/home/ec2-user/workplace/verify-RH-Lean/scripts/lib.sh: line 96: /proc/3529664/maps: No such file or directory
+/home/ec2-user/workplace/verify-RH-Lean/scripts/lib.sh: line 96: /proc/3531312/maps: No such file or directory
+/home/ec2-user/workplace/verify-RH-Lean/scripts/lib.sh: line 96: /proc/3531392/maps: No such file or directory
+/home/ec2-user/workplace/verify-RH-Lean/scripts/lib.sh: line 96: /proc/3531500/maps: No such file or directory
+/home/ec2-user/workplace/verify-RH-Lean/scripts/lib.sh: line 96: /proc/3529994/maps: No such file or directory
+/home/ec2-user/workplace/verify-RH-Lean/scripts/lib.sh: line 96: /proc/3531942/maps: No such file or directory
+/home/ec2-user/workplace/verify-RH-Lean/scripts/lib.sh: line 96: /proc/3533770/maps: No such file or directory
+/home/ec2-user/workplace/verify-RH-Lean/scripts/lib.sh: line 96: /proc/3535491/maps: No such file or directory
+/home/ec2-user/workplace/verify-RH-Lean/scripts/lib.sh: line 96: /proc/3536315/maps: No such file or directory
 exit status:     0
-started (UTC):   2026-11-21T07:04:51Z
-finished (UTC):  2026-11-21T17:23:22Z
-duration:        10h 18m
-last progress:   [183902/183903]
+started (UTC):   2026-11-26T03:15:54Z
+finished (UTC):  2026-11-26T03:28:22Z
+duration:        0h 12m 28s
+last progress:   [9851/9852]
 error lines:     0
-warning lines:   489061
+warning lines:   10
 failed jobs:     0
-final line:      Build completed successfully (183903 jobs).
-disk after:      1.3T used, 709G free
-size of .lake:   1.2T
+final line:      Build completed successfully (9852 jobs).
+modules built:   803 .olean files in the project's build
+peak memory:     22.7 GiB in use, swap peak 0 GiB
+peak mappings:   55767 memory mappings in one Lean process (vm.max_map_count is 1048576)
+largest process: 10.8 GiB RSS
+cpu time:        4.9 core-hours
+disk after:      56G used, 1.9T free
+project build:   7.5G in .lake/build; 15G in .lake including Mathlib and the other packages
 machine:         32 CPUs, 61 GiB RAM, aarch64, JOBS=28
-[17:24:02] compressing build log
--rw-rw-r--. 1 ec2-user ec2-user 8243312 Nov 21 17:23 /home/ec2-user/rh/out/build.log.zst
+[03:28:22] compressing build log
+-rw-rw-r--. 1 ec2-user ec2-user 12116 Nov 26 03:28 /home/ec2-user/grh-verify/out/build.log.zst
   PASS  lake build succeeded
 
 All checks passed (0 warning(s)).

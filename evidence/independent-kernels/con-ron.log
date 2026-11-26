@@ -1,0 +1,49 @@
+con-ron: parse done: 216567 fold records — the file's 216567, 0 built-in prelude records synthesised; store 80683970 expression, 13101 level, 1425897 name nodes t=25.834s (parse 25.834s)
+con-ron: install 0/216567 inductive Eq t=25.854s
+con-ron: install 20000/216567 theorem _private.Mathlib.LinearAlgebra.LinearIndependent.Defs.0.LinearIndependent.of_subsingleton'._simp_1_1 t=26.540s
+con-ron: install 40000/216567 theorem EMetric.mem_nhdsWithin_iff t=27.249s
+con-ron: install 60000/216567 theorem AlgHom.coe_toRingHom t=27.926s
+con-ron: install 80000/216567 theorem Nat.card_eq_two_iff' t=28.900s
+con-ron: install 100000/216567 theorem Nat.not_odd_iff t=30.228s
+con-ron: install 120000/216567 theorem CategoryTheory.MorphismProperty.instCompleteBooleanAlgebra._proof_14 t=31.334s
+con-ron: install 140000/216567 theorem exists_isLocalExtr_Ioo t=32.729s
+con-ron: install 160000/216567 theorem New.Floors.HyperbolicBasis.measurePreserving_inclMatrix_flatChart._simp_1_1 t=34.766s
+con-ron: install 180000/216567 theorem DirectSum.gMulHom._proof_2 t=36.815s
+con-ron: install 200000/216567 theorem New.Variety.semilinearOfBasis_single t=38.848s
+con-ron: install done: 216567/216567 declarations installed, 213885 checks pending; store 82754827 expression (82754827 persistent), 17285 level, 1430975 name nodes t=41.756s (install 15.922s)
+con-ron: check 20000/213885 theorem AddEquiv.arrowCongr._proof_1 t=41.900s
+con-ron: check 40000/213885 theorem MultilinearMap.domDomCongrLinearEquiv._proof_1 t=42.208s
+con-ron: check 60000/213885 theorem Function.Injective.divisionRing._proof_2 t=42.672s
+con-ron: check 80000/213885 theorem Localization.subalgebra._proof_1 t=43.260s
+con-ron: check 100000/213885 theorem Polynomial.mapRingHom_id t=44.271s
+con-ron: check 120000/213885 theorem CategoryTheory.Iso.ringCatIsoToRingEquiv._proof_1 t=45.391s
+con-ron: check 140000/213885 theorem LieModuleHom.instModule._proof_3 t=47.330s
+con-ron: check 160000/213885 theorem _private.Mathlib.Data.Nat.Choose.Basic.0.Nat.choose_mul._proof_1_2 t=50.460s
+con-ron: check 180000/213885 theorem CategoryTheory.Pairwise.instDecidableEqHom.decEq._proof_3 t=52.052s
+con-ron: check 200000/213885 theorem _private.Lib.GaloisRep.BaseChange.IwahoriEigenforms.0.New.mem_range_locMap_of_locMap_eq_self t=54.448s
+con-ron: check done: 213885/213885 t=59.860s (check 18.104s)
+con-ron: done: parse 25.834s, install 15.922s, check 18.104s, 32 workers t=59.860s
+con-ron: accepted 216567 declarations (--verified)
+	Command being timed: "con-ron --jobs=32 --progress=20000 /home/ec2-user/grh-verify/out/solution.ndjson"
+	User time (seconds): 549.31
+	System time (seconds): 2.63
+	Percent of CPU this job got: 921%
+	Elapsed (wall clock) time (h:mm:ss or m:ss): 0:59.92
+	Average shared text size (kbytes): 0
+	Average unshared data size (kbytes): 0
+	Average stack size (kbytes): 0
+	Average total size (kbytes): 0
+	Maximum resident set size (kbytes): 7921132
+	Average resident set size (kbytes): 0
+	Major (requiring I/O) page faults: 0
+	Minor (reclaiming a frame) page faults: 1463315
+	Voluntary context switches: 157
+	Involuntary context switches: 18053
+	Swaps: 0
+	File system inputs: 0
+	File system outputs: 8
+	Socket messages sent: 0
+	Socket messages received: 0
+	Signals delivered: 0
+	Page size (bytes): 4096
+	Exit status: 0

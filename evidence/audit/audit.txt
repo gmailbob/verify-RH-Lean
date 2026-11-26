@@ -52,4 +52,4 @@ PASS axioms  LFunction_eq_zero_re_of_isPrimitive: [propext, Classical.choice, Qu
 'LFunction_eq_zero_re' depends on axioms: [propext, Classical.choice, Quot.sound]
 'LFunction_eq_zero_re_of_isPrimitive' depends on axioms: [propext, Classical.choice, Quot.sound]
 AUDIT COMPLETE: all checks passed
-wall 48.90s, max RSS 34887000 KB
+wall 3.22s, max RSS 9157780 KB
